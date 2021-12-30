@@ -1,12 +1,11 @@
 /*
  * @Date: 2021-12-30 20:04:42
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 21:00:49
+ * @LastEditTime: 2021-12-30 21:45:01
  * @FilePath: /configforpagedemo/src/utils/ImportModule.ts
  */
 
-
-
+import * as fs from "fs";
 
 /**
  * @name: searchOptions
@@ -20,7 +19,6 @@ export interface searchOptions {
     endTag?: string
 }
 
-const fs = require('fs');
 
 /**
  * @Author: czh
@@ -31,13 +29,16 @@ const fs = require('fs');
  * @type {needDeep为是否进行深度搜索,endTag为文件后缀名}
  * @return {*}
  */
-const _getPathInfo = (src: string, needDeep: Boolean = false, endTag: string = '.js', pathList: Array<string> = []) => {
+const _getPathInfo = (src: string, needDeep: boolean, endTag: string = '.js', pathList: Array<string> = []) => {
     let needSearchList: Array<any> = []
     fs.readdirSync(src, {
         withFileTypes: true
     }).map((x: any) => {
-        if (x.isDirectory()) needSearchList.push(src + x.name + '/')
-        else pathList.push(src + String(x.name))
+        if (x.isDirectory()) {
+            needSearchList.push(src + x.name + '/')
+        } else {
+            pathList.push(src + String(x.name))
+        }
     })
     if (!needDeep) return pathList;
     needSearchList.map(x => [
@@ -47,11 +48,11 @@ const _getPathInfo = (src: string, needDeep: Boolean = false, endTag: string = '
 }
 
 
-let searchModulesByPath = (pathList: Array<searchOptions>) => {
-    let modules: Array<any> = [];
+const searchModulesByPath = (pathList: Array<searchOptions>) => {
+    let modules: Array<object> = [];
     if (!pathList || pathList.length == 0) {
-        console.error('Api加载错误：【searchApiFromJS】', pathList)
-        return modules;
+        console.error('Api加载错误:【searchApiFromJS】', pathList)
+        return new Array<object>();
     }
     pathList.map(x => {
         _getPathInfo(x.src, x.needDeep || false, x.endTag || '.js').map((y) => {

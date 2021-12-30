@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 21:06:04
+ * @LastEditTime: 2021-12-30 21:07:10
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions, infoCell } from "./cellClass";
@@ -16,19 +16,15 @@ export default {
      * @authors: CZH
      * @Date: 2021-12-30 15:18:29
      */
-    tableCellMaker:(prop: string, label: string, template: Array<templateCellOptions>, options: cellMakerOptions) => {
-        let cell:infoCell = {
+    tableCellMaker: (prop: string, label: string, template: Array<templateCellOptions>, options: cellMakerOptions) => {
+        return {
             key: prop,
             value: prop,
             prop,
             label,
             template,
-        }
-        cell = {
-            ...cell,
             ...options
         }
-        return cell
     },
 
     ...ImportModule,

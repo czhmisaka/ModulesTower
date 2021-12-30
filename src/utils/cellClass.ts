@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 16:17:43
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 20:39:06
+ * @LastEditTime: 2021-12-30 21:19:59
  * @FilePath: /configforpagedemo/src/utils/cellClass.ts
  */
 
@@ -36,9 +36,9 @@ export interface templateCellOptions {
  * @Date: 2021-12-30 17:21:14
  */
 export interface cellMakerOptions {
-    style?: String,
-    width?: String,
-    needTranslate?: Boolean,
+    style?: string,
+    width?: string,
+    needTranslate?: boolean,
     translateFunc?: Function,
 };
 

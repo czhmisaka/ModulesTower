@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 19:54:50
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 21:01:30
+ * @LastEditTime: 2021-12-30 21:29:39
  * @FilePath: /configforpagedemo/src/config/pageConfigs/index.ts
  */
 
