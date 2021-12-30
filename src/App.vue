@@ -1,24 +1,24 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 15:04:40
+ * @LastEditTime: 2021-12-30 20:40:17
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
-  <div></div>
-  <router-view />
+  <div class="wholePage">
+    <router-view />
+  </div>
 </template>
 
 <script>
-
 export default {
   data: () => {
     return {};
   },
-  async onLoad(){},
-  methods:{
-
-  }
+  async onLoad() {
+    return;
+  },
+  methods: {},
 };
 </script>
 

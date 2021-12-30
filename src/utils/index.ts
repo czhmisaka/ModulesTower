@@ -1,11 +1,11 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 17:29:02
+ * @LastEditTime: 2021-12-30 20:30:30
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
-import { cellMakerOptions } from "./cellClass";
-import { templateCellOptions } from "./cellClass";
+import { cellMakerOptions, templateCellOptions, infoCell } from "./cellClass";
+import ImportModule from "./ImportModule";
 
 
 
@@ -17,13 +17,18 @@ export default {
      * @Date: 2021-12-30 15:18:29
      */
     tableCellMaker: (prop: string, label: string, template: Array<templateCellOptions>, options: cellMakerOptions) => {
-        return {
-            key:prop,
-            value:prop,
+        let cell: infoCell = {
+            key: prop,
+            value: prop,
             prop,
             label,
             template,
             ...options
         }
+        return cell
     },
+
+    ...ImportModule,
 }
+
+
