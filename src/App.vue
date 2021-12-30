@@ -1,11 +1,12 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 20:40:17
+ * @LastEditTime: 2021-12-30 20:43:23
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
   <div class="wholePage">
+    {{ pageModules }}
     <router-view />
   </div>
 </template>
@@ -13,7 +14,9 @@
 <script>
 export default {
   data: () => {
-    return {};
+    return {
+      pageModules: this.$pageModules,
+    };
   },
   async onLoad() {
     return;

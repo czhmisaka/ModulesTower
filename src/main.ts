@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 17:47:22
+ * @LastEditTime: 2021-12-30 20:52:39
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
@@ -10,9 +10,9 @@ import './registerServiceWorker'
 import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-
-let app = createApp(App)
+import pageModules from './config/pageConfigs'
+const app = createApp(App)
+app.config.globalProperties.$pageModules = pageModules
 app.use(router)
 app.use(ElementPlus)
-
 app.mount('#app')

@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 20:04:42
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 20:16:58
+ * @LastEditTime: 2021-12-30 21:00:49
  * @FilePath: /configforpagedemo/src/utils/ImportModule.ts
  */
 
@@ -20,9 +20,7 @@ export interface searchOptions {
     endTag?: string
 }
 
-
 const fs = require('fs');
-
 
 /**
  * @Author: czh
@@ -49,9 +47,12 @@ const _getPathInfo = (src: string, needDeep: Boolean = false, endTag: string = '
 }
 
 
-const searchModulesByPath: Function = (pathList: Array<searchOptions>) => {
-    if (!pathList || pathList.length == 0) return console.error('Api加载错误：【searchApiFromJS】', pathList);
-    let modules: Array<string> = [];
+let searchModulesByPath = (pathList: Array<searchOptions>) => {
+    let modules: Array<any> = [];
+    if (!pathList || pathList.length == 0) {
+        console.error('Api加载错误：【searchApiFromJS】', pathList)
+        return modules;
+    }
     pathList.map(x => {
         _getPathInfo(x.src, x.needDeep || false, x.endTag || '.js').map((y) => {
             console.log(y)
