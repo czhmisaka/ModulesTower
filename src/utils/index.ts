@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 17:25:34
+ * @LastEditTime: 2021-12-30 17:29:02
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions } from "./cellClass";
@@ -26,8 +26,4 @@ export default {
             ...options
         }
     },
-
-    
-
-    
 }
