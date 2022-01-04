@@ -1,12 +1,11 @@
 /*
  * @Date: 2021-12-30 20:04:42
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-31 11:10:48
+ * @LastEditTime: 2021-12-31 11:49:13
  * @FilePath: /configforpagedemo/src/utils/ImportModule.ts
  */
-
 import * as fs from 'fs'
-
+console.log(fs)
 /**
  * @name: searchOptions
  * @description: 路径搜索参数单元
@@ -48,7 +47,7 @@ const _getPathInfo = (src: string, needDeep: boolean, endTag?: string, pathList:
 }
 
 
- 
+
 const searchModulesByPath = (pathList: Array<searchOptions>) => {
     let modules: Array<any> = [];
     if (!pathList || pathList.length == 0) {
@@ -58,7 +57,7 @@ const searchModulesByPath = (pathList: Array<searchOptions>) => {
     pathList.map(x => {
         _getPathInfo(x.src, x.needDeep || false, x.endTag || '.js').map((y) => {
             console.log(y)
-            modules.push(require(y))
+            // modules.push(require(y))
         })
     })
     return modules;
