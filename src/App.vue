@@ -1,11 +1,13 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-05 19:44:23
+ * @LastEditTime: 2022-01-05 19:54:27
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
   <div class="wholePage">
+
+    
     <el-aside></el-aside>
     <router-view />
   </div>
