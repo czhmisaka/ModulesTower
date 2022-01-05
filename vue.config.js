@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-05 09:21:49
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-05 10:51:14
+ * @LastEditTime: 2022-01-05 10:52:22
  * @FilePath: /configforpagedemo/vue.config.js
  */
 
@@ -13,7 +13,7 @@ const projectVersion = '0.0.1'
 module.exports = {
     publicPath: '',
     devServer: {
-        proxy: {}
+        // proxy: {}
     },
     configureWebpack: {
         // webpack 配置

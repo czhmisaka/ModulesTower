@@ -1,11 +1,13 @@
 /*
  * @Date: 2021-12-30 20:04:42
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-31 11:49:13
+ * @LastEditTime: 2022-01-05 11:17:02
  * @FilePath: /configforpagedemo/src/utils/ImportModule.ts
  */
-import * as fs from 'fs'
-console.log(fs)
+
+import * as fs from 'fs';
+
+
 /**
  * @name: searchOptions
  * @description: 路径搜索参数单元
@@ -65,4 +67,5 @@ const searchModulesByPath = (pathList: Array<searchOptions>) => {
 
 export default {
     searchModulesByPath,
+    requireModule,
 }
