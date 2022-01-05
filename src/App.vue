@@ -1,11 +1,12 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-05 15:45:59
+ * @LastEditTime: 2022-01-05 19:44:23
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
   <div class="wholePage">
+    <el-aside></el-aside>
     <router-view />
   </div>
 </template>
@@ -13,8 +14,7 @@
 <script>
 export default {
   data: () => {
-    return {
-    };
+    return {};
   },
   async onLoad() {
     return;
