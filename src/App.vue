@@ -1,15 +1,18 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-05 22:23:25
+ * @LastEditTime: 2022-01-07 18:01:57
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
   <div class="wholePage">
-    <el-aside>
-
-    </el-aside>
-    <router-view />
+    <el-container>
+      <el-hedaer> </el-hedaer>
+      <el-container>
+        <el-aside>
+          </el-aside>
+        <el-main> <router-view /> </el-main></el-container
+    ></el-container>
   </div>
 </template>
 
