@@ -1,11 +1,17 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 21:07:10
+ * @LastEditTime: 2022-01-07 21:44:21
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions, infoCell } from "./cellClass";
 import ImportModule from "./ImportModule";
+
+
+// 对象字符串判空
+export function isValidKey(key: string | number | symbol, object: object): key is keyof typeof object {
+    return key in object;
+}
 
 
 
@@ -28,6 +34,6 @@ export default {
     },
 
     ...ImportModule,
+    isValidKey,
 }
-
 

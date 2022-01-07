@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 20:04:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-05 11:17:02
+ * @LastEditTime: 2022-01-07 20:50:07
  * @FilePath: /configforpagedemo/src/utils/ImportModule.ts
  */
 
@@ -67,5 +67,4 @@ const searchModulesByPath = (pathList: Array<searchOptions>) => {
 
 export default {
     searchModulesByPath,
-    requireModule,
 }

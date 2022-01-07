@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-07 18:03:35
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-07 18:30:20
+ * @LastEditTime: 2022-01-07 19:27:42
  * @FilePath: /configforpagedemo/src/config/siteConfig/menu/index.ts
  */
 
@@ -15,7 +15,9 @@
  * @Date: 2022-01-07 18:26:34
  */
 enum menuCellType {
-
+    leaf,
+    group,
+    main,
 }
 
 /**
@@ -27,12 +29,16 @@ enum menuCellType {
 export interface menuCellTemplate {
     label: string & number,
     path: string,
-    type: menuCellTemplate,
+    type: menuCellType,
     style: object & string,
 }
 
 // 菜单栏配置
-const menuConfig: Array<menuCellTemplate> = []
+const menuConfig: Array<menuCellTemplate> = [
+    
+]
+
+
 
 export default menuConfig;
 
