@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-07 21:44:21
+ * @LastEditTime: 2022-01-08 13:30:39
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions, infoCell } from "./cellClass";

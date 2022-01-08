@@ -1,15 +1,19 @@
 <!--
  * @Date: 2021-12-30 19:40:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-07 21:21:24
+ * @LastEditTime: 2022-01-08 13:37:49
  * @FilePath: /configforpagedemo/src/components/header/header.vue
 -->
 <template>
   <div class="header">
-    <el-icon size="30" color="#000">
-      <edit></edit>
-    </el-icon>
-    <edit></edit>
+    <div class="siteTitle">
+      <div :class="isOpen ? 'normal' : 'mini'">
+        <!-- 这边放上自己的icon -->
+      </div>
+      <div class="titl">
+        
+      </div>
+    </div>
   </div>
 </template>
 
