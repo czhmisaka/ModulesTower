@@ -13,6 +13,7 @@ const projectVersion = '0.0.1'
 module.exports = {
     publicPath: '',
     devServer: {
+        port: 9050,
         // proxy: {}
     },
     configureWebpack: {
