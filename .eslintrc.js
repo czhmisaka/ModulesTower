@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-05 20:18:03
+ * @LastEditTime: 2022-01-22 19:18:54
  * @FilePath: /configforpagedemo/.eslintrc.js
  */
 module.exports = {
@@ -21,6 +21,8 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'prefer-const': 'off',
-    'no-explicit-any': 'off'
+    'no-explicit-any': 'off',
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    '@typescript-eslint/ban-types': 'off'
   }
 }

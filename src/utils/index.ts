@@ -1,11 +1,10 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-08 13:30:39
+ * @LastEditTime: 2022-01-22 19:09:01
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
-import { cellMakerOptions, templateCellOptions, infoCell } from "./cellClass";
-import ImportModule from "./ImportModule";
+import { cellMakerOptions, templateCellOptions } from "./cellClass";
 
 
 // 对象字符串判空
@@ -32,8 +31,6 @@ export default {
             ...options
         }
     },
-
-    ...ImportModule,
     isValidKey,
 }
 

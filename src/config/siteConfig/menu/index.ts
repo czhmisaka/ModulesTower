@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-07 18:03:35
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-07 19:27:42
+ * @LastEditTime: 2022-01-22 18:27:33
  * @FilePath: /configforpagedemo/src/config/siteConfig/menu/index.ts
  */
 
@@ -33,10 +33,14 @@ export interface menuCellTemplate {
     style: object & string,
 }
 
+export const addMenuCell = () => { }
+
+
 // 菜单栏配置
 const menuConfig: Array<menuCellTemplate> = [
-    
+
 ]
+
 
 
 

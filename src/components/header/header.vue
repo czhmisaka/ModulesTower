@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 19:40:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-08 13:52:08
+ * @LastEditTime: 2022-01-22 18:16:54
  * @FilePath: /configforpagedemo/src/components/header/header.vue
 -->
 <template>
@@ -10,8 +10,10 @@
       <div :class="isOpen ? 'normal' : 'mini'">
         <!-- 这边放上自己的icon -->
       </div>
-      <div class="titl"></div>
-    </div>
+      <div class="title">
+
+      </div>
+    </div> 
     <div class="right"></div>
   </div>
 </template>

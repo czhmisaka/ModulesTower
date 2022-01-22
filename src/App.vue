@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-07 20:11:34
+ * @LastEditTime: 2022-01-22 19:21:11
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
@@ -29,7 +29,7 @@ export default {
     return {};
   },
   async onLoad() {
-    return;
+    return null;
   },
   methods: {},
 };
