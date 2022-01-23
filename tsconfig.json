@@ -3,14 +3,14 @@
     "target": "esnext",
     "module": "esnext",
     "strict": false,
-    "noImplicitAny":true,
+    "noImplicitAny": true,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "resolveJsonModule":true,
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
@@ -35,7 +35,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx", "src/components/basicComponents/cell/icon/iconCell.js"
   ],
   "exclude": [
     "node_modules"

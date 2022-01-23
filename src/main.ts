@@ -1,11 +1,12 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-22 19:20:01
+ * @LastEditTime: 2022-01-23 00:40:34
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
 import App from './App.vue'
+import CusIcon from './components/basicComponents/cell/icon/iconCell.vue'
 import './registerServiceWorker'
 import router from './router'
 import ElementPlus from 'element-plus'
@@ -25,6 +26,7 @@ for (let x in Icons) {
     }
 }
 
+app.component('CusIcon', CusIcon)
 
 app.use(router)
 app.use(ElementPlus)
