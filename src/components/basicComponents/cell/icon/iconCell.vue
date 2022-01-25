@@ -1,12 +1,13 @@
 <!--
  * @Date: 2022-01-22 19:23:46
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-23 21:37:11
+ * @LastEditTime: 2022-01-24 09:36:24
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/icon/iconCell.vue
 -->
 <script lang="tsx">
 import { getIcon } from "@/utils";
-import { defineComponent, toRefs, h } from "vue";
+import { ElIcon } from "element-plus";
+import { defineComponent, h } from "vue";
 
 export default defineComponent({
   name: "CusIcon",
@@ -22,14 +23,13 @@ export default defineComponent({
     },
   },
   setup: (props) => {
-    const { name,iconOption } = toRefs<any>(props);
     return () =>
       h(
-        "el-icon",
+        ElIcon,
         {
-          props: { iconOption },
+          props: props.iconOption,
         },
-        [h(getIcon(name))]
+        [h(getIcon(props.name + ""))]
       );
   },
 });

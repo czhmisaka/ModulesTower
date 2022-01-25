@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-23 21:32:41
+ * @LastEditTime: 2022-01-24 09:12:23
  * @FilePath: /configforpagedemo/src/shims-vue.d.ts
  */
 /* eslint-disable */
@@ -12,10 +12,6 @@ declare module '*.vue' {
   export default Component
 }
 
-declare module 'element-plus' {
-  const content: any
-  export = content
-}
 
 
                                       
