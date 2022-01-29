@@ -1,17 +1,17 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-23 00:30:06
+ * @LastEditTime: 2022-01-29 10:00:24
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
   <el-container class="wholePage">
     <el-header style="padding: 0px">
-      <czhHeader />
+      <czhHeader  />
     </el-header>
     <el-main style="padding: 6px">
       <el-aside style="padding: 0px">
-        <czhMenu :name="Edit" />
+        <czhMenu :name="menu" />
       </el-aside>
       <el-main>
         <router-view />
@@ -21,21 +21,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 import czhHeader from "./components/header/header.vue";
 import czhMenu from "./components/menu/menu.vue";
 
 export default defineComponent({
   components: { czhHeader, czhMenu },
-  data: () => {
-    return {};
+  data() {
+    return {
+      menu: [],
+    };
   },
   onLoad() {},
   methods: {},
-  setup() {
-    
-  },
-})
+  setup() {},
+});
 </script>
 
 <style lang="scss">

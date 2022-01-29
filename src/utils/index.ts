@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-23 21:38:08
+ * @LastEditTime: 2022-01-28 14:23:50
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions } from "./cellClass";
@@ -13,8 +13,8 @@ export function isValidKey(key: string | number | symbol, object: object): key i
     return key in object;
 }
 
+// 获取Icon 对象
 export function getIcon(name: string) {
-    console.log(name)
     if (isValidKey(name, Icons)) {
         return Icons[name]
     } else {
@@ -22,8 +22,7 @@ export function getIcon(name: string) {
     }
 }
 
-
-
+// 全量导出模式
 export default {
     /**
      * @name: tableCellMaker
