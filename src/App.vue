@@ -7,7 +7,7 @@
 <template>
   <el-container class="wholePage">
     <el-header style="padding: 0px">
-      <czhHeader  />
+      <czhHeader />
     </el-header>
     <el-main style="padding: 6px">
       <el-aside style="padding: 0px">
