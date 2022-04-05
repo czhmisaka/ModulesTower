@@ -1,0 +1,27 @@
+2022-04-05 23:01:41.454 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 127.0.0.1:6379. Connection refused.
+2022-04-05 23:06:43.112 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 8 connecting to http://42.192.134.238/:6379. nodename nor servname provided, or not known.
+2022-04-05 23:06:46.523 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:06:55.970 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:09:54.293 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:09:57.854 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:10:22.908 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:11:09.405 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:11:12.456 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:11:20.827 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:11:22.883 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:13:01.669 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:13:30.271 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:14:13.429 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:15:00.738 | INFO     | common.sys_redis:init_redis_connect:57 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:15:01.392 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:15:06.524 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:15:44.372 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:16:32.893 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:17:11.134 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:26:26.433 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 Error 61 connecting to 42.192.134.238:6379. Connection refused.
+2022-04-05 23:27:51.288 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 WRONGPASS invalid username-password pair or user is disabled.
+2022-04-05 23:27:58.080 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 WRONGPASS invalid username-password pair or user is disabled.
+2022-04-05 23:32:27.187 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 WRONGPASS invalid username-password pair or user is disabled.
+2022-04-05 23:33:18.410 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 DB index is out of range
+2022-04-05 23:33:21.851 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 DB index is out of range
+2022-04-05 23:33:30.753 | INFO     | common.sys_redis:init_redis_connect:63 - 连接redis异常 DB index is out of range

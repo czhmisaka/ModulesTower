@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-05 09:21:49
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-22 23:34:59
+ * @LastEditTime: 2022-04-05 14:43:50
  * @FilePath: /configforpagedemo/vue.config.js
  */
 
@@ -10,17 +10,25 @@
 const Env = process.env.NODE_ENV
 const projectVersion = '0.0.1'
 
-const AutoImport = require('unplugin-auto-import/webpack')
-const Components = require('unplugin-vue-components/webpack')
+
+const proxyObjCreate = require('./config/proxyTable.js')
+
+const AutoImport = require('unplugin-auto-import/webpack');
+const Components = require('unplugin-vue-components/webpack');
 const {
     ElementPlusResolver
-} = require('unplugin-vue-components/resolvers')
+} = require('unplugin-vue-components/resolvers');
+
+
+
 
 module.exports = {
     publicPath: '',
     devServer: {
         port: 9050,
-        // proxy: {}
+        proxy: {
+            ...proxyObjCreate(['/']),
+        }
     },
     configureWebpack: {
         // webpack 配置
@@ -30,12 +38,12 @@ module.exports = {
             chunkFilename: `[name].${Env}-${projectVersion}.js`,
         },
         plugins: [
-            // AutoImport({
-            //     resolvers: [ElementPlusResolver()],
-            // }),
-            // Components({
-            //     resolvers: [ElementPlusResolver()],
-            // }),
+            AutoImport({
+                resolvers: [ElementPlusResolver()],
+            }),
+            Components({
+                resolvers: [ElementPlusResolver()],
+            }),
         ]
     },
    

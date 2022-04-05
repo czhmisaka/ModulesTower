@@ -15,6 +15,7 @@
       </el-aside>
       <el-main>
         <router-view />
+        <el-button type="primary" @click="createUser">登陆</el-button>
       </el-main>
     </el-main>
   </el-container>
@@ -24,6 +25,7 @@
 import { defineComponent } from "vue";
 import czhHeader from "./components/header/header.vue";
 import czhMenu from "./components/menu/menu.vue";
+import { CreateUser } from "@/api/user/user";
 
 export default defineComponent({
   components: { czhHeader, czhMenu },
@@ -32,9 +34,16 @@ export default defineComponent({
       menu: [],
     };
   },
-  onLoad() {},
-  methods: {},
-  setup() {},
+  methods: {
+    async createUser() {
+      let res: any = await CreateUser({
+        name: "admin",
+        password: "123456",
+        email: "1234@123.12",
+      });
+      console.log(res);
+    },
+  },
 });
 </script>
 

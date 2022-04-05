@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-23 00:40:34
+ * @LastEditTime: 2022-04-05 14:52:57
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
@@ -15,7 +15,6 @@ import pageModules from './config/pageConfigs'
 import * as Icons from '@element-plus/icons-vue'
 import utils from './utils'
 
-
 const app = createApp(App)
 app.config.globalProperties.$pageModules = pageModules
 for (let x in Icons) {
@@ -25,6 +24,7 @@ for (let x in Icons) {
         console.log('icon 加载失败 : ', x)
     }
 }
+
 
 app.component('CusIcon', CusIcon)
 

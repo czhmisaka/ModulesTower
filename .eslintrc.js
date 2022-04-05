@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-23 00:31:07
+ * @LastEditTime: 2022-04-05 14:23:26
  * @FilePath: /configforpagedemo/.eslintrc.js
  */
 module.exports = {
@@ -25,6 +25,7 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-empty-function': 'off'
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
   }
 }
