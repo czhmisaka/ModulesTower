@@ -27,7 +27,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def create_access_token(
         subject: Union[str, Any],
-        expires_delta: timedelta = None
+        expires_delta: timedelta=None,
 ) -> str:
     """
     生成token
