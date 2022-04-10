@@ -25,16 +25,13 @@ from core.config import settings
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def create_access_token(
-        subject: Union[str, Any],
-        expires_delta: timedelta=None,
-) -> str:
-    """
+def create_access_token(subject: Union[str, Any],expires_delta: timedelta = None ) -> str:
+    '''
     生成token
-    :param subject:需要存储到token的数据(注意token里面的数据，属于公开的)
+    :param subject:需要存储到token的数据(注意token里面的数据,属于公开的)
     :param expires_delta:
     :return:
-    """
+    '''
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
