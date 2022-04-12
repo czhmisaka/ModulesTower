@@ -5,13 +5,8 @@
  * @FilePath: /configforpagedemo/src/views/Home.vue
 -->
 
-
 <template>
-  <div>
-    <CusIcon name="Edit" :iconOption="{
-      'size':'20'
-    }"/>
-  </div>
+  <div></div>
 </template>
 
 <script>

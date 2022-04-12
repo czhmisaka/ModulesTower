@@ -15,7 +15,6 @@
       </el-aside>
       <el-main>
         <router-view />
-        <el-button type="primary" @click="createUser">登陆</el-button>
       </el-main>
     </el-main>
   </el-container>
