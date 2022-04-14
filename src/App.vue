@@ -18,6 +18,7 @@
       </el-main>
     </el-main>
   </el-container>
+  <lineSlideExchange />
 </template>
 
 <script lang="ts">
@@ -25,9 +26,10 @@ import { defineComponent } from "vue";
 import czhHeader from "./components/header/header.vue";
 import czhMenu from "./components/menu/menu.vue";
 import { CreateUser } from "@/api/user/user";
+import lineSlideExchange from "@/components/animate/lineSlideExchange.vue";
 
 export default defineComponent({
-  components: { czhHeader, czhMenu },
+  components: { czhHeader, czhMenu, lineSlideExchange },
   data() {
     return {
       menu: [],
