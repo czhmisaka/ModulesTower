@@ -18,7 +18,7 @@
       </el-main>
     </el-main>
   </el-container>
-  <lineSlideExchange />
+  <lineSlideExchange ref="lineSlideExchange" />
 </template>
 
 <script lang="ts">
