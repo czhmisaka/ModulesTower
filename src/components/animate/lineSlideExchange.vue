@@ -4,20 +4,41 @@
  * @LastEditTime: 2022-04-16 22:28:24
  * @FilePath: /configforpagedemo/src/components/animate/lineSlideExchange.vue
 -->
+<template>
+  <div class="wholeScreen">
+    <div class="rotateBox" :style="`transform:rotate(${rotate}deg)`"></div>
+  </div>
+</template>
 
 <script lang="tsx">
-import { defineComponent, h, toRefs, PropType } from "vue";
+import { defineComponent, h, toRefs, ref } from "vue";
 
 interface lineObj {
   color: string;
   width: number;
 }
 
+/**
+ * @name: rgbToHex
+ * @description: rgbToHex
+ * @authors: CZH
+ * @Date: 2022-04-17 19:39:21
+ * @param {*} r
+ * @param {*} g
+ * @param {*} b
+ */
 function rgbToHex(r: number, g: number, b: number): string {
   var hex = ((r << 16) | (g << 8) | b).toString(16);
   return "#" + new Array(Math.abs(hex.length - 7)).join("0") + hex;
 }
 
+/**
+ * @name: hexToRgb
+ * @description: hexToRgb
+ * @authors: CZH
+ * @Date: 2022-04-17 19:39:38
+ * @param {*} hex
+ */
 function hexToRgb(hex: string): Array<number> {
   let rgb: Array<number> = [];
   for (var i = 1; i < 7; i += 2) {
@@ -49,19 +70,15 @@ function getColorList(
       rgbToHex(rStep * i + sColor[0], gStep * i + sColor[1], bStep * i + sColor[2])
     );
   }
-  console.log([...arguments], "asd", colorArray);
   return colorArray;
 }
 
 export default defineComponent({
   name: "lineSlideExchange",
-  methods: {
-    async start() {},
-  },
   props: {
     linesNumber: {
       type: Number,
-      default: 10,
+      default: 30,
     },
     startColor: {
       type: String,
@@ -71,10 +88,14 @@ export default defineComponent({
       type: String,
       default: "#ff9900",
     },
+    rotate: {
+      type: Number,
+      default: 0,
+    },
   },
-  setup: (props) => {
+  setup: (props, { expose }) => {
+    // 计算颜色列表
     const { linesNumber, startColor, endColor } = toRefs<any>(props);
-    console.log(startColor.value, endColor.value, linesNumber.value, "asd");
     const colorArray: Array<string> = getColorList(
       startColor.value,
       endColor.value,
@@ -87,36 +108,71 @@ export default defineComponent({
         width: 100 / linesNumber.value,
       });
     }
-    return () => (
-      <div class="wholeScreen">
-        {linesArray.map((item, index) => {
-          return (
-            <div
-              class={"lineFilter line" + index}
-              style={{
-                backgroundColor: item.color,
-                width: item.width * 2 + "vw",
-                height: "100vh",
-                boxShadow: "0px 0px 10px " + item.color,
-                animationDuration: 0.1 + 0.2 * index + "s",
-                transform: "translate(-50vw, 0vh) rotateZ(45deg) scale(2)",
-              }}
-            ></div>
-          );
-        })}
-      </div>
-    );
+    let status = ref("");
+    const start = () => {
+      status.value = "In";
+      console.log("asdda", status.value);
+    };
+
+    expose({ start });
+    return {
+      status,
+      linesArray,
+    };
+    // () => (
+    //   <div class="wholeScreen">
+    //     <div
+    //       class="rotateBox"
+    //       style={{
+    //         transform: `rotate(${props.rotate}deg)`,
+    //       }}
+    //     >
+    //       {linesArray.map((item, index) => {
+    //         return (
+    //           <div
+    //             class={
+    //               "lineFilter " + status.value == "In"
+    //                 ? "slideIn"
+    //                 : status.value == "Out"
+    //                 ? "slideOut"
+    //                 : ""
+    //             }
+    //             style={{
+    //               backgroundColor: item.color,
+    //               boxShadow: "0px 0px 10px " + item.color,
+    //               width: item.width + "%",
+    //               transform: `translateY(${
+    //                 status.value == "In" ? "0" : status.value == "Out" ? "100" : "-100"
+    //               }%) !important`,
+    //               animationDelay: `${0.1 + index * 0.1}s`,
+    //             }}
+    //           >
+    //             {index + "  " + item.color}
+    //           </div>
+    //         );
+    //       })}
+    //     </div>
+    //   </div>
+    // );
   },
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @keyframes lineSlideIn {
   0% {
-    transform: translate(-150vw, 100vh) rotateZ(45deg) scale(2);
+    transform: translateY(-100%);
   }
   100% {
-    transform: translate(-50vw, 0vh) rotateZ(45deg) scale(2);
+    transform: translateY(0%);
+  }
+}
+@keyframes lineSlideOut {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(100%);
   }
 }
 .wholeScreen {
@@ -126,12 +182,29 @@ export default defineComponent({
   overflow: hidden;
   top: 0px;
   left: 0px;
-  z-index: 9999;
-  display: flex;
-  flex-wrap: column;
-  backdrop-filter: blur(10px);
-  .lineFilter {
-    animation: lineSlideIn ease-in-out;
+  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.7);
+  .rotateBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -100vw;
+    margin-top: -100vh;
+    width: 200vw;
+    height: 200vh;
+    display: flex;
+    flex-wrap: column;
+    .lineFilter {
+      height: 100%;
+      line-height: 100%;
+      animation-iteration-count: infinite;
+    }
+    .slideIn {
+      animation-name: lineSlideIn;
+    }
+    .slideOut {
+      animation-name: lineSlideOut;
+    }
   }
 }
 

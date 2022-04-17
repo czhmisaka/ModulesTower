@@ -35,6 +35,11 @@ export default defineComponent({
       menu: [],
     };
   },
+  mounted() {
+    setTimeout(() => {
+      this.$refs["lineSlideExchange"].start();
+    }, 500);
+  },
   methods: {
     async createUser() {
       let res: any = await CreateUser({
