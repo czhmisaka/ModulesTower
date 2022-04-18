@@ -1,17 +1,32 @@
 <!--
  * @Date: 2022-04-12 20:07:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-04-16 22:28:24
+ * @LastEditTime: 2022-04-18 09:54:03
  * @FilePath: /configforpagedemo/src/components/animate/lineSlideExchange.vue
 -->
 <template>
   <div class="wholeScreen">
-    <div class="rotateBox" :style="`transform:rotate(${rotate}deg)`"></div>
+    <div class="rotateBox" :style="`transform:rotate(${rotate}deg)`">
+      <div
+        v-for="(item, index) in linesArray"
+        :key="`lines${index}}`"
+        :class="`lineFilter ${status}`"
+        :style="{
+          width: `${item.width}%`,
+          backgroundColor: `${item.color}`,
+          transform: `translateY(${
+            status == 'slideIn' ? '0' : status == 'slideOut' ? '100' : '-100'
+          }%)`,
+          animationDuration: `${0.1 + index * 0.1}s`,
+          boxShadow: `0px 0px ${item.width / 2}vw ${item.color}`,
+        }"
+      ></div>
+    </div>
   </div>
 </template>
 
 <script lang="tsx">
-import { defineComponent, h, toRefs, ref } from "vue";
+import { defineComponent, toRefs, ref } from "vue";
 
 interface lineObj {
   color: string;
@@ -90,7 +105,7 @@ export default defineComponent({
     },
     rotate: {
       type: Number,
-      default: 0,
+      default: 45,
     },
   },
   setup: (props, { expose }) => {
@@ -109,51 +124,22 @@ export default defineComponent({
       });
     }
     let status = ref("");
+
+    // 开始动画
     const start = () => {
-      status.value = "In";
-      console.log("asdda", status.value);
+      status.value = "slideIn";
     };
 
-    expose({ start });
+    // 结束动画
+    const finish = () => {
+      status.value = "slideOut";
+    };
+
+    expose({ start, finish });
     return {
       status,
       linesArray,
     };
-    // () => (
-    //   <div class="wholeScreen">
-    //     <div
-    //       class="rotateBox"
-    //       style={{
-    //         transform: `rotate(${props.rotate}deg)`,
-    //       }}
-    //     >
-    //       {linesArray.map((item, index) => {
-    //         return (
-    //           <div
-    //             class={
-    //               "lineFilter " + status.value == "In"
-    //                 ? "slideIn"
-    //                 : status.value == "Out"
-    //                 ? "slideOut"
-    //                 : ""
-    //             }
-    //             style={{
-    //               backgroundColor: item.color,
-    //               boxShadow: "0px 0px 10px " + item.color,
-    //               width: item.width + "%",
-    //               transform: `translateY(${
-    //                 status.value == "In" ? "0" : status.value == "Out" ? "100" : "-100"
-    //               }%) !important`,
-    //               animationDelay: `${0.1 + index * 0.1}s`,
-    //             }}
-    //           >
-    //             {index + "  " + item.color}
-    //           </div>
-    //         );
-    //       })}
-    //     </div>
-    //   </div>
-    // );
   },
 });
 </script>
@@ -183,7 +169,7 @@ export default defineComponent({
   top: 0px;
   left: 0px;
   backdrop-filter: blur(2px);
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(255, 255, 255, 0.1);
   .rotateBox {
     position: absolute;
     top: 50%;
@@ -200,10 +186,10 @@ export default defineComponent({
       animation-iteration-count: infinite;
     }
     .slideIn {
-      animation-name: lineSlideIn;
+      animation: lineSlideIn ease-in-out;
     }
     .slideOut {
-      animation-name: lineSlideOut;
+      animation: lineSlideOut ease-in-out;
     }
   }
 }

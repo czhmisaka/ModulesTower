@@ -39,6 +39,9 @@ export default defineComponent({
     setTimeout(() => {
       this.$refs["lineSlideExchange"].start();
     }, 500);
+    setTimeout(() => {
+      this.$refs["lineSlideExchange"].finish();
+    }, 2500);
   },
   methods: {
     async createUser() {
