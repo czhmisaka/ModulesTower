@@ -14,11 +14,20 @@
         <czhMenu :name="menu" />
       </el-aside>
       <el-main>
-        <router-view />
+        {{ sColor }}
+        {{ eColor }}
+        <!-- <router-view /> -->
       </el-main>
     </el-main>
   </el-container>
-  <lineSlideExchange ref="lineSlideExchange" />
+  <lineSlideExchange
+    ref="lineSlideExchange"
+    :linesNumber="linesNumber"
+    :rotate="rotate"
+    :start-color="sColor"
+    :end-color="eColor"
+    :speed="1.5"
+  />
 </template>
 
 <script lang="ts">
@@ -28,20 +37,44 @@ import czhMenu from "./components/menu/menu.vue";
 import { CreateUser } from "@/api/user/user";
 import lineSlideExchange from "@/components/animate/lineSlideExchange.vue";
 
+function getRandomColor(): string {
+  return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
+}
+
 export default defineComponent({
   components: { czhHeader, czhMenu, lineSlideExchange },
   data() {
     return {
       menu: [],
+      sColor: getRandomColor(),
+      eColor: getRandomColor(),
+      rotate: Math.random() * 360,
+      linesNumber: 40,
     };
   },
   mounted() {
-    setTimeout(() => {
+    setTimeout(async () => {
+      this.sColor = getRandomColor();
+      this.eColor = getRandomColor();
+      this.rotate = Math.random() * 360;
+      await this.$nextTick();
       this.$refs["lineSlideExchange"].start();
     }, 500);
     setTimeout(() => {
       this.$refs["lineSlideExchange"].finish();
     }, 2500);
+    setInterval(() => {
+      setTimeout(async () => {
+        this.sColor = getRandomColor();
+        this.eColor = getRandomColor();
+        this.rotate = Math.random() * 360;
+        await this.$nextTick();
+        this.$refs["lineSlideExchange"].start();
+      }, 500);
+      setTimeout(() => {
+        this.$refs["lineSlideExchange"].finish();
+      }, 2500);
+    }, 5500);
   },
   methods: {
     async createUser() {

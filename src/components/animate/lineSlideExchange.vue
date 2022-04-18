@@ -6,7 +6,11 @@
 -->
 <template>
   <div class="wholeScreen">
-    <div class="rotateBox" :style="`transform:rotate(${rotate}deg)`">
+    <div
+      class="rotateBox"
+      :style="`transform:rotate(${rotate}deg)`"
+      v-if="linesArray && linesArray.length > 0"
+    >
       <div
         v-for="(item, index) in linesArray"
         :key="`lines${index}}`"
@@ -17,7 +21,7 @@
           transform: `translateY(${
             status == 'slideIn' ? '0' : status == 'slideOut' ? '100' : '-100'
           }%)`,
-          animationDuration: `${0.1 + index * 0.1}s`,
+          animationDuration: `${(index * 0.2) / speed}s`,
           boxShadow: `0px 0px ${item.width / 2}vw ${item.color}`,
         }"
       ></div>
@@ -26,7 +30,7 @@
 </template>
 
 <script lang="tsx">
-import { defineComponent, toRefs, ref } from "vue";
+import { defineComponent, toRefs, ref, reactive } from "vue";
 
 interface lineObj {
   color: string;
@@ -73,7 +77,7 @@ function getColorList(
   startColor: string,
   endColor: string,
   colorNum = 10
-): Array<string> {
+): Array<lineObj> {
   let colorArray: Array<string> = [];
   let sColor = hexToRgb(startColor),
     eColor = hexToRgb(endColor);
@@ -85,53 +89,63 @@ function getColorList(
       rgbToHex(rStep * i + sColor[0], gStep * i + sColor[1], bStep * i + sColor[2])
     );
   }
-  return colorArray;
+  let linesArray: Array<lineObj> = [];
+  for (let x = 0; x <= colorNum; x++) {
+    linesArray.push({
+      color: colorArray[x % colorArray.length],
+      width: 100 / colorNum,
+    });
+  }
+  console.log(colorArray[0], "asd");
+  return linesArray;
 }
 
 export default defineComponent({
   name: "lineSlideExchange",
   props: {
+    speed: {
+      type: Number,
+      default: 1,
+    },
     linesNumber: {
       type: Number,
       default: 30,
     },
     startColor: {
       type: String,
-      default: "#ff0000",
+      default: "#00aaff",
     },
     endColor: {
       type: String,
-      default: "#ff9900",
+      default: "#ccaaff",
     },
     rotate: {
       type: Number,
-      default: 45,
+      default: 30,
     },
   },
   setup: (props, { expose }) => {
     // 计算颜色列表
     const { linesNumber, startColor, endColor } = toRefs<any>(props);
-    const colorArray: Array<string> = getColorList(
-      startColor.value,
-      endColor.value,
-      linesNumber.value
-    );
-    let linesArray: Array<lineObj> = [];
-    for (let x = 0; x <= linesNumber.value; x++) {
-      linesArray.push({
-        color: colorArray[x % colorArray.length],
-        width: 100 / linesNumber.value,
-      });
-    }
+    // let linesArray: Array<lineObj> = reactive([]);
+    let linesArray = ref(new Array<lineObj>());
     let status = ref("");
 
     // 开始动画
     const start = () => {
+      linesArray.value = getColorList(
+        startColor.value,
+        endColor.value,
+        linesNumber.value
+      );
       status.value = "slideIn";
     };
 
     // 结束动画
     const finish = () => {
+      linesArray.value = reactive(
+        getColorList(startColor.value, endColor.value, linesNumber.value)
+      );
       status.value = "slideOut";
     };
 
@@ -170,26 +184,28 @@ export default defineComponent({
   left: 0px;
   backdrop-filter: blur(2px);
   background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
   .rotateBox {
     position: absolute;
     top: 50%;
     left: 50%;
     margin-left: -100vw;
-    margin-top: -100vh;
+    margin-top: -200vh;
     width: 200vw;
-    height: 200vh;
+    height: 400vh;
     display: flex;
     flex-wrap: column;
     .lineFilter {
       height: 100%;
       line-height: 100%;
       animation-iteration-count: infinite;
+      border-radius: 30px;
     }
     .slideIn {
-      animation: lineSlideIn ease-in-out;
+      animation: lineSlideIn;
     }
     .slideOut {
-      animation: lineSlideOut ease-in-out;
+      animation: lineSlideOut;
     }
   }
 }
