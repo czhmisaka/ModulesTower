@@ -5,24 +5,42 @@
  * @FilePath: /configforpagedemo/src/components/animate/lineSlideExchange.vue
 -->
 <template>
-  <div class="wholeScreen">
+  <div
+    class="wholeScreen"
+    :style="{
+      zIndex: status ? '10000000' : '-1',
+    }"
+  >
     <div
       class="rotateBox"
-      :style="`transform:rotate(${rotate}deg)`"
+      :style="`transform:rotate(${rotate}deg);backdrop-filter: blur(2px);opacity:${
+        status ? '1' : '0'
+      }`"
       v-if="linesArray && linesArray.length > 0"
     >
       <div
         v-for="(item, index) in linesArray"
         :key="`lines${index}}`"
         :class="`lineFilter ${status}`"
+        :ref="
+          (el) => {
+            if (el) linesArrayDom[i] = el;
+          }
+        "
+        @animationend="
+          (e) => {
+            stopAnimation(e, index);
+          }
+        "
         :style="{
           width: `${item.width}%`,
           backgroundColor: `${item.color}`,
           transform: `translateY(${
             status == 'slideIn' ? '0' : status == 'slideOut' ? '100' : '-100'
           }%)`,
-          animationDuration: `${(index * 0.2) / speed}s`,
+          animationDuration: `${(index * 0.1) / speed}s`,
           boxShadow: `0px 0px ${item.width / 2}vw ${item.color}`,
+          zIndex: index,
         }"
       ></div>
     </div>
@@ -96,7 +114,6 @@ function getColorList(
       width: 100 / colorNum,
     });
   }
-  console.log(colorArray[0], "asd");
   return linesArray;
 }
 
@@ -126,9 +143,10 @@ export default defineComponent({
   },
   setup: (props, { expose }) => {
     // 计算颜色列表
-    const { linesNumber, startColor, endColor } = toRefs<any>(props);
+    const { linesNumber, startColor, endColor, speed } = toRefs<any>(props);
     // let linesArray: Array<lineObj> = reactive([]);
     let linesArray = ref(new Array<lineObj>());
+    const linesArrayDom = ref([]);
     let status = ref("");
 
     // 开始动画
@@ -141,7 +159,7 @@ export default defineComponent({
       status.value = "slideIn";
     };
 
-    // 结束动画
+    // 开始退出动画
     const finish = () => {
       linesArray.value = reactive(
         getColorList(startColor.value, endColor.value, linesNumber.value)
@@ -149,10 +167,23 @@ export default defineComponent({
       status.value = "slideOut";
     };
 
-    expose({ start, finish });
+    // 动画停止
+    const stopAnimation = (data: any, index: number) => {
+      console.log("asdasd", index, linesArray.value.length / speed.value);
+      if (
+        index >= linesArray.value.length / speed.value &&
+        data.animationName == "lineSlideOut"
+      ) {
+        status.value = "";
+      }
+    };
+
+    expose({ start, finish, stopAnimation });
     return {
+      stopAnimation,
       status,
       linesArray,
+      linesArrayDom,
     };
   },
 });
@@ -182,19 +213,22 @@ export default defineComponent({
   overflow: hidden;
   top: 0px;
   left: 0px;
-  backdrop-filter: blur(2px);
   background: rgba(255, 255, 255, 0.1);
   overflow: hidden;
+  transition: all 0.4s ease-in-out;
   .rotateBox {
     position: absolute;
     top: 50%;
     left: 50%;
+    // 这里留一个坑,日后改为自适应所有分辨率比例,原理就是获取当前窗口长宽比,搭配转角去计算需要的宽高
     margin-left: -200vw;
     margin-top: -200vh;
     width: 400vw;
     height: 400vh;
+    // 以上
     display: flex;
     flex-wrap: column;
+    opacity: 0;
     .lineFilter {
       height: 100%;
       line-height: 100%;
@@ -208,9 +242,5 @@ export default defineComponent({
       animation: lineSlideOut;
     }
   }
-}
-
-.zIndexTop {
-  z-index: 10000000000;
 }
 </style>

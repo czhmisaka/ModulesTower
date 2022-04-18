@@ -16,7 +16,7 @@
       <el-main>
         {{ sColor }}
         {{ eColor }}
-        <!-- <router-view /> -->
+        <router-view />
       </el-main>
     </el-main>
   </el-container>
@@ -49,7 +49,7 @@ export default defineComponent({
       sColor: getRandomColor(),
       eColor: getRandomColor(),
       rotate: Math.random() * 360,
-      linesNumber: 40,
+      linesNumber: 60,
     };
   },
   mounted() {
