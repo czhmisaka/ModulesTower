@@ -189,9 +189,9 @@ export default defineComponent({
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-left: -100vw;
+    margin-left: -200vw;
     margin-top: -200vh;
-    width: 200vw;
+    width: 400vw;
     height: 400vh;
     display: flex;
     flex-wrap: column;
