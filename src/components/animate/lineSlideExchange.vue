@@ -38,7 +38,7 @@
           transform: `translateY(${
             status == 'slideIn' ? '0' : status == 'slideOut' ? '100' : '-100'
           }%)`,
-          animationDuration: `${(index * 0.1) / speed}s`,
+          animationDuration: `${(index * 0.05) / speed}s`,
           boxShadow: `0px 0px ${item.width / 2}vw ${item.color}`,
           zIndex: index,
         }"
@@ -143,8 +143,7 @@ export default defineComponent({
   },
   setup: (props, { expose }) => {
     // 计算颜色列表
-    const { linesNumber, startColor, endColor, speed } = toRefs<any>(props);
-    // let linesArray: Array<lineObj> = reactive([]);
+    const { linesNumber, startColor, endColor, speed, rotate } = toRefs<any>(props);
     let linesArray = ref(new Array<lineObj>());
     const linesArrayDom = ref([]);
     let status = ref("");
@@ -169,7 +168,6 @@ export default defineComponent({
 
     // 动画停止
     const stopAnimation = (data: any, index: number) => {
-      console.log("asdasd", index, linesArray.value.length / speed.value);
       if (
         index >= linesArray.value.length / speed.value &&
         data.animationName == "lineSlideOut"
@@ -215,7 +213,7 @@ export default defineComponent({
   left: 0px;
   background: rgba(255, 255, 255, 0.1);
   overflow: hidden;
-  transition: all 0.4s ease-in-out;
+  transition: all 1s ease-in-out;
   .rotateBox {
     position: absolute;
     top: 50%;
@@ -236,10 +234,10 @@ export default defineComponent({
       border-radius: 30px;
     }
     .slideIn {
-      animation: lineSlideIn;
+      animation: lineSlideIn ease-in;
     }
     .slideOut {
-      animation: lineSlideOut;
+      animation: lineSlideOut ease-out;
     }
   }
 }
