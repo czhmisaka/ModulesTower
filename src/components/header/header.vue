@@ -47,7 +47,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .header {
   width: 100vw;
-  height: 50px;
+  height: 60px;
   box-shadow: 0px 0px 10px #ccc;
 }
 </style>

@@ -168,6 +168,10 @@ export default defineComponent({
 
     // 动画停止
     const stopAnimation = (data: any, index: number) => {
+      /**
+       * @czhmisaka
+       * 留个坑,需要完善结束时间判断,在结束时返回准确的状态
+       */
       if (
         index >= linesArray.value.length / speed.value &&
         data.animationName == "lineSlideOut"

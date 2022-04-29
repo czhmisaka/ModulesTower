@@ -6,11 +6,15 @@
 -->
 
 <template>
-  <div></div>
+  <gridDesktop />
 </template>
 
 <script>
+import gridDesktop from "@/components/basicComponents/grid/gridDesktop";
 export default {
+  components: {
+    gridDesktop,
+  },
   data: () => {
     return {};
   },

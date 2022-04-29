@@ -6,19 +6,17 @@
 -->
 <template>
   <el-container class="wholePage">
-    <el-header style="padding: 0px">
+    <el-header style="padding: 0px; z-index: 1000">
       <czhHeader />
     </el-header>
-    <el-main style="padding: 6px">
-      <el-aside style="padding: 0px">
+    <el-container>
+      <el-aside style="padding: 0px; z-index: 100">
         <czhMenu :name="menu" />
       </el-aside>
-      <el-main>
-        {{ sColor }}
-        {{ eColor }}
+      <el-main style="padding: 0px; z-index: 10">
         <router-view />
       </el-main>
-    </el-main>
+    </el-container>
   </el-container>
   <lineSlideExchange
     ref="lineSlideExchange"
@@ -53,28 +51,28 @@ export default defineComponent({
     };
   },
   mounted() {
-    setTimeout(async () => {
-      this.sColor = getRandomColor();
-      this.eColor = getRandomColor();
-      this.rotate = Math.random() * 360;
-      await this.$nextTick();
-      this.$refs["lineSlideExchange"].start();
-    }, 500);
-    setTimeout(() => {
-      this.$refs["lineSlideExchange"].finish();
-    }, 2500);
-    setInterval(() => {
-      setTimeout(async () => {
-        this.sColor = getRandomColor();
-        this.eColor = getRandomColor();
-        this.rotate = Math.random() * 360;
-        await this.$nextTick();
-        this.$refs["lineSlideExchange"].start();
-      }, 500);
-      setTimeout(() => {
-        this.$refs["lineSlideExchange"].finish();
-      }, 2500);
-    }, 5500);
+    // setTimeout(async () => {
+    //   this.sColor = getRandomColor();
+    //   this.eColor = getRandomColor();
+    //   this.rotate = Math.random() * 360;
+    //   await this.$nextTick();
+    //   this.$refs["lineSlideExchange"].start();
+    // }, 500);
+    // setTimeout(() => {
+    //   this.$refs["lineSlideExchange"].finish();
+    // }, 2500);
+    // setInterval(() => {
+    //   setTimeout(async () => {
+    //     this.sColor = getRandomColor();
+    //     this.eColor = getRandomColor();
+    //     this.rotate = Math.random() * 360;
+    //     await this.$nextTick();
+    //     this.$refs["lineSlideExchange"].start();
+    //   }, 500);
+    //   setTimeout(() => {
+    //     this.$refs["lineSlideExchange"].finish();
+    //   }, 2500);
+    // }, 5500);
   },
   methods: {
     async createUser() {
