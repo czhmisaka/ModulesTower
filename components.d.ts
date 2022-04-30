@@ -4,12 +4,14 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    Card: typeof import('./src/components/basicComponents/grid/module/gridCard/card.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElHeader: typeof import('element-plus/es')['ElHeader']
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItemGroup: typeof import('element-plus/es')['ElMenuItemGroup']
+    GridDesktop: typeof import('./src/components/basicComponents/grid/gridDesktop.vue')['default']
     Header: typeof import('./src/components/header/header.vue')['default']
     IconCell: typeof import('./src/components/basicComponents/cell/icon/iconCell.vue')['default']
     InfoCell: typeof import('./src/components/basicComponents/cell/info/infoCell.vue')['default']

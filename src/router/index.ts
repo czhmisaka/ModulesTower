@@ -1,17 +1,14 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-02-02 21:02:42
+ * @LastEditTime: 2022-04-29 14:57:56
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { routerCellMaker, noMenu, noAsideMenu } from './util'
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import('../views/Home.vue')
-  },
+  routerCellMaker('/', 'Home', () => import('../views/Home.vue'), noMenu()),
 ]
 
 const router = createRouter({

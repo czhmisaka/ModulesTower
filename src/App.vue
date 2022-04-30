@@ -6,11 +6,11 @@
 -->
 <template>
   <el-container class="wholePage">
-    <el-header style="padding: 0px; z-index: 1000">
+    <el-header style="padding: 0px; z-index: 1000" v-if="meta.headerMenu">
       <czhHeader />
     </el-header>
     <el-container>
-      <el-aside style="padding: 0px; z-index: 100">
+      <el-aside style="padding: 0px; z-index: 100" v-if="meta.asideMenu">
         <czhMenu :name="menu" />
       </el-aside>
       <el-main style="padding: 0px; z-index: 10">
@@ -50,29 +50,14 @@ export default defineComponent({
       linesNumber: 60,
     };
   },
+  computed: {
+    meta() {
+      return this.$route.meta;
+    },
+  },
   mounted() {
-    // setTimeout(async () => {
-    //   this.sColor = getRandomColor();
-    //   this.eColor = getRandomColor();
-    //   this.rotate = Math.random() * 360;
-    //   await this.$nextTick();
-    //   this.$refs["lineSlideExchange"].start();
-    // }, 500);
-    // setTimeout(() => {
-    //   this.$refs["lineSlideExchange"].finish();
-    // }, 2500);
-    // setInterval(() => {
-    //   setTimeout(async () => {
-    //     this.sColor = getRandomColor();
-    //     this.eColor = getRandomColor();
-    //     this.rotate = Math.random() * 360;
-    //     await this.$nextTick();
-    //     this.$refs["lineSlideExchange"].start();
-    //   }, 500);
-    //   setTimeout(() => {
-    //     this.$refs["lineSlideExchange"].finish();
-    //   }, 2500);
-    // }, 5500);
+    this.$refs["lineSlideExchange"].start();
+    this.$refs["lineSlideExchange"].finish();
   },
   methods: {
     async createUser() {
