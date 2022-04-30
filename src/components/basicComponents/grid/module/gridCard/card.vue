@@ -5,9 +5,14 @@
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 
+<template>
+  <component :is="componentId"></component>
+</template>
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
+  name: "gridCardBox",
+  props: {},
   setup() {},
 });
 </script>

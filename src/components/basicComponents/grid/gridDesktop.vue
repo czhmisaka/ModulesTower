@@ -24,12 +24,14 @@
       "
       @hover="hoverGridCell(index)"
     ></div>
+    <div class="gridCard"></div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { gridCell, gridCellMaker } from "./module/dataTemplate";
+import { testData } from "./module/testData";
+import { gridPositionByXY } from "./module/util";
 export default defineComponent({
   name: "gridDesktop",
   props: {
@@ -55,33 +57,11 @@ export default defineComponent({
   data() {
     return {
       gridColNum: 24,
-      gridList: [] as Array<gridCell>,
+      gridList: testData,
     };
   },
   methods: {
-    /**
-     * @name: gridPositionByXY
-     * @description: 计算并返回grid布局参数
-     * @authors: CZH
-     * @Date: 2022-04-29 16:11:19
-     * @param {*} x
-     * @param {*} y
-     * @param {*} xSize
-     * @param {*} ySize
-     */
-    gridPositionByXY(
-      x: number,
-      y: number,
-      xSize: number,
-      ySize: number,
-      options: { [key: string]: any } = {}
-    ) {
-      console.log(x, y, xSize, ySize, options);
-      return {
-        gridArea: `${x} / ${y} / ${x + xSize} / ${y + ySize}`,
-        ...options,
-      };
-    },
+    gridPositionByXY,
   },
 });
 </script>
