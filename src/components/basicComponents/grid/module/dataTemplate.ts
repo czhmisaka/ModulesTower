@@ -1,15 +1,10 @@
 /*
+import { gridCellTemplate } from './dataTemplate';
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-04-30 14:25:08
+ * @LastEditTime: 2022-05-05 00:02:21
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
-
-import { hide } from "@popperjs/core";
-
-
-
-
 
 
 
@@ -43,14 +38,31 @@ export const gridSizeMaker = (width = 1, height = 1, options: { [key: string]: a
 }
 export interface gridCellTemplate {
     label: string,
+    labelNameCN: string,
     key: string,
     gridInfo: {
+        default: {
+            position: {
+                x: number,
+                y: number,
+            },
+            size?: gridSizeCell,
+        },
         size: {
             middle: gridSizeCell,
             [key: string]: gridSizeCell
         }
     },
+    func?: {
+        setSize?: (size: gridSizeCell) => void,
+        setPosition?: (position: { x: number, y: number }) => void,
+        [key: string]: any
+    },
+    component:any,
     options?: {
+        props?: {
+            [key: string]: any,
+        },
         [key: string]: any
     },
     data?: {
@@ -68,17 +80,25 @@ export interface gridCellTemplate {
  * @name: 函数名
  * @description: waitForWriting
  * @authors: CZH
- * @Date: 2022-04-30 14:25:29
+ *  @Date: 2022-04-30 14:25:29
  * @param {string} label
  * @param {object} size
  * @param {object} options
  */
-export const gridCellMaker = (label: string, size: { [key: string]: gridSizeCell } = {}, options: { [key: string]: any }): gridCellTemplate => {
+export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: string]: gridSizeCell } = {}, component: any, options: { [key: string]: any }): gridCellTemplate => {
     let gridCell: gridCellTemplate = {
         label,
+        labelNameCN,
         key: label,
         options,
+        component,
         gridInfo: {
+            default: {
+                position: {
+                    x: 1,
+                    y: 1,
+                },
+            },
             size: {
                 middle: gridSizeMaker(2, 2),
                 ...size,

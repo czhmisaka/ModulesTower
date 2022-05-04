@@ -24,16 +24,28 @@
       "
       @hover="hoverGridCell(index)"
     ></div>
-    <div class="gridCard"></div>
+    <div
+      class="gridCard"
+      v-for="(gridCard, index) in gridList"
+      :key="index + '_gridCard'"
+      :style="gridPositionByXY(outPutPositionAndGridSize(gridCard))"
+    >
+      {{ gridPositionByXY(outPutPositionAndGridSize(gridCard)) }}
+      <card :detail="{ ...gridCard, index }" />
+      <component :is="componentMap.get('iconCell')" :name="'Delete'"></component>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { componentMap } from "./module/gridCard/module/componentsList";
 import { testData } from "./module/testData";
-import { gridPositionByXY } from "./module/util";
+import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
+import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 export default defineComponent({
   name: "gridDesktop",
+  components: { card },
   props: {
     cusStyle: {
       type: Object,
@@ -43,10 +55,13 @@ export default defineComponent({
     },
   },
   computed: {
+    /**
+     * @name: gridRowNum
+     * @description: 计算行数
+     * @authors: CZH
+     * @Date: 2022-05-04 18:14:23
+     */
     gridRowNum() {
-      /**
-       * 计算行数
-       */
       let screen = {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -56,13 +71,20 @@ export default defineComponent({
   },
   data() {
     return {
-      gridColNum: 24,
-      gridList: testData,
+      componentMap,
+      gridColNum: 4,
+      // 可使用组件列表
+      gridTypeList: testData,
+
+      // 渲染用组件列表
+      gridList: [testData[0]],
     };
   },
   methods: {
     gridPositionByXY,
+    outPutPositionAndGridSize,
   },
+  async mounted() {},
 });
 </script>
 
