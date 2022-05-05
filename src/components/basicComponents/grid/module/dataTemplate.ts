@@ -2,7 +2,7 @@
 import { gridCellTemplate } from './dataTemplate';
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-05 00:02:21
+ * @LastEditTime: 2022-05-05 08:45:36
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -90,7 +90,7 @@ export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: 
         label,
         labelNameCN,
         key: label,
-        options,
+        options, 
         component,
         gridInfo: {
             default: {

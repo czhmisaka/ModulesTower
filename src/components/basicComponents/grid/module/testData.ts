@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-05 00:03:05
+ * @LastEditTime: 2022-05-05 08:57:11
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
@@ -14,11 +14,11 @@ export const testData = [
         small: gridSizeMaker(1, 1),
         large: gridSizeMaker(4, 4)
     },
-    defineAsyncComponent(() => import('@/components/basicComponents/cell/icon/iconCell.vue'))
-    , {
-        props: {
-            name: 'Aim',
-            iconOption: {},
-        },
-    })
+        defineAsyncComponent(() => import('@/components/basicComponents/cell/icon/iconCell.vue'))
+        , {
+            props: {
+                name: 'Aim',
+                iconOption: {},
+            },
+        })
 ]

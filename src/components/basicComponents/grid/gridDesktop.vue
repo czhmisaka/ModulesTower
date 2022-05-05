@@ -9,13 +9,13 @@
   <div
     class="baseGrid"
     :style="{
-      gridTemplateColumns: 'repeat(auto-fill, calc(100vw / ' + gridColNum + ')',
-      gridTemplateRows: 'repeat(auto-fill, calc(100vw / ' + gridColNum + ')',
+      gridTemplateColumns: `repeat(auto-fill, calc(100${gridRowNumAndUnit.unit} / ${gridColNum} )`,
+      gridTemplateRows: `repeat(auto-fill, calc(100${gridRowNumAndUnit.unit} / ${gridColNum})`,
     }"
   >
     <div
       class="bgGridCell"
-      v-for="index in gridColNum * gridRowNum"
+      v-for="index in gridColNum * gridRowNumAndUnit.rowNum"
       :key="`${index}_${index / gridColNum}_gridPosition`"
       :style="
         gridPositionByXY(Math.floor(index / gridColNum) + 1, index % gridColNum, 1, 1, {
@@ -30,9 +30,7 @@
       :key="index + '_gridCard'"
       :style="gridPositionByXY(outPutPositionAndGridSize(gridCard))"
     >
-      {{ gridPositionByXY(outPutPositionAndGridSize(gridCard)) }}
       <card :detail="{ ...gridCard, index }" />
-      <component :is="componentMap.get('iconCell')" :name="'Delete'"></component>
     </div>
   </div>
 </template>
@@ -57,22 +55,28 @@ export default defineComponent({
   computed: {
     /**
      * @name: gridRowNum
-     * @description: 计算行数
+     * @description: 计算行数 和使用单位
      * @authors: CZH
      * @Date: 2022-05-04 18:14:23
      */
-    gridRowNum() {
+    gridRowNumAndUnit() {
       let screen = {
         width: window.innerWidth,
         height: window.innerHeight,
+        rowNum: 0,
+        unit: "vw",
       };
-      return Math.floor(screen.height / (screen.width / this.gridColNum));
+      if (screen.height * 1 > screen.width * 1) {
+        screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
+        screen.unit = "vh";
+      } else screen.rowNum = Math.floor(screen.height / (screen.width / this.gridColNum));
+      return screen;
     },
   },
   data() {
     return {
       componentMap,
-      gridColNum: 4,
+      gridColNum: 12,
       // 可使用组件列表
       gridTypeList: testData,
 

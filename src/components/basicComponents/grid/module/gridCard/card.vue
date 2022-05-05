@@ -6,6 +6,7 @@
 -->
 <script lang="ts">
 import { h, defineComponent } from "vue";
+import cardBox from "@/components/basicComponents/grid/module/gridCard/module/cardBox.vue";
 export default defineComponent({
   name: "gridCardBox",
   props: {
@@ -18,7 +19,9 @@ export default defineComponent({
   },
   methods: {},
   setup(props) {
-    return () => h(props.detail.component, { ...props.detail.options.props });
+    console.log(props.detail);
+    return () =>
+      h(cardBox, {}, [h(props.detail.component, { ...props.detail.options.props })]);
   },
 });
 </script>

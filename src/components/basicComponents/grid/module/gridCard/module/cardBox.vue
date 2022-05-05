@@ -6,5 +6,23 @@
 -->
 
 <template>
-  <div class="moveBox"></div>
+  <div class="moveBox">
+    <slot></slot>
+  </div>
 </template>
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  props: {
+    detail: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
+  },
+  methods: {},
+  setup() {},
+});
+</script>
