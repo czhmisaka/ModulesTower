@@ -16,12 +16,30 @@ export default defineComponent({
         return {};
       },
     },
+    sizeUnit: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
   },
   methods: {},
-  setup(props) {
-    console.log(props.detail);
+  setup(props, context) {
+    const onResize = (inputData: any): void => {
+      let gridInfo = props.detail.gridInfo;
+      gridInfo.default.size = inputData;
+      context.emit("setGridInfo", gridInfo);
+    };
     return () =>
-      h(cardBox, {}, [h(props.detail.component, { ...props.detail.options.props })]);
+      h(
+        cardBox,
+        {
+          blockSize: props.sizeUnit.blockSize,
+          detail: props.detail,
+          onResize: onResize,
+        },
+        [h(props.detail.component, { ...props.detail.options.props })]
+      );
   },
 });
 </script>

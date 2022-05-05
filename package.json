@@ -18,7 +18,9 @@
     "register-service-worker": "^1.7.1",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
-    "vue-router": "^4.0.0-0"
+    "vue-drag-resize": "^1.5.4",
+    "vue-router": "^4.0.0-0",
+    "vue3-draggable-resizable": "^1.6.3"
   },
   "devDependencies": {
     "@types/node": "^17.0.5",

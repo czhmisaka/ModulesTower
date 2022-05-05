@@ -2,7 +2,7 @@
 import { gridCellTemplate } from './dataTemplate';
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-05 08:45:36
+ * @LastEditTime: 2022-05-05 23:06:29
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -58,7 +58,7 @@ export interface gridCellTemplate {
         setPosition?: (position: { x: number, y: number }) => void,
         [key: string]: any
     },
-    component:any,
+    component: cardComponent,
     options?: {
         props?: {
             [key: string]: any,
@@ -75,6 +75,12 @@ export interface gridCellTemplate {
     },
 }
 
+interface cardComponent {
+    name: string,
+    type?: string,
+    data?: any | string,
+}
+
 
 /**
  * @name: 函数名
@@ -85,12 +91,12 @@ export interface gridCellTemplate {
  * @param {object} size
  * @param {object} options
  */
-export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: string]: gridSizeCell } = {}, component: any, options: { [key: string]: any }): gridCellTemplate => {
+export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: string]: gridSizeCell } = {}, component: cardComponent, options: { [key: string]: any }): gridCellTemplate => {
     let gridCell: gridCellTemplate = {
         label,
         labelNameCN,
         key: label,
-        options, 
+        options,
         component,
         gridInfo: {
             default: {
@@ -105,5 +111,6 @@ export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: 
             }
         }
     }
+    gridCell.gridInfo.default.size = gridCell.gridInfo.size.middle;
     return gridCell;
 }

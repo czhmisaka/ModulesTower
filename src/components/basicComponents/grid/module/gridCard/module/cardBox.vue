@@ -6,9 +6,18 @@
 -->
 
 <template>
-  <div class="moveBox">
+  <vue-drag-resize
+    :isActive="true"
+    :w="detail.gridInfo.default.size.width * blockSize"
+    :h="detail.gridInfo.default.size.height * blockSize"
+    v-on:resizing="resize"
+    v-on:dragging="resize"
+    class="moveBox"
+  >
+    {{ detail }}
+
     <slot></slot>
-  </div>
+  </vue-drag-resize>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
@@ -21,8 +30,32 @@ export default defineComponent({
         return {};
       },
     },
+    blockSize: {
+      type: Number,
+      default: 0,
+    },
   },
-  methods: {},
+  methods: {
+    resize(newReact: any) {
+      console.log(newReact, "qwe");
+      this.$emit("resize", {
+        width: newReact.w,
+        height: newReact.h,
+      });
+    },
+  },
   setup() {},
 });
 </script>
+
+<style lang="scss" scoped>
+.moveBox {
+  overflow: hidden;
+  transition: background 0.1s;
+  top: 0px;
+  left: 0px;
+}
+.moveBox:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+</style>

@@ -6,6 +6,7 @@
 -->
 
 <template>
+  {{ gridRowNumAndUnit }}
   <div
     class="baseGrid"
     :style="{
@@ -30,14 +31,21 @@
       :key="index + '_gridCard'"
       :style="gridPositionByXY(outPutPositionAndGridSize(gridCard))"
     >
-      <card :detail="{ ...gridCard, index }" />
+      <card
+        :detail="{ ...gridCard, index }"
+        :sizeUnit="gridRowNumAndUnit"
+        @setGridInfo="
+          (gridInfo) => {
+            setGridInfo(gridInfo, index);
+          }
+        "
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { componentMap } from "./module/gridCard/module/componentsList";
 import { testData } from "./module/testData";
 import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
@@ -65,17 +73,21 @@ export default defineComponent({
         height: window.innerHeight,
         rowNum: 0,
         unit: "vw",
+        blockSize: 0, // px单位的 单个grid单元大小
       };
       if (screen.height * 1 > screen.width * 1) {
         screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
         screen.unit = "vh";
       } else screen.rowNum = Math.floor(screen.height / (screen.width / this.gridColNum));
+      screen.blockSize =
+        screen.unit == "vw"
+          ? screen.width / this.gridColNum
+          : screen.height / this.gridColNum;
       return screen;
     },
   },
   data() {
     return {
-      componentMap,
       gridColNum: 12,
       // 可使用组件列表
       gridTypeList: testData,
@@ -87,6 +99,12 @@ export default defineComponent({
   methods: {
     gridPositionByXY,
     outPutPositionAndGridSize,
+
+    // 列表修改
+    setGridInfo(gridInfo: any, index: number): void {
+      console.log(gridInfo, index, "asd");
+      this.gridList[index].gridInfo = gridInfo;
+    },
   },
   async mounted() {},
 });
