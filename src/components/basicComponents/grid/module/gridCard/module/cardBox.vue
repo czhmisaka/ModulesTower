@@ -10,12 +10,12 @@
     :isActive="true"
     :w="detail.gridInfo.default.size.width * blockSize"
     :h="detail.gridInfo.default.size.height * blockSize"
+    :x="0"
+    :y="0"
     v-on:resizing="resize"
     v-on:dragging="resize"
     class="moveBox"
   >
-    {{ detail }}
-
     <slot></slot>
   </vue-drag-resize>
 </template>
@@ -36,15 +36,27 @@ export default defineComponent({
     },
   },
   methods: {
+    // 计算回传值
+    computedUnit(size: number): number {
+      return Math.round(size / this.blockSize) + 1;
+    },
+
+    // 触发resize事件
     resize(newReact: any) {
       console.log(newReact, "qwe");
-      this.$emit("resize", {
-        width: newReact.w,
-        height: newReact.h,
-      });
+      if (newReact.w || newReact.h)
+        this.$emit("resize", {
+          width: this.computedUnit(newReact.w) || this.detail.gridInfo.default.size.width,
+          height:
+            this.computedUnit(newReact.h) || this.detail.gridInfo.default.size.height,
+        });
+      if (newReact.x || newReact.y)
+        this.$emit("move", {
+          x: this.computedUnit(newReact.y) || this.detail.gridInfo.default.position.y,
+          y: this.computedUnit(newReact.x) || this.detail.gridInfo.default.position.x,
+        });
     },
   },
-  setup() {},
 });
 </script>
 

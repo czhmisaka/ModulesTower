@@ -7,6 +7,8 @@
 <script lang="ts">
 import { h, defineComponent } from "vue";
 import cardBox from "@/components/basicComponents/grid/module/gridCard/module/cardBox.vue";
+import { componentGetter } from "./../dataTemplate";
+import { componentLists } from "./module/componentLists";
 export default defineComponent({
   name: "gridCardBox",
   props: {
@@ -30,16 +32,22 @@ export default defineComponent({
       gridInfo.default.size = inputData;
       context.emit("setGridInfo", gridInfo);
     };
-    return () =>
-      h(
-        cardBox,
-        {
-          blockSize: props.sizeUnit.blockSize,
-          detail: props.detail,
-          onResize: onResize,
-        },
-        [h(props.detail.component, { ...props.detail.options.props })]
-      );
+    const onMove = (inputData: any): void => {
+      let gridInfo = props.detail.gridInfo;
+      gridInfo.default.position = inputData;
+      context.emit("setGridInfo", gridInfo);
+    };
+    return () => [
+      h(cardBox, {
+        blockSize: props.sizeUnit.blockSize,
+        detail: props.detail,
+        onResize: onResize,
+        onMove: onMove,
+      }),
+      h(componentGetter(props.detail.component, componentLists), {
+        ...props.detail.options.props,
+      }),
+    ];
   },
 });
 </script>

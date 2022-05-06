@@ -1,8 +1,9 @@
 /*
 import { gridCellTemplate } from './dataTemplate';
+import { defineAsyncComponent } from 'vue';
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-05 23:06:29
+ * @LastEditTime: 2022-05-06 09:57:47
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -58,7 +59,7 @@ export interface gridCellTemplate {
         setPosition?: (position: { x: number, y: number }) => void,
         [key: string]: any
     },
-    component: cardComponent,
+    component: cardComponent | any,
     options?: {
         props?: {
             [key: string]: any,
@@ -75,12 +76,32 @@ export interface gridCellTemplate {
     },
 }
 
-interface cardComponent {
-    name: string,
-    type?: string,
-    data?: any | string,
+
+export enum cardComponentType {
+    componentList = 'componentList',
+    fromData = 'fromData', // 不推荐使用data保存组件
+    cusComponent = 'cusComponent', // 使用自定义组件
 }
 
+
+
+export interface cardComponent {
+    name: string,
+    type: cardComponentType,
+    data?: any | string,
+    getFunc?: (data: any) => any,
+}
+
+
+export const componentGetter = (component: cardComponent, componentLists: { [key: string]: any }): any => {
+    switch (component.type) {
+        case cardComponentType.componentList:
+            return componentLists[component.name];
+        case cardComponentType.fromData:
+            return component.data;
+        // case cardComponentType.cusComponent:
+    }
+}
 
 /**
  * @name: 函数名
@@ -91,7 +112,7 @@ interface cardComponent {
  * @param {object} size
  * @param {object} options
  */
-export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: string]: gridSizeCell } = {}, component: cardComponent, options: { [key: string]: any }): gridCellTemplate => {
+export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: string]: gridSizeCell } = {}, component: cardComponent | any, options: { [key: string]: any }): gridCellTemplate => {
     let gridCell: gridCellTemplate = {
         label,
         labelNameCN,

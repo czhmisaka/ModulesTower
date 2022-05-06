@@ -6,7 +6,6 @@
 -->
 
 <template>
-  {{ gridRowNumAndUnit }}
   <div
     class="baseGrid"
     :style="{
@@ -135,5 +134,8 @@ export default defineComponent({
 }
 .bgGridCell:hover {
   animation: hoverFadeInOut 1.2s infinite;
+}
+.gridCard {
+  transition: all 0.3s;
 }
 </style>
