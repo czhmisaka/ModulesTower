@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-07 18:56:31
+ * @LastEditTime: 2022-05-07 19:25:33
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions } from "./cellClass";
@@ -30,23 +30,17 @@ export function getIcon(name: string) {
  * @param {any} initalObj
  */
 export const deepClone = (initalObj: any): any => {
-    let finalObj: any = {};
-    function deepClone(initalObj:any, finalObj:any) {    
-        let obj = finalObj || {};    
-        for (let i in initalObj) {        
-          let prop = initalObj[i];        // 避免相互引用对象导致死循环，如initalObj.a = initalObj的情况
-          if(prop === obj) {            
-            continue;
-          }        
-          if (typeof prop === 'object') {
-            obj[i] = (prop.constructor === Array) ? [] : Object.create(prop);
-          } else {
-            obj[i] = prop;
-          }
-        }    
-        return obj;
-      }
-    deepClone(initalObj, finalObj)
+    function clone(searchObj: any): any {
+        let back = {} as any;
+        for (let item in searchObj) {
+            if (searchObj[item] && typeof searchObj[item] === 'object')
+                back[item] = clone(searchObj[item]);
+            else
+                back[item] = searchObj[item];
+        }
+        return back
+    }
+    let finalObj: any = clone(initalObj);
     return finalObj
 }
 

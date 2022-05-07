@@ -26,23 +26,11 @@ export default defineComponent({
     },
   },
   methods: {},
-  setup(props, context) {
-    const onResize = (inputData: any): void => {
-      let gridInfo = props.detail.gridInfo;
-      gridInfo.default.size = inputData;
-      context.emit("setGridInfo", gridInfo);
-    };
-    const onMove = (inputData: any): void => {
-      let gridInfo = props.detail.gridInfo;
-      gridInfo.default.position = inputData;
-      context.emit("setGridInfo", gridInfo);
-    };
+  setup(props) {
     return () => [
       h(cardBox, {
         blockSize: props.sizeUnit.blockSize,
         detail: props.detail,
-        onResize: onResize,
-        onMove: onMove,
       }),
       h(componentGetter(props.detail.component, componentLists), {
         ...props.detail.options.props,

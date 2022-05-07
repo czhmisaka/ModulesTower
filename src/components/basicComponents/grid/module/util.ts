@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-30 14:30:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-04 22:35:20
+ * @LastEditTime: 2022-05-07 20:34:04
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/util.ts
  */
 
@@ -70,4 +70,28 @@ export const outPutPositionAndGridSize = (gridCell: gridCellTemplate) => {
         }
     }
     return output
+}
+
+
+
+// 设置gridCell布局定位参数
+export const setPosition = function (x: number, y: number): any {
+    this.gridInfo.default.position.x = x;
+    this.gridInfo.default.position.y = y;
+    return this;
+}
+
+// 设置gridCell布局大小参数
+export const setSize = function (width: number, height: number): any {
+    this.gridInfo.default.size.width = width;
+    this.gridInfo.default.size.height = height;
+    return this;
+}
+
+// 卡片操作工具包
+export const cardUtil = {
+    setPosition,
+    setSize
+} as {
+    [key: string]: any
 }

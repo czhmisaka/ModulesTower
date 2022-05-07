@@ -6,36 +6,9 @@
 -->
 
 <template>
-  <div
-    class="dragBox"
-    :draggable="true"
-    @drag="drag"
-    @dragstart="dragStatus = true"
-    @dragend="dragStatus = false"
-    :style="{
-      width: detail.gridInfo.default.size.width * blockSize + 'px',
-      height: detail.gridInfo.default.size.height * blockSize + 'px',
-      top: (detail.gridInfo.default.position.x - 1) * blockSize + 'px',
-      left: (detail.gridInfo.default.position.y - 1) * blockSize + 'px',
-    }"
-  >
-    <slot v-if="!dragStatus"></slot>
-  </div>
-  <!-- <vue-drag-resize
-    :isActive="true"
-    :w="detail.gridInfo.default.size.width * blockSize"
-    :h="detail.gridInfo.default.size.height * blockSize"
-    :x="0"
-    :y="0"
-    v-on:resizing="drag"
-    v-on:dragging="drag"
-    v-on:dragstart="dragStatus = true"
-    v-on:dragend="dragStatus = false"
-    class="moveBox"
-  >
+  <div class="dragBox" :draggable="true">
     <slot></slot>
-    <div></div>
-  </vue-drag-resize> -->
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
@@ -64,15 +37,6 @@ export default defineComponent({
     // 计算回传值
     computedUnit(size: number): number {
       return Math.round(size / this.blockSize) + 1;
-    },
-
-    // 触发拖拽事件
-    drag(newReact: any) {
-      if (newReact.x || newReact.y)
-        this.$emit("move", {
-          x: this.computedUnit(newReact.y) || this.detail.gridInfo.default.position.y,
-          y: this.computedUnit(newReact.x) || this.detail.gridInfo.default.position.x,
-        });
     },
   },
 });

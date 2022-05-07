@@ -12,6 +12,8 @@
     :col-num="gridColNum"
     :row-height="gridRowNumAndUnit.blockSize"
     :responsive="false"
+    :isDraggable="true"
+    :isResizable="true"
     :vertical-compact="false"
     :prevent-collision="true"
     :use-css-transforms="true"
@@ -25,19 +27,12 @@
       :h="item.h"
       :i="item.i"
       :key="item.i"
+      @move="gridItemOnMove"
+      @resize="gridItemOnResize"
     >
-      <card
-        :detail="{ ...gridList[index], index }"
-        :sizeUnit="gridRowNumAndUnit"
-        @setGridInfo="
-          (gridInfo) => {
-            setGridInfo({ ...gridList[index] }, index);
-          }
-        "
-      />
+      <card :detail="{ ...gridList[index], index }" :sizeUnit="gridRowNumAndUnit" />
     </grid-item>
   </grid-layout>
-  {{ gridList }}
 </template>
 
 <script lang="ts">
@@ -106,6 +101,7 @@ export default defineComponent({
       this.gridList[index].gridInfo = gridInfo;
     },
 
+    // 输出gridLayout需要的数据
     gridListToLayout() {
       return this.gridList.map((item: gridCellTemplate, index: number) => {
         let cell = outPutPositionAndGridSize(item);
@@ -118,19 +114,22 @@ export default defineComponent({
         };
       });
     },
+
+    // 移动gridItem
+    gridItemOnMove(i: number, x: number, y: number): void {
+      this.gridList[i].setPosition(x, y);
+    },
+
+    // 形状编辑gridItem
+    gridItemOnResize(i: number, newH = 0, newW = 0): void {
+      this.gridList[i].setSize(newW, newH);
+    },
   },
   async mounted() {
-    console.log("mounted", this.$utils.deepClone(testData[0]), testData[0]);
     this.gridList.push(this.$utils.deepClone(testData[0]));
-    this.gridList.push({
-      ...testData[0],
-      options: {
-        props: {
-          name: "Delete",
-        },
-      },
-    });
-    this.gridList[1].gridInfo.default.position.x = 4;
+    this.gridList.push(
+      this.$utils.deepClone(testData[0]).setPosition(5, 0).setSize(1, 1)
+    );
   },
 });
 </script>

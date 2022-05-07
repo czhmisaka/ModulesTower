@@ -3,11 +3,11 @@ import { gridCellTemplate } from './dataTemplate';
 import { defineAsyncComponent } from 'vue';
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-06 09:57:47
+ * @LastEditTime: 2022-05-07 20:34:07
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
-
+import { cardUtil } from "./util";
 
 export const gridSizeConfig = (size: gridInfo_SizeType = gridInfo_SizeType.middle): gridSizeCell => {
     const gridInfo_SizeTypeToGridSize = {
@@ -54,11 +54,6 @@ export interface gridCellTemplate {
             [key: string]: gridSizeCell
         }
     },
-    func?: {
-        setSize?: (size: gridSizeCell) => void,
-        setPosition?: (position: { x: number, y: number }) => void,
-        [key: string]: any
-    },
     component: cardComponent | any,
     options?: {
         props?: {
@@ -74,6 +69,7 @@ export interface gridCellTemplate {
 
         }
     },
+    [key: string]: any
 }
 
 
@@ -122,8 +118,8 @@ export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: 
         gridInfo: {
             default: {
                 position: {
-                    x: 1,
-                    y: 1,
+                    x: 0,
+                    y: 0,
                 },
             },
             size: {
@@ -133,5 +129,8 @@ export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: 
         }
     }
     gridCell.gridInfo.default.size = gridCell.gridInfo.size.middle;
+    for (let key in cardUtil) {
+        gridCell[key] = cardUtil[key]
+    }
     return gridCell;
 }
