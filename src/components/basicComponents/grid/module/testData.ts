@@ -1,11 +1,11 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-07 21:39:46
+ * @LastEditTime: 2022-05-07 21:53:17
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
-import { h } from "vue";
+import { h, defineComponent } from "vue";
 import { gridCellMaker, gridSizeMaker, cardComponentType } from "./dataTemplate";
 import { ElButton } from 'element-plus'
 
@@ -42,7 +42,13 @@ export const testData = [
             type: cardComponentType.componentList
         }
         , {
-            slots: () => h(ElButton, {
-            }, '这是一个卡片中的按钮')
+            slots: () =>
+                h(defineComponent({
+                    setup() {
+                        return () => h('div', {}, ['这是一个卡片',
+                            h(ElButton, { type: 'danger' },'测试按钮')
+                        ])
+                    }
+                }))
         })
 ]
