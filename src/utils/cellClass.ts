@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 16:17:43
  * @LastEditors: CZH
- * @LastEditTime: 2021-12-30 21:19:59
+ * @LastEditTime: 2022-05-07 18:38:21
  * @FilePath: /configforpagedemo/src/utils/cellClass.ts
  */
 
@@ -40,7 +40,7 @@ export interface cellMakerOptions {
     width?: string,
     needTranslate?: boolean,
     translateFunc?: Function,
-};
+}
 
 
 /**

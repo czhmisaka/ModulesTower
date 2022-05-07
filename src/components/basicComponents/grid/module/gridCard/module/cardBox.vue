@@ -12,7 +12,6 @@
     @drag="drag"
     @dragstart="dragStatus = true"
     @dragend="dragStatus = false"
-    :dropEffect="move"
     :style="{
       width: detail.gridInfo.default.size.width * blockSize + 'px',
       height: detail.gridInfo.default.size.height * blockSize + 'px',
@@ -28,11 +27,14 @@
     :h="detail.gridInfo.default.size.height * blockSize"
     :x="0"
     :y="0"
-    v-on:resizing="resize"
-    v-on:dragging="resize"
+    v-on:resizing="drag"
+    v-on:dragging="drag"
+    v-on:dragstart="dragStatus = true"
+    v-on:dragend="dragStatus = false"
     class="moveBox"
   >
     <slot></slot>
+    <div></div>
   </vue-drag-resize> -->
 </template>
 <script lang="ts">

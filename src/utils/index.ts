@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-28 14:23:50
+ * @LastEditTime: 2022-05-07 18:56:31
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions } from "./cellClass";
@@ -22,6 +22,35 @@ export function getIcon(name: string) {
     }
 }
 
+/**
+ * @name: deepClone
+ * @description:深度克隆
+ * @authors: CZH
+ * @Date: 2022-05-07 18:47:21
+ * @param {any} initalObj
+ */
+export const deepClone = (initalObj: any): any => {
+    let finalObj: any = {};
+    function deepClone(initalObj:any, finalObj:any) {    
+        let obj = finalObj || {};    
+        for (let i in initalObj) {        
+          let prop = initalObj[i];        // 避免相互引用对象导致死循环，如initalObj.a = initalObj的情况
+          if(prop === obj) {            
+            continue;
+          }        
+          if (typeof prop === 'object') {
+            obj[i] = (prop.constructor === Array) ? [] : Object.create(prop);
+          } else {
+            obj[i] = prop;
+          }
+        }    
+        return obj;
+      }
+    deepClone(initalObj, finalObj)
+    return finalObj
+}
+
+
 // 全量导出模式
 export default {
     /**
@@ -41,5 +70,8 @@ export default {
         }
     },
     isValidKey,
+    deepClone
 }
+
+
 

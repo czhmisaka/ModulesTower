@@ -28,7 +28,6 @@ export default defineComponent({
   methods: {},
   setup(props, context) {
     const onResize = (inputData: any): void => {
-      console.log("resize", inputData);
       let gridInfo = props.detail.gridInfo;
       gridInfo.default.size = inputData;
       context.emit("setGridInfo", gridInfo);
