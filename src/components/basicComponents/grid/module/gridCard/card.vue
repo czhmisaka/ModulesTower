@@ -5,8 +5,8 @@
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
-import { h, defineComponent } from "vue";
 import cardBox from "@/components/basicComponents/grid/module/gridCard/module/cardBox.vue";
+import { h, defineComponent } from "vue";
 import { componentGetter } from "./../dataTemplate";
 import { componentLists } from "./module/componentLists";
 export default defineComponent({
@@ -27,14 +27,19 @@ export default defineComponent({
   },
   methods: {},
   setup(props) {
+    let children = props.detail.options.slots || null;
     return () => [
       h(cardBox, {
         blockSize: props.sizeUnit.blockSize,
         detail: props.detail,
       }),
-      h(componentGetter(props.detail.component, componentLists), {
-        ...props.detail.options.props,
-      }),
+      h(
+        componentGetter(props.detail.component, componentLists),
+        {
+          ...props.detail.options.props,
+        },
+        children
+      ),
     ];
   },
 });

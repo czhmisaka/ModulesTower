@@ -128,7 +128,10 @@ export default defineComponent({
   async mounted() {
     this.gridList.push(this.$utils.deepClone(testData[0]));
     this.gridList.push(
-      this.$utils.deepClone(testData[0]).setPosition(5, 0).setSize(1, 1)
+      this.$utils.deepClone(testData[1]).setPosition(5, 0).setSize(2, 1)
+    );
+    this.gridList.push(
+      this.$utils.deepClone(testData[2]).setPosition(7, 0).setSize(3, 3)
     );
   },
 });
