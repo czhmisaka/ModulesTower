@@ -28,7 +28,10 @@
       class="gridCard"
       v-for="(gridCard, index) in gridList"
       :key="index + '_gridCard'"
-      :style="gridPositionByXY(outPutPositionAndGridSize(gridCard))"
+      :style="{
+        ...gridPositionByXY(outPutPositionAndGridSize(gridCard)),
+        animation: 'hoverFadeInOut 0.3s',
+      }"
     >
       <card
         :detail="{ ...gridCard, index }"
@@ -101,7 +104,6 @@ export default defineComponent({
 
     // 列表修改
     setGridInfo(gridInfo: any, index: number): void {
-      console.log(gridInfo, index, "asd");
       this.gridList[index].gridInfo = gridInfo;
     },
   },
@@ -118,19 +120,18 @@ export default defineComponent({
 
 @keyframes hoverFadeInOut {
   0% {
-    opacity: 0;
+    background-color: rgba(0, 0, 0, 0);
   }
   50% {
-    opacity: 0.5;
+    background-color: rgba(0, 0, 0, 0.5);
   }
   100% {
-    opacity: 0;
+    background-color: rgba(0, 0, 0, 0);
   }
 }
 
 .bgGridCell {
   opacity: 0;
-  background-color: rgba(0, 0, 0, 0.5);
 }
 .bgGridCell:hover {
   animation: hoverFadeInOut 1.2s infinite;
