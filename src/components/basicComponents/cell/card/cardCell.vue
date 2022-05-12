@@ -1,14 +1,18 @@
-<template>
-  <el-card class="wholeBox">
-    你说的对
-    <slot></slot>
-  </el-card>
-</template>
-
 <script lang="ts">
-import { defineComponent } from "vue";
+import { ElCard } from "element-plus";
+import { defineComponent, h } from "vue";
 export default defineComponent({
-  setup() {},
+  name: "cardCell",
+  setup(props, { slots }) {
+    return () =>
+      h(
+        ElCard,
+        {
+          class: "wholeBox",
+        },
+        slots.default
+      );
+  },
 });
 </script>
 

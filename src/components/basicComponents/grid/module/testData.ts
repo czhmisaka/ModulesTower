@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-10 14:29:09
+ * @LastEditTime: 2022-05-12 18:19:39
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
@@ -32,8 +32,8 @@ export const testData = [
             type: cardComponentType.componentList
         }
         , {
-            slots: () => h(ElTable,{},[
-                h(ElTableColumn,{},[])
+            children: h(ElTable, {}, () => [
+                () => h(ElTableColumn, {}, [])
             ])
         }),
     gridCellMaker('cardCell', '卡片容器 测试1', {
@@ -44,16 +44,15 @@ export const testData = [
             type: cardComponentType.componentList
         }
         , {
-            slots: () =>
-                h(defineComponent({
-                    setup() {
-                        return () => h('div', {}, ['这是一个卡片',
-                            h(ElButton, { type: 'danger' },'测试按钮'),
-                            h(ElInput,{
-                                placeholder:'请输入内容',
-                            },'')
-                        ])
-                    }
-                }))
+            children: h(defineComponent({
+                setup() {
+                    return () => h('div', {}, [
+                        h(ElButton, { type: 'danger' }, () => [h('span', '测试按钮')]),
+                        h(ElInput, {
+                            placeholder: '请输入内容',
+                        })
+                    ])
+                }
+            }))
         })
 ]

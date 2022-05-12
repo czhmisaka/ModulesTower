@@ -10,7 +10,7 @@ import { ElIcon } from "element-plus";
 import { defineComponent, h } from "vue";
 
 export default defineComponent({
-  name: "CusIcon",
+  name: "IconCell",
   props: {
     name: {
       type: String,
@@ -29,7 +29,7 @@ export default defineComponent({
         {
           props: props.iconOption,
         },
-        [h(getIcon(props.name + ""))]
+        () => [h(getIcon(props.name + ""))]
       );
   },
 });

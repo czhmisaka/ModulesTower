@@ -27,7 +27,7 @@ export default defineComponent({
   },
   methods: {},
   setup(props) {
-    let children = props.detail.options.slots || null;
+    let children = props.detail.options.children ? props.detail.options.children : null;
     return () => [
       h(cardBox, {
         blockSize: props.sizeUnit.blockSize,
@@ -38,7 +38,7 @@ export default defineComponent({
         {
           ...props.detail.options.props,
         },
-        children
+        () => (children ? children : null)
       ),
     ];
   },
