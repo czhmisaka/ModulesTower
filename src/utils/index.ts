@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-07 19:25:33
+ * @LastEditTime: 2022-05-11 11:11:44
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions } from "./cellClass";
@@ -24,7 +24,7 @@ export function getIcon(name: string) {
 
 /**
  * @name: deepClone
- * @description:深度克隆
+ * @description:深度克隆·
  * @authors: CZH
  * @Date: 2022-05-07 18:47:21
  * @param {any} initalObj

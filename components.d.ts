@@ -6,6 +6,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Card: typeof import('./src/components/basicComponents/grid/module/gridCard/card.vue')['default']
     CardBox: typeof import('./src/components/basicComponents/grid/module/gridCard/module/cardBox.vue')['default']
+    CardCell: typeof import('./src/components/basicComponents/cell/card/cardCell.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElContainer: typeof import('element-plus/es')['ElContainer']

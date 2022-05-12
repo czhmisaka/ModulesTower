@@ -77,7 +77,7 @@ export default defineComponent({
       } else screen.rowNum = Math.floor(screen.height / (screen.width / this.gridColNum));
       screen.blockSize =
         screen.unit == "vw"
-          ? screen.width / this.gridColNum
+          ? (screen.width - this.gridColNum * 10 - 10) / this.gridColNum
           : screen.height / this.gridColNum;
       return screen;
     },
@@ -132,6 +132,10 @@ export default defineComponent({
     );
     this.gridList.push(
       this.$utils.deepClone(testData[2]).setPosition(7, 0).setSize(3, 3)
+    );
+
+    this.gridList.push(
+      this.$utils.deepClone(testData[2]).setPosition(5, 3).setSize(2, 2)
     );
   },
 });
