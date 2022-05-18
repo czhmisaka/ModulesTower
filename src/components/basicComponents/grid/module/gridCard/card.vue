@@ -1,16 +1,17 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-04-29 15:02:21
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
+ * @LastEditTime: 2022-05-14 17:42:22
+ * @FilePath: /o2oaweb/src/thirdThemeComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
-import cardBox from "@/components/basicComponents/grid/module/gridCard/module/cardBox.vue";
-import { h, defineComponent } from "vue";
-import { componentGetter } from "./../dataTemplate";
+import cardBox from "./module/cardBox.vue";
+import { defineComponent, h } from "vue";
+import { componentGetter, gridCellTemplate } from "./../dataTemplate";
 import { componentLists } from "./module/componentLists";
 export default defineComponent({
   name: "gridCardBox",
+  emits: ["onChange"],
   props: {
     detail: {
       type: Object,
@@ -24,23 +25,123 @@ export default defineComponent({
         return {};
       },
     },
+    baseData: {
+      type: Object,
+      default: () => {
+        return {} as { [key: string]: any };
+      },
+    },
+    gridList: {
+      type: Array,
+      default: () => {
+        return [] as Array<gridCellTemplate>;
+      },
+    },
   },
   methods: {},
-  setup(props) {
-    let children = props.detail.options.children ? props.detail.options.children : null;
+  setup(props, context) {
+    let children = props.detail.options.slots || null;
+
+    // 判断动画尺寸
+    const editShakeName = (size: { width: number; height: number }): string => {
+      const { width, height } = size;
+      const big = width > height ? width : height;
+      if (big < 4) return "editShakeS_GRID_CARD_BOX";
+      if (big < 8) return "editShakeM_GRID_CARD_BOX";
+      return "editShakeL_GRID_CARD_BOX";
+    };
+
     return () => [
-      h(cardBox, {
-        blockSize: props.sizeUnit.blockSize,
-        detail: props.detail,
-      }),
       h(
-        componentGetter(props.detail.component, componentLists),
+        "div",
         {
-          ...props.detail.options.props,
+          style: {
+            width: "100%",
+            height: "100%",
+            overflow: "hidden",
+            userSelect: "none",
+            Animation: props.baseData.editable
+              ? editShakeName(props.detail.gridInfo.default.size) +
+                " 0.3s ease-in-out infinite"
+              : "none",
+          },
         },
-        () => (children ? children : null)
+        [
+          h(cardBox, {
+            style: {
+              width: "100%",
+              height: "100%",
+              zIndex:
+                props.baseData.editable && !props.detail.options.isSettingTool
+                  ? "100000000000"
+                  : "-1",
+            },
+            blockSize: props.sizeUnit.blockSize,
+            detail: props.detail,
+          }),
+          h(
+            componentGetter(props.detail.component, componentLists),
+            {
+              on: {
+                onChange: (key: string, value: any, options: { [key: string]: any }) => {
+                  context.emit("onChange", key, value, options);
+                },
+              },
+              baseData: props.baseData,
+              sizeUnit: props.sizeUnit,
+              gridList: props.gridList,
+              ...props.detail.options.props,
+            },
+            children ? children(props, context) : null
+          ),
+        ]
       ),
     ];
   },
 });
 </script>
+
+<style>
+@keyframes editShakeL_GRID_CARD_BOX {
+  0% {
+    transform: rotate(0deg);
+  }
+  33% {
+    transform: rotate(-0.2deg);
+  }
+  66% {
+    transform: rotate(0.2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes editShakeS_GRID_CARD_BOX {
+  0% {
+    transform: rotate(0deg);
+  }
+  33% {
+    transform: rotate(-1deg);
+  }
+  66% {
+    transform: rotate(1deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes editShakeM_GRID_CARD_BOX {
+  0% {
+    transform: rotate(0deg);
+  }
+  33% {
+    transform: rotate(-0.5deg);
+  }
+  66% {
+    transform: rotate(0.5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+</style>

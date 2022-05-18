@@ -6,90 +6,104 @@
 -->
 
 <template>
-  <grid-layout
-    class="bases"
-    :layout="gridListToLayout()"
-    :col-num="gridColNum"
-    :row-height="gridRowNumAndUnit.blockSize"
-    :responsive="false"
-    :isDraggable="true"
-    :isResizable="true"
-    :vertical-compact="false"
-    :prevent-collision="true"
-    :use-css-transforms="true"
-    :margin="[10, 10]"
-  >
-    <grid-item
-      v-for="(item, index) in gridListToLayout()"
-      :x="item.x"
-      :y="item.y"
-      :w="item.w"
-      :h="item.h"
-      :i="item.i"
-      :key="item.i"
-      @move="gridItemOnMove"
-      @resize="gridItemOnResize"
+  <div ref="screen" style="width: 100%; height: 100%">
+    <grid-layout
+      class="bases"
+      :layout="gridListToLayout()"
+      :col-num="gridColNum"
+      :row-height="gridRowNumAndUnit().blockSize"
+      :responsive="false"
+      :isDraggable="baseData.editable"
+      :isResizable="false"
+      :vertical-compact="false"
+      :prevent-collision="true"
+      :use-css-transforms="true"
+      :margin="[10, 10]"
     >
-      <card :detail="{ ...gridList[index], index }" :sizeUnit="gridRowNumAndUnit" />
-    </grid-item>
-  </grid-layout>
+      <grid-item
+        v-for="(item, index) in gridListToLayout()"
+        :x="item.x"
+        :y="item.y"
+        :w="item.w"
+        :h="item.h"
+        :i="item.i"
+        :key="item.i"
+        @move="gridItemOnMove"
+        @resize="gridItemOnResize"
+        class="grid-item"
+      >
+        <card
+          :ref="'card_' + index"
+          :detail="{ ...gridList[index], index }"
+          :baseData="baseData"
+          :sizeUnit="gridRowNumAndUnit()"
+          @onChange="(key, value, options) => cardOnChange(index, key, value, options)"
+        />
+      </grid-item>
+    </grid-layout>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { testData } from "./module/testData";
-import { gridCellTemplate } from "./module/dataTemplate";
+import { cardOnChangeType, gridCellTemplate } from "./module/dataTemplate";
 import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 export default defineComponent({
   name: "gridDesktop",
   components: { card },
   props: {
+    // 自定样式
     cusStyle: {
       type: Object,
       default: () => {
-        return {};
+        return {} as {
+          // 全屏幕展示
+          wholeScreen?: boolean;
+          maxRows?: number;
+          [key: string]: any;
+        };
       },
     },
+
+    // 可编辑状态 // 目前尚未实装功能
     editable: {
       type: Boolean,
       default: false,
     },
+
+    // 渲染间隔
+    gridColNum: {
+      type: Number,
+      default: 12,
+    },
+
+    // 可以使用的组件列表
+    desktopData: {
+      type: Array,
+      default: () => {
+        return testData as Array<gridCellTemplate>;
+      },
+    },
   },
-  computed: {
-    /**
-     * @name: gridRowNum
-     * @description: 计算行数 和使用单位
-     * @authors: CZH
-     * @Date: 2022-05-04 18:14:23
-     */
-    gridRowNumAndUnit() {
-      let screen = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        rowNum: 0,
-        unit: "vw",
-        blockSize: 0, // px单位的 单个grid单元大小
-      };
-      if (screen.height * 1 > screen.width * 1) {
-        screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
-        screen.unit = "vh";
-      } else screen.rowNum = Math.floor(screen.height / (screen.width / this.gridColNum));
-      screen.blockSize =
-        screen.unit == "vw"
-          ? (screen.width - this.gridColNum * 10 - 10) / this.gridColNum
-          : screen.height / this.gridColNum;
-      return screen;
+  computed: {},
+
+  watch: {
+    editable(val) {
+      this.baseData.editable = val;
     },
   },
   data() {
     return {
-      gridColNum: 12,
-      // 可使用组件列表
-      gridTypeList: testData,
-
       // 渲染用组件列表
       gridList: [],
+
+      // 基础数据存放
+      baseData: {
+        editable: false,
+        wholeScreen: false,
+      } as { [key: string]: any },
     };
   },
   methods: {
@@ -124,19 +138,72 @@ export default defineComponent({
     gridItemOnResize(i: number, newH = 0, newW = 0): void {
       this.gridList[i].setSize(newW, newH);
     },
-  },
-  async mounted() {
-    this.gridList.push(this.$utils.deepClone(testData[0]));
-    this.gridList.push(
-      this.$utils.deepClone(testData[1]).setPosition(5, 0).setSize(2, 1)
-    );
-    this.gridList.push(
-      this.$utils.deepClone(testData[2]).setPosition(7, 0).setSize(3, 3)
-    );
 
-    this.gridList.push(
-      this.$utils.deepClone(testData[2]).setPosition(5, 3).setSize(2, 2)
-    );
+    /**
+     * @name: cardOnChange
+     * @description: waitForWriting
+     * @authors: CZH
+     * @Date: 2022-05-12 15:29:55
+     */
+    async cardOnChange(
+      index: number,
+      key: string,
+      value: any,
+      options: {
+        type: Array<cardOnChangeType>;
+        [key: string]: any;
+      }
+    ) {
+      options.type.map((type) => {
+        if (type == cardOnChangeType.onChange) {
+          this.baseData[key] = value;
+          this.baseData = { ...this.baseData };
+        } else if (type == cardOnChangeType.upOnChange) {
+          this.$emit("onChange", key, value);
+        } else if (type == cardOnChangeType.forceRefresh) {
+          this.$forceUpdate();
+        }
+      });
+    },
+
+    /**
+     * @name: gridRowNum
+     * @description: 计算行数 和使用单位
+     * @authors: CZH
+     * @Date: 2022-05-04 18:14:23
+     */
+    gridRowNumAndUnit() {
+      let screen = {
+        width:
+          document.getElementById("screenId")?.offsetWidth || document.body.offsetWidth,
+        height:
+          document.getElementById("screenId")?.offsetHeight || document.body.offsetHeight,
+        rowNum: 0,
+        unit: "vw",
+        blockSize: 0, // px单位的 单个grid单元大小
+      };
+      if (screen.height * 1 > screen.width * 1 || this.cusStyle.wholeScreen == true) {
+        screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
+        screen.unit = "vh";
+        screen.blockSize = screen.height / (this.cusStyle.maxRows || this.gridColNum);
+      } else {
+        screen.rowNum = Math.floor(screen.height / this.gridColNum);
+        screen.blockSize =
+          screen.unit == "vw"
+            ? (screen.width - this.gridColNum * 10 - 10) / this.gridColNum
+            : screen.height / this.gridColNum;
+      }
+      return screen;
+    },
+
+    // 填充gridList
+    forceUpdateGridList() {
+      this.gridList = this.desktopData as Array<gridCellTemplate>;
+    },
+  },
+
+  async mounted() {
+    this.forceUpdateGridList();
   },
 });
 </script>
@@ -164,7 +231,6 @@ export default defineComponent({
     background-color: rgba(0, 0, 0, 0);
   }
 }
-
 .bgGridCell {
   opacity: 0;
 }

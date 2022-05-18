@@ -6,17 +6,30 @@
 -->
 
 <template>
-  <gridDesktop />
+  <div
+    :style="{
+      width: '100vw',
+      height: '100vh',
+      background: 'rgba(0,0,0,0.02)',
+    }"
+  >
+    <gridDesktop @onChange="onChange" />
+  </div>
 </template>
 
-<script>
-import gridDesktop from "@/components/basicComponents/grid/gridDesktop";
-export default {
+<script lang="ts">
+import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
+import { defineComponent } from "vue";
+
+export default defineComponent({
   components: {
     gridDesktop,
+  },
+  methods: {
+    onChange: (): void => {},
   },
   data: () => {
     return {};
   },
-};
+});
 </script>

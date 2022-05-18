@@ -7,7 +7,9 @@
 <script lang="tsx">
 import { getIcon } from "@/utils";
 import { ElIcon } from "element-plus";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, reactive } from "vue";
+import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+import { gridCellTemplate } from "../../grid/module/dataTemplate";
 
 export default defineComponent({
   name: "IconCell",
@@ -21,16 +23,28 @@ export default defineComponent({
         return {};
       },
     },
+    sizeUnit: {
+      type: Object,
+      default: () => {
+        return {} as {
+          [key: string]: any;
+        };
+      },
+    },
   },
   setup: (props) => {
+    const _blockSize = reactive(props.sizeUnit).blockSize;
+    console.log(props.iconOption);
     return () =>
-      h(
-        ElIcon,
-        {
-          props: props.iconOption,
-        },
-        () => [h(getIcon(props.name + ""))]
-      );
+      h(cardBg, {}, () => [
+        h(
+          ElIcon,
+          {
+            size: _blockSize * 0.5,
+          },
+          () => h(getIcon(props.name + ""))
+        ),
+      ]);
   },
 });
 </script>

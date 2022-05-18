@@ -1,13 +1,19 @@
 /*
-import { gridCellTemplate } from './dataTemplate';
-import { defineAsyncComponent } from 'vue';
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-07 20:34:07
+ * @LastEditTime: 2022-05-18 23:01:15
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 import { cardUtil } from "./util";
+export enum cardOnChangeType {
+    upOnChange = 'upOnChange',
+    onChange = 'onChange',
+    forceRefresh = 'forceRefresh',
+    gridCardListonChange = 'gridCardListonChange',
+}
+
+
 
 export const gridSizeConfig = (size: gridInfo_SizeType = gridInfo_SizeType.middle): gridSizeCell => {
     const gridInfo_SizeTypeToGridSize = {
