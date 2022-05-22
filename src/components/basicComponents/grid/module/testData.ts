@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:19:28
+ * @LastEditTime: 2022-05-22 20:27:06
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
@@ -38,7 +38,7 @@ export const testData = [
             isBlack: true,
             title:'壁纸',
             content: '--来自鬼刀大佬',
-            img:'https://storage.inewsdb.com/268963341081de7c525437a6bdba1e17.jpg',
+            img:'https://pic1.zhimg.com/80/v2-b8e48ee4c2efb2813c42c3778743a2c4_1440w.jpg',
         }
     }).setPosition(0, 1).setSize(2, 2),
     gridCellMaker('elcard', '卡片', {}, {

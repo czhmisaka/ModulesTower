@@ -21,6 +21,7 @@ declare module 'vue' {
     GridLayout: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridLayout.vue')['default']
     Header: typeof import('./src/components/header/header.vue')['default']
     IconCell: typeof import('./src/components/basicComponents/cell/icon/iconCell.vue')['default']
+    Iframe: typeof import('./src/components/basicComponents/cell/info/iframe.vue')['default']
     InfoCard: typeof import('./src/components/basicComponents/cell/info/infoCard.vue')['default']
     InfoCell: typeof import('./src/components/basicComponents/cell/info/infoCell.vue')['default']
     InfoList: typeof import('./src/components/basicComponents/list/info/infoList.vue')['default']

@@ -4,10 +4,8 @@ declare global {
   const ElAside: typeof import('element-plus/es')['ElAside']
   const ElContainer: typeof import('element-plus/es')['ElContainer']
   const ElHeader: typeof import('element-plus/es')['ElHeader']
-  const ElLoadingDirective: typeof import('element-plus/es')['ElLoadingDirective']
   const ElMain: typeof import('element-plus/es')['ElMain']
   const ElMenu: typeof import('element-plus/es')['ElMenu']
   const ElMenuItemGroup: typeof import('element-plus/es')['ElMenuItemGroup']
-  const vLoading: typeof import('element-plus/es')['ElLoadingDirective']
 }
 export {}
