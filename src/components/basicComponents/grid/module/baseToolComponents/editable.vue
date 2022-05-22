@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-15 23:05:09
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:01:06
+ * @LastEditTime: 2022-05-22 20:09:45
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/editable.vue
 -->
 <script lang="ts">
@@ -56,6 +56,7 @@ export default defineComponent({
                 margin: _blockSize.value * 0.2 + "px",
               },
               ondblclick: () => emitData("editable", !props.baseData.editable),
+              ontouchend:() => emitData("editable", !props.baseData.editable),
               sizeUnit: props.sizeUnit,
               name: props.baseData.editable ? "Unlock" : "Lock",
             }),

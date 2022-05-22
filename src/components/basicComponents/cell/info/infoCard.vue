@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-22 16:57:40
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:03:26
+ * @LastEditTime: 2022-05-22 20:16:03
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/infoCard.vue
 -->
 <script lang="ts">
@@ -13,6 +13,10 @@ import cardBg from "../card/cardBg.vue";
 export default defineComponent({
   mixins: [baseComponents],
   props: {
+    isBlack: {
+      type: Boolean,
+      default: false,
+    },
     sizeUnit: {
       type: Object,
       default: () => {
@@ -30,7 +34,7 @@ export default defineComponent({
     img: { type: String, default: "" },
   },
   setup(props, context) {
-    const { title, content, img } = toRefs(props);
+    const { title, content, img, isBlack } = toRefs(props);
     context.emit("Ready");
     return () => [
       h(
@@ -61,7 +65,7 @@ export default defineComponent({
                     top: "0px",
                     fontSize: "20px",
                     margin: "12px",
-                    color: "white",
+                    color: isBlack.value ? "white" : "black",
                     backdropFilter: "blur(10px)",
                     borderRadius: "12px",
                     padding: "2px 4px",
@@ -79,11 +83,12 @@ export default defineComponent({
                     width: "calc( 100% - 24px)",
                     height: "20%",
                     bottom: "0px",
-                    background: "rgba(255,255,255, 0.4)",
+                    background: isBlack.value?"rgba(255,255,255, 0.4)":"rgba( 0,0,0,0.4)",
                     backdropFilter: "blur(2px)",
                     color: "white",
                     textAlign: "left",
                     padding: "0px 12px",
+                    fontSize: '8%',
                   },
                 },
                 [h("i", content.value)]
