@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-23 21:38:31
+ * @LastEditTime: 2022-05-22 21:14:15
  * @FilePath: /configforpagedemo/src/views/Home.vue
 -->
 
@@ -13,7 +13,7 @@
       background: 'rgba(0,0,0,0.02)',
     }"
   >
-    <gridDesktop @onChange="onChange" />
+    <gridDesktop @onChange="onChange" :grid-col-num="4"/>
   </div>
 </template>
 

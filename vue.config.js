@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-05 09:21:49
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:28:02
+ * @LastEditTime: 2022-05-22 20:53:13
  * @FilePath: /configforpagedemo/vue.config.js
  */
 
@@ -23,7 +23,7 @@ const {
 
 
 module.exports = {
-    publicPath: Env == 'production' ? 'workbench' : '',
+    publicPath: Env == 'production' ? '' : '',
     devServer: {
         port: 9050,
         proxy: {

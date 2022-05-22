@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 14:38:17
+ * @LastEditTime: 2022-05-22 21:12:40
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -120,16 +120,21 @@ export default defineComponent({
 
     // 输出gridLayout需要的数据
     gridListToLayout() {
-      return this.gridList.map((item: gridCellTemplate, index: number) => {
-        let cell = outPutPositionAndGridSize(item);
-        return {
-          x: cell.x,
-          y: cell.y,
-          w: cell.width,
-          h: cell.height,
-          i: index,
-        };
-      });
+      const back: Array<any> = this.gridList.map(
+        (item: gridCellTemplate, index: number) => {
+          let cell = outPutPositionAndGridSize(item);
+          if (cell.x > this.gridColNum) cell.x = 0;
+          if (cell.width > this.gridColNum) cell.width = this.gridColNum;
+          return {
+            x: cell.x,
+            y: cell.y,
+            w: cell.width,
+            h: cell.height,
+            i: index,
+          };
+        }
+      );
+      return back;
     },
 
     // 移动gridItem

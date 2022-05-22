@@ -1,29 +1,13 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:27:06
+ * @LastEditTime: 2022-05-22 21:14:41
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType } from "./dataTemplate";
 
 export const testData = [
-    gridCellMaker('iconCell', '标签装饰', {
-        small: gridSizeMaker(1, 1),
-        large: gridSizeMaker(4, 4)
-    },
-        {
-            name: 'iconCell',
-            type: cardComponentType.componentList
-        }
-        , {
-            props: {
-                name: 'Loading',
-                iconOption: {
-                    size: 300
-                },
-            },
-        }).setPosition(0, 0).setSize(1, 1),
     gridCellMaker('editable', '编辑', {}, {
         name: 'setting_editable',
         type: cardComponentType.componentList
@@ -79,5 +63,5 @@ export const testData = [
         props:{
             url:'http://guild.czht.top',
         },
-    }).setPosition(4, 0).setSize(8,5),
+    }).setPosition(0, 5).setSize(8,5),
 ]
