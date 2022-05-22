@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-18 23:34:15
+ * @LastEditTime: 2022-05-22 18:11:17
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
@@ -23,5 +23,22 @@ export const testData = [
                     size: 300
                 },
             },
-        }).setPosition(1, 0).setSize(4, 4),
+        }).setPosition(1, 0).setSize(1, 1),
+
+    gridCellMaker('editable', '编辑', {}, {
+        name: 'setting_editable',
+        type: cardComponentType.componentList
+    }, {
+        isSettingTool: true
+    }).setPosition(2, 0).setSize(1, 1),
+    gridCellMaker('elcard', '卡片', {}, {
+        name: 'elcard',
+        type: cardComponentType.componentList
+    }, {
+        props: {
+            title:'洪都拉斯,荔枝兰',
+            content: '口味偏酸,香气非常的浓郁,入口就能感受果香味',
+            img:'https://storage.inewsdb.com/268963341081de7c525437a6bdba1e17.jpg',
+        }
+    }).setPosition(2, 1).setSize(4, 4)
 ]

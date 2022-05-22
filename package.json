@@ -14,12 +14,12 @@
     "core-js": "^3.6.5",
     "element-plus": "^1.2.0-beta.6",
     "fs": "^0.0.1-security",
+    "mitt": "^3.0.0",
     "path": "^0.12.7",
     "register-service-worker": "^1.7.1",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
     "vue-drag-resize": "^1.5.4",
-    "vue-grid-layout": "^3.0.0-beta1",
     "vue-router": "^4.0.0-0",
     "vue3-draggable-resizable": "^1.6.3"
   },

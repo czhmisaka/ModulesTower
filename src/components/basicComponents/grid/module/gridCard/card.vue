@@ -1,12 +1,12 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-14 17:42:22
- * @FilePath: /o2oaweb/src/thirdThemeComponents/grid/module/gridCard/card.vue
+ * @LastEditTime: 2022-05-22 18:16:42
+ * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
 import cardBox from "./module/cardBox.vue";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, toRefs } from "vue";
 import { componentGetter, gridCellTemplate } from "./../dataTemplate";
 import { componentLists } from "./module/componentLists";
 export default defineComponent({
@@ -80,12 +80,10 @@ export default defineComponent({
             detail: props.detail,
           }),
           h(
-            componentGetter(props.detail.component, componentLists),
+            componentGetter(props.detail.component, componentLists).component,
             {
-              on: {
-                onChange: (key: string, value: any, options: { [key: string]: any }) => {
-                  context.emit("onChange", key, value, options);
-                },
+              onOnChange: (key: string, value: any, options: { [key: string]: any }) => {
+                context.emit("onChange", key, value, options);
               },
               baseData: props.baseData,
               sizeUnit: props.sizeUnit,

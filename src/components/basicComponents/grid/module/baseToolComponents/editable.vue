@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-15 23:05:09
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-15 23:05:10
+ * @LastEditTime: 2022-05-22 00:44:55
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/editable.vue
 -->
 <script lang="ts">
@@ -11,6 +11,7 @@ import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 import { ElPopper } from "element-plus";
 
 export default defineComponent({
+  emits: ["onChange"],
   props: {
     baseData: {
       type: Object,
@@ -24,54 +25,44 @@ export default defineComponent({
         return {};
       },
     },
+    gridList: {
+      type: Array,
+      default: () => {
+        return [] as Array<any>;
+      },
+    },
   },
   setup(props, context) {
     const _blockSize = ref(props.sizeUnit.blockSize);
     const emitData = (key: string, value: any) => {
+      console.log("emitData");
       context.emit("onChange", key, value, {
         type: [cardOnChangeType.onChange],
       });
     };
-    return () =>
-      h(cardForCus, {}, [
-        h(
-          ElPopper,
-          {
-            props: {
-              content: `双击${props.baseData.editable ? "关闭" : "打开"}编辑`,
-            },
-          },
-          [
-            h(
-              "div",
-              {
-                style: {
-                  width: "100%",
-                  height: "100%",
-                  cursor: "pointer",
-                },
-                on: {
-                  dblclick: () => {
-                    emitData("editable", !props.baseData.editable);
-                  },
-                },
+    console.log("render");
+    return () => [
+      h(
+        ElPopper,
+        {
+          trigger: "hover",
+          content: `双击${props.baseData.editable ? "关闭" : "打开"}编辑`,
+        },
+        {
+          trigger: () => [
+            h(iconCell, {
+              iconOption: {
+                fontSize: _blockSize.value * 0.6 + "px",
+                margin: _blockSize.value * 0.2 + "px",
               },
-              [
-                h(iconCell, {
-                  style: {
-                    fontSize: _blockSize.value * 0.6 + "px",
-                    margin: _blockSize.value * 0.2 + "px",
-                  },
-                  props: {
-                    theme: "twoTone",
-                    type: props.baseData.editable ? "unlock" : "lock",
-                  },
-                }),
-              ]
-            ),
-          ]
-        ),
-      ]);
+              ondblclick: () => emitData("editable", !props.baseData.editable),
+              sizeUnit: props.sizeUnit,
+              name: props.baseData.editable ? "Unlock" : "Lock",
+            }),
+          ],
+        }
+      ),
+    ];
   },
 });
 </script>

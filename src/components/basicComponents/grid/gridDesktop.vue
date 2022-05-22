@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-07 15:55:31
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktopEdit.vue
+ * @LastEditTime: 2022-05-22 14:38:17
+ * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
 <template>
@@ -16,7 +16,7 @@
       :isDraggable="baseData.editable"
       :isResizable="false"
       :vertical-compact="false"
-      :prevent-collision="true"
+      :prevent-collision="false"
       :use-css-transforms="true"
       :margin="[10, 10]"
     >
@@ -49,10 +49,13 @@ import { defineComponent } from "vue";
 import { testData } from "./module/testData";
 import { cardOnChangeType, gridCellTemplate } from "./module/dataTemplate";
 import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
+import GridLayout from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridLayout.vue";
+import GridItem from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridItem.vue";
+
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 export default defineComponent({
   name: "gridDesktop",
-  components: { card },
+  components: { card, GridLayout, GridItem },
   props: {
     // 自定样式
     cusStyle: {

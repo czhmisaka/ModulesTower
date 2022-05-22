@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-04-05 14:23:26
+ * @LastEditTime: 2022-05-22 14:41:10
  * @FilePath: /configforpagedemo/.eslintrc.js
  */
 module.exports = {
@@ -27,5 +27,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-this-alias': 'off',
   }
 }

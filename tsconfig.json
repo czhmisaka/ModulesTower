@@ -35,8 +35,8 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx", "src/components/basicComponents/cell/icon/iconCell.js"
-, "config/proxyTable.ts"  ],
+    "tests/**/*.tsx", "src/components/basicComponents/cell/icon/iconCell.js", "config/proxyTable.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

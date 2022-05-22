@@ -1,15 +1,14 @@
 <!--
  * @Date: 2022-01-22 19:23:46
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-24 09:36:24
+ * @LastEditTime: 2022-05-22 18:18:20
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/icon/iconCell.vue
 -->
 <script lang="tsx">
 import { getIcon } from "@/utils";
 import { ElIcon } from "element-plus";
-import { defineComponent, h, reactive } from "vue";
+import { defineComponent, h, reactive, toRefs } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
-import { gridCellTemplate } from "../../grid/module/dataTemplate";
 
 export default defineComponent({
   name: "IconCell",
@@ -26,21 +25,22 @@ export default defineComponent({
     sizeUnit: {
       type: Object,
       default: () => {
-        return {} as {
-          [key: string]: any;
-        };
+        return {};
       },
     },
   },
   setup: (props) => {
-    const _blockSize = reactive(props.sizeUnit).blockSize;
-    console.log(props.iconOption);
+    const { sizeUnit } = toRefs(props);
     return () =>
       h(cardBg, {}, () => [
         h(
           ElIcon,
           {
-            size: _blockSize * 0.5,
+            style: {
+              margin: sizeUnit.value.blockSize * 0.25 + "px",
+              fontSize:sizeUnit.value.blockSize * 0.5 + "px",
+              ...props.iconOption,
+            },
           },
           () => h(getIcon(props.name + ""))
         ),

@@ -1,9 +1,10 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-18 23:01:15
+ * @LastEditTime: 2022-05-21 15:43:44
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
+
 
 import { cardUtil } from "./util";
 export enum cardOnChangeType {
@@ -79,6 +80,12 @@ export interface gridCellTemplate {
 }
 
 
+/**
+ * @name: cardComponentType
+ * @description: 组件加载方式
+ * @authors: CZH
+ * @Date: 2022-05-16 18:43:10
+ */
 export enum cardComponentType {
     componentList = 'componentList',
     fromData = 'fromData', // 不推荐使用data保存组件
@@ -86,7 +93,74 @@ export enum cardComponentType {
 }
 
 
+/**
+ * @name: inputType
+ * @description: 输入类型
+ * @authors: CZH
+ * @Date: 2022-05-19 14:38:50
+ */
+export enum inputType {
+    text = 'text',
+    number = 'number',
+    numberSlider = 'numberSlider',
+}
 
+export interface CardComponentTemplate {
+    name?: string,
+    settngDetail: {
+        props?: {
+            [key: string]: {
+                type: inputType,
+                localData?: {
+                    [key: string]: any,
+                }
+            }
+        },
+        baseProps?: {
+            [key: string]: any,
+        },
+        [key: string]: any
+    },
+    component: any,
+    [key: string]: any,
+}
+
+/**
+ * @name: cardComponentMaker
+ * @description: 可用组件生成器
+ * @authors: CZH
+ * @Date: 2022-05-19 14:06:02
+ */
+export const cardComponentMaker = (
+    component: any,
+    props: {
+        [key: string]: {
+            type: inputType,
+            localData?: {
+                [key: string]: any,
+            }
+        }
+    },
+    baseProps: { [key: string]: any },
+): CardComponentTemplate => {
+    let cardComponent = {
+        settngDetail: {
+            props,
+            baseProps,
+        },
+        component,
+    } as CardComponentTemplate;
+    return cardComponent;
+}
+
+
+
+/**
+ * @name: cardComponent
+ * @description: waitForWriting
+ * @authors: CZH
+ * @Date: 2022-05-19 16:00:11
+ */
 export interface cardComponent {
     name: string,
     type: cardComponentType,

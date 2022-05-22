@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-07 18:52:17
+ * @LastEditTime: 2022-05-22 14:14:22
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
@@ -15,7 +15,6 @@ import pageModules from './config/pageConfigs'
 import * as Icons from '@element-plus/icons-vue'
 import utils from './utils'
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
-import VueGridLayout from 'vue-grid-layout';
 
 const app = createApp(App)
 app.config.globalProperties.$pageModules = pageModules
@@ -36,5 +35,4 @@ app.component('vue-drag-resize', Vue3DraggableResizable)
 
 app.use(router)
 app.use(ElementPlus)
-app.use(VueGridLayout)
 app.mount('#app')

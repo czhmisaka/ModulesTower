@@ -5,8 +5,11 @@
 declare module 'vue' {
   export interface GlobalComponents {
     Card: typeof import('./src/components/basicComponents/grid/module/gridCard/card.vue')['default']
+    CardBg: typeof import('./src/components/basicComponents/cell/card/cardBg.vue')['default']
     CardBox: typeof import('./src/components/basicComponents/grid/module/gridCard/module/cardBox.vue')['default']
     CardCell: typeof import('./src/components/basicComponents/cell/card/cardCell.vue')['default']
+    CustomDragElement: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/CustomDragElement.vue')['default']
+    Editable: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/editable.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElHeader: typeof import('element-plus/es')['ElHeader']
@@ -14,8 +17,11 @@ declare module 'vue' {
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItemGroup: typeof import('element-plus/es')['ElMenuItemGroup']
     GridDesktop: typeof import('./src/components/basicComponents/grid/gridDesktop.vue')['default']
+    GridItem: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridItem.vue')['default']
+    GridLayout: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridLayout.vue')['default']
     Header: typeof import('./src/components/header/header.vue')['default']
     IconCell: typeof import('./src/components/basicComponents/cell/icon/iconCell.vue')['default']
+    InfoCard: typeof import('./src/components/basicComponents/cell/info/infoCard.vue')['default']
     InfoCell: typeof import('./src/components/basicComponents/cell/info/infoCell.vue')['default']
     InfoList: typeof import('./src/components/basicComponents/list/info/infoList.vue')['default']
     InputCell: typeof import('./src/components/basicComponents/cell/input/inputCell.vue')['default']
