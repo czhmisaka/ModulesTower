@@ -1,14 +1,18 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 18:16:42
+ * @LastEditTime: 2022-05-22 20:01:26
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
 import cardBox from "./module/cardBox.vue";
-import { defineComponent, h, toRefs } from "vue";
+import { getIcon } from "@/utils";
+import { defineComponent, h, reactive, toRefs, ref } from "vue";
 import { componentGetter, gridCellTemplate } from "./../dataTemplate";
 import { componentLists } from "./module/componentLists";
+
+import { ElLoading, ElIcon } from "element-plus";
+import iconCellVue from "@/components/basicComponents/cell/icon/iconCell.vue";
 export default defineComponent({
   name: "gridCardBox",
   emits: ["onChange"],
@@ -41,6 +45,9 @@ export default defineComponent({
   methods: {},
   setup(props, context) {
     let children = props.detail.options.slots || null;
+    let isLoading = ref(true);
+
+    const { sizeUnit, detail } = toRefs(props);
 
     // 判断动画尺寸
     const editShakeName = (size: { width: number; height: number }): string => {
@@ -50,7 +57,6 @@ export default defineComponent({
       if (big < 8) return "editShakeM_GRID_CARD_BOX";
       return "editShakeL_GRID_CARD_BOX";
     };
-
     return () => [
       h(
         "div",
@@ -67,6 +73,37 @@ export default defineComponent({
           },
         },
         [
+          h(
+            "div",
+            {
+              style: {
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                top: 0,
+                left: 0,
+                background: "rgba(255,255,255,1)",
+                borderRadius: "12px",
+                zIndex: isLoading.value ? 100000 : -1,
+                display: "flex",
+              },
+            },
+            [
+              h(
+                ElIcon,
+                {
+                  style: {
+                    top: "50%",
+                    left: "50%",
+                    margin: "-" + sizeUnit.value.blockSize * 0.25 + "px",
+                    fontSize: sizeUnit.value.blockSize * 0.5 + "px",
+                  },
+                  class: "is-loading",
+                },
+                () => h(getIcon("Loading"))
+              ),
+            ]
+          ),
           h(cardBox, {
             style: {
               width: "100%",
@@ -84,6 +121,9 @@ export default defineComponent({
             {
               onOnChange: (key: string, value: any, options: { [key: string]: any }) => {
                 context.emit("onChange", key, value, options);
+              },
+              onReady: (e = false) => {
+                isLoading.value = e;
               },
               baseData: props.baseData,
               sizeUnit: props.sizeUnit,

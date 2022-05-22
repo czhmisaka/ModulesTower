@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-15 23:05:09
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 00:44:55
+ * @LastEditTime: 2022-05-22 20:01:06
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/editable.vue
 -->
 <script lang="ts">
@@ -9,9 +9,10 @@ import { defineComponent, h, toRef, ref } from "vue";
 import { cardOnChangeType } from "../dataTemplate";
 import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 import { ElPopper } from "element-plus";
+import { baseComponents } from "@/components/basicComponents/grid/module/gridCard/baseCardComponentMixins";
 
 export default defineComponent({
-  emits: ["onChange"],
+  mixins: [baseComponents],
   props: {
     baseData: {
       type: Object,
@@ -35,12 +36,11 @@ export default defineComponent({
   setup(props, context) {
     const _blockSize = ref(props.sizeUnit.blockSize);
     const emitData = (key: string, value: any) => {
-      console.log("emitData");
       context.emit("onChange", key, value, {
         type: [cardOnChangeType.onChange],
       });
     };
-    console.log("render");
+    context.emit("Ready");
     return () => [
       h(
         ElPopper,

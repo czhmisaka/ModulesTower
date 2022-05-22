@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-01-22 19:23:46
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 18:18:20
+ * @LastEditTime: 2022-05-22 20:02:42
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/icon/iconCell.vue
 -->
 <script lang="tsx">
@@ -9,8 +9,10 @@ import { getIcon } from "@/utils";
 import { ElIcon } from "element-plus";
 import { defineComponent, h, reactive, toRefs } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+import {baseComponents} from "@/components/basicComponents/grid/module/gridCard/baseCardComponentMixins";
 
 export default defineComponent({
+  mixins: [baseComponents],
   name: "IconCell",
   props: {
     name: {
@@ -28,9 +30,14 @@ export default defineComponent({
         return {};
       },
     },
+    isLoadingIcon:{
+      type:Boolean,
+      default:false
+    },
   },
-  setup: (props) => {
-    const { sizeUnit } = toRefs(props);
+  setup: (props,context) => {
+    const { sizeUnit,isLoadingIcon } = toRefs(props);
+    context.emit('Ready');
     return () =>
       h(cardBg, {}, () => [
         h(
@@ -41,6 +48,7 @@ export default defineComponent({
               fontSize:sizeUnit.value.blockSize * 0.5 + "px",
               ...props.iconOption,
             },
+            class:[isLoadingIcon.value? "is-loading":""],
           },
           () => h(getIcon(props.name + ""))
         ),

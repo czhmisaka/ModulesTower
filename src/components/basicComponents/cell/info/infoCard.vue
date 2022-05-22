@@ -1,15 +1,17 @@
 <!--
  * @Date: 2022-05-22 16:57:40
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 18:12:05
+ * @LastEditTime: 2022-05-22 20:03:26
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/infoCard.vue
 -->
 <script lang="ts">
 import { defineComponent, h, toRefs } from "vue";
+import { baseComponents } from "@/components/basicComponents/grid/module/gridCard/baseCardComponentMixins";
 
 import { ElCard } from "element-plus";
 import cardBg from "../card/cardBg.vue";
 export default defineComponent({
+  mixins: [baseComponents],
   props: {
     sizeUnit: {
       type: Object,
@@ -29,7 +31,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const { title, content, img } = toRefs(props);
-    const _blockSize = toRefs(props.sizeUnit.blockSize);
+    context.emit("Ready");
     return () => [
       h(
         cardBg,
@@ -74,7 +76,7 @@ export default defineComponent({
                     position: "relative",
                     top: "80%",
                     overflow: "hidden",
-                    width: "100%",
+                    width: "calc( 100% - 24px)",
                     height: "20%",
                     bottom: "0px",
                     background: "rgba(255,255,255, 0.4)",
@@ -84,7 +86,7 @@ export default defineComponent({
                     padding: "0px 12px",
                   },
                 },
-                [h("span", content.value)]
+                [h("i", content.value)]
               ),
             ]
           ),
