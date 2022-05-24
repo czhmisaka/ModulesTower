@@ -35,7 +35,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const { title, content, img, isBlack } = toRefs(props);
-    context.emit("Ready");
+    context.emit("ready");
     return () => [
       h(
         cardBg,

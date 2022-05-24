@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-01-22 19:23:46
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:02:42
+ * @LastEditTime: 2022-05-24 21:34:23
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/icon/iconCell.vue
 -->
 <script lang="tsx">
@@ -37,7 +37,7 @@ export default defineComponent({
   },
   setup: (props,context) => {
     const { sizeUnit,isLoadingIcon } = toRefs(props);
-    context.emit('Ready');
+    context.emit('ready');
     return () =>
       h(cardBg, {}, () => [
         h(

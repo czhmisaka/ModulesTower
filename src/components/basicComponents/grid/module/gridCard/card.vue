@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:01:26
+ * @LastEditTime: 2022-05-24 21:40:10
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
@@ -115,6 +115,13 @@ export default defineComponent({
             },
             blockSize: props.sizeUnit.blockSize,
             detail: props.detail,
+            sizeUnit: props.sizeUnit,
+            onOnChange: (
+              value: { [key: string]: any },
+              options: { [key: string]: any }
+            ) => {
+              context.emit("onChange", value, options);
+            },
           }),
           h(
             componentGetter(props.detail.component, componentLists).component,

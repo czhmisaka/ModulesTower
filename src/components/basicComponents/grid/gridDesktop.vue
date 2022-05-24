@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 21:12:40
+ * @LastEditTime: 2022-05-24 23:51:46
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -18,7 +18,7 @@
       :vertical-compact="false"
       :prevent-collision="false"
       :use-css-transforms="true"
-      :margin="[10, 10]"
+      :margin="[baseData.margin, baseData.margin]"
     >
       <grid-item
         v-for="(item, index) in gridListToLayout()"
@@ -33,19 +33,31 @@
         class="grid-item"
       >
         <card
+          v-if="gridList[index]"
           :ref="'card_' + index"
           :detail="{ ...gridList[index], index }"
           :baseData="baseData"
           :sizeUnit="gridRowNumAndUnit()"
-          @onChange="(key, value, options) => cardOnChange(index, key, value, options)"
+          @onChange="(value, options) => cardOnChange(index, value, options)"
         />
       </grid-item>
     </grid-layout>
+    <cardEditModal
+      :detail="baseData._componentDetail"
+      ref="cardEdit"
+      :gridList="gridList"
+      :componentIndex="baseData._componentIndex"
+      @onChange="
+        (index, value) =>
+          cardOnChange(index, value, { type: [cardOnChangeType.gridCardListonChange] })
+      "
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import cardEditModal from "@/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue";
 import { testData } from "./module/testData";
 import { cardOnChangeType, gridCellTemplate } from "./module/dataTemplate";
 import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
@@ -55,7 +67,7 @@ import GridItem from "@/components/basicComponents/grid/module/baseToolComponent
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 export default defineComponent({
   name: "gridDesktop",
-  components: { card, GridLayout, GridItem },
+  components: { card, GridLayout, GridItem, cardEditModal },
   props: {
     // 自定样式
     cusStyle: {
@@ -99,13 +111,17 @@ export default defineComponent({
   },
   data() {
     return {
+      cardOnChangeType,
       // 渲染用组件列表
       gridList: [],
 
       // 基础数据存放
       baseData: {
+        margin: 12,
         editable: false,
         wholeScreen: false,
+        _componentDetail: {},
+        _componentIndex: -1,
       } as { [key: string]: any },
     };
   },
@@ -155,21 +171,46 @@ export default defineComponent({
      */
     async cardOnChange(
       index: number,
-      key: string,
       value: any,
       options: {
         type: Array<cardOnChangeType>;
         [key: string]: any;
       }
     ) {
-      options.type.map((type) => {
+      options.type.map(async (type) => {
         if (type == cardOnChangeType.onChange) {
-          this.baseData[key] = value;
+          for (let x in value) {
+            this.baseData[x] = value[x];
+          }
           this.baseData = { ...this.baseData };
         } else if (type == cardOnChangeType.upOnChange) {
-          this.$emit("onChange", key, value);
+          this.$emit("onChange", value);
         } else if (type == cardOnChangeType.forceRefresh) {
+          const gridList = [...this.gridList];
+          this.gridList = [];
+          await this.$nextTick();
+          this.gridList = gridList;
+        } else if (type == cardOnChangeType.forceRefreshToOrgin) {
+          this.gridList = [] as Array<gridCellTemplate>;
+          await this.$nextTick();
+          this.forceUpdateGridList();
           this.$forceUpdate();
+        } else if (type == cardOnChangeType.gridCardListonChange) {
+          if (index != -1) {
+            this.gridList[index] = value[index];
+          } else {
+            this.gridList = [...value];
+          }
+        } else if (type == cardOnChangeType.cardEdit) {
+          this.baseData._componentDetail = this.gridList[index];
+          this.baseData._componentIndex = index;
+          await this.$nextTick();
+          this.$refs?.cardEdit?.open();
+        } else if (type == cardOnChangeType.cardDelete) {
+          const gridList = [...this.gridList];
+          delete gridList[index];
+          await this.$nextTick();
+          this.gridList = gridList.filter(Boolean);
         }
       });
     },
@@ -198,7 +239,10 @@ export default defineComponent({
         screen.rowNum = Math.floor(screen.height / this.gridColNum);
         screen.blockSize =
           screen.unit == "vw"
-            ? (screen.width - this.gridColNum * 10 - 10) / this.gridColNum
+            ? (screen.width -
+                this.gridColNum * this.baseData.margin -
+                this.baseData.margin) /
+              this.gridColNum
             : screen.height / this.gridColNum;
       }
       return screen;

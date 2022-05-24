@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 21:14:41
+ * @LastEditTime: 2022-05-25 00:06:31
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
@@ -30,7 +30,7 @@ export const testData = [
         type: cardComponentType.componentList
     }, {
         props: {
-            isBlack: true,
+            isBlack: false,
             title:'壁纸',
             content: '--来自鬼刀大佬',
             img:'https://images3.alphacoders.com/111/thumb-1920-1111255.jpg',
@@ -63,5 +63,5 @@ export const testData = [
         props:{
             url:'http://guild.czht.top',
         },
-    }).setPosition(0, 5).setSize(8,5),
+    }).setPosition(4, 0).setSize(8,5),
 ]

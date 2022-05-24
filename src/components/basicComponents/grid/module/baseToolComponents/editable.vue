@@ -35,12 +35,16 @@ export default defineComponent({
   },
   setup(props, context) {
     const _blockSize = ref(props.sizeUnit.blockSize);
-    const emitData = (key: string, value: any) => {
-      context.emit("onChange", key, value, {
-        type: [cardOnChangeType.onChange],
-      });
+    const emitData = (value: any) => {
+      context.emit(
+        "onChange",
+        { editable: value },
+        {
+          type: [cardOnChangeType.onChange],
+        }
+      );
     };
-    context.emit("Ready");
+    context.emit("ready");
     return () => [
       h(
         ElPopper,
@@ -55,8 +59,8 @@ export default defineComponent({
                 fontSize: _blockSize.value * 0.6 + "px",
                 margin: _blockSize.value * 0.2 + "px",
               },
-              ondblclick: () => emitData("editable", !props.baseData.editable),
-              ontouchend:() => emitData("editable", !props.baseData.editable),
+              ondblclick: () => emitData(!props.baseData.editable),
+              ontouchend: () => emitData(!props.baseData.editable),
               sizeUnit: props.sizeUnit,
               name: props.baseData.editable ? "Unlock" : "Lock",
             }),

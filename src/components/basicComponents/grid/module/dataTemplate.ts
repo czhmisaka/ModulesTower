@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 18:41:09
+ * @LastEditTime: 2022-05-24 21:28:48
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -11,7 +11,10 @@ export enum cardOnChangeType {
     upOnChange = 'upOnChange',
     onChange = 'onChange',
     forceRefresh = 'forceRefresh',
+    forceRefreshToOrgin = 'forceRefreshToOrgin',
     gridCardListonChange = 'gridCardListonChange',
+    cardEdit = 'cardEdit',
+    cardDelete = 'cardDelete',
 }
 
 
@@ -110,6 +113,7 @@ export interface CardComponentTemplate {
     settngDetail: {
         props?: {
             [key: string]: {
+                label: string,
                 type: inputType,
                 localData?: {
                     [key: string]: any,
@@ -135,6 +139,7 @@ export const cardComponentMaker = (
     component: any,
     props: {
         [key: string]: {
+            label: string,
             type: inputType,
             localData?: {
                 [key: string]: any,

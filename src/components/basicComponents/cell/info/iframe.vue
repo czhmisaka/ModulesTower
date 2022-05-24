@@ -37,7 +37,7 @@ export default defineComponent({
           },
           src: url.value,
           onLoad: () => {
-              context.emit("Ready")
+              context.emit("ready")
           },
         }),
       ]),
