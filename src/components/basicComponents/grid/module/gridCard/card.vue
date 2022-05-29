@@ -15,7 +15,7 @@ import { ElLoading, ElIcon } from "element-plus";
 import iconCellVue from "@/components/basicComponents/cell/icon/iconCell.vue";
 export default defineComponent({
   name: "gridCardBox",
-  emits: ["onChange"],
+  emits: ["onChange", "openComponentsList"],
   props: {
     detail: {
       type: Object,

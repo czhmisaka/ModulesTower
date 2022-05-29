@@ -33,7 +33,6 @@
         class="grid-item"
       >
         <card
-          v-if="gridList[index]"
           :ref="'card_' + index"
           :detail="{ ...gridList[index], index }"
           :baseData="baseData"
@@ -42,6 +41,7 @@
         />
       </grid-item>
     </grid-layout>
+    <componentsListModal :gridList="gridList" ref="componentsListModal" />
     <cardEditModal
       :detail="baseData._componentDetail"
       ref="cardEdit"
@@ -61,13 +61,14 @@ import cardEditModal from "@/components/basicComponents/grid/module/baseToolComp
 import { testData } from "./module/testData";
 import { cardOnChangeType, gridCellTemplate } from "./module/dataTemplate";
 import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
+import componentsListModal from "@/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue";
 import GridLayout from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridLayout.vue";
 import GridItem from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridItem.vue";
 
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 export default defineComponent({
   name: "gridDesktop",
-  components: { card, GridLayout, GridItem, cardEditModal },
+  components: { card, GridLayout, GridItem, cardEditModal, componentsListModal },
   props: {
     // 自定样式
     cusStyle: {
@@ -207,10 +208,9 @@ export default defineComponent({
           await this.$nextTick();
           this.$refs?.cardEdit?.open();
         } else if (type == cardOnChangeType.cardDelete) {
-          const gridList = [...this.gridList];
-          delete gridList[index];
-          await this.$nextTick();
-          this.gridList = gridList.filter(Boolean);
+          this.gridList.splice(index, 1);
+        } else if (type == cardOnChangeType.openComponentsList) {
+          console.log("fuck empty");
         }
       });
     },

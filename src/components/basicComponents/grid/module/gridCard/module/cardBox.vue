@@ -24,7 +24,7 @@
             borderRadius: '12px',
             cursor: 'pointer',
           }"
-          @click="btnClickDealCenter(btn)"
+          @dblclick="btnClickDealCenter(btn)"
         >
           <el-tooltip :content="btn.name" placement="top">
             <Icon
