@@ -12,10 +12,17 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-// import { componentLists } from "@/components/basicComponents/grid/module/gridCard/module/componentLists";
+import { componentLists } from "@/components/basicComponents/grid/module/gridCard/module/componentLists";
 
 export default defineComponent({
   props: ["gridList"],
-  setup() {},
+  data() {
+    return {
+      componentLists,
+    };
+  },
+  methods: {
+    open() {},
+  },
 });
 </script>

@@ -41,7 +41,14 @@
         />
       </grid-item>
     </grid-layout>
-    <componentsListModal :gridList="gridList" ref="componentsListModal" />
+    <componentsListModal
+      :gridList="gridList"
+      ref="componentsListModal"
+      @onChange="
+        (index, value) =>
+          cardOnChange(index, value, { type: [cardOnChangeType.gridCardListonChange] })
+      "
+    />
     <cardEditModal
       :detail="baseData._componentDetail"
       ref="cardEdit"
@@ -210,7 +217,7 @@ export default defineComponent({
         } else if (type == cardOnChangeType.cardDelete) {
           this.gridList.splice(index, 1);
         } else if (type == cardOnChangeType.openComponentsList) {
-          console.log("fuck empty");
+          this.$refs.componentsListModal.open();
         }
       });
     },
