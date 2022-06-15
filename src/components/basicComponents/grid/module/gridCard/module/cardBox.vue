@@ -27,11 +27,11 @@
           @dblclick="btnClickDealCenter(btn)"
         >
           <el-tooltip :content="btn.name" placement="top">
-            <Icon
+            <iconCell
               :name="btn.type"
               :iconOption="{
                 color: btn.color,
-                margin: sizeUnit.blockSize * 0.15 + 'px',
+                margin: `${sizeUnit.blockSize * 0.15}px`,
               }"
               :sizeUnit="sizeUnit"
             />
@@ -75,7 +75,7 @@ import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 
 export default defineComponent({
   components: {
-    Icon: iconCell,
+    iconCell: iconCell,
   },
   props: {
     sizeUnit: {

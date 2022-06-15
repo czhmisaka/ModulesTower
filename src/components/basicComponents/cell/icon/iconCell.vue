@@ -1,15 +1,15 @@
 <!--
  * @Date: 2022-01-22 19:23:46
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-24 21:34:23
+ * @LastEditTime: 2022-06-09 14:38:11
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/icon/iconCell.vue
 -->
 <script lang="tsx">
 import { getIcon } from "@/utils";
 import { ElIcon } from "element-plus";
-import { defineComponent, h, reactive, toRefs } from "vue";
+import { defineComponent, h, toRefs } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
-import {baseComponents} from "@/components/basicComponents/grid/module/gridCard/baseCardComponentMixins";
+import { baseComponents } from "@/components/basicComponents/grid/module/gridCard/baseCardComponentMixins";
 
 export default defineComponent({
   mixins: [baseComponents],
@@ -30,14 +30,15 @@ export default defineComponent({
         return {};
       },
     },
-    isLoadingIcon:{
-      type:Boolean,
-      default:false
+    isLoadingIcon: {
+      type: Boolean,
+      default: false,
     },
   },
-  setup: (props,context) => {
-    const { sizeUnit,isLoadingIcon } = toRefs(props);
-    context.emit('ready');
+  setup: (props, context) => {
+    const { sizeUnit, isLoadingIcon, iconOption } = toRefs(props);
+    context.emit("ready");
+    console.log(iconOption.value, "asd");
     return () =>
       h(cardBg, {}, () => [
         h(
@@ -45,10 +46,10 @@ export default defineComponent({
           {
             style: {
               margin: sizeUnit.value.blockSize * 0.25 + "px",
-              fontSize:sizeUnit.value.blockSize * 0.5 + "px",
-              ...props.iconOption,
+              fontSize: sizeUnit.value.blockSize * 0.5 + "px",
+              ...iconOption.value,
             },
-            class:[isLoadingIcon.value? "is-loading":""],
+            class: [isLoadingIcon.value ? "is-loading" : ""],
           },
           () => h(getIcon(props.name + ""))
         ),

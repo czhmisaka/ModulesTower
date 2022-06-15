@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-29 14:38:21
+ * @LastEditTime: 2022-06-15 22:35:10
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
@@ -18,6 +18,7 @@ export const testData = [
         type: cardComponentType.componentList,
         name: 'icon'
     }, {
+        isSettingTool: true,
         props: {
             name: 'Grid',
             onClickFunc: (content: any) => {
