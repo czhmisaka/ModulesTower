@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-29 01:34:56
+ * @LastEditTime: 2022-06-15 23:16:06
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -127,6 +127,14 @@ export interface CardComponentTemplate {
         [key: string]: any
     },
     component: any,
+    compontentInfo?: {
+        description?: string,
+        name?: string,
+        group?: string,
+        context?: Array<any>,
+        gridInfo?: { [key: string]: gridSizeCell },
+        [key: string]: any
+    },
     [key: string]: any,
 }
 
@@ -148,12 +156,21 @@ export const cardComponentMaker = (
         }
     },
     baseProps: { [key: string]: any },
+    compontentInfo: {
+        description?: string,
+        name?: string,
+        group?: string,
+        context?: Array<any>,
+        gridInfo?: { [key: string]: gridSizeCell },
+        [key: string]: any
+    } = {},
 ): CardComponentTemplate => {
     let cardComponent = {
         settngDetail: {
             props,
             baseProps,
         },
+        compontentInfo,
         component,
     } as CardComponentTemplate;
     return cardComponent;
