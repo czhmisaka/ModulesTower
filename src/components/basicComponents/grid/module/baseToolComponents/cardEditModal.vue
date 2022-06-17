@@ -1,15 +1,15 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-24 23:56:35
+ * @LastEditTime: 2022-06-16 23:41:55
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
 <template>
   <span>
     <div :class="'baseModal ' + (modalControl.isOpen ? 'open' : 'close')" @click="close">
-      <div class="formModalBox" @click.stop="fuckNo">
-        <el-card title="组件属性" class="card">
+      <div class="formModalBox" @click.stop="fuckNothing">
+        <el-card header="组件属性" class="card">
           <el-form :model="data" v-on:submit.prevent>
             <el-form-item
               v-for="(formItem, index) in dataInputTemplate"
@@ -20,6 +20,24 @@
             </el-form-item>
           </el-form>
         </el-card>
+
+        <el-card header="组件模式" class="card">
+          <el-form ref="form" v-on:submit.prevent>
+            <el-form-item label="模式">
+              <el-select v-model="cardComponentDetail.type" placeholder="组件加载模式">
+                <el-option
+                  :label="item"
+                  :value="item"
+                  v-for="item in cardComponentType"
+                  :key="item + 'cardComponentType'"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="代码"> </el-form-item>
+          </el-form>
+        </el-card>
+
         <div class="BtnList">
           <el-button class="btn" type="primary" @click="close(true)">保存</el-button>
           <el-button @click="close">取消</el-button>
@@ -31,7 +49,11 @@
 
 <script lang="ts">
 import { componentLists } from "@/components/basicComponents/grid/module/gridCard/module/componentLists";
-import { componentGetter } from "@/components/basicComponents/grid/module/dataTemplate";
+import {
+  componentGetter,
+  cardComponent,
+  cardComponentType,
+} from "@/components/basicComponents/grid/module/dataTemplate";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -43,24 +65,37 @@ export default defineComponent({
       modalControl: {
         isOpen: false,
       } as { [key: string]: any },
+
       data: {} as { [key: string]: any },
       dataInputTemplate: [] as Array<{
         [key: string]: any;
       }>,
+
+      cardComponentDetail: {} as cardComponent,
+      cardComponentType,
     };
   },
   methods: {
     getPropsData() {
-      this.data = { ...this.detail.options.props };
-      const props = componentGetter(this.detail.component, componentLists).settngDetail
-        .props;
+      // 拆分组件属性,设置表单数据
       this.dataInputTemplate = [];
-      for (let x in props) {
-        this.dataInputTemplate.push({
-          key: x,
-          ...props[x],
-        });
+      this.data = { ...this.detail.options.props };
+
+      // componentList 模式属性预先加载
+      if (this.detail.component.type == cardComponentType.componentList) {
+        const props = componentGetter(this.detail.component, componentLists).settngDetail
+          .props;
+        for (let x in props) {
+          this.dataInputTemplate.push({
+            key: x,
+            ...props[x],
+          });
+        }
       }
+
+      // 获取当前组件模式
+      this.cardComponentDetail = { ...this.detail.component };
+
       this.$forceUpdate();
     },
 
@@ -82,13 +117,17 @@ export default defineComponent({
               ...this.data,
             },
           },
+          component: {
+            ...this.detail.component,
+            ...this.cardComponentDetail,
+          },
         };
         this.$emit("onChange", this.componentIndex, gridList);
       }
       this.modalControl.isOpen = false;
     },
 
-    fuckNo() {},
+    fuckNothing() {},
   },
 });
 </script>
@@ -136,6 +175,7 @@ export default defineComponent({
     height: auto;
     margin: 10px;
     border-radius: 6px;
+    text-align: left;
   }
   .BtnList {
     position: absolute;

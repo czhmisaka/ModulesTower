@@ -1,12 +1,13 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-15 23:16:06
+ * @LastEditTime: 2022-06-16 23:20:17
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 
 import { cardUtil } from "./util";
+import { defineComponent } from 'vue';
 export enum cardOnChangeType {
     upOnChange = 'upOnChange',
     onChange = 'onChange',
@@ -197,7 +198,9 @@ export const componentGetter = (component: cardComponent, componentLists: { [key
         case cardComponentType.componentList:
             return componentLists[component.name];
         case cardComponentType.fromData:
-            return component.data;
+            return {
+                component: defineComponent(component.data)
+            }
         // case cardComponentType.cusComponent:
     }
 }
