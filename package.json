@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^0.2.4",
+    "@types/codemirror": "^5.60.5",
     "axios": "^0.25.0",
     "codemirror-editor-vue3": "^2.1.7",
     "core-js": "^3.6.5",

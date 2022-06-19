@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-16 23:41:55
+ * @LastEditTime: 2022-06-18 01:08:28
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -33,8 +33,17 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-
-            <el-form-item label="代码"> </el-form-item>
+            <el-form-item
+              label="代码"
+              v-if="cardComponentDetail.type == cardComponentType.fromData"
+            >
+              <Codemirror
+                v-model="cardComponentDetail.data"
+                :options="cmOptions"
+                :height="400"
+                border
+              />
+            </el-form-item>
           </el-form>
         </el-card>
 
@@ -48,6 +57,23 @@
 </template>
 
 <script lang="ts">
+// 配置代码编辑器
+import Codemirror from "codemirror-editor-vue3";
+import { EditorConfiguration } from "codemirror";
+import "codemirror/mode/javascript/javascript.js";
+import "codemirror/theme/xq-dark.css";
+
+const cmOptions = {
+  mode: "javascript", // 语言模式
+  theme: "xq-dark", // 主题
+  lineNumbers: false, // 显示行号
+  smartIndent: true, // 智能缩进
+  indentUnit: 4, // 智能缩进单位为4个空格长度
+  abSize: 4,
+  foldGutter: true, // 启用行槽中的代码折叠
+  styleActiveLine: true, // 显示选中行的样式
+} as EditorConfiguration;
+
 import { componentLists } from "@/components/basicComponents/grid/module/gridCard/module/componentLists";
 import {
   componentGetter,
@@ -58,6 +84,9 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "cardEditModal",
+  components: {
+    Codemirror,
+  },
   props: ["detail", "gridList", "componentIndex"],
   data() {
     return {
@@ -70,6 +99,9 @@ export default defineComponent({
       dataInputTemplate: [] as Array<{
         [key: string]: any;
       }>,
+
+      // codeMirrorOptions: cmOptions,
+      cmOptions,
 
       cardComponentDetail: {} as cardComponent,
       cardComponentType,
@@ -170,6 +202,8 @@ export default defineComponent({
   max-width: 1400px;
   border-radius: 12px;
   background: #fefefe;
+  overflow-x: hidden;
+  overflow-y: scroll;
   .card {
     width: calc(100% - 20px);
     height: auto;
@@ -178,14 +212,25 @@ export default defineComponent({
     text-align: left;
   }
   .BtnList {
-    position: absolute;
+    position: relative;
+    text-align: right;
     bottom: 12px;
+    width: 100%;
     right: 12px;
     width: auto;
     height: auto;
+    margin-top: 30px;
     .btn {
       margin-right: 12px;
     }
   }
+}
+
+.cm-s-xq-dark .CodeMirror-line::selection,
+.cm-s-xq-dark .CodeMirror-line > span::selection,
+.cm-s-xq-dark .CodeMirror-line > span > span::selection {
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
 }
 </style>
