@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-05 09:21:49
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:53:13
+ * @LastEditTime: 2022-06-27 08:43:27
  * @FilePath: /configforpagedemo/vue.config.js
  */
 
@@ -19,7 +19,7 @@ const {
     ElementPlusResolver
 } = require('unplugin-vue-components/resolvers');
 
-
+const MonacoEditorPlugin = require('monaco-editor-webpack-plugin')
 
 
 module.exports = {
@@ -44,6 +44,14 @@ module.exports = {
             Components({
                 resolvers: [ElementPlusResolver()],
             }),
+            new MonacoEditorPlugin({
+                // https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+                // Include a subset of languages support
+                // Some language extensions like typescript are so huge that may impact build performance
+                // e.g. Build full languages support with webpack 4.0 takes over 80 seconds
+                // Languages are loaded on demand at runtime
+                languages: ['javascript', 'css', 'html', 'typescript']
+            })
         ]
     },
 

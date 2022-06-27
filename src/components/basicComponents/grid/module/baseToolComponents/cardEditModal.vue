@@ -37,12 +37,6 @@
               label="代码"
               v-if="cardComponentDetail.type == cardComponentType.fromData"
             >
-              <Codemirror
-                v-model="cardComponentDetail.data"
-                :options="cmOptions"
-                :height="400"
-                border
-              />
             </el-form-item>
           </el-form>
         </el-card>
@@ -57,23 +51,6 @@
 </template>
 
 <script lang="ts">
-// 配置代码编辑器
-import Codemirror from "codemirror-editor-vue3";
-import { EditorConfiguration } from "codemirror";
-import "codemirror/mode/javascript/javascript.js";
-import "codemirror/theme/xq-dark.css";
-
-const cmOptions = {
-  mode: "javascript", // 语言模式
-  theme: "xq-dark", // 主题
-  lineNumbers: false, // 显示行号
-  smartIndent: true, // 智能缩进
-  indentUnit: 4, // 智能缩进单位为4个空格长度
-  abSize: 4,
-  foldGutter: true, // 启用行槽中的代码折叠
-  styleActiveLine: true, // 显示选中行的样式
-} as EditorConfiguration;
-
 import { componentLists } from "@/components/basicComponents/grid/module/gridCard/module/componentLists";
 import {
   componentGetter,
@@ -84,9 +61,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "cardEditModal",
-  components: {
-    Codemirror,
-  },
+  components: {},
   props: ["detail", "gridList", "componentIndex"],
   data() {
     return {
@@ -99,9 +74,6 @@ export default defineComponent({
       dataInputTemplate: [] as Array<{
         [key: string]: any;
       }>,
-
-      // codeMirrorOptions: cmOptions,
-      cmOptions,
 
       cardComponentDetail: {} as cardComponent,
       cardComponentType,
