@@ -24,19 +24,45 @@
         <el-card header="组件模式" class="card">
           <el-form ref="form" v-on:submit.prevent>
             <el-form-item label="模式">
-              <el-select v-model="cardComponentDetail.type" placeholder="组件加载模式">
-                <el-option
+              <el-radio-group
+                v-model="cardComponentDetail.type"
+                size="large"
+                placeholder="组件加载模式"
+              >
+                <el-radio-button
                   :label="item"
                   :value="item"
                   v-for="item in cardComponentType"
                   :key="item + 'cardComponentType'"
-                ></el-option>
+                />
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item
+              label="固有组件"
+              v-if="cardComponentDetail.type == cardComponentType.componentList"
+            >
+              <el-select v-model="cardComponentDetail.name" placeholder="选择组件">
+                <el-option
+                  :value="item.name"
+                  v-for="(item, index) in componentLists"
+                  :key="item.name + '_' + index"
+                >
+                  {{ item.compontentInfo.label + ":" + item.compontentInfo.description }}
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item
               label="代码"
               v-if="cardComponentDetail.type == cardComponentType.fromData"
             >
+              {{ cardComponentDetail.data }}
+              <Codemirror
+                v-model:value="cardComponentDetail.data"
+                :options="cmOptions"
+                border
+                placeholder="test placeholder"
+                :height="600"
+              />
             </el-form-item>
           </el-form>
         </el-card>
@@ -59,9 +85,16 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { defineComponent } from "vue";
 
+// 引入编辑器
+import Codemirror from "codemirror-editor-vue3";
+import "codemirror/mode/javascript/javascript.js";
+import "codemirror/theme/dracula.css";
+
 export default defineComponent({
   name: "cardEditModal",
-  components: {},
+  components: {
+    Codemirror,
+  },
   props: ["detail", "gridList", "componentIndex"],
   data() {
     return {
@@ -77,6 +110,17 @@ export default defineComponent({
 
       cardComponentDetail: {} as cardComponent,
       cardComponentType,
+
+      // 代码编辑器
+      cmOptions: {
+        mode: "text/javascript", // Language mode
+        theme: "dracula", // Theme
+        lineNumbers: true, // Show line number
+        smartIndent: true, // Smart indent
+        indentUnit: 2, // The smart indent unit is 2 spaces in length
+        foldGutter: true, // Code folding
+        styleActiveLine: true, // Display the style of the selected row
+      },
     };
   },
   methods: {
@@ -99,6 +143,13 @@ export default defineComponent({
 
       // 获取当前组件模式
       this.cardComponentDetail = { ...this.detail.component };
+      // 检查组件加载模式，设置fromData组件的初始值（假如为空）
+      if (!this.cardComponentDetail.data || this.cardComponentDetail.data == "") {
+        this.cardComponentDetail.data = `function HelloWorld() {
+  const count = ref(0)
+  return ()=>h('p',['asdad'])
+}`;
+      }
 
       this.$forceUpdate();
     },

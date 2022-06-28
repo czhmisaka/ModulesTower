@@ -1,13 +1,13 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-16 23:20:17
+ * @LastEditTime: 2022-06-27 23:50:28
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 
 import { cardUtil } from "./util";
-import { defineComponent } from 'vue';
+import { defineAsyncComponent, defineComponent, ref, h } from 'vue';
 export enum cardOnChangeType {
     upOnChange = 'upOnChange',
     onChange = 'onChange',
@@ -106,6 +106,7 @@ export enum cardComponentType {
  */
 export enum inputType {
     text = 'text',
+    boolean = 'boolean',
     number = 'number',
     numberSlider = 'numberSlider',
 }
@@ -130,7 +131,7 @@ export interface CardComponentTemplate {
     component: any,
     compontentInfo?: {
         description?: string,
-        name?: string,
+        label?: string,
         group?: string,
         context?: Array<any>,
         gridInfo?: { [key: string]: gridSizeCell },
@@ -159,7 +160,7 @@ export const cardComponentMaker = (
     baseProps: { [key: string]: any },
     compontentInfo: {
         description?: string,
-        name?: string,
+        label?: string,
         group?: string,
         context?: Array<any>,
         gridInfo?: { [key: string]: gridSizeCell },
@@ -167,6 +168,7 @@ export const cardComponentMaker = (
     } = {},
 ): CardComponentTemplate => {
     let cardComponent = {
+        name: compontentInfo.label,
         settngDetail: {
             props,
             baseProps,
@@ -188,7 +190,7 @@ export const cardComponentMaker = (
 export interface cardComponent {
     name: string,
     type: cardComponentType,
-    data?: any | string,
+    data?: string,
     getFunc?: (data: any) => any,
 }
 
@@ -198,8 +200,15 @@ export const componentGetter = (component: cardComponent, componentLists: { [key
         case cardComponentType.componentList:
             return componentLists[component.name];
         case cardComponentType.fromData:
+            if (!component.data)
+                return '';
+            console.log(eval(component.data))
+            console.log(defineComponent(eval(component.data)))
+
             return {
-                component: defineComponent(component.data)
+                // component:defineComponent(Function('"use strict";return (' + component.data + ')')().bind(ref))
+                // component: defineComponent(eval('(()=>{return '+component.data+'})()')),
+                component: defineComponent(eval(component.data)),
             }
         // case cardComponentType.cusComponent:
     }

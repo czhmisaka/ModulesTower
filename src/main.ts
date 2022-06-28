@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 14:14:22
+ * @LastEditTime: 2022-06-27 21:39:59
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
