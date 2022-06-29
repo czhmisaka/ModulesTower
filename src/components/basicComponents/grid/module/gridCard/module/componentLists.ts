@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-27 22:02:19
+ * @LastEditTime: 2022-06-28 22:17:16
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';
@@ -33,7 +33,7 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
     }, {
         onClickFunc: () => { alert('icon点击事件触发') },
     }, {
-        label: 'Icon',
+        label: 'IconButton',
         labelNameCN: '图标触发器',
         key: 'icon',
         description: '输入图标名称,展示对应图标,基于ElementPlus的图标库,点击时触发对应自定义事件',

@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-27 21:39:59
+ * @LastEditTime: 2022-06-28 23:16:29
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
@@ -17,6 +17,7 @@ import utils from './utils'
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
 
 const app = createApp(App)
+
 app.config.globalProperties.$pageModules = pageModules
 app.config.globalProperties.$utils = utils
 for (let x in Icons) {
@@ -26,13 +27,10 @@ for (let x in Icons) {
         console.log('icon 加载失败 : ', x)
     }
 }
-
-
 app.component('CusIcon', iconCell)
-
-
 app.component('vue-drag-resize', Vue3DraggableResizable)
-
 app.use(router)
 app.use(ElementPlus)
+
+
 app.mount('#app')

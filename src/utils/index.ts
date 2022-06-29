@@ -1,12 +1,13 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-11 11:11:44
+ * @LastEditTime: 2022-06-28 23:25:47
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions } from "./cellClass";
 import * as Icons from '@element-plus/icons-vue'
-import { h } from "vue";
+import { h, createApp, Component } from "vue";
+
 
 // 对象字符串判空
 export function isValidKey(key: string | number | symbol, object: object): key is keyof typeof object {
@@ -42,6 +43,26 @@ export const deepClone = (initalObj: any): any => {
     }
     let finalObj: any = clone(initalObj);
     return finalObj
+}
+
+
+// 组件加载模式，为了适配用户自定义组件的载入时的环境
+export const createCusApp = (options: Component, rootProps?: Record<string, unknown> | null) => {
+    const app = createApp(options);
+    // app.config.globalProperties.$pageModules = pageModules
+    // app.config.globalProperties.$utils = utils
+    // for (let x in Icons) {
+    //     if (utils.isValidKey(x, Icons)) {
+    //         app.component(x, Icons[x])
+    //     } else {
+    //         console.log('icon 加载失败 : ', x)
+    //     }
+    // }
+    // app.component('CusIcon', iconCell)
+    // app.component('vue-drag-resize', Vue3DraggableResizable)
+    // app.use(router)
+    // app.use(ElementPlus)
+    return app
 }
 
 

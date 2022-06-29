@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-18 01:08:28
+ * @LastEditTime: 2022-06-28 22:36:55
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -9,18 +9,6 @@
   <span>
     <div :class="'baseModal ' + (modalControl.isOpen ? 'open' : 'close')" @click="close">
       <div class="formModalBox" @click.stop="fuckNothing">
-        <el-card header="组件属性" class="card">
-          <el-form :model="data" v-on:submit.prevent>
-            <el-form-item
-              v-for="(formItem, index) in dataInputTemplate"
-              :key="index + '_FormItem'"
-              :label="formItem.label"
-            >
-              <el-input v-model="data[formItem.key]" />
-            </el-form-item>
-          </el-form>
-        </el-card>
-
         <el-card header="组件模式" class="card">
           <el-form ref="form" v-on:submit.prevent>
             <el-form-item label="模式">
@@ -41,9 +29,13 @@
               label="固有组件"
               v-if="cardComponentDetail.type == cardComponentType.componentList"
             >
-              <el-select v-model="cardComponentDetail.name" placeholder="选择组件">
+              <el-select
+                v-model="cardComponentDetail.name"
+                placeholder="选择组件"
+                @change="componentLoaderChange"
+              >
                 <el-option
-                  :value="item.name"
+                  :value="index"
                   v-for="(item, index) in componentLists"
                   :key="item.name + '_' + index"
                 >
@@ -55,7 +47,6 @@
               label="代码"
               v-if="cardComponentDetail.type == cardComponentType.fromData"
             >
-              {{ cardComponentDetail.data }}
               <Codemirror
                 v-model:value="cardComponentDetail.data"
                 :options="cmOptions"
@@ -63,6 +54,18 @@
                 placeholder="test placeholder"
                 :height="600"
               />
+            </el-form-item>
+          </el-form>
+        </el-card>
+
+        <el-card header="组件属性" class="card">
+          <el-form :model="data" v-on:submit.prevent>
+            <el-form-item
+              v-for="(formItem, index) in dataInputTemplate"
+              :key="index + '_FormItem'"
+              :label="formItem.label"
+            >
+              <el-input v-model="data[formItem.key]" />
             </el-form-item>
           </el-form>
         </el-card>
@@ -124,6 +127,12 @@ export default defineComponent({
     };
   },
   methods: {
+    /**
+     * @name: getPropsData
+     * @description: 载入组件数据
+     * @authors: CZH
+     * @Date: 2022-06-28 21:53:23
+     */
     getPropsData() {
       // 拆分组件属性,设置表单数据
       this.dataInputTemplate = [];
@@ -145,21 +154,69 @@ export default defineComponent({
       this.cardComponentDetail = { ...this.detail.component };
       // 检查组件加载模式，设置fromData组件的初始值（假如为空）
       if (!this.cardComponentDetail.data || this.cardComponentDetail.data == "") {
-        this.cardComponentDetail.data = `function HelloWorld() {
-  const count = ref(0)
-  return ()=>h('p',['asdad'])
-}`;
+        this.cardComponentDetail.data = `{
+      setup(props) {
+        const name = ref('小米')
+        return { name }
+      },
+      render() {
+        return h('div', { style: { fontSize: '24px' } }, '你好' + this.name)
+      }
+    }`;
       }
 
       this.$forceUpdate();
     },
 
+    /**
+     * @name: componentLoaderChange
+     * @description: 判断组件加载状态&&加载模式，更新组件props输入表单
+     * @authors: CZH
+     * @Date: 2022-06-28 21:55:51
+     */
+    async componentLoaderChange() {
+      const { cardComponentDetail } = this;
+      let cardComponent = componentGetter(cardComponentDetail, componentLists);
+
+      // 根据不同的组件加载模式执行对应的检查方式
+      switch (cardComponentDetail.type) {
+        case cardComponentType.componentList:
+          // 重置输入模板
+          this.dataInputTemplate = [];
+          await this.$nextTick();
+          for (let x in cardComponent.settngDetail.props) {
+            this.dataInputTemplate.push({
+              key: x,
+              ...cardComponent.settngDetail.props[x],
+            });
+          }
+          break;
+        case cardComponentType.fromData:
+          break;
+        case cardComponentType.cusComponent:
+          break;
+      }
+    },
+
+    /**
+     * @name: open
+     * @description: 载入组件数据，之后打开编辑窗口
+     * @authors: CZH
+     * @Date: 2022-06-28 21:53:14
+     */
     async open() {
       this.getPropsData();
       await this.$nextTick();
       this.modalControl.isOpen = true;
     },
 
+    /**
+     * @name: close
+     * @description: 关闭组件编辑窗口，回填编辑后？的组件数据，目前版本会导致所有的组件重新加载
+     * @authors: CZH
+     * @Date: 2022-06-28 21:49:58
+     * @param {*} needSave
+     */
     async close(needSave = false) {
       if (needSave) {
         const gridList = [...this.gridList];
@@ -182,6 +239,7 @@ export default defineComponent({
       this.modalControl.isOpen = false;
     },
 
+    // 一个无用的函数
     fuckNothing() {},
   },
 });

@@ -1,13 +1,15 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-27 23:50:28
+ * @LastEditTime: 2022-06-28 22:36:02
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 
 import { cardUtil } from "./util";
 import { defineAsyncComponent, defineComponent, ref, h } from 'vue';
+import { createApp } from 'vue';
+
 export enum cardOnChangeType {
     upOnChange = 'upOnChange',
     onChange = 'onChange',
@@ -197,20 +199,28 @@ export interface cardComponent {
 
 export const componentGetter = (component: cardComponent, componentLists: { [key: string]: any }): any => {
     switch (component.type) {
+
         case cardComponentType.componentList:
-            return componentLists[component.name];
+            if (Object.keys(componentLists).indexOf(component.name)) {
+                return componentLists[component.name];
+            }
+            else {
+                return componentLists['iframe']
+            }
+
         case cardComponentType.fromData:
             if (!component.data)
                 return '';
-            console.log(eval(component.data))
-            console.log(defineComponent(eval(component.data)))
 
+            console.log(eval('(()=>{return ' + component.data + '})()'))
             return {
                 // component:defineComponent(Function('"use strict";return (' + component.data + ')')().bind(ref))
                 // component: defineComponent(eval('(()=>{return '+component.data+'})()')),
-                component: defineComponent(eval(component.data)),
+                component: createApp(eval('(()=>{return ' + component.data + '})()')),
             }
-        // case cardComponentType.cusComponent:
+
+        case cardComponentType.cusComponent:
+            break;
     }
 }
 

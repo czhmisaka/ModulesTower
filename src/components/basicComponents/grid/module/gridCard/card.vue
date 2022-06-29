@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-24 21:40:10
+ * @LastEditTime: 2022-06-29 08:47:37
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
@@ -10,9 +10,7 @@ import { getIcon } from "@/utils";
 import { defineComponent, h, reactive, toRefs, ref } from "vue";
 import { componentGetter, gridCellTemplate } from "./../dataTemplate";
 import { componentLists } from "./module/componentLists";
-
-import { ElLoading, ElIcon } from "element-plus";
-import iconCellVue from "@/components/basicComponents/cell/icon/iconCell.vue";
+import { ElIcon } from "element-plus";
 export default defineComponent({
   name: "gridCardBox",
   emits: ["onChange", "openComponentsList"],
@@ -49,6 +47,8 @@ export default defineComponent({
 
     const { sizeUnit, detail } = toRefs(props);
 
+    // 组件渲染函数
+
     // 判断动画尺寸
     const editShakeName = (size: { width: number; height: number }): string => {
       const { width, height } = size;
@@ -57,6 +57,7 @@ export default defineComponent({
       if (big < 8) return "editShakeM_GRID_CARD_BOX";
       return "editShakeL_GRID_CARD_BOX";
     };
+
     return () => [
       h(
         "div",
@@ -85,6 +86,7 @@ export default defineComponent({
                 background: "rgba(255,255,255,1)",
                 borderRadius: "12px",
                 zIndex: isLoading.value ? 100000 : -1,
+                // zIndex: -1,
                 display: "flex",
               },
             },
