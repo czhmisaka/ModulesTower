@@ -59,17 +59,18 @@
         </el-card>
 
         <el-card header="组件属性" class="card">
-          <el-form :model="data" v-on:submit.prevent>
+          <el-form :model="componentsProps" v-on:submit.prevent>
             <el-form-item
-              v-for="(formItem, index) in dataInputTemplate"
+              v-for="(formItem, index) in componentsPropsInputTemplate"
               :key="index + '_FormItem'"
               :label="formItem.label"
             >
-              <el-input v-model="data[formItem.key]" />
+              <el-input v-model="componentsProps[formItem.key]" />
             </el-form-item>
           </el-form>
         </el-card>
 
+        <el-card header="布局属性" class="card"> </el-card>
         <div class="BtnList">
           <el-button class="btn" type="primary" @click="close(true)">保存</el-button>
           <el-button @click="close">取消</el-button>
@@ -85,6 +86,7 @@ import {
   componentGetter,
   cardComponent,
   cardComponentType,
+  componentsGridInfo,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { defineComponent } from "vue";
 
@@ -106,10 +108,12 @@ export default defineComponent({
         isOpen: false,
       } as { [key: string]: any },
 
-      data: {} as { [key: string]: any },
-      dataInputTemplate: [] as Array<{
+      componentsProps: {} as { [key: string]: any },
+      componentsPropsInputTemplate: [] as Array<{
         [key: string]: any;
       }>,
+
+      componentsGridInfo: {} as componentsGridInfo,
 
       cardComponentDetail: {} as cardComponent,
       cardComponentType,
@@ -135,15 +139,15 @@ export default defineComponent({
      */
     getPropsData() {
       // 拆分组件属性,设置表单数据
-      this.dataInputTemplate = [];
-      this.data = { ...this.detail.options.props };
+      this.componentsPropsInputTemplate = [];
+      this.componentsProps = { ...this.detail.options.props };
 
       // componentList 模式属性预先加载
       if (this.detail.component.type == cardComponentType.componentList) {
         const props = componentGetter(this.detail.component, componentLists).settngDetail
           .props;
         for (let x in props) {
-          this.dataInputTemplate.push({
+          this.componentsPropsInputTemplate.push({
             key: x,
             ...props[x],
           });
@@ -182,10 +186,10 @@ export default defineComponent({
       switch (cardComponentDetail.type) {
         case cardComponentType.componentList:
           // 重置输入模板
-          this.dataInputTemplate = [];
+          this.componentsPropsInputTemplate = [];
           await this.$nextTick();
           for (let x in cardComponent.settngDetail.props) {
-            this.dataInputTemplate.push({
+            this.componentsPropsInputTemplate.push({
               key: x,
               ...cardComponent.settngDetail.props[x],
             });
@@ -226,7 +230,7 @@ export default defineComponent({
             ...this.detail.options,
             props: {
               ...this.detail.options.props,
-              ...this.data,
+              ...this.componentsProps,
             },
           },
           component: {

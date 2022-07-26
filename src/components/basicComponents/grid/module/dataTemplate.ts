@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-28 22:36:02
+ * @LastEditTime: 2022-07-25 14:54:28
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -43,6 +43,20 @@ export interface gridSizeCell {
     [key: string]: any
 }
 
+export interface componentsGridInfo {
+    default: {
+        position: {
+            x: number,
+            y: number,
+        },
+        size?: gridSizeCell,
+    },
+    size: {
+        middle: gridSizeCell,
+        [key: string]: gridSizeCell
+    }
+}
+
 
 export const gridSizeMaker = (width = 1, height = 1, options: { [key: string]: any } = {}): gridSizeCell => {
     return {
@@ -51,23 +65,19 @@ export const gridSizeMaker = (width = 1, height = 1, options: { [key: string]: a
         ...options
     }
 }
+
+
+/**
+ * @name: gridCellTemplate
+ * @description: 组件布局属性
+ * @authors: CZH
+ * @Date: 2022-07-24 16:56:14
+ */
 export interface gridCellTemplate {
     label: string,
     labelNameCN: string,
     key: string,
-    gridInfo: {
-        default: {
-            position: {
-                x: number,
-                y: number,
-            },
-            size?: gridSizeCell,
-        },
-        size: {
-            middle: gridSizeCell,
-            [key: string]: gridSizeCell
-        }
-    },
+    gridInfo: componentsGridInfo,
     component: cardComponent | any,
     options?: {
         props?: {
@@ -111,6 +121,7 @@ export enum inputType {
     boolean = 'boolean',
     number = 'number',
     numberSlider = 'numberSlider',
+    obj = 'object'
 }
 
 export interface CardComponentTemplate {

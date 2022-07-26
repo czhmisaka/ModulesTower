@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-28 22:17:16
+ * @LastEditTime: 2022-07-24 15:29:41
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';
@@ -9,7 +9,7 @@ import { cardComponentMaker, inputType, gridSizeMaker, CardComponentTemplate } f
 export const componentLists: { [key: string]: CardComponentTemplate } = {
     'iconCell': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/cell/icon/iconCell.vue')), {
         name: {
-            label: '标签名称',
+            label: '标签',
             type: inputType.text,
         },
     }, {}, {
@@ -103,4 +103,32 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
             large: gridSizeMaker(12, 8)
         }
     }),
+    'GridDesktop': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/grid/gridDesktop.vue')), {
+        cusStyle: {
+            label: '自定义样式',
+            type: inputType.obj
+        },
+        editable: {
+            label: '编辑状态',
+            type: inputType.boolean
+        },
+        gridColNum: {
+            label: '渲染列数',
+            type: inputType.number
+        },
+        desktopData: {
+            label: '组件载入列表',
+            type:inputType.obj
+        }
+    }, {}, {
+        label: 'GridDesktop',
+        labelNameCN: '扩展桌面组件',
+        key: 'GridDesktop',
+        description: '一个扩展桌面，需要载入组件后，提供桌面内的数据交互',
+        gridInfo: {
+            small: gridSizeMaker(6, 4),
+            middle: gridSizeMaker(9, 6),
+            large: gridSizeMaker(12, 8)
+        }
+    })
 }

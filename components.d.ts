@@ -9,6 +9,7 @@ declare module 'vue' {
     CardBox: typeof import('./src/components/basicComponents/grid/module/gridCard/module/cardBox.vue')['default']
     CardCell: typeof import('./src/components/basicComponents/cell/card/cardCell.vue')['default']
     CardEditModal: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue')['default']
+    ComponentsIconCard: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/componentsIconCard.vue')['default']
     ComponentsListModal: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue')['default']
     CustomDragElement: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/CustomDragElement.vue')['default']
     Editable: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/editable.vue')['default']

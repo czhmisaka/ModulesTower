@@ -49,6 +49,9 @@ export default defineComponent({
       h(
         ElPopper,
         {
+          style: {
+            cursor: "pointer",
+          },
           trigger: "hover",
           content: `双击${props.baseData.editable ? "关闭" : "打开"}编辑`,
         },

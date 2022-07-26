@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-20 09:24:50
+ * @LastEditTime: 2022-07-24 15:09:05
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
@@ -76,7 +76,8 @@ export const testData = [
         type: cardComponentType.componentList
     }, {
         props: {
-            url: 'http://guild.czht.top',
+            // url: 'http://guild.czht.top',
+            url: "http://42.192.134.238:8080/bloom-effect/"
         },
     }).setPosition(4, 0).setSize(8, 5),
 ]
