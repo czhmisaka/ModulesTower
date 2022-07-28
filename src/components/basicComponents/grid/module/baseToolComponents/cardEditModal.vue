@@ -70,7 +70,14 @@
           </el-form>
         </el-card>
 
-        <el-card header="布局属性" class="card"> </el-card>
+        <el-card header="布局属性" class="card">
+          {{ componentsGridInfo }}
+          <el-form :model="componentsProps" v-on:submit.prevent>
+            <el-form-item label="label">
+              <el-input v-model="model"></el-input>
+            </el-form-item>
+          </el-form>
+        </el-card>
         <div class="BtnList">
           <el-button class="btn" type="primary" @click="close(true)">保存</el-button>
           <el-button @click="close">取消</el-button>
@@ -153,6 +160,9 @@ export default defineComponent({
           });
         }
       }
+
+      // 获取组件布局信息
+      this.componentsGridInfo = { ...this.detail.gridInfo };
 
       // 获取当前组件模式
       this.cardComponentDetail = { ...this.detail.component };
@@ -237,7 +247,11 @@ export default defineComponent({
             ...this.detail.component,
             ...this.cardComponentDetail,
           },
-        };
+          gridInfo: {
+            ...this.detail.gridInfo,
+            ...this.componentsGridInfo,
+          },
+        } as cardComponent;
         this.$emit("onChange", this.componentIndex, gridList);
       }
       this.modalControl.isOpen = false;

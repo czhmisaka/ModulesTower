@@ -7,7 +7,7 @@
 <script lang="ts">
 import cardBox from "./module/cardBox.vue";
 import { getIcon } from "@/utils";
-import { defineComponent, h, reactive, toRefs, ref } from "vue";
+import { defineComponent, h, watch, toRefs, ref, getCurrentInstance } from "vue";
 import { componentGetter, gridCellTemplate } from "./../dataTemplate";
 import { componentLists } from "./module/componentLists";
 import { ElIcon } from "element-plus";
@@ -44,10 +44,7 @@ export default defineComponent({
   setup(props, context) {
     let children = props.detail.options.slots || null;
     let isLoading = ref(true);
-
     const { sizeUnit, detail } = toRefs(props);
-
-    // 组件渲染函数
 
     // 判断动画尺寸
     const editShakeName = (size: { width: number; height: number }): string => {

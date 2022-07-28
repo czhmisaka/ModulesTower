@@ -13,12 +13,13 @@
       background: 'rgba(0,0,0,0.02)',
     }"
   >
-    <gridDesktop @onChange="onChange" :grid-col-num="12"/>
+    <gridDesktop @onChange="onChange" :grid-col-num="12" :desktopData="testData" />
   </div>
 </template>
 
 <script lang="ts">
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
+import { testData } from "@/components/basicComponents/grid/module/testData";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -29,7 +30,9 @@ export default defineComponent({
     onChange: (): void => {},
   },
   data: () => {
-    return {};
+    return {
+      testData,
+    };
   },
 });
 </script>

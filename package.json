@@ -23,7 +23,7 @@
     "vue-class-component": "^8.0.0-0",
     "vue-drag-resize": "^1.5.4",
     "vue-router": "^4.0.0-0",
-    "vue3-draggable-resizable": "^1.6.3",
+    "vue3-draggable-resizable": "^1.6.4",
     "vue3-grid-layout": "^1.0.0"
   },
   "devDependencies": {

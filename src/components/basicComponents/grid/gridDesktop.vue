@@ -27,7 +27,7 @@
         :w="item.w"
         :h="item.h"
         :i="item.i"
-        :key="item.i"
+        :key="'card' + item.i + updateTimes"
         @move="gridItemOnMove"
         @resize="gridItemOnResize"
         class="grid-item"
@@ -71,8 +71,14 @@ import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
 import componentsListModal from "@/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue";
 import GridLayout from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridLayout.vue";
 import GridItem from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridItem.vue";
-
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
+
+let interval = null as any;
+let componentBoxInfo = {} as {
+  width: string | number;
+  height: string | number;
+};
+
 export default defineComponent({
   name: "gridDesktop",
   components: { card, GridLayout, GridItem, cardEditModal, componentsListModal },
@@ -122,6 +128,8 @@ export default defineComponent({
       cardOnChangeType,
       // 渲染用组件列表
       gridList: [],
+      // 更新组件用
+      updateTimes: 0,
 
       // 基础数据存放
       baseData: {
@@ -263,6 +271,22 @@ export default defineComponent({
 
   async mounted() {
     this.forceUpdateGridList();
+    if (interval) clearInterval(interval);
+    interval = setInterval(async () => {
+      let width =
+        document.getElementById("screenId")?.offsetWidth || document.body.offsetWidth;
+      let height =
+        document.getElementById("screenId")?.offsetHeight || document.body.offsetHeight;
+      if (componentBoxInfo?.width != width || componentBoxInfo?.height != height) {
+        this.$forceUpdate();
+        this.updateTimes++;
+        if (this.updateTimes > 99999) this.updateTimes = -11111;
+      }
+      componentBoxInfo = {
+        width: width,
+        height: height,
+      };
+    }, 500);
   },
 });
 </script>
