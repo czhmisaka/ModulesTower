@@ -70,11 +70,30 @@
           </el-form>
         </el-card>
 
-        <el-card header="布局属性" class="card">
+        <el-card
+          header="布局属性"
+          class="card"
+          v-if="componentsGridInfo && componentsGridInfo.default"
+        >
           {{ componentsGridInfo }}
-          <el-form :model="componentsProps" v-on:submit.prevent>
-            <el-form-item label="label">
-              <el-input v-model="model"></el-input>
+          <el-form :model="componentsGridInfo" v-on:submit.prevent>
+            <el-form-item label="X轴距离">
+              <el-slider
+                v-model="componentsGridInfo.default.position.x"
+                :step="1"
+                :min="0"
+                :max="sizeUnit.colNum"
+                show-stops
+              />
+            </el-form-item>
+            <el-form-item label="Y轴距离">
+              <el-slider
+                v-model="componentsGridInfo.default.position.y"
+                :step="1"
+                :min="0"
+                :max="componentsGridInfo.default.position.y + 6"
+                show-stops
+              />
             </el-form-item>
           </el-form>
         </el-card>
@@ -107,21 +126,28 @@ export default defineComponent({
   components: {
     Codemirror,
   },
-  props: ["detail", "gridList", "componentIndex"],
+  props: ["detail", "gridList", "componentIndex", "sizeUnit"],
   data() {
     return {
+      // componentsType.componentList 加载方式中可使用的组件列表
       componentLists,
       modalControl: {
         isOpen: false,
       } as { [key: string]: any },
 
+      // 组件属性配置
       componentsProps: {} as { [key: string]: any },
       componentsPropsInputTemplate: [] as Array<{
         [key: string]: any;
       }>,
 
+      // 组件布局配置
       componentsGridInfo: {} as componentsGridInfo,
+      componentsGridInfoInputTemplate: [] as Array<{
+        [key: string]: any;
+      }>,
 
+      // 组件数据
       cardComponentDetail: {} as cardComponent,
       cardComponentType,
 

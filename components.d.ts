@@ -28,6 +28,7 @@ declare module 'vue' {
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElSlider: typeof import('element-plus/es')['ElSlider']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     FuncComponentLoader: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/funcComponentLoader.vue')['default']
     GridDesktop: typeof import('./src/components/basicComponents/grid/gridDesktop.vue')['default']

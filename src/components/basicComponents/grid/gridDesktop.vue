@@ -54,6 +54,7 @@
       ref="cardEdit"
       :gridList="gridList"
       :componentIndex="baseData._componentIndex"
+      :sizeUnit="gridRowNumAndUnit()"
       @onChange="
         (index, value) =>
           cardOnChange(index, value, { type: [cardOnChangeType.gridCardListonChange] })
@@ -243,6 +244,7 @@ export default defineComponent({
         height:
           document.getElementById("screenId")?.offsetHeight || document.body.offsetHeight,
         rowNum: 0,
+        colNum: this.gridColNum,
         unit: "vw",
         blockSize: 0, // px单位的 单个grid单元大小
       };
