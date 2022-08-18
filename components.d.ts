@@ -45,6 +45,7 @@ declare module 'vue' {
     InputList: typeof import('./src/components/basicComponents/list/input/inputList.vue')['default']
     LineSlideExchange: typeof import('./src/components/animate/lineSlideExchange.vue')['default']
     Menu: typeof import('./src/components/menu/menu.vue')['default']
+    PropInputDeal: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/propInputDeal.vue')['default']
     TableCell: typeof import('./src/components/basicComponents/cell/table/tableCell.vue')['default']
     TableList: typeof import('./src/components/basicComponents/list/table/tableList.vue')['default']
   }

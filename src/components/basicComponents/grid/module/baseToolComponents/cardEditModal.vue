@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-28 22:36:55
+ * @LastEditTime: 2022-08-11 23:10:31
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -75,14 +75,13 @@
           class="card"
           v-if="componentsGridInfo && componentsGridInfo.default"
         >
-          {{ componentsGridInfo }}
           <el-form :model="componentsGridInfo" v-on:submit.prevent>
             <el-form-item label="X轴距离">
               <el-slider
                 v-model="componentsGridInfo.default.position.x"
                 :step="1"
                 :min="0"
-                :max="sizeUnit.colNum"
+                :max="sizeUnit.colNum - componentsGridInfo.default.size.width"
                 show-stops
               />
             </el-form-item>
@@ -96,6 +95,24 @@
               />
             </el-form-item>
           </el-form>
+          <el-form-item label="组件 宽">
+            <el-slider
+              v-model="componentsGridInfo.default.size.width"
+              :step="1"
+              :min="0"
+              :max="sizeUnit.colNum - componentsGridInfo.default.position.x"
+              show-stops
+            />
+          </el-form-item>
+          <el-form-item label="组件 高">
+            <el-slider
+              v-model="componentsGridInfo.default.size.height"
+              :step="1"
+              :min="1"
+              :max="componentsGridInfo.default.size.height + 6"
+              show-stops
+            />
+          </el-form-item>
         </el-card>
         <div class="BtnList">
           <el-button class="btn" type="primary" @click="close(true)">保存</el-button>

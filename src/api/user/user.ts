@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-05 14:44:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-04-10 22:09:32
+ * @LastEditTime: 2022-08-11 23:36:37
  * @FilePath: /configforpagedemo/src/api/user/user.ts
  */
 
@@ -19,7 +19,7 @@ interface User{
 
 // 创建用户
 export const CreateUser = async (data:User) => {
-    let res:any = await post(`${mainPath}`, data)
+    let res = await post(`${mainPath}`, data)
     return res
 }
 

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-24 20:48:39
+ * @LastEditTime: 2022-08-15 23:53:24
  * @FilePath: /configforpagedemo/src/views/Home.vue
 -->
 
@@ -27,11 +27,24 @@ export default defineComponent({
     gridDesktop,
   },
   methods: {
-    onChange: (): void => {},
+    async init() {},
+  },
+  watch: {
+    $route: {
+      handler() {
+        this.init();
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    this.init();
   },
   data: () => {
     return {
       testData,
+
+      Env: {},
     };
   },
 });
