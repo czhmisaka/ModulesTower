@@ -1,23 +1,103 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-21 14:10:38
+ * @LastEditTime: 2022-08-22 00:34:34
  * @FilePath: /configforpagedemo/README.md
 -->
 
 # configForDesktopPage
 
+项目地址：[体验地址](http://42.192.134.238/workbench/#/)
+项目仓库：[configForDesktopPage](https://github.com/czhmisaka/ConfigForDesktopPage)
 这是一款针对web小团队协作开发用的组件，可以有效的复用代码，开发的同时产出组件的使用说明和文档。
 通过引入GridDesktop组件，输入组件配置列表，即可使用组件构建出一个简单的界面。
 同时在桌面页面中也配置了一些基础配置动画和配置工具，方便开发调试。
 
 ## 桌面
 
+桌面本身也是一个组件，可以在项目中按需引用。
+具体路径：
+*@/components/basicComponents/grid/gridDesktop.vue*
+使用参考配置
+
+```html
+<template>
+    <gridDesktop @onChange="onChange" :grid-col-num="12" :desktopData="testData" :cusStyle="cusStyle"/>
+</template>
+```
+
+具体组件详情可参考
+
+```Typescript
+const props = {
+    // 自定样式
+    cusStyle: {
+      type: Object,
+      default: () => {
+        return {} as {
+          // 全屏幕展示
+          wholeScreen?: boolean;
+          maxRows?: number;
+          [key: string]: any;
+        };
+      },
+    },
+
+    // 可编辑状态 // 目前尚未实装功能
+    editable: {
+      type: Boolean,
+      default: false,
+    },
+
+    // 渲染间隔
+    gridColNum: {
+      type: Number,
+      default: 12,
+    },
+
+    // 可以使用的组件列表
+    desktopData: {
+      type: Array,
+      default: () => {
+        return testData as Array<gridCellTemplate>;
+      },
+    },
+  },
+```
+
 ## 组件
 
-### 组件-如何渲染
+### 组件-基座
 
-参考 *@/components/basicComponents/grid/module/gridCard/card.vue*
+组件底座
+*@/components/basicComponents/grid/module/gridCard/card.vue*
+
+组件底座将会基于组件本身属性提供以下功能
+
+1. 属性配置界面，可以实时配置属性
+2. 提供emit事件可以单独配置组件加载状态
+3. 提供组件布局（需要组件本身支持响应式布局）
+4. 依照组件配置项可以快速生成组件文档
+
+桌面组件将会响应以下onChange事件类型
+
+```Typescript
+export enum cardOnChangeType {
+    upOnChange = 'upOnChange',
+    onChange = 'onChange',
+    forceRefresh = 'forceRefresh',
+    forceRefreshToOrgin = 'forceRefreshToOrgin',
+    gridCardListonChange = 'gridCardListonChange',
+    cardConfigChange = 'cardConfigChange',
+    cardEdit = 'cardEdit',
+    cardDelete = 'cardDelete',
+    openComponentsList = 'openComponentsList',
+}
+```
+
+### 组件-通用功能
+
+通用功能基于emit事件实现
 
 ### 组件-注册方式
 
@@ -65,7 +145,6 @@ export const cardComponentMaker = (
 }
 
 ```
-
 
 ### 组件-加载方案
 
@@ -124,7 +203,10 @@ export interface cardComponent {
 2. data中用于存放当前模块中的API，图片，配置数据等资源
 3. 单独存放一个Router编写当前组件的路由
 4. index.vue中可以通过加载不同的桌面配置文件来切换当前页面的功能
+
 <img src='./markDownImage/file.png'>
+
+**图片仅作为示范，并非本项目内容**
 
 ## 一些开发过程中需要注意的地方
 
@@ -158,7 +240,4 @@ npm run dev
 npm run build
 ```
 
-
-
 --------------------------------
-
