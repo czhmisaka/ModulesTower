@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-24 23:51:46
+ * @LastEditTime: 2022-08-24 00:16:07
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -27,16 +27,18 @@
         :w="item.w"
         :h="item.h"
         :i="item.i"
-        :key="'card' + item.i + updateTimes"
+        :key="item.i"
         @move="gridItemOnMove"
         @resize="gridItemOnResize"
         class="grid-item"
+        :style="gridItemStyle(gridList[index])"
       >
         <card
           :ref="'card_' + index"
           :detail="{ ...gridList[index], index }"
           :baseData="baseData"
           :sizeUnit="gridRowNumAndUnit()"
+          :gridList="gridList"
           @onChange="(value, options) => cardOnChange(index, value, options)"
         />
       </grid-item>
@@ -65,6 +67,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import cardEditModal from "@/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue";
 import { testData } from "./module/testData";
 import { cardOnChangeType, gridCellTemplate } from "./module/dataTemplate";
@@ -88,10 +91,15 @@ export default defineComponent({
     cusStyle: {
       type: Object,
       default: () => {
-        return {} as {
+        return {
+          wholeScreen: false,
+          maxRows: 12,
+          margin: 10,
+        } as {
           // 全屏幕展示
-          wholeScreen?: boolean;
-          maxRows?: number;
+          wholeScreen: false;
+          maxRows: number;
+          margin: number;
           [key: string]: any;
         };
       },
@@ -195,6 +203,11 @@ export default defineComponent({
       }
     ) {
       options.type.map(async (type) => {
+        console.log(
+          "组件" + this.gridList[index].labelNameCN,
+          "请求执行事件<" + type + ">",
+          value
+        );
         if (type == cardOnChangeType.onChange) {
           for (let x in value) {
             this.baseData[x] = value[x];
@@ -217,6 +230,20 @@ export default defineComponent({
             this.gridList[index] = value[index];
           } else {
             this.gridList = [...value];
+          }
+        } else if (type == cardOnChangeType.cardConfigChange) {
+          if (typeof value == "object") {
+            const changeList = Object.keys(value);
+            this.gridList = this.gridList.map((card: gridCellTemplate) => {
+              changeList.map((x: string) => {
+                if (card.label == x) {
+                  card = deepMerge(JSON.parse(JSON.stringify(value[x])), card);
+                }
+              });
+              return card;
+            });
+          } else {
+            console.error("输入数据有误", value);
           }
         } else if (type == cardOnChangeType.cardEdit) {
           this.baseData._componentDetail = this.gridList[index];
@@ -247,6 +274,7 @@ export default defineComponent({
         colNum: this.gridColNum,
         unit: "vw",
         blockSize: 0, // px单位的 单个grid单元大小
+        margin: this.cusStyle?.margin || 12,
       };
       if (screen.height * 1 > screen.width * 1 || this.cusStyle.wholeScreen == true) {
         screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
@@ -257,12 +285,42 @@ export default defineComponent({
         screen.blockSize =
           screen.unit == "vw"
             ? (screen.width -
-                this.gridColNum * this.baseData.margin -
-                this.baseData.margin) /
+                this.gridColNum * this.cusStyle.margin -
+                this.cusStyle.margin) /
               this.gridColNum
             : screen.height / this.gridColNum;
       }
       return screen;
+    },
+
+    /**
+     * @name: gridItemStyle
+     * @description: 计算组件grid Item 属性的数据
+     * @authors: CZH
+     * @Date: 2022-08-18 18:16:17
+     * @param {*} gridCell
+     */
+    gridItemStyle(gridCell: gridCellTemplate): { [key: string]: string } {
+      let style: { [key: string]: string } = {};
+      if (
+        "options" in gridCell &&
+        gridCell.options &&
+        "showInGridDesktop" in gridCell.options
+      ) {
+        if (gridCell.options.showInGridDesktop) {
+          style = {
+            ...style,
+            maxWidth: "10000px",
+          };
+        } else {
+          style = {
+            ...style,
+            maxWidth: "0px",
+            overflow: "hidden",
+          };
+        }
+      }
+      return style;
     },
 
     // 填充gridList
@@ -304,7 +362,6 @@ export default defineComponent({
   width: 100vw;
   height: 100vh;
 }
-
 @keyframes hoverFadeInOut {
   0% {
     background-color: rgba(0, 0, 0, 0);
@@ -318,6 +375,9 @@ export default defineComponent({
 }
 .bgGridCell {
   opacity: 0;
+}
+.grid-item {
+  transition: max-width 0.4s;
 }
 .bgGridCell:hover {
   animation: hoverFadeInOut 1.2s infinite;

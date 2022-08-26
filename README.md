@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-22 00:34:34
+ * @LastEditTime: 2022-08-22 14:02:12
  * @FilePath: /configforpagedemo/README.md
 -->
 
@@ -64,6 +64,7 @@ const props = {
     },
   },
 ```
+
 
 ## 组件
 
@@ -229,6 +230,7 @@ npm install
 ```
 
 #### Compiles and hot-reloads for development
+
 
 ```shell
 npm run dev

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-21 21:24:03
+ * @LastEditTime: 2022-08-23 20:54:21
  * @FilePath: /configforpagedemo/src/views/Home.vue
 -->
 
@@ -31,7 +31,7 @@ export default defineComponent({
   },
   watch: {
     $route: {
-      handler() {
+      handler(): void {
         this.init();
       },
       deep: true,

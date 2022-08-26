@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-07-24 15:09:05
+ * @LastEditTime: 2022-08-23 23:21:42
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
@@ -27,9 +27,9 @@ export const testData = [
                     type: [cardOnChangeType.openComponentsList]
                 })
             }
-        }
+        },
     }).setPosition(0, 0).setSize(1, 1),
-    gridCellMaker('elcard', '卡片', {}, {
+    gridCellMaker('elcard1', '卡片', {}, {
         name: 'elcard',
         type: cardComponentType.componentList
     }, {
@@ -40,7 +40,7 @@ export const testData = [
             img: 'https://pic1.zhimg.com/80/v2-b8e48ee4c2efb2813c42c3778743a2c4_1440w.jpg',
         }
     }).setPosition(0, 1).setSize(2, 2),
-    gridCellMaker('elcard', '卡片', {}, {
+    gridCellMaker('elcard2', '卡片', {}, {
         name: 'elcard',
         type: cardComponentType.componentList
     }, {
@@ -51,7 +51,7 @@ export const testData = [
             img: 'https://images3.alphacoders.com/111/thumb-1920-1111255.jpg',
         }
     }).setPosition(2, 0).setSize(2, 2),
-    gridCellMaker('elcard', '卡片', {}, {
+    gridCellMaker('elcard3', '卡片', {}, {
         name: 'elcard',
         type: cardComponentType.componentList
     }, {
@@ -62,7 +62,7 @@ export const testData = [
             img: 'https://images7.alphacoders.com/573/thumb-1920-573701.jpg',
         }
     }).setPosition(2, 2).setSize(2, 2),
-    gridCellMaker('elcard', '卡片', {}, {
+    gridCellMaker('elcard4', '卡片', {}, {
         name: 'elcard',
         type: cardComponentType.componentList
     }, {

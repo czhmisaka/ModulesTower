@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-21 23:56:09
+ * @LastEditTime: 2022-08-23 23:22:21
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -44,12 +44,15 @@ export interface gridSizeCell {
     [key: string]: any
 }
 
+export interface gridPositionCell {
+    x: number,
+    y: number
+}
+
+
 export interface componentsGridInfo {
     default: {
-        position: {
-            x: number,
-            y: number,
-        },
+        position: gridPositionCell
         size?: gridSizeCell,
     },
     size: {
@@ -68,6 +71,16 @@ export const gridSizeMaker = (width = 1, height = 1, options: { [key: string]: a
 }
 
 
+
+
+export interface gridCellOptions {
+    props?: {
+        [key: string]: any,
+    },
+    showInGridDesktop?: Boolean,
+    [key: string]: any
+}
+
 /**
  * @name: gridCellTemplate
  * @description: 组件布局属性
@@ -80,12 +93,7 @@ export interface gridCellTemplate {
     key: string,
     gridInfo: componentsGridInfo,
     component: cardComponent | any,
-    options?: {
-        props?: {
-            [key: string]: any,
-        },
-        [key: string]: any
-    },
+    options?: gridCellOptions,
     data?: {
         methods: {
 
@@ -245,12 +253,15 @@ export const componentGetter = (component: cardComponent, componentLists: { [key
  * @param {object} size
  * @param {object} options
  */
-export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: string]: gridSizeCell } = {}, component: cardComponent | any, options: { [key: string]: any }): gridCellTemplate => {
+export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: string]: gridSizeCell } = {}, component: cardComponent | any, options: gridCellOptions): gridCellTemplate => {
     let gridCell: gridCellTemplate = {
         label,
         labelNameCN,
         key: label,
-        options,
+        options: {
+            showInGridDesktop: true,
+            ...options
+        },
         component,
         gridInfo: {
             default: {
