@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-24 00:16:07
+ * @LastEditTime: 2022-08-27 18:44:50
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -214,7 +214,9 @@ export default defineComponent({
     ) {
       options.type.map(async (type) => {
         console.log(
-          "组件" + this.gridList[index].labelNameCN,
+          index != -1 && index < this.gridList.length
+            ? "组件" + this.gridList[index].labelNameCN
+            : "桌面组件",
           "请求执行事件<" + type + ">",
           value
         );
@@ -244,14 +246,22 @@ export default defineComponent({
         } else if (type == cardOnChangeType.cardConfigChange) {
           if (typeof value == "object") {
             const changeList = Object.keys(value);
-            this.gridList = this.gridList.map((card: gridCellTemplate) => {
+            const needRefreshCardList = [] as number[];
+            this.gridList = this.gridList.map((card: gridCellTemplate, index: number) => {
               changeList.map((x: string) => {
                 if (card.label == x) {
+                  needRefreshCardList.push(index);
                   card = deepMerge(JSON.parse(JSON.stringify(value[x])), card);
                 }
               });
               return card;
             });
+            needRefreshCardList.map((item) => {
+              if (this.$refs["card_" + item] && this.$refs["card_" + item].length > 0) {
+                this.$refs["card_" + item][0].$forceUpdate();
+              }
+            });
+            console.log(this.gridList);
           } else {
             console.error("输入数据有误", value);
           }
@@ -277,27 +287,19 @@ export default defineComponent({
     gridRowNumAndUnit() {
       let screen = {
         width:
-          document.getElementById("screenId")?.offsetWidth ||
-          document.body.offsetWidth,
+          document.getElementById("screenId")?.offsetWidth || document.body.offsetWidth,
         height:
-          document.getElementById("screenId")?.offsetHeight ||
-          document.body.offsetHeight,
+          document.getElementById("screenId")?.offsetHeight || document.body.offsetHeight,
         rowNum: 0,
         colNum: this.gridColNum,
         unit: "vw",
         blockSize: 0, // px单位的 单个grid单元大小
         margin: this.cusStyle?.margin || 12,
       };
-      if (
-        screen.height * 1 > screen.width * 1 ||
-        this.cusStyle.wholeScreen == true
-      ) {
-        screen.rowNum = Math.floor(
-          screen.width / (screen.height / this.gridColNum)
-        );
+      if (screen.height * 1 > screen.width * 1 || this.cusStyle.wholeScreen == true) {
+        screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
         screen.unit = "vh";
-        screen.blockSize =
-          screen.height / (this.cusStyle.maxRows || this.gridColNum);
+        screen.blockSize = screen.height / (this.cusStyle.maxRows || this.gridColNum);
       } else {
         screen.rowNum = Math.floor(screen.height / this.gridColNum);
         screen.blockSize =
@@ -320,17 +322,21 @@ export default defineComponent({
      */
     gridItemStyle(gridCell: gridCellTemplate): { [key: string]: string } {
       let style: { [key: string]: string } = {};
-      if (gridCell.options && gridCell.options.showInGridDesktop) {
+      if (
+        "options" in gridCell &&
+        gridCell.options &&
+        "showInGridDesktop" in gridCell.options
+      ) {
         if (gridCell.options.showInGridDesktop) {
           style = {
             ...style,
             maxWidth: "10000px",
-            zIndex: "1000",
+            zIndex: "100",
           };
         } else {
           style = {
             ...style,
-            maxWidth: "0px",
+            maxWidth: "100%",
             overflow: "hidden",
             zIndex: "1",
           };
@@ -350,15 +356,10 @@ export default defineComponent({
     if (interval) clearInterval(interval);
     interval = setInterval(async () => {
       let width =
-        document.getElementById("screenId")?.offsetWidth ||
-        document.body.offsetWidth;
+        document.getElementById("screenId")?.offsetWidth || document.body.offsetWidth;
       let height =
-        document.getElementById("screenId")?.offsetHeight ||
-        document.body.offsetHeight;
-      if (
-        componentBoxInfo?.width != width ||
-        componentBoxInfo?.height != height
-      ) {
+        document.getElementById("screenId")?.offsetHeight || document.body.offsetHeight;
+      if (componentBoxInfo?.width != width || componentBoxInfo?.height != height) {
         this.$forceUpdate();
         this.updateTimes++;
         if (this.updateTimes > 99999) this.updateTimes = -11111;

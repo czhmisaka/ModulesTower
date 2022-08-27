@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-05-30 10:48:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-02 17:27:33
- * @FilePath: /o2oaweb/src/thirdThemeComponents/grid/module/baseComponents/componentsListModal.vue
+ * @LastEditTime: 2022-08-27 16:06:09
+ * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue
 -->
 
 <template>
@@ -26,7 +26,6 @@
         @dblclick="addComponent(item)"
       >
         {{ componentMap[item] }}
-        <!-- <componentsIconCard :cardComponents="componentMap[item]" /> -->
       </div>
     </div>
   </div>
@@ -40,6 +39,7 @@ import {
   gridCellMaker,
   cardComponentType,
   gridCellTemplate,
+  CardComponentTemplate,
 } from "../dataTemplate";
 export default defineComponent({
   props: ["sizeUnit", "gridList"],
@@ -66,7 +66,7 @@ export default defineComponent({
 
     // 添加组件
     addComponent(name: string) {
-      const comp = this.componentMap[name];
+      const comp = this.componentMap[name] as CardComponentTemplate;
       let newComp: gridCellTemplate = gridCellMaker(
         name,
         name,
@@ -75,7 +75,11 @@ export default defineComponent({
           name,
           type: cardComponentType.componentList,
         },
-        {}
+        {
+          props: {
+            ...comp.settngDetail.baseProps,
+          },
+        }
       );
       if (comp.compontentInfo && comp.compontentInfo.group == "settingTool") {
         newComp.options = {

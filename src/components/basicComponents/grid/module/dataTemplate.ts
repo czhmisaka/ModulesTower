@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-23 23:22:21
+ * @LastEditTime: 2022-08-27 16:47:54
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -130,7 +130,8 @@ export enum inputType {
     boolean = 'boolean',
     number = 'number',
     numberSlider = 'numberSlider',
-    obj = 'object'
+    obj = 'object',
+    functionEditor='functionEditor'
 }
 
 export interface CardComponentTemplate {

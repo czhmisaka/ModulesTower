@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-29 08:47:37
+ * @LastEditTime: 2022-08-27 19:23:37
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
@@ -55,6 +55,17 @@ export default defineComponent({
       return "editShakeL_GRID_CARD_BOX";
     };
 
+    // 判断当前组件是否应该显示
+    const isShow = () => {
+      let back =
+        Object.keys(props.detail.options).indexOf("showInGridDesktop") != -1
+          ? props.detail.options.showInGridDesktop
+            ? true
+            : false
+          : true;
+      return back;
+    };
+
     return () => [
       h(
         "div",
@@ -64,6 +75,9 @@ export default defineComponent({
             height: "100%",
             overflow: "hidden",
             userSelect: "none",
+            transition: isShow() ? "opacity 0.4s,margin 1s" : "opacity 0.4s,margin 0.6s",
+            margin: isShow() ? "0px" : "0px 0px 0px -30px",
+            opacity: isShow() ? 1 : 0,
             Animation: props.baseData.editable
               ? editShakeName(props.detail.gridInfo.default.size) +
                 " 0.3s ease-in-out infinite"
@@ -71,38 +85,39 @@ export default defineComponent({
           },
         },
         [
-          h(
-            "div",
-            {
-              style: {
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                top: 0,
-                left: 0,
-                background: "rgba(255,255,255,1)",
-                borderRadius: "12px",
-                zIndex: isLoading.value ? 100000 : -1,
-                // zIndex: -1,
-                display: "flex",
-              },
-            },
-            [
-              h(
-                ElIcon,
+          isShow()
+            ? h(
+                "div",
                 {
                   style: {
-                    top: "50%",
-                    left: "50%",
-                    margin: "-" + sizeUnit.value.blockSize * 0.25 + "px",
-                    fontSize: sizeUnit.value.blockSize * 0.5 + "px",
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                    top: 0,
+                    left: 0,
+                    background: "rgba(255,255,255,1)",
+                    borderRadius: "12px",
+                    zIndex: isLoading.value ? 100000 : -1,
+                    display: "flex",
                   },
-                  class: "is-loading",
                 },
-                () => h(getIcon("Loading"))
-              ),
-            ]
-          ),
+                [
+                  h(
+                    ElIcon,
+                    {
+                      style: {
+                        top: "50%",
+                        left: "50%",
+                        margin: "-" + sizeUnit.value.blockSize * 0.25 + "px",
+                        fontSize: sizeUnit.value.blockSize * 0.5 + "px",
+                      },
+                      class: "is-loading",
+                    },
+                    () => h(getIcon("Loading"))
+                  ),
+                ]
+              )
+            : null,
           h(cardBox, {
             style: {
               width: "100%",

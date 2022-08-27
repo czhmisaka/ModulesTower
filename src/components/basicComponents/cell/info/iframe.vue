@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-22 18:23:04
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-24 00:17:48
+ * @LastEditTime: 2022-08-27 15:49:21
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/iframe.vue
 -->
 <script lang="ts">
@@ -23,37 +23,22 @@ export default defineComponent({
   },
   setup(props, context) {
     const { url } = toRefs(props);
-
-    const isVisible = ref(false);
     context.emit("ready");
     return () => [
-      h(
-        cardBg,
-        {
-            onClick: () => {
-              console.log(isVisible.value, "asd");
-              isVisible.value = !isVisible.value;
-              changeVisible(context, {
-                elcard1: isVisible.value,
-              });
-            }
-        },
-        ()=>null
-        // () => [
-        //   h("iframe", {
-        //     style: {
-        //       width: "100%",
-        //       height: "100%",
-        //       border: "none",
-        //       borderRadius: "12px",
-        //     },
-        //     src: url.value,
-        //     onLoad: () => {
-        //       context.emit("ready");
-        //     },
-        //   }),
-        // ]
-      ),
+      h(cardBg, {}, () => [
+        h("iframe", {
+          style: {
+            width: "100%",
+            height: "100%",
+            border: "none",
+            borderRadius: "12px",
+          },
+          src: url.value,
+          onLoad: () => {
+            context.emit("ready");
+          },
+        }),
+      ]),
     ];
   },
 });

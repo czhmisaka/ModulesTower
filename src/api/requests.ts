@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-06-22 09:12:14
+ * @LastEditTime: 2022-08-27 19:34:14
  * @FilePath: /configforpagedemo/src/api/requests.ts
  */
 
@@ -93,11 +93,11 @@ request.interceptors.response.use(response => {
 })
 
 
-export const get = (url: string, data: object) => {
+export const get = (url: string, params: any) => {
     return request({
         url,
-        method:'get',
-        data,
+        method: 'get',
+        params,
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },
@@ -107,7 +107,7 @@ export const get = (url: string, data: object) => {
 export function post(url: string, data: object) {
     return request({
         url,
-        method:'post',
+        method: 'post',
         data,
         headers: {
             'Content-Type': 'application/json;charset=utf-8'

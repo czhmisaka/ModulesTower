@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-07-24 15:29:41
+ * @LastEditTime: 2022-08-27 18:34:54
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';
@@ -28,10 +28,18 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
         },
         onClickFunc: {
             label: '触发事件',
-            type: inputType.text,
+            type: inputType.functionEditor,
+        },
+        tips: {
+            label: '提示标签',
+            type: inputType.text
         }
     }, {
-        onClickFunc: () => { alert('icon点击事件触发') },
+        name: 'Position',
+        onClickFunc: (content: any) => {
+            const { props, context, e } = content;
+            console.log(props, context, e)
+        },
     }, {
         label: 'IconButton',
         labelNameCN: '图标触发器',
@@ -103,6 +111,17 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
             large: gridSizeMaker(12, 8)
         }
     }),
+    'userLogin': cardComponentMaker(defineAsyncComponent(() => import('@/components/userInfo/login.vue')), {
+    }, {
+    }, {
+        label: 'userLogin',
+        labelNameCN: '用户登录',
+        key: 'userLogin',
+        description: '一个用户登录用组件',
+        gridInfo: {
+            small: gridSizeMaker(4, 2),
+        }
+    }),
     'GridDesktop': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/grid/gridDesktop.vue')), {
         cusStyle: {
             label: '自定义样式',
@@ -118,7 +137,7 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
         },
         desktopData: {
             label: '组件载入列表',
-            type:inputType.obj
+            type: inputType.obj
         }
     }, {}, {
         label: 'GridDesktop',

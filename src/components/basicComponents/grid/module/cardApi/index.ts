@@ -30,18 +30,17 @@ const checkContext = (content: { [key: string]: any }, value: { [key: string]: a
  * @param {any} target
  * @param {any} other
  */
- export const deepMerge = (target: any, other: any) => {
+export const deepMerge = (target: any, other: any) => {
     const targetToString = Object.prototype.toString.call(target);
-    const otherToString = Object.prototype.toString.call(target);
-    if (targetToString === "[object Object]" && otherToString === "[object Object]") {
+    if (targetToString === "[object Object]") {
         for (let [key, val] of Object.entries(other)) {
-            if (!target[key]) {
-                target[key] = val;
-            } else {
+            if (key in target) {
                 target[key] = deepMerge(target[key], val);
+            } else {
+                target[key] = val;
             }
         }
-    } else if (targetToString === "[object Array]" && otherToString === "[object Array]") {
+    } else if (targetToString === "[object Array]") {
         for (let [key, val] of Object.entries(other)) {
             if (target[key]) {
                 target[key] = deepMerge(target[key], val);
