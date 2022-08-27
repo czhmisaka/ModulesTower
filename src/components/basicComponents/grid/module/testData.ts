@@ -38,7 +38,7 @@ export const testData = [
             title: '壁纸',
             content: '--来自鬼刀大佬',
             img: 'https://pic1.zhimg.com/80/v2-b8e48ee4c2efb2813c42c3778743a2c4_1440w.jpg',
-        }
+        },
     }).setPosition(0, 1).setSize(2, 2),
     gridCellMaker('elcard2', '卡片', {}, {
         name: 'elcard',
@@ -76,8 +76,8 @@ export const testData = [
         type: cardComponentType.componentList
     }, {
         props: {
-            // url: 'http://guild.czht.top',
-            url: "http://42.192.134.238:8080/bloom-effect/"
+            url: 'http://guild.czht.top',
+            // url: "http://42.192.134.238:8080/bloom-effect/"
         },
     }).setPosition(4, 0).setSize(8, 5),
 ]

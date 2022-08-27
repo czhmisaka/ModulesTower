@@ -9,25 +9,21 @@
 
 const proxyTemplate_dev = {
     name: 'dev',
-    target: 'http://localhost:8000/',
+    target: 'http://42.192.134.238:8000/',
     changeOrigin: true,
     ws: true,
-    pathRewrite: {
-
-    }
+    pathRewrite: {}
 }
 
 const proxyTemplate_prod = {
-    name: 'dev',
-    target: 'http://localhost:8000/',
+    name: 'prod',
+    target: 'http://42.192.134.238:8000/',
     changeOrigin: true,
     ws: true,
-    pathRewrite: {
-
-    }
+    pathRewrite: {}
 }
 
-const proxyMap = { proxyTemplate_dev, proxyTemplate_prod }
+const proxyMap = {  proxyTemplate_dev, proxyTemplate_prod }
 
 /**
  * @name: proxyObjCreate

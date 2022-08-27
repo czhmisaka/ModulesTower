@@ -27,7 +27,10 @@ export default defineComponent({
     gridDesktop,
   },
   methods: {
-    async init() {},
+    async init() {
+      let route = this.$route;
+      console.log(route)
+    },
   },
   watch: {
     $route: {

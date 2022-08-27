@@ -5,14 +5,10 @@
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/iframe.vue
 -->
 <script lang="ts">
-import { defineComponent, reactive, h, toRefs, onMounted } from "vue";
+import { defineComponent, ref, h, toRefs } from "vue";
 import { baseComponents } from "@/components/basicComponents/grid/module/gridCard/baseCardComponentMixins";
 import cardBg from "../card/cardBg.vue";
-import {
-  changeVisible,
-  changeCardPosition,
-  changeCardSize,
-} from "@/components/basicComponents/grid/module/cardApi";
+import { changeVisible } from "@/components/basicComponents/grid/module/cardApi";
 
 export default defineComponent({
   mixins: [baseComponents],
@@ -28,44 +24,36 @@ export default defineComponent({
   setup(props, context) {
     const { url } = toRefs(props);
 
-    onMounted(async () => {
-      setInterval(() => {
-        let data = {
-          elcard1: {
-            x: Math.floor(Math.random() * 8),
-            y: Math.floor(Math.random() * 4),
-          },
-          elcard2: {
-            x: Math.floor(Math.random() * 8),
-            y: Math.floor(Math.random() * 4),
-          },
-          elcard3: {
-            x: Math.floor(Math.random() * 8),
-            y: Math.floor(Math.random() * 4),
-          },
-          elcard4: {
-            x: Math.floor(Math.random() * 8),
-            y: Math.floor(Math.random() * 4),
-          },
-        };
-        changeCardPosition(context, data);
-      }, 1000);
-    });
+    const isVisible = ref(false);
+    context.emit("ready");
     return () => [
-      h(cardBg, {}, () => [
-        h("iframe", {
-          style: {
-            width: "100%",
-            height: "100%",
-            border: "none",
-            borderRadius: "12px",
-          },
-          src: url.value,
-          onLoad: () => {
-            context.emit("ready");
-          },
-        }),
-      ]),
+      h(
+        cardBg,
+        {
+            onClick: () => {
+              console.log(isVisible.value, "asd");
+              isVisible.value = !isVisible.value;
+              changeVisible(context, {
+                elcard1: isVisible.value,
+              });
+            }
+        },
+        ()=>null
+        // () => [
+        //   h("iframe", {
+        //     style: {
+        //       width: "100%",
+        //       height: "100%",
+        //       border: "none",
+        //       borderRadius: "12px",
+        //     },
+        //     src: url.value,
+        //     onLoad: () => {
+        //       context.emit("ready");
+        //     },
+        //   }),
+        // ]
+      ),
     ];
   },
 });

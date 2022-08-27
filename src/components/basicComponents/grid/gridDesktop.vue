@@ -48,7 +48,9 @@
       ref="componentsListModal"
       @onChange="
         (index, value) =>
-          cardOnChange(index, value, { type: [cardOnChangeType.gridCardListonChange] })
+          cardOnChange(index, value, {
+            type: [cardOnChangeType.gridCardListonChange],
+          })
       "
     />
     <cardEditModal
@@ -59,7 +61,9 @@
       :sizeUnit="gridRowNumAndUnit()"
       @onChange="
         (index, value) =>
-          cardOnChange(index, value, { type: [cardOnChangeType.gridCardListonChange] })
+          cardOnChange(index, value, {
+            type: [cardOnChangeType.gridCardListonChange],
+          })
       "
     />
   </div>
@@ -85,7 +89,13 @@ let componentBoxInfo = {} as {
 
 export default defineComponent({
   name: "gridDesktop",
-  components: { card, GridLayout, GridItem, cardEditModal, componentsListModal },
+  components: {
+    card,
+    GridLayout,
+    GridItem,
+    cardEditModal,
+    componentsListModal,
+  },
   props: {
     // 自定样式
     cusStyle: {
@@ -267,19 +277,27 @@ export default defineComponent({
     gridRowNumAndUnit() {
       let screen = {
         width:
-          document.getElementById("screenId")?.offsetWidth || document.body.offsetWidth,
+          document.getElementById("screenId")?.offsetWidth ||
+          document.body.offsetWidth,
         height:
-          document.getElementById("screenId")?.offsetHeight || document.body.offsetHeight,
+          document.getElementById("screenId")?.offsetHeight ||
+          document.body.offsetHeight,
         rowNum: 0,
         colNum: this.gridColNum,
         unit: "vw",
         blockSize: 0, // px单位的 单个grid单元大小
         margin: this.cusStyle?.margin || 12,
       };
-      if (screen.height * 1 > screen.width * 1 || this.cusStyle.wholeScreen == true) {
-        screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
+      if (
+        screen.height * 1 > screen.width * 1 ||
+        this.cusStyle.wholeScreen == true
+      ) {
+        screen.rowNum = Math.floor(
+          screen.width / (screen.height / this.gridColNum)
+        );
         screen.unit = "vh";
-        screen.blockSize = screen.height / (this.cusStyle.maxRows || this.gridColNum);
+        screen.blockSize =
+          screen.height / (this.cusStyle.maxRows || this.gridColNum);
       } else {
         screen.rowNum = Math.floor(screen.height / this.gridColNum);
         screen.blockSize =
@@ -302,21 +320,19 @@ export default defineComponent({
      */
     gridItemStyle(gridCell: gridCellTemplate): { [key: string]: string } {
       let style: { [key: string]: string } = {};
-      if (
-        "options" in gridCell &&
-        gridCell.options &&
-        "showInGridDesktop" in gridCell.options
-      ) {
+      if (gridCell.options && gridCell.options.showInGridDesktop) {
         if (gridCell.options.showInGridDesktop) {
           style = {
             ...style,
             maxWidth: "10000px",
+            zIndex: "1000",
           };
         } else {
           style = {
             ...style,
             maxWidth: "0px",
             overflow: "hidden",
+            zIndex: "1",
           };
         }
       }
@@ -334,10 +350,15 @@ export default defineComponent({
     if (interval) clearInterval(interval);
     interval = setInterval(async () => {
       let width =
-        document.getElementById("screenId")?.offsetWidth || document.body.offsetWidth;
+        document.getElementById("screenId")?.offsetWidth ||
+        document.body.offsetWidth;
       let height =
-        document.getElementById("screenId")?.offsetHeight || document.body.offsetHeight;
-      if (componentBoxInfo?.width != width || componentBoxInfo?.height != height) {
+        document.getElementById("screenId")?.offsetHeight ||
+        document.body.offsetHeight;
+      if (
+        componentBoxInfo?.width != width ||
+        componentBoxInfo?.height != height
+      ) {
         this.$forceUpdate();
         this.updateTimes++;
         if (this.updateTimes > 99999) this.updateTimes = -11111;
