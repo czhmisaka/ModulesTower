@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 19:13:08
+ * @LastEditTime: 2022-08-28 20:43:38
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
@@ -46,7 +46,9 @@ export const testData = [
                 const { context } = content;
                 changeVisible(context, {
                     elcard1: true,
-                    elcard2: false
+                    elcard2: false,
+                    iframe1: true,
+                    iframe2: false
                 })
             }
         },
@@ -61,7 +63,9 @@ export const testData = [
                 const { context } = content;
                 changeVisible(context, {
                     elcard1: false,
-                    elcard2: true
+                    elcard2: true,
+                    iframe1: false,
+                    iframe2: true
                 })
             }
         },
@@ -146,7 +150,7 @@ export const testData = [
         showInGridDesktop: false,
     }).setPosition(2, 2).setSize(2, 2),
 
-    gridCellMaker('前端导航', '前端导航', {}, {
+    gridCellMaker('iframe1', '前端导航', {}, {
         name: 'iframe',
         type: cardComponentType.componentList
     }, {
@@ -154,5 +158,16 @@ export const testData = [
             url: 'http://guild.czht.top',
             // url: "http://42.192.134.238:8080/bloom-effect/"
         },
-    }).setPosition(4, 1).setSize(8, 5),
+    }).setPosition(4, 1).setSize(8, 4),
+
+    gridCellMaker('iframe2', '前端导航', {}, {
+        name: 'iframe',
+        type: cardComponentType.componentList
+    }, {
+        props: {
+            // url: 'http://guild.czht.top',
+            url: "https://www.czht.top"
+        },
+        showInGridDesktop: false
+    }).setPosition(4, 1).setSize(8, 4),
 ]

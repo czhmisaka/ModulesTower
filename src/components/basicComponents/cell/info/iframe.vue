@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-22 18:23:04
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 15:49:21
+ * @LastEditTime: 2022-08-28 21:31:34
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/iframe.vue
 -->
 <script lang="ts">
@@ -25,20 +25,31 @@ export default defineComponent({
     const { url } = toRefs(props);
     context.emit("ready");
     return () => [
-      h(cardBg, {}, () => [
-        h("iframe", {
+      h(
+        cardBg,
+        {
           style: {
             width: "100%",
             height: "100%",
-            border: "none",
-            borderRadius: "12px",
+            overflow: "hidden",
           },
-          src: url.value,
-          onLoad: () => {
-            context.emit("ready");
-          },
-        }),
-      ]),
+        },
+        () => [
+          h("iframe", {
+            style: {
+              width: "100%",
+              height: "100%",
+              border: "none",
+              overflow: "hidden",
+              borderRadius: "12px",
+            },
+            src: url.value,
+            onLoad: () => {
+              context.emit("ready");
+            },
+          }),
+        ]
+      ),
     ];
   },
 });
