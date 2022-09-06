@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 16:47:54
+ * @LastEditTime: 2022-09-06 09:17:02
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -95,12 +95,8 @@ export interface gridCellTemplate {
     component: cardComponent | any,
     options?: gridCellOptions,
     data?: {
-        methods: {
-
-        },
-        params: {
-
-        }
+        methods: {},
+        params: {}
     },
     [key: string]: any
 }
@@ -131,7 +127,7 @@ export enum inputType {
     number = 'number',
     numberSlider = 'numberSlider',
     obj = 'object',
-    functionEditor='functionEditor'
+    functionEditor = 'functionEditor'
 }
 
 export interface CardComponentTemplate {

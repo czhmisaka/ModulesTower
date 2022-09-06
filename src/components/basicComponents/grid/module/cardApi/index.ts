@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-30 16:14:57
+ * @LastEditTime: 2022-09-06 09:09:57
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -24,7 +24,7 @@ const checkContext = (content: { [key: string]: any }, value: { [key: string]: a
 
 /**
  * @name: deepMerge
- * @description: 合并对象,保持
+ * @description: 合并两个对象，如有存在相同的key,则target优先
  * @authors: CZH
  * @Date: 2022-08-23 23:58:35
  * @param {any} target

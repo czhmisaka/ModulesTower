@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-30 10:48:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 16:06:09
+ * @LastEditTime: 2022-09-03 23:33:40
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue
 -->
 
@@ -25,7 +25,7 @@
         }"
         @dblclick="addComponent(item)"
       >
-        {{ componentMap[item] }}
+        <componentsIconCard :cardComponents="componentMap[item]" :sizeUnit="sizeUnit" />
       </div>
     </div>
   </div>
@@ -34,6 +34,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { componentLists } from "@/components/basicComponents/grid/module/gridCard/module/componentLists";
+import componentsIconCard from "./componentsIconCard.vue";
 import {
   cardOnChangeType,
   gridCellMaker,
@@ -44,7 +45,7 @@ import {
 export default defineComponent({
   props: ["sizeUnit", "gridList"],
   components: {
-    // componentsIconCard,
+    componentsIconCard,
   },
   data() {
     return {

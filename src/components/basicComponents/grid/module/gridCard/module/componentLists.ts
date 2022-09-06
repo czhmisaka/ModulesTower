@@ -1,11 +1,14 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 18:34:54
+ * @LastEditTime: 2022-09-03 22:46:48
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';
 import { cardComponentMaker, inputType, gridSizeMaker, CardComponentTemplate } from './../../dataTemplate'
+
+
+
 export const componentLists: { [key: string]: CardComponentTemplate } = {
     'iconCell': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/cell/icon/iconCell.vue')), {
         name: {
@@ -149,5 +152,5 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
             middle: gridSizeMaker(9, 6),
             large: gridSizeMaker(12, 8)
         }
-    })
+    }),
 }
