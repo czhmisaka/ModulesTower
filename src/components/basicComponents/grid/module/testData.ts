@@ -1,13 +1,14 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-03 22:46:27
+ * @LastEditTime: 2022-09-08 23:28:20
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/testData.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType } from "./dataTemplate";
-import { changeVisible } from "./cardApi";
+import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "./cardApi";
 
+let fucker = true
 export const testData = [
     gridCellMaker('editable', '编辑', {}, {
         name: 'setting_editable',
@@ -35,7 +36,7 @@ export const testData = [
         name: 'userLogin'
     }, {
         isSettingTool: true,
-    }).setPosition(4, 0).setSize(8, 1),
+    }).setPosition(5, 0).setSize(7, 1),
     gridCellMaker('showElcard1', '显示elcard1', {}, {
         type: cardComponentType.componentList,
         name: 'icon'
@@ -45,6 +46,7 @@ export const testData = [
             onClickFunc: (content: any) => {
                 const { context } = content;
                 changeVisible(context, {
+                    elcard0:true,
                     elcard1: true,
                     elcard2: false,
                     iframe1: true,
@@ -53,6 +55,72 @@ export const testData = [
             }
         },
     }).setPosition(2, 4).setSize(1, 1),
+    gridCellMaker('showElcard2', 'card变换效果', {}, {
+        type: cardComponentType.componentList,
+        name: 'icon'
+    }, {
+        props: {
+            name: 'ArrowRight',
+            onClickFunc: (content: any) => {
+                const { context } = content;
+                let name = !fucker ? 'ArrowRight' : 'ArrowLeft'
+                let posiitionMap = fucker ? {
+                    elcard0: {
+                        x: 4,
+                        y: 0
+                    },
+                    showElcard2: {
+                        x: 6,
+                        y: 0
+                    },
+                    userLogin: {
+                        x: 7,
+                        y: 0
+                    }
+                } : {
+                    elcard0: {
+                        x: 4,
+                        y: 1
+                    },
+                    showElcard2: {
+                        x: 4,
+                        y: 0
+                    },
+                    userLogin: {
+                        x: 5,
+                        y: 0
+                    }
+                }
+                let sizeMap = fucker ? {
+                    elcard0: {
+                        width: 2,
+                        height: 5
+                    },
+                    userLogin: {
+                        width: 5,
+                        height: 1
+                    }
+                } : {
+                    elcard0: {
+                        width: 2,
+                        height: 4
+                    },
+                    userLogin: {
+                        width: 7,
+                        height: 1
+                    }
+                }
+                changeCardProperties(context, {
+                    showElcard2: {
+                        name
+                    }
+                })
+                changeCardPosition(context, posiitionMap)
+                changeCardSize(context, sizeMap)
+                fucker = !fucker
+            }
+        },
+    }).setPosition(4, 0).setSize(1, 1),
     gridCellMaker('hideElcard1', '隐藏elcard1', {}, {
         type: cardComponentType.componentList,
         name: 'icon'
@@ -62,6 +130,7 @@ export const testData = [
             onClickFunc: (content: any) => {
                 const { context } = content;
                 changeVisible(context, {
+                    elcard0:false,
                     elcard1: false,
                     elcard2: true,
                     iframe1: false,
@@ -81,6 +150,17 @@ export const testData = [
             img: 'https://pic1.zhimg.com/80/v2-b8e48ee4c2efb2813c42c3778743a2c4_1440w.jpg',
         },
     }).setPosition(0, 1).setSize(2, 2),
+    gridCellMaker('elcard0', '卡片', {}, {
+        name: 'elcard',
+        type: cardComponentType.componentList
+    }, {
+        props: {
+            isBlack: true,
+            title: '壁纸',
+            content: '--来自鬼刀大佬',
+            img: 'https://pic1.zhimg.com/80/v2-b8e48ee4c2efb2813c42c3778743a2c4_1440w.jpg',
+        },
+    }).setPosition(4, 1).setSize(2, 4),
     gridCellMaker('elcard1', '卡片', {}, {
         name: 'elcard',
         type: cardComponentType.componentList
@@ -158,7 +238,7 @@ export const testData = [
             url: 'http://guild.czht.top',
             // url: "http://42.192.134.238:8080/bloom-effect/"
         },
-    }).setPosition(4, 1).setSize(8, 4),
+    }).setPosition(6, 1).setSize(6, 4),
 
     gridCellMaker('iframe2', '前端导航', {}, {
         name: 'iframe',
@@ -171,5 +251,5 @@ export const testData = [
         showInGridDesktop: false
     }).setPosition(4, 1).setSize(8, 4),
 
-    
+
 ]

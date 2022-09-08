@@ -1,11 +1,12 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-06 09:09:57
+ * @LastEditTime: 2022-09-08 18:28:08
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
 import { cardOnChangeType, gridCellOptions, gridPositionCell, gridSizeCell } from '../dataTemplate'
+import { deepClone } from './deepClone';
 
 /**
  * @name: checkContext
@@ -65,7 +66,7 @@ export const setData = (content: {
     if (!checkContext(content, value)) return;
     try {
         let func = content['$emit'] ? '$emit' : 'emit';
-        content[func]('onChange', value, {
+        content[func]('onChange', deepClone(value), {
             type: [
                 cardOnChangeType.onChange
             ]
@@ -157,6 +158,40 @@ export const changeCardSize = (content: { [key: string]: any }, value: { [key: s
                         size: value[name]
                     }
                 }
+            }
+        })
+        content[func]('onChange', data, {
+            type: [
+                cardOnChangeType.cardConfigChange
+            ]
+        })
+    } catch (err) {
+        console.error('changeVisible 错误:', err, content, value);
+    }
+}
+
+
+
+
+
+/**
+ * @name: changeCardProperties
+ * @description: 修改组件配置参数
+ * @authors: CZH
+ * @Date: 2022-09-08 10:06:40
+ * @param {object} content
+ * @param {*} value
+ */
+export const changeCardProperties = (content: { [key: string]: any }, value: { [key: string]: any }) => {
+    if (!checkContext(content, value)) return;
+    try {
+        let func = content['$emit'] ? '$emit' : 'emit';
+        let data = {} as gridCellOptions;
+        Object.keys(value).map((name: string) => {
+            data[name] = {
+                options: {
+                    props: { ...value[name] }
+                },
             }
         })
         content[func]('onChange', data, {

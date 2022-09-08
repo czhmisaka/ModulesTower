@@ -31,7 +31,12 @@
         @move="gridItemOnMove"
         @resize="gridItemOnResize"
         class="grid-item"
-        :style="gridItemStyle(gridList[index])"
+        :style="{
+          ...gridItemStyle(gridList[index]),
+          transition: baseData.editable
+            ? 'max-width 0.4s, width 0.3s , height 0.3s'
+            : 'max-width 0.4s, transform 0.4s , width 0.3s , height 0.3s',
+        }"
       >
         <card
           :ref="'card_' + index"
