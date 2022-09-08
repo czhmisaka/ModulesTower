@@ -9,7 +9,7 @@ import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType ,grid
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
 
 
-let fucker = true;
+let fucker = false;
 export const mobileDesktop = [
     gridCellMaker('editable', '编辑', {}, {
         name: 'setting_editable',
