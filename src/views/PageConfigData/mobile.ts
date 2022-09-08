@@ -1,42 +1,44 @@
-/*
- * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2022-09-08 23:37:01
- * @FilePath: /configforpagedemo/src/views/PageConfigData/main.ts
- */
 
-import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate"
+
+
+
+
+
+
+import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType ,gridCellTemplate} from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
 
-let fucker = true
-export const mainDesktop = [
+
+let fucker = true;
+export const mobileDesktop = [
     gridCellMaker('editable', '编辑', {}, {
         name: 'setting_editable',
         type: cardComponentType.componentList
     }, {
         isSettingTool: true
-    }).setPosition(1, 0).setSize(1, 1),
-    gridCellMaker('openComponents', '打开组件菜单', {}, {
-        type: cardComponentType.componentList,
-        name: 'icon'
-    }, {
-        isSettingTool: true,
-        props: {
-            name: 'Grid',
-            onClickFunc: (content: any) => {
-                const { context } = content;
-                context.emit('onChange', {}, {
-                    type: [cardOnChangeType.openComponentsList]
-                })
-            }
-        },
-    }).setPosition(0, 0).setSize(1, 1),
+    }).setPosition(2, 5).setSize(1, 1),
+    // gridCellMaker('openComponents', '打开组件菜单', {}, {
+    //     type: cardComponentType.componentList,
+    //     name: 'icon'
+    // }, {
+    //     isSettingTool: true,
+    //     props: {
+    //         name: 'Grid',
+    //         onClickFunc: (content: any) => {
+    //             const { context } = content;
+    //             context.emit('onChange', {}, {
+    //                 type: [cardOnChangeType.openComponentsList]
+    //             })
+    //         }
+    //     },
+    // }).setPosition(0, 0).setSize(1, 1),
     gridCellMaker('userLogin', '用户登录', {}, {
         type: cardComponentType.componentList,
         name: 'userLogin'
     }, {
         isSettingTool: true,
-    }).setPosition(5, 0).setSize(7, 1),
+        showInGridDesktop:false,
+    }).setPosition(0,5).setSize(3, 1),
     gridCellMaker('showElcard1', '显示elcard1', {}, {
         type: cardComponentType.componentList,
         name: 'icon'
@@ -60,67 +62,47 @@ export const mainDesktop = [
         name: 'icon'
     }, {
         props: {
-            name: 'ArrowRight',
+            name: 'ArrowDown',
             onClickFunc: (content: any) => {
                 const { context } = content;
-                let name = !fucker ? 'ArrowRight' : 'ArrowLeft'
+                let name = !fucker ? 'ArrowDown' : 'ArrowUp'
                 let posiitionMap = fucker ? {
                     elcard0: {
-                        x: 4,
-                        y: 0
+                        x: 0,
+                        y: 5
                     },
-                    showElcard2: {
-                        x: 6,
-                        y: 0
-                    },
-                    userLogin: {
-                        x: 7,
-                        y: 0
-                    }
                 } : {
                     elcard0: {
-                        x: 4,
-                        y: 1
+                        x: 0,
+                        y: 6
                     },
-                    showElcard2: {
-                        x: 4,
-                        y: 0
-                    },
-                    userLogin: {
-                        x: 5,
-                        y: 0
-                    }
                 }
                 let sizeMap = fucker ? {
                     elcard0: {
                         width: 2,
-                        height: 5
+                        height: 3
                     },
-                    userLogin: {
-                        width: 5,
-                        height: 1
-                    }
                 } : {
                     elcard0: {
-                        width: 2,
-                        height: 4
+                        width: 4,
+                        height: 2
                     },
-                    userLogin: {
-                        width: 7,
-                        height: 1
-                    }
                 }
                 changeCardProperties(context, {
                     showElcard2: {
                         name
                     }
                 })
+                changeVisible(context,{
+                    editable:fucker,
+                    userLogin:!fucker
+                })
                 changeCardPosition(context, posiitionMap)
                 changeCardSize(context, sizeMap)
                 fucker = !fucker
             }
         },
-    }).setPosition(4, 0).setSize(1, 1),
+    }).setPosition(3, 5).setSize(1, 1),
     gridCellMaker('hideElcard1', '隐藏elcard1', {}, {
         type: cardComponentType.componentList,
         name: 'icon'
@@ -149,7 +131,7 @@ export const mainDesktop = [
             content: '--来自鬼刀大佬',
             img: 'https://pic1.zhimg.com/80/v2-b8e48ee4c2efb2813c42c3778743a2c4_1440w.jpg',
         },
-    }).setPosition(0, 1).setSize(2, 2),
+    }).setPosition(0, 0).setSize(2, 3),
     gridCellMaker('elcard0', '卡片', {}, {
         name: 'elcard',
         type: cardComponentType.componentList
@@ -158,9 +140,9 @@ export const mainDesktop = [
             isBlack: true,
             title: '壁纸',
             content: '--来自鬼刀大佬',
-            img: 'https://pic1.zhimg.com/80/v2-b8e48ee4c2efb2813c42c3778743a2c4_1440w.jpg',
+            img: 'https://pic4.zhimg.com/v2-306dbf3946e096bc2c8b03aa0250ad93_r.jpg',
         },
-    }).setPosition(4, 1).setSize(2, 4),
+    }).setPosition(0, 5).setSize(2, 3),
     gridCellMaker('elcard1', '卡片', {}, {
         name: 'elcard',
         type: cardComponentType.componentList
@@ -229,27 +211,4 @@ export const mainDesktop = [
         },
         showInGridDesktop: false,
     }).setPosition(2, 2).setSize(2, 2),
-
-    gridCellMaker('iframe1', '前端导航', {}, {
-        name: 'iframe',
-        type: cardComponentType.componentList
-    }, {
-        props: {
-            url: 'http://guild.czht.top',
-            // url: "http://42.192.134.238:8080/bloom-effect/"
-        },
-    }).setPosition(6, 1).setSize(6, 4),
-
-    gridCellMaker('iframe2', '前端导航', {}, {
-        name: 'iframe',
-        type: cardComponentType.componentList
-    }, {
-        props: {
-            // url: 'http://guild.czht.top',
-            url: "https://www.czht.top"
-        },
-        showInGridDesktop: false
-    }).setPosition(4, 1).setSize(8, 4),
-
-
-]
+] as gridCellTemplate[]

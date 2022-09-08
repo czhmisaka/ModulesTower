@@ -13,14 +13,19 @@
       background: 'rgba(0,0,0,0.02)',
     }"
   >
-    <gridDesktop @onChange="onChange" :grid-col-num="12" :desktopData="testData" />
+    <gridDesktop
+      @onChange="onChange"
+      :grid-col-num="isMobile() ? 4 : 12"
+      :desktopData="desktopData"
+    />
   </div>
 </template>
 
 <script lang="ts">
+import { isMobile } from "@/api/requests";
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
-import { testData } from "@/components/basicComponents/grid/module/testData";
 import { defineComponent } from "vue";
+import { PageConfig } from "./PageConfigData/index";
 
 export default defineComponent({
   components: {
@@ -29,7 +34,7 @@ export default defineComponent({
   methods: {
     async init() {
       let route = this.$route;
-      console.log(route);
+      console.log(route, isMobile());
     },
   },
   watch: {
@@ -45,9 +50,9 @@ export default defineComponent({
   },
   data: () => {
     return {
-      testData,
-
+      desktopData: PageConfig[isMobile() ? "mobile" : "main"],
       Env: {},
+      isMobile,
     };
   },
 });

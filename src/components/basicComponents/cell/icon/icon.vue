@@ -28,6 +28,14 @@ export default defineComponent({
               func()({ props, context, e });
             }
           },
+          ontouchend: (e: any) => {
+            if (typeof onClickFunc.value == "function")
+              onClickFunc.value({ props, context, e });
+            else if (typeof onClickFunc.value == "string") {
+              const func = eval(`()=>` + onClickFunc.value);
+              func()({ props, context, e });
+            }
+          },
         },
         () =>
           props.tips
