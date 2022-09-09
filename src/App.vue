@@ -24,7 +24,7 @@
     :rotate="rotate"
     :start-color="sColor"
     :end-color="eColor"
-    :speed="1.5"
+    :speed="1"
   />
 </template>
 
