@@ -26,7 +26,7 @@
 </template>
 ```
 
-具体组件详情可参考
+具体组件载入数据的配置详情可参考
 
 ```Typescript
 const props = {
@@ -65,67 +65,16 @@ const props = {
   },
 ```
 
-### 桌面-CardApi
+### CardApi
+
 
 通过封装对于onChange事件的操作，gridDesktop组件将会拥有更加广泛易用的组件操作能力
 
-```TypeScript
-/*
- * @Date: 2022-08-21 00:08:11
- * @LastEditors: CZH
- * @LastEditTime: 2022-09-08 18:28:08
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
- */
+#### setData
 
-import { cardOnChangeType, gridCellOptions, gridPositionCell, gridSizeCell } from '../dataTemplate'
-import { deepClone } from './deepClone';
+功能描述：一个用于交互桌面组件BaseData数据的函数，本质是分装了gridDesktop的onChange操作，关于GridDesktop能响应的组件操作，可以参考 *组件-基座*
 
-/**
- * @name: checkContext
- * @description: 检查context对象以及输入value是否存在
- * @authors: CZH
- * @Date: 2022-08-17 19:12:22
- * @param {object} content
- * @param {object} value
- */
-const checkContext = (content: { [key: string]: any }, value: { [key: string]: any }) => {
-    if (Object.keys(value).length == 0) console.error('setData_数据上报错误:', '当前上报数据为空');
-    else if (!content) console.error('setData_数据上报错误:', '没有组件对象');
-    else return true
-}
-
-
-/**
- * @name: deepMerge
- * @description: 合并两个对象，如有存在相同的key,则target优先
- * @authors: CZH
- * @Date: 2022-08-23 23:58:35
- * @param {any} target
- * @param {any} other
- */
-export const deepMerge = (target: any, other: any) => {
-    const targetToString = Object.prototype.toString.call(target);
-    if (targetToString === "[object Object]") {
-        for (let [key, val] of Object.entries(other)) {
-            if (key in target) {
-                target[key] = deepMerge(target[key], val);
-            } else {
-                target[key] = val;
-            }
-        }
-    } else if (targetToString === "[object Array]") {
-        for (let [key, val] of Object.entries(other)) {
-            if (target[key]) {
-                target[key] = deepMerge(target[key], val);
-            } else {
-                target.push(val);
-            }
-        }
-    }
-    return target;
-}
-
-
+```Typescript
 /**
  * @name: setData
  * @description: 简易组件数据推送到桌面baseData的工具
@@ -147,8 +96,14 @@ export const setData = (content: {
         console.error('setData_数据上报错误:', err, content, value);
     }
 }
+```
 
 
+#### changeVisible
+
+功能描述：一个用于设置组件显影状态的函数，可以触发组件的fade in out 动画
+
+```TypeScript
 /**
  * @name: changeVisible
  * @description: 组件可视状态修改
@@ -176,7 +131,12 @@ export const changeVisible = (content: { [key: string]: any }, value: { [key: st
         console.error('changeVisible 错误:', err, content, value);
     }
 }
+```
 
+#### changeCardPosition
+功能描述：一个用于设置组件位置状态的函数，可以触发组件的位移动画
+
+```Typescript
 /**
  * @name: changeCardPosition
  * @description: 使用组件名称修改组件位置
@@ -208,10 +168,16 @@ export const changeCardPosition = (content: { [key: string]: any }, value: { [ke
         console.error('changeVisible 错误:', err, content, value);
     }
 }
+```
 
 
+#### changeCardSize
+功能描述：一个用于设置组件大小的函数，可以触发组件的变形动画
+
+
+```Typescript
 /**
- * @name: changeCardPosition
+ * @name: changeCardSize
  * @description: 使用组件名称修改组件Size
  * @authors: CZH
  * @Date: 2022-08-17 21:01:15
@@ -243,9 +209,13 @@ export const changeCardSize = (content: { [key: string]: any }, value: { [key: s
 }
 
 
+```
 
 
+#### changeCardProperties
+功能描述：用于修改组件props参数的函数，
 
+```Typescript
 /**
  * @name: changeCardProperties
  * @description: 修改组件配置参数
