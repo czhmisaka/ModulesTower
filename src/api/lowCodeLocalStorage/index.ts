@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-09-03 20:00:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-03 21:58:26
+ * @LastEditTime: 2022-09-18 11:01:05
  * @FilePath: /configforpagedemo/src/api/lowCodeLocalStorage/index.ts
  */
 
@@ -9,7 +9,8 @@ import { get, post } from '@/api/requests'
 
 
 export const Api = {
-    getTableList: '/getTableList'
+    getTableList: '/getTableList',
+    
 } as { [key: string]: string }
 
 
