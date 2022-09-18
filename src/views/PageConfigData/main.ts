@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-08 23:37:01
+ * @LastEditTime: 2022-09-18 11:52:52
  * @FilePath: /configforpagedemo/src/views/PageConfigData/main.ts
  */
 
@@ -250,6 +250,4 @@ export const mainDesktop = [
         },
         showInGridDesktop: false
     }).setPosition(4, 1).setSize(8, 4),
-
-
 ]

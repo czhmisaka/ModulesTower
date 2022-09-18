@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 19:23:37
+ * @LastEditTime: 2022-09-18 11:51:57
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
