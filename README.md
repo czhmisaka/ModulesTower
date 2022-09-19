@@ -67,7 +67,6 @@ const props = {
 
 ### CardApi
 
-
 通过封装对于onChange事件的操作，gridDesktop组件将会拥有更加广泛易用的组件操作能力
 
 #### setData
