@@ -1,12 +1,13 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-18 11:52:52
+ * @LastEditTime: 2022-09-21 20:03:13
  * @FilePath: /configforpagedemo/src/views/PageConfigData/main.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
+import { setSize } from '../../components/basicComponents/grid/module/util';
 
 let fucker = true
 export const mainDesktop = [
@@ -250,4 +251,8 @@ export const mainDesktop = [
         },
         showInGridDesktop: false
     }).setPosition(4, 1).setSize(8, 4),
+    gridCellMaker('cardApiControler','cardApiControler',{},{
+        name:'cardApiControler',
+        type:cardComponentType.componentList,
+    },{}).setPosition(0,5).setSize(4,1)
 ]

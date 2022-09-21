@@ -1,11 +1,12 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-08 23:40:01
+ * @LastEditTime: 2022-09-21 21:04:38
  * @FilePath: /configforpagedemo/src/api/requests.ts
  */
 
 import axios from 'axios';
+import { getCookie } from './config/cookie';
 export const CancelToken: any = axios.CancelToken; // axios 的取消请求
 
 export function isMobile() {

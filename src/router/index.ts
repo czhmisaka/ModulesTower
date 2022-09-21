@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-16 12:57:24
+ * @LastEditTime: 2022-09-21 23:58:20
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'

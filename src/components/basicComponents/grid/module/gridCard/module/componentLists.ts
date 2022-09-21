@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-03 22:46:48
+ * @LastEditTime: 2022-09-21 20:01:43
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';
@@ -153,4 +153,16 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
             large: gridSizeMaker(12, 8)
         }
     }),
+
+    'cardApiControler': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/cell/action/cardApiControler.vue')), {}, {}, {
+        label: 'cardApiControler',
+        labelNameCN: 'cardApi调用大师',
+        key: 'cardApiControler',
+        description: '用来主动触发不同的cardApi的组件',
+        gridInfo: {
+            small: gridSizeMaker(6, 4),
+            middle: gridSizeMaker(9, 6),
+            large: gridSizeMaker(12, 8)
+        }
+    })
 }
