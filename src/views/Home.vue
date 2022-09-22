@@ -11,6 +11,7 @@
       width: '100vw',
       height: '100vh',
       background: 'rgba(0,0,0,0.02)',
+      overflow: 'hidden',
     }"
   >
     <gridDesktop
@@ -32,10 +33,7 @@ export default defineComponent({
     gridDesktop,
   },
   methods: {
-    async init() {
-      let route = this.$route;
-      console.log(route, isMobile());
-    },
+    async init() {},
   },
   watch: {
     $route: {

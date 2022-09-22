@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-08 18:28:08
+ * @LastEditTime: 2022-09-22 23:46:13
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -41,15 +41,16 @@ export const deepMerge = (target: any, other: any) => {
                 target[key] = val;
             }
         }
-    } else if (targetToString === "[object Array]") {
-        for (let [key, val] of Object.entries(other)) {
-            if (target[key]) {
-                target[key] = deepMerge(target[key], val);
-            } else {
-                target.push(val);
-            }
-        }
-    }
+    } 
+    // else if (targetToString === "[object Array]") {
+    //     for (let [key, val] of Object.entries(other)) {
+    //         if (target[key]) {
+    //             target[key] = deepMerge(target[key], val);
+    //         } else {
+    //             target.push(val);
+    //         }
+    //     }
+    // }
     return target;
 }
 
@@ -190,11 +191,11 @@ export const changeCardProperties = (content: { [key: string]: any }, value: { [
         Object.keys(value).map((name: string) => {
             data[name] = {
                 options: {
-                    props: { ...value[name] }
+                    props:value[name]
                 },
             }
         })
-        content[func]('onChange', data, {
+        content[func]('onChange', deepClone(data), {
             type: [
                 cardOnChangeType.cardConfigChange
             ]

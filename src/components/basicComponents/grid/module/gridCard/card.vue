@@ -99,6 +99,7 @@ export default defineComponent({
                     borderRadius: "12px",
                     zIndex: isLoading.value ? 100000 : -1,
                     display: "flex",
+                    opacity: isLoading.value ? 1 : 0,
                   },
                 },
                 [
@@ -149,6 +150,12 @@ export default defineComponent({
               baseData: props.baseData,
               sizeUnit: props.sizeUnit,
               gridList: props.gridList,
+              detail: {
+                gridInfo: props.detail.gridInfo,
+                label: props.detail.label,
+                labelNameCN: props.detail.labelNameCN,
+                key: props.detail.label,
+              },
               ...props.detail.options.props,
             },
             children ? children(props, context) : null

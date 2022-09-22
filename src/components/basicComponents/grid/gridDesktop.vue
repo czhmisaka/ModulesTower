@@ -220,10 +220,10 @@ export default defineComponent({
       options.type.map(async (type) => {
         console.log(
           index != -1 && index < this.gridList.length
-            ? "组件" + this.gridList[index].labelNameCN
+            ? "组件「" + this.gridList[index].labelNameCN + "」"
             : "桌面组件",
           "请求执行事件<" + type + ">",
-          value
+          JSON.parse(JSON.stringify(value))
         );
         if (type == cardOnChangeType.onChange) {
           for (let x in value) {
@@ -252,6 +252,7 @@ export default defineComponent({
           if (typeof value == "object") {
             const changeList = Object.keys(value);
             const needRefreshCardList = [] as number[];
+            // debugger;
             this.gridList = this.gridList.map((card: gridCellTemplate, index: number) => {
               changeList.map((x: string) => {
                 if (card.label == x) {
@@ -266,7 +267,6 @@ export default defineComponent({
                 this.$refs["card_" + item][0].$forceUpdate();
               }
             });
-            console.log(this.gridList);
           } else {
             console.error("输入数据有误", value);
           }

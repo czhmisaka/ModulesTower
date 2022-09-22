@@ -32,6 +32,12 @@ export default defineComponent({
         return [] as Array<any>;
       },
     },
+    detail: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
   },
   setup(props, context) {
     const _blockSize = ref(props.sizeUnit.blockSize);
@@ -65,6 +71,7 @@ export default defineComponent({
               ondblclick: () => emitData(!props.baseData.editable),
               ontouchend: () => emitData(!props.baseData.editable),
               sizeUnit: props.sizeUnit,
+              detail: props.detail,
               name: props.baseData.editable ? "Unlock" : "Lock",
             }),
           ],

@@ -5,11 +5,15 @@
 
 
 
-import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType ,gridCellTemplate} from "@/components/basicComponents/grid/module/dataTemplate"
+import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType, gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
+import { setPosition, setSize } from '../../components/basicComponents/grid/module/util';
+
+import { infoTemplate, infoType } from '@/components/basicComponents/cell/info/DynamicIsland'
 
 
 let fucker = false;
+let fuckerMoon = false;
 export const mobileDesktop = [
     gridCellMaker('editable', '编辑', {}, {
         name: 'setting_editable',
@@ -17,28 +21,13 @@ export const mobileDesktop = [
     }, {
         isSettingTool: true
     }).setPosition(2, 5).setSize(1, 1),
-    // gridCellMaker('openComponents', '打开组件菜单', {}, {
-    //     type: cardComponentType.componentList,
-    //     name: 'icon'
-    // }, {
-    //     isSettingTool: true,
-    //     props: {
-    //         name: 'Grid',
-    //         onClickFunc: (content: any) => {
-    //             const { context } = content;
-    //             context.emit('onChange', {}, {
-    //                 type: [cardOnChangeType.openComponentsList]
-    //             })
-    //         }
-    //     },
-    // }).setPosition(0, 0).setSize(1, 1),
     gridCellMaker('userLogin', '用户登录', {}, {
         type: cardComponentType.componentList,
         name: 'userLogin'
     }, {
         isSettingTool: true,
-        showInGridDesktop:false,
-    }).setPosition(0,5).setSize(3, 1),
+        showInGridDesktop: false,
+    }).setPosition(0, 5).setSize(3, 1),
     gridCellMaker('showElcard1', '显示elcard1', {}, {
         type: cardComponentType.componentList,
         name: 'icon'
@@ -48,7 +37,7 @@ export const mobileDesktop = [
             onClickFunc: (content: any) => {
                 const { context } = content;
                 changeVisible(context, {
-                    elcard0:true,
+                    elcard0: true,
                     elcard1: true,
                     elcard2: false,
                     iframe1: true,
@@ -84,7 +73,7 @@ export const mobileDesktop = [
                     },
                 } : {
                     elcard0: {
-                        width: 4,
+                        width: 3,
                         height: 2
                     },
                 }
@@ -93,9 +82,9 @@ export const mobileDesktop = [
                         name
                     }
                 })
-                changeVisible(context,{
-                    editable:fucker,
-                    userLogin:!fucker
+                changeVisible(context, {
+                    editable: fucker,
+                    userLogin: !fucker
                 })
                 changeCardPosition(context, posiitionMap)
                 changeCardSize(context, sizeMap)
@@ -112,7 +101,7 @@ export const mobileDesktop = [
             onClickFunc: (content: any) => {
                 const { context } = content;
                 changeVisible(context, {
-                    elcard0:false,
+                    elcard0: false,
                     elcard1: false,
                     elcard2: true,
                     iframe1: false,
@@ -211,4 +200,69 @@ export const mobileDesktop = [
         },
         showInGridDesktop: false,
     }).setPosition(2, 2).setSize(2, 2),
+    gridCellMaker('DynamicIsland', '灵动岛岛', {}, {
+        name: 'DynamicIsland',
+        type: cardComponentType.componentList
+    }, {
+        props: {
+            info: [],
+            size: {
+                x: 2,
+                y: 0.25,
+                width: 0,
+                height: 0.5,
+                maxWidth: 4,
+                maxHeight:2
+            }
+        },
+    }),
+    gridCellMaker('activeInfo', '触发info', {}, {
+        type: cardComponentType.componentList,
+        name: 'icon'
+    }, {
+        props: {
+            name: 'Sunrise',
+            onClickFunc: (content: any) => {
+                const { context } = content;
+                let info = {
+                    icon: fuckerMoon ? 'Moon' : "Sunrise",
+                    type: infoType.icon,
+                    options: {
+                        color: fuckerMoon ? 'skyblue' : 'orange'
+                    },
+                    time: 3,
+                } as infoTemplate
+                changeCardProperties(context, {
+                    activeInfo: {
+                        name: fuckerMoon ? 'Moon' : "Sunrise"
+                    },
+                    DynamicIsland: {
+                        info: [info]
+                    }
+                })
+                fuckerMoon = !fuckerMoon
+            }
+        },
+    }).setPosition(3, 6).setSize(1, 1),
+    gridCellMaker('closeInfo', '关闭info', {}, {
+        type: cardComponentType.componentList,
+        name: 'icon'
+    }, {
+        props: {
+            name: 'Football',
+            onClickFunc: (content: any) => {
+                const { context } = content;
+                let info = {
+                    image:'https://pic4.zhimg.com/v2-53c4046627a3e1e0d8f04d74d965d7eb_r.jpg',
+                    type: infoType.image,
+                    time: 3,
+                } as infoTemplate
+                changeCardProperties(context, {
+                    DynamicIsland: {
+                        info: [info]
+                    }
+                })
+            }
+        },
+    }).setPosition(3, 7).setSize(1, 1),
 ] as gridCellTemplate[]

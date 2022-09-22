@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-09-21 19:56:51
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-22 15:34:20
+ * @LastEditTime: 2022-09-22 16:32:00
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/action/cardApiControler.vue
 -->
 <template>
@@ -26,7 +26,12 @@
       <el-input v-model="data" class="float_left"> </el-input>
       <el-button type="primary" @click="action">GO！！！</el-button>
     </span>
-    <div v-else :style="'height: 100%; line-height:' + sizeUnit.blockSize + 'px'">
+    <div
+      v-else
+      :style="{
+        margin: sizeUnit.blockSize * 0.25 + 'px',
+      }"
+    >
       <el-icon :style="{ fontSize: sizeUnit.blockSize * 0.5 + 'px' }">
         <Edit />
       </el-icon>

@@ -5,6 +5,7 @@
 declare module 'vue' {
   export interface GlobalComponents {
     Card: typeof import('./src/components/basicComponents/grid/module/gridCard/card.vue')['default']
+    CardApiControler: typeof import('./src/components/basicComponents/cell/action/cardApiControler.vue')['default']
     CardBg: typeof import('./src/components/basicComponents/cell/card/cardBg.vue')['default']
     CardBox: typeof import('./src/components/basicComponents/grid/module/gridCard/module/cardBox.vue')['default']
     CardCell: typeof import('./src/components/basicComponents/cell/card/cardCell.vue')['default']

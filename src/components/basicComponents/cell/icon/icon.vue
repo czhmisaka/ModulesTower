@@ -12,7 +12,7 @@ import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 import { ElPopover } from "element-plus";
 export default defineComponent({
   mixins: [baseComponents],
-  props: ["name", "sizeUnit", "onClickFunc", "tips"],
+  props: ["name", "sizeUnit", "onClickFunc", "tips", "detail"],
   setup(props, context) {
     context.emit("ready");
     const { onClickFunc } = toRefs(props);
@@ -50,12 +50,14 @@ export default defineComponent({
                   reference: h(iconCell, {
                     name: props.name,
                     sizeUnit: props.sizeUnit,
+                    detail: props.detail,
                   }),
                 }
               )
             : h(iconCell, {
                 name: props.name,
                 sizeUnit: props.sizeUnit,
+                detail: props.detail,
               })
       ),
     ];

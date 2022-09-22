@@ -34,9 +34,22 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    detail: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
   },
   setup: (props, context) => {
-    const { sizeUnit, isLoadingIcon, iconOption } = toRefs(props);
+    const { sizeUnit, isLoadingIcon, iconOption, detail } = toRefs(props);
+    let length = 1;
+    if (detail.value && "gridInfo" in detail.value)
+      length =
+        detail.value.gridInfo.default.size.width >
+        detail.value.gridInfo.default.size.height
+          ? detail.value.gridInfo.default.size.height
+          : detail.value.gridInfo.default.size.width;
     context.emit("ready");
     return () =>
       h(cardBg, {}, () => [
@@ -44,10 +57,12 @@ export default defineComponent({
           ElIcon,
           {
             style: {
-              margin: sizeUnit.value.blockSize * 0.25 + "px",
-              fontSize: sizeUnit.value.blockSize * 0.5 + "px",
+              background: "url(" + length * sizeUnit.value.blockSize + ".jpg)",
+              margin: length * sizeUnit.value.blockSize * 0.25 + "px",
+              fontSize: length * sizeUnit.value.blockSize * 0.5 + "px",
               ...iconOption.value,
             },
+            color: iconOption.value.color ? iconOption.value.color : "",
             class: [isLoadingIcon.value ? "is-loading" : ""],
           },
           () => h(getIcon(props.name + ""))
