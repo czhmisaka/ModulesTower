@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-21 20:03:13
+ * @LastEditTime: 2022-09-22 15:10:29
  * @FilePath: /configforpagedemo/src/views/PageConfigData/main.ts
  */
 
@@ -254,5 +254,5 @@ export const mainDesktop = [
     gridCellMaker('cardApiControler','cardApiControler',{},{
         name:'cardApiControler',
         type:cardComponentType.componentList,
-    },{}).setPosition(0,5).setSize(4,1)
+    },{}).setPosition(2,2).setSize(1,1)
 ]

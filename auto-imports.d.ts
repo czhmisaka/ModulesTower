@@ -8,6 +8,7 @@ declare global {
   const ElForm: typeof import('element-plus/es')['ElForm']
   const ElFormItem: typeof import('element-plus/es')['ElFormItem']
   const ElHeader: typeof import('element-plus/es')['ElHeader']
+  const ElIcon: typeof import('element-plus/es')['ElIcon']
   const ElInput: typeof import('element-plus/es')['ElInput']
   const ElMain: typeof import('element-plus/es')['ElMain']
   const ElMenu: typeof import('element-plus/es')['ElMenu']
