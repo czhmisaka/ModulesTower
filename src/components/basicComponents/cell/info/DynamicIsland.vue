@@ -40,7 +40,7 @@
       <div
         class="showBox"
         :style="{
-          opacity: isInInfo(infoType.image) ? 1 : 0,
+          opacity: __isInInfo(infoType.image) ? 1 : 0,
           backgroundImage: `url(${context.image})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -80,11 +80,16 @@ const keyFrameClass = {
   noMessage: "normal",
 } as { [key: string]: string };
 
+let dbTouch = false;
+
 export default defineComponent({
   name: "灵动岛岛",
   nameEn: "DynamicIsland",
   mixins: [baseComponents],
-  components: { cardBg, lessIcon },
+  components: {
+    cardBg,
+    lessIcon,
+  },
   props: {
     info: {
       type: Object,
@@ -120,10 +125,10 @@ export default defineComponent({
         if (val.length == 0) {
           this.init();
         }
-        if (!this.isInInfo(infoType.image) && this.isInInfo(infoType.icon)) {
+        if (!this.__isInInfo(infoType.image) && this.__isInInfo(infoType.icon)) {
           this.startIcon();
         }
-        if (this.isInInfo(infoType.image)) {
+        if (this.__isInInfo(infoType.image)) {
           this.startImage();
         }
       },
@@ -153,6 +158,10 @@ export default defineComponent({
         message: [] as string[],
         element: {} as { [key: string]: any },
         image: "",
+        timeLimit: "",
+        needKillerInfo: {
+          type: infoType.sleep,
+        } as infoTemplate,
       } as { [key: string]: any },
 
       gridInfo: {
@@ -205,6 +214,13 @@ export default defineComponent({
       this.status.class = keyFrameClass.noMessage;
     },
 
+    /**
+     * @name: pushInfo
+     * @description: 处理推送的函数
+     * @authors: CZH
+     * @Date: 2022-09-25 20:43:08
+     * @param {*} infoList
+     */
     async pushInfo(infoList: infoTemplate[]) {
       this.context.info = this.context.info.concat(infoList);
       infoList.map((item: infoTemplate) => {
@@ -218,11 +234,7 @@ export default defineComponent({
           case infoType.image:
             this.context.image = "";
             this.context.image = item.image;
-            setTimeout(() => {
-              this.context.info = this.context.info.filter(
-                (x: infoTemplate) => x.type != infoType.image
-              );
-            }, 3000);
+            this.__timeLimit(item);
             break;
         }
       });
@@ -230,6 +242,12 @@ export default defineComponent({
       this.__clearInfo();
     },
 
+    /**
+     * @name: touchStart
+     * @description: 响应点击事件
+     * @authors: CZH
+     * @Date: 2022-09-25 20:43:25
+     */
     touchStart() {
       if (this.info.length == 0) {
         const { size, position } = this.detail.gridInfo.default;
@@ -247,6 +265,12 @@ export default defineComponent({
       }
     },
 
+    /**
+     * @name: touchend
+     * @description: 触控离开事件
+     * @authors: CZH
+     * @Date: 2022-09-25 20:43:48
+     */
     touchend() {
       const { size, position } = this.detail.gridInfo.default;
       const setSize = {
@@ -289,6 +313,12 @@ export default defineComponent({
       changeCardPosition(this, data);
     },
 
+    /**
+     * @name: __clearInfo
+     * @description: 清空等待队列
+     * @authors: CZH
+     * @Date: 2022-09-25 22:00:11
+     */
     __clearInfo() {
       let data = {} as { [key: string]: any };
       data[this.detail.key] = {
@@ -297,8 +327,25 @@ export default defineComponent({
       changeCardProperties(this, data);
     },
 
-    isInInfo(name: infoType) {
+    /**
+     * @name: __clearInfoLocal
+     * @description: 清空本地展示任务队列
+     * @authors: CZH
+     * @Date: 2022-09-25 22:00:26
+     */
+    __clearInfoLocal() {},
+
+    __isInInfo(name: infoType) {
       return this.context.info.filter((x: infoTemplate) => x.type == name).length > 0;
+    },
+
+    __timeLimit(info: infoTemplate) {
+      let { timeLimit } = this.context;
+      if (timeLimit) clearTimeout(timeLimit);
+      if (info.time >= 0) {
+        this.context.timeLimit = setTimeout(() => {}, info.time * 1000);
+        this.context.needKillerInfo = deepClone(info);
+      }
     },
   },
 

@@ -10,9 +10,18 @@ import { baseComponents } from "@/components/basicComponents/grid/module/gridCar
 
 import { ElCard } from "element-plus";
 import cardBg from "../card/cardBg.vue";
+import { changeCardProperties } from "../../grid/module/cardApi";
+import { gridCellTemplate } from "../../grid/module/dataTemplate";
+import { infoType } from "./DynamicIsland";
 export default defineComponent({
   mixins: [baseComponents],
   props: {
+    gridList: {
+      type: Object,
+      default: () => {
+        return [] as gridCellTemplate[];
+      },
+    },
     isBlack: {
       type: Boolean,
       default: false,
@@ -35,11 +44,26 @@ export default defineComponent({
   },
   setup(props, context) {
     const { title, content, img, isBlack } = toRefs(props);
+    // changeCardProperties
     context.emit("ready");
     return () => [
       h(
         cardBg,
         {
+          ontouchend: () => {
+            console.log("asd");
+            changeCardProperties(context, {
+              DynamicIsland: {
+                info: [
+                  {
+                    image: img.value,
+                    type: infoType.image,
+                    time: 10,
+                  },
+                ],
+              },
+            });
+          },
           cusStyle: {
             overflow: "hidden",
           },
@@ -83,12 +107,14 @@ export default defineComponent({
                     width: "calc( 100% - 24px)",
                     height: "20%",
                     bottom: "0px",
-                    background: isBlack.value?"rgba(255,255,255, 0.4)":"rgba( 0,0,0,0.4)",
+                    background: isBlack.value
+                      ? "rgba(255,255,255, 0.4)"
+                      : "rgba( 0,0,0,0.4)",
                     backdropFilter: "blur(2px)",
                     color: "white",
                     textAlign: "left",
                     padding: "0px 12px",
-                    fontSize: '8%',
+                    fontSize: "8%",
                   },
                 },
                 [h("i", content.value)]
