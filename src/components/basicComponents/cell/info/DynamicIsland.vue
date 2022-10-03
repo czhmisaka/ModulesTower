@@ -339,6 +339,13 @@ export default defineComponent({
       return this.context.info.filter((x: infoTemplate) => x.type == name).length > 0;
     },
 
+    /**
+     * @name: __timeLimit
+     * @description: 展示时间控制函数
+     * @authors: CZH
+     * @Date: 2022-09-30 10:05:11
+     * @param {*} info
+     */
     __timeLimit(info: infoTemplate) {
       let { timeLimit } = this.context;
       if (timeLimit) clearTimeout(timeLimit);
