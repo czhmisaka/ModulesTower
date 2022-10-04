@@ -51,7 +51,6 @@ export default defineComponent({
         cardBg,
         {
           ontouchend: () => {
-            console.log("asd");
             changeCardProperties(context, {
               DynamicIsland: {
                 info: [
