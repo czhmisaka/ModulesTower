@@ -41,6 +41,7 @@
         class="showBox"
         :style="{
           opacity: __isInInfo(infoType.image) ? 1 : 0,
+          maxHeight: __isInInfo(infoType.image) ? '100%' : 0,
           backgroundImage: `url(${context.image})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -51,8 +52,37 @@
               ? 'rgba(0, 0, 0, 1) 0px 18px 36px -18px inset;'
               : ''),
         }"
+      ></div>
+      <div
+        class="showBox"
+        :style="{
+          opacity: __isInInfo(infoType.message) ? 1 : 0,
+          marginTop: context.icon.length > 0 ? '-' + height + 'px' : '',
+          color: 'white',
+          fontSize: '16px',
+          fontWeight: 900,
+          lineHeight: size.height * sizeUnit.blockSize + 'px',
+        }"
       >
-        <div></div>
+        {{ context.message }}
+      </div>
+      <div
+        class="showBox"
+        :style="{
+          opacity: __isInInfo(infoType.el) ? 1 : 0,
+          marginTop: context.icon.length > 0 ? '-' + height + 'px' : '',
+          color: 'white',
+        }"
+      >
+        <card
+          v-if="__isInInfo(infoType.el)"
+          :ref="'card_DynamicIsland_0'"
+          :detail="{ ...context.el, index }"
+          :baseData="baseData"
+          :sizeUnit="sizeUnit"
+          :gridList="gridList"
+          @onChange="(value, options) => cardOnChange(value, options)"
+        />
       </div>
     </div>
   </cardBg>
@@ -74,7 +104,7 @@ import {
   changeCardSize,
   changeCardProperties,
 } from "../../grid/module/cardApi/index";
-import { stringify } from "querystring";
+import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 
 const keyFrameClass = {
   noMessage: "normal",
@@ -89,6 +119,7 @@ export default defineComponent({
   components: {
     cardBg,
     lessIcon,
+    card,
   },
   props: {
     info: {
@@ -120,6 +151,11 @@ export default defineComponent({
         }
       },
     },
+    "context.message": {
+      handler(val) {
+        console.log("asd", val);
+      },
+    },
     "context.info": {
       handler(val) {
         if (val.length == 0) {
@@ -129,10 +165,16 @@ export default defineComponent({
           this.startIcon();
         }
         if (this.__isInInfo(infoType.image)) {
-          val.map((item: infoTemplate) => {
-            this.context.image = item.image;
+          val.map((info: infoTemplate) => {
+            if (info.type == infoType.image) this.context.image = info.image;
           });
           this.startImage();
+        }
+        if (this.__isInInfo(infoType.message)) {
+          val.map((info: infoTemplate) => {
+            if (info.type == infoType.message) this.context.message = info.message;
+          });
+          this.startMessage();
         }
       },
     },
@@ -158,7 +200,7 @@ export default defineComponent({
           name: string;
           iconOption: { [key: string]: any };
         }[],
-        message: [] as string[],
+        message: "",
         element: {} as { [key: string]: any },
         image: "",
         timeLimit: "",
@@ -181,9 +223,20 @@ export default defineComponent({
     };
   },
   methods: {
-    close() {},
+    startMessage() {
+      const position = {
+        x: this.size.y,
+        y: this.size.y,
+      } as gridPositionCell;
+      const size = {
+        width: this.size.maxWidth - this.size.y * 2,
+        height: this.size.height,
+      } as gridSizeCell;
 
-    startMessage() {},
+      this.__changeSize(size);
+      this.__changePosition(position);
+      this.status.class = keyFrameClass.noMessage;
+    },
 
     startImage() {
       const position = {
@@ -217,6 +270,10 @@ export default defineComponent({
       this.status.class = keyFrameClass.noMessage;
     },
 
+    cardOnChange(value: any, options: any) {
+      this.$emit();
+    },
+
     /**
      * @name: pushInfo
      * @description: 处理推送的函数
@@ -236,6 +293,9 @@ export default defineComponent({
             this.context.info = this.context.info.concat(infoList);
             break;
           case infoType.image:
+            this.__timeLimit(item);
+            break;
+          case infoType.message:
             this.__timeLimit(item);
             break;
         }
@@ -376,9 +436,9 @@ export default defineComponent({
         this.__clearInfoLocal(needKillerInfo);
         needChangeAction = true;
       }
-      setTimeout(() => this.__setInfoLocal(info), needChangeAction ? 300 : 0);
+      setTimeout(() => this.__setInfoLocal(info), needChangeAction ? 420 : 0);
       this.context.needKillerInfo = info;
-      if (info.time >= 0) {
+      if (info.time != -1 && info.time > 0) {
         this.context.timeLimit = setTimeout(() => {
           this.__clearInfoLocal(info);
         }, info.time * 1000 + (needChangeAction ? 500 : 0));

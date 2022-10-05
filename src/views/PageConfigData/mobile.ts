@@ -212,7 +212,7 @@ export const mobileDesktop = [
                 width: 0,
                 height: 0.5,
                 maxWidth: 4,
-                maxHeight:2
+                maxHeight: 2
             }
         },
     }),
@@ -244,7 +244,7 @@ export const mobileDesktop = [
             }
         },
     }).setPosition(3, 6).setSize(1, 1),
-    gridCellMaker('closeInfo', '关闭info', {}, {
+    gridCellMaker('sendMessage', '发送信息', {}, {
         type: cardComponentType.componentList,
         name: 'icon'
     }, {
@@ -253,9 +253,9 @@ export const mobileDesktop = [
             onClickFunc: (content: any) => {
                 const { context } = content;
                 let info = {
-                    image:'https://pic4.zhimg.com/v2-53c4046627a3e1e0d8f04d74d965d7eb_r.jpg',
-                    type: infoType.image,
-                    time: 3,
+                    message: '一条简单的信息',
+                    type: infoType.message,
+                    time: 10,
                 } as infoTemplate
                 changeCardProperties(context, {
                     DynamicIsland: {
