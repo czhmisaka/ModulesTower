@@ -5,13 +5,10 @@
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/infoCell.vue
 -->
 
-
 <script lang="tsx">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
-    setup() {
-        
-    },
-})
+  setup() {},
+});
 </script>

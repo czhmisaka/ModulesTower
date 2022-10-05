@@ -1,9 +1,11 @@
 /*
  * @Date: 2022-09-22 23:02:49
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-23 00:44:59
+ * @LastEditTime: 2022-10-05 21:28:51
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/DynamicIsland.ts
  */
+import { gridCellTemplate } from '../../grid/module/dataTemplate';
+
 
 // 信息状态
 export enum infoType {
@@ -25,7 +27,7 @@ export enum infoTypeActionListLengthLimit{
 export interface infoTemplate {
     type: infoType;
     message?: string;
-    el?: Function | any;
+    el?: gridCellTemplate;
     icon?: string | Function;
     time?: number;
     image?: string;

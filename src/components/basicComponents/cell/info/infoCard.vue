@@ -57,7 +57,7 @@ export default defineComponent({
                   {
                     image: img.value,
                     type: infoType.image,
-                    time: 10,
+                    time: 5,
                   },
                 ],
               },

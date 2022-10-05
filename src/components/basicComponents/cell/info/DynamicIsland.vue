@@ -129,6 +129,9 @@ export default defineComponent({
           this.startIcon();
         }
         if (this.__isInInfo(infoType.image)) {
+          val.map((item: infoTemplate) => {
+            this.context.image = item.image;
+          });
           this.startImage();
         }
       },
@@ -222,18 +225,17 @@ export default defineComponent({
      * @param {*} infoList
      */
     async pushInfo(infoList: infoTemplate[]) {
-      this.context.info = this.context.info.concat(infoList);
       infoList.map((item: infoTemplate) => {
         switch (item.type) {
           case infoType.icon:
+            if (this.context.icon.length > 1) this.context.icon.shift();
             this.context.icon.push({
               name: item.icon,
               iconOption: item.options,
             });
+            this.context.info = this.context.info.concat(infoList);
             break;
           case infoType.image:
-            this.context.image = "";
-            this.context.image = item.image;
             this.__timeLimit(item);
             break;
         }
@@ -329,11 +331,32 @@ export default defineComponent({
 
     /**
      * @name: __clearInfoLocal
-     * @description: 清空本地展示任务队列
+     * @description: 清空本地当前展示任务
      * @authors: CZH
      * @Date: 2022-09-25 22:00:26
      */
-    __clearInfoLocal() {},
+    __clearInfoLocal(info: infoTemplate) {
+      let infoList = deepClone(this.context.info);
+      let needKillerInfo = {
+        type: infoType.sleep,
+      } as infoTemplate;
+      clearTimeout(this.context.timeLimit);
+      this.context.info = infoList.filter((infoCell: infoTemplate) => {
+        return !(infoCell.type == info.type);
+      });
+      this.context.needKillerInfo = needKillerInfo;
+    },
+
+    /**
+     * @name: __setInfoLocal
+     * @description: 设置本地当前展示任务
+     * @authors: CZH
+     * @Date: 2022-10-05 21:06:31
+     * @param {*} info
+     */
+    __setInfoLocal(info: infoTemplate) {
+      this.context.info = this.context.info.concat([info]);
+    },
 
     __isInInfo(name: infoType) {
       return this.context.info.filter((x: infoTemplate) => x.type == name).length > 0;
@@ -346,11 +369,19 @@ export default defineComponent({
      * @Date: 2022-09-30 10:05:11
      * @param {*} info
      */
-    __timeLimit(info: infoTemplate) {
-      let { timeLimit } = this.context;
-      if (timeLimit) clearTimeout(timeLimit);
+    async __timeLimit(info: infoTemplate) {
+      let { needKillerInfo } = this.context;
+      let needChangeAction = false;
+      if (needKillerInfo && needKillerInfo.type != infoType.sleep) {
+        this.__clearInfoLocal(needKillerInfo);
+        needChangeAction = true;
+      }
+      setTimeout(() => this.__setInfoLocal(info), needChangeAction ? 300 : 0);
+      this.context.needKillerInfo = info;
       if (info.time >= 0) {
-        this.context.timeLimit = setTimeout(() => {}, info.time * 1000);
+        this.context.timeLimit = setTimeout(() => {
+          this.__clearInfoLocal(info);
+        }, info.time * 1000 + (needChangeAction ? 500 : 0));
         this.context.needKillerInfo = deepClone(info);
       }
     },
