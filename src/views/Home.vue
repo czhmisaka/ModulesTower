@@ -45,22 +45,24 @@ export default defineComponent({
       deep: true,
     },
   },
-  mounted() {
-    this.init();
-
-    if (window.location.origin.split(".czht.top").length > 0) {
-      localName = window.location.origin.split(".czht.top")[0].split("://")[1];
-      if (isValidKey(localName, PageConfig)) {
-        this.desktopData = PageConfig[localName];
-      }
-    }
-  },
   data: () => {
     return {
       desktopData: PageConfig[isMobile() ? "mobile" : "main"],
       Env: {},
       isMobile,
     };
+  },
+  mounted() {
+    this.init();
+
+    if (window.location.origin.split(".czht.top").length > 0) {
+      // localName = window.location.origin.split(".czht.top")[0].split("://")[1];
+      localName = "chenyi";
+      if (isValidKey(localName, PageConfig)) {
+        console.log("localName", localName, PageConfig[localName]);
+        this.desktopData = PageConfig[localName];
+      }
+    }
   },
 });
 </script>

@@ -146,6 +146,10 @@ export default defineComponent({
     editable(val) {
       this.baseData.editable = val;
     },
+
+    desktopData(val) {
+      this.forceUpdateGridList();
+    },
   },
   data() {
     return {
