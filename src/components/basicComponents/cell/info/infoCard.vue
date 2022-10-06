@@ -101,11 +101,10 @@ export default defineComponent({
                 {
                   style: {
                     position: "relative",
-                    top: "80%",
                     overflow: "hidden",
                     width: "calc( 100% - 24px)",
-                    height: "20%",
-                    bottom: "0px",
+                    top: "calc( 100% - 60px)",
+                    height: "60px",
                     background: isBlack.value
                       ? "rgba(255,255,255, 0.4)"
                       : "rgba( 0,0,0,0.4)",

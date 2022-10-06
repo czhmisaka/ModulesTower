@@ -48,7 +48,7 @@ export default defineComponent({
   },
   data: () => {
     return {
-      desktopData: PageConfig[isMobile() ? "mobile" : "main"],
+      desktopData: PageConfig[isMobile() ? "ChenYi" : "main"],
       Env: {},
       isMobile,
     };

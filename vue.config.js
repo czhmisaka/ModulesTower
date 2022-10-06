@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-05 09:21:49
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 19:22:42
+ * @LastEditTime: 2022-10-06 23:48:51
  * @FilePath: /configforpagedemo/vue.config.js
  */
 
@@ -24,7 +24,7 @@ module.exports = {
     devServer: {
         port: 9050,
         proxy: {
-            ...proxyObjCreate(['/']),
+            ...proxyObjCreate(['/api']),
         }
     },
     configureWebpack: {
