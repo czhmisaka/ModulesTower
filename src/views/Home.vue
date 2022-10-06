@@ -27,7 +27,9 @@ import { isMobile } from "@/api/requests";
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
+import { isValidKey } from "./../utils/index";
 
+let localName = "";
 export default defineComponent({
   components: {
     gridDesktop,
@@ -45,10 +47,17 @@ export default defineComponent({
   },
   mounted() {
     this.init();
+
+    if (window.location.origin.split(".czht.top").length > 0) {
+      localName = window.location.origin.split(".czht.top")[0].split("://")[1];
+      if (isValidKey(localName, PageConfig)) {
+        this.desktopData = PageConfig[localName];
+      }
+    }
   },
   data: () => {
     return {
-      desktopData: PageConfig[isMobile() ? "ChenYi" : "main"],
+      desktopData: PageConfig[isMobile() ? "mobile" : "main"],
       Env: {},
       isMobile,
     };

@@ -2,7 +2,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-06 23:41:43
+ * @LastEditTime: 2022-10-07 00:04:41
  * @FilePath: /configforpagedemo/src/views/PageConfigData/index.ts
  */
 import { mainDesktop } from './main';
@@ -12,5 +12,5 @@ import { ChenYi } from './ChenYi'
 export const PageConfig = {
     main: mainDesktop,
     mobile: mobileDesktop,
-    ChenYi: ChenYi
+    chenyi: ChenYi
 }
