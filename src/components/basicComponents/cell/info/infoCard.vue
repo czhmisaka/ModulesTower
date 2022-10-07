@@ -100,6 +100,7 @@ export default defineComponent({
                 "div",
                 {
                   style: {
+                    opacity: content.value ? 1 : 0,
                     position: "relative",
                     overflow: "hidden",
                     width: "calc( 100% - 24px)",
