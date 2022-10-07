@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-06 23:41:41
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-07 11:34:38
+ * @LastEditTime: 2022-10-07 11:36:09
  * @FilePath: /configforpagedemo/src/views/PageConfigData/ChenYi.ts
  */
 
@@ -32,7 +32,7 @@ export const ChenYi = [
             // content: '-- 来自浙江石浦',
             img: '/img/dada.jpeg',
         },
-    }).setPosition(0, 1).setSize(4, 6.5),
+    }).setPosition(0, 0.5).setSize(4, 6.5),
    
     // gridCellMaker('DynamicIsland', '灵动岛岛', {}, {
     //     name: 'DynamicIsland',
