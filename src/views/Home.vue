@@ -16,14 +16,13 @@
   >
     <gridDesktop
       @onChange="onChange"
-      :grid-col-num="isMobile() ? 4 : 12"
-      :desktopData="desktopData"
+      :grid-col-num="desktopData.gridColNum"
+      :desktopData="desktopData.desktopData"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { isMobile } from "@/api/requests";
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
@@ -35,7 +34,21 @@ export default defineComponent({
     gridDesktop,
   },
   methods: {
-    async init() {},
+    async init() {
+      if (window.location.origin.split(".czht.top").length > 1) {
+        localName = window.location.origin.split(".czht.top")[0].split("://")[1];
+        if (isValidKey(localName, PageConfig)) {
+          this.desktopData = PageConfig[localName];
+        }
+      } else if (this.$route.params) {
+        let { PageName } = this.$route.params;
+        if (isValidKey(PageName, PageConfig)) {
+          this.desktopData = PageConfig[PageName];
+        } else {
+          this.$router.push("/");
+        }
+      }
+    },
   },
   watch: {
     $route: {
@@ -47,20 +60,12 @@ export default defineComponent({
   },
   data: () => {
     return {
-      desktopData: PageConfig[isMobile() ? "mobile" : "main"],
+      desktopData: PageConfig["main"],
       Env: {},
-      isMobile,
     };
   },
   mounted() {
     this.init();
-    if (window.location.origin.split(".czht.top").length > 0) {
-      localName = window.location.origin.split(".czht.top")[0].split("://")[1];
-      if (isValidKey(localName, PageConfig)) {
-        console.log("localName", localName, PageConfig[localName]);
-        this.desktopData = PageConfig[localName];
-      }
-    }
   },
 });
 </script>

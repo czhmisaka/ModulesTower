@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-22 21:15:14
+ * @LastEditTime: 2022-10-10 20:26:57
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';
@@ -170,14 +170,23 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
             label: '信息（一般不支持手填）',
             type: inputType.text
         },
-        size:{
-            label:'确定灵动岛的所在位置和尺寸',
-            type:inputType.text
+        size: {
+            label: '确定灵动岛的所在位置和尺寸',
+            type: inputType.text
         },
     }, {}, {
         label: 'DynamicIsland',
         labelNameCN: '灵动岛岛',
         key: 'DynamicIsland',
+        description: '用来展示信息',
+        gridInfo: {
+            small: gridSizeMaker(1, 1),
+        }
+    }),
+    'infoFile': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/cell/info/infoFile/infoFile.vue')), {}, {}, {
+        label: 'infoFile',
+        labelNameCN: '文件信息块',
+        key: 'infoFile',
         description: '用来展示信息',
         gridInfo: {
             small: gridSizeMaker(1, 1),
