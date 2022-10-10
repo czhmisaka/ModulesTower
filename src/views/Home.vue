@@ -54,10 +54,8 @@ export default defineComponent({
   },
   mounted() {
     this.init();
-
     if (window.location.origin.split(".czht.top").length > 0) {
-      // localName = window.location.origin.split(".czht.top")[0].split("://")[1];
-      localName = "chenyi";
+      localName = window.location.origin.split(".czht.top")[0].split("://")[1];
       if (isValidKey(localName, PageConfig)) {
         console.log("localName", localName, PageConfig[localName]);
         this.desktopData = PageConfig[localName];

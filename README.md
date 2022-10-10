@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-18 11:00:37
+ * @LastEditTime: 2022-10-10 17:02:01
  * @FilePath: /configforpagedemo/README.md
 -->
 
@@ -65,7 +65,7 @@ const props = {
   },
 ```
 
-### CardApi
+### 桌面组件间数据交互方式 - CardApi
 
 通过封装对于onChange事件的操作，gridDesktop组件将会拥有更加广泛易用的组件操作能力
 
