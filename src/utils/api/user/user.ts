@@ -1,12 +1,12 @@
 /*
  * @Date: 2022-04-05 14:44:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-11 23:36:37
- * @FilePath: /configforpagedemo/src/api/user/user.ts
+ * @LastEditTime: 2022-10-11 16:41:00
+ * @FilePath: /configforpagedemo/src/utils/api/user/user.ts
  */
 
 
-import {  post } from '@/api/requests'
+import {  post } from '@/utils/api/requests'
 
 const mainPath = '/users/'
 

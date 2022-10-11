@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-11 09:39:23
+ * @LastEditTime: 2022-10-11 16:40:22
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
@@ -11,7 +11,7 @@ import './registerServiceWorker'
 import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import pageModules from './config/pageConfigs'
+import pageModules from './utils/config/pageConfigs'
 import * as Icons from '@element-plus/icons-vue'
 import utils from './utils'
 import Vue3DraggableResizable from 'vue3-draggable-resizable'

@@ -1,11 +1,11 @@
 /*
  * @Date: 2022-09-03 20:00:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-18 11:01:05
- * @FilePath: /configforpagedemo/src/api/lowCodeLocalStorage/index.ts
+ * @LastEditTime: 2022-10-11 16:42:08
+ * @FilePath: /configforpagedemo/src/utils/api/lowCodeLocalStorage/index.ts
  */
 
-import { get, post } from '@/api/requests'
+import { get, post } from '@/utils/api/requests'
 
 
 export const Api = {
