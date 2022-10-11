@@ -26,7 +26,7 @@
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
-import { isValidKey } from "./../utils/index";
+import { isValidKey } from "../../utils/index";
 
 let localName = "";
 export default defineComponent({

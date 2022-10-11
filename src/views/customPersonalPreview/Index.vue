@@ -1,22 +1,71 @@
 <!--
- * @Date: 2022-02-02 00:33:54
+ * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-21 20:49:49
- * @FilePath: /configforpagedemo/src/views/customPersonalPreview/Index.vue
+ * @LastEditTime: 2022-09-03 20:00:22
+ * @FilePath: /configforpagedemo/src/views/Home.vue
 -->
-<script lang="tsx">
-import { defineComponent, h } from "vue";
+
+<template>
+  <div
+    :style="{
+      width: '100vw',
+      height: '100vh',
+      background: 'rgba(0,0,0,0.02)',
+      overflow: 'hidden',
+    }"
+  >
+    <gridDesktop
+      @onChange="onChange"
+      :grid-col-num="desktopData.gridColNum"
+      :desktopData="desktopData.desktopData"
+    />
+  </div>
+</template>
+
+<script lang="ts">
+import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
+import { defineComponent } from "vue";
+import { PageConfig } from "./PageConfigData/index";
+import { isValidKey } from "@/utils/index";
+
+let localName = "";
 export default defineComponent({
-  name: "custonPersonalPreview",
-  data() {
-    return {};
-  },
-  async onload() {},
-  async mounted() {
-    await this.getPersonData();
+  components: {
+    gridDesktop,
   },
   methods: {
-    async getPersonalData() {},
+    async init() {
+      if (window.location.origin.split(".czht.top").length > 1) {
+        localName = window.location.origin.split(".czht.top")[0].split("://")[1];
+        if (isValidKey(localName, PageConfig)) {
+          this.desktopData = PageConfig[localName];
+        }
+      } else if (this.$route.params) {
+        let { PageName } = this.$route.params;
+        if (isValidKey(PageName, PageConfig)) {
+          this.desktopData = PageConfig[PageName];
+        } else {
+          this.$router.push("/");
+        }
+      }
+    },
+  },
+  watch: {
+    $route: {
+      handler(): void {
+        this.init();
+      },
+      deep: true,
+    },
+  },
+  data: () => {
+    return {
+      desktopData: PageConfig["main"],
+      Env: {},
+    };
+  },
+  mounted() {
+    this.init();
   },
 });
 </script>

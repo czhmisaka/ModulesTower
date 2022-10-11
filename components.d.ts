@@ -43,6 +43,7 @@ declare module 'vue' {
     Iframe: typeof import('./src/components/basicComponents/cell/info/iframe.vue')['default']
     InfoCard: typeof import('./src/components/basicComponents/cell/info/infoCard.vue')['default']
     InfoCell: typeof import('./src/components/basicComponents/cell/info/infoCell.vue')['default']
+    InfoFile: typeof import('./src/components/basicComponents/cell/info/infoFile/infoFile.vue')['default']
     InfoList: typeof import('./src/components/basicComponents/list/info/infoList.vue')['default']
     InputCell: typeof import('./src/components/basicComponents/cell/input/inputCell.vue')['default']
     InputList: typeof import('./src/components/basicComponents/list/input/inputList.vue')['default']

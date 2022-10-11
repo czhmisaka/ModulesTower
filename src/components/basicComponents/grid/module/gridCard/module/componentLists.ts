@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-10 20:26:57
+ * @LastEditTime: 2022-10-10 22:29:51
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';
@@ -191,5 +191,6 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
         gridInfo: {
             small: gridSizeMaker(1, 1),
         }
-    })
+    }),
+    
 }
