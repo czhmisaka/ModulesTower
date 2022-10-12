@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-06 09:17:02
+ * @LastEditTime: 2022-10-12 17:55:07
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -81,6 +81,12 @@ export interface gridCellOptions {
     [key: string]: any
 }
 
+export interface gridOriginTemplate {
+    class: string,
+    userType?: string,
+    checkFunc?: Function
+}
+
 /**
  * @name: gridCellTemplate
  * @description: 组件布局属性
@@ -92,6 +98,7 @@ export interface gridCellTemplate {
     labelNameCN: string,
     key: string,
     gridInfo: componentsGridInfo,
+    gridOrigin: gridOriginTemplate,
     component: cardComponent | any,
     options?: gridCellOptions,
     data?: {
