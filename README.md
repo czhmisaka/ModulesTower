@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-13 14:01:32
+ * @LastEditTime: 2022-10-13 15:37:46
  * @FilePath: /configforpagedemo/README.md
 -->
 
@@ -388,7 +388,7 @@ export interface cardComponent {
 
 ## 参考文件结构
 ```text
-文件结构规划(src内)
+lcdp-fe 文件结构规划(src内,src外为基础vue3项目)
 ├── components                                  // 全局通用组件
 │   └── components1                             // 组件1
 │   └── index.ts                                // 全量注册组件
@@ -404,6 +404,9 @@ export interface cardComponent {
 │           └── api                             // 模块接口
 │           └── tool                            // 模块工具函数
 │           └── config                          // 模块独有数据环境配置
+│       └── index.vue                           // 模块出口页面
+│       └── output.ts                           // 模块对外暴露工具类
+│       └── dependencies.json(非必需)            // 模块npm依赖
 │   └── index.ts                                // 模块注册
 ├── router                                      // 路由
 │   └── mainRouter.ts                           // 项目路由配置
