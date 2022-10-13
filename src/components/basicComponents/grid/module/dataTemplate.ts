@@ -98,7 +98,7 @@ export interface gridCellTemplate {
     labelNameCN: string,
     key: string,
     gridInfo: componentsGridInfo,
-    gridOrigin: gridOriginTemplate,
+    gridOrigin?: gridOriginTemplate,
     component: cardComponent | any,
     options?: gridCellOptions,
     data?: {
