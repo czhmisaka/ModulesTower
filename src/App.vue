@@ -32,7 +32,7 @@
 import { defineComponent } from "vue";
 import czhHeader from "./components/header/header.vue";
 import czhMenu from "./components/menu/menu.vue";
-import { CreateUser } from "@/api/user/user";
+import { CreateUser } from "@/utils/api/user/user";
 import lineSlideExchange from "@/components/animate/lineSlideExchange.vue";
 
 function getRandomColor(): string {

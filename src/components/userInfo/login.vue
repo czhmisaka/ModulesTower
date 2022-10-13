@@ -43,7 +43,7 @@
 <script setup>
 import cardBg from "@/components/basicComponents/cell/card/cardBg";
 import { onMounted, ref, getCurrentInstance, defineEmits } from "vue";
-import { get, post } from "@/api/requests";
+import { get, post } from "@/utils/api/requests";
 
 const { proxy } = getCurrentInstance();
 var loginStatus = {

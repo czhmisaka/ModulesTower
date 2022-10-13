@@ -6,21 +6,18 @@
 -->
 <template>
   <el-menu>
-    <el-menu-item-group>
-      
-    </el-menu-item-group>
+    <el-menu-item-group> </el-menu-item-group>
   </el-menu>
 </template>
 
 <script lang="ts">
-import { menuCellTemplate } from "@/config/siteConfig/menu";
 import { defineComponent } from "vue";
 export default defineComponent({
   props: {
     menuList: {
       type: Array,
       default: () => {
-        return Array<menuCellTemplate>();
+        return [] as any[];
       },
     },
   },

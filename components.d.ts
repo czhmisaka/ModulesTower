@@ -50,6 +50,7 @@ declare module 'vue' {
     LessIcon: typeof import('./src/components/basicComponents/cell/icon/lessIcon.vue')['default']
     LineSlideExchange: typeof import('./src/components/animate/lineSlideExchange.vue')['default']
     Login: typeof import('./src/components/userInfo/login.vue')['default']
+    MarkedPage: typeof import('./src/components/basicComponents/cell/markdown/markedPage/index.vue')['default']
     Menu: typeof import('./src/components/menu/menu.vue')['default']
     PropInputDeal: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/propInputDeal.vue')['default']
     TableCell: typeof import('./src/components/basicComponents/cell/table/tableCell.vue')['default']
