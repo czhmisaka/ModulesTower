@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-10 17:02:01
+ * @LastEditTime: 2022-10-13 14:01:32
  * @FilePath: /configforpagedemo/README.md
 -->
 
@@ -385,9 +385,34 @@ export interface cardComponent {
 3. 单独存放一个Router编写当前组件的路由
 4. index.vue中可以通过加载不同的桌面配置文件来切换当前页面的功能
 
-<img src='./markDownImage/file.png'>
 
-**图片仅作为示范，并非本项目内容**
+## 参考文件结构
+```text
+文件结构规划(src内)
+├── components                                  // 全局通用组件
+│   └── components1                             // 组件1
+│   └── index.ts                                // 全量注册组件
+├── util                                        // 通用工具库
+│   └── api                                     // 通用接口
+│   └── tool                                    // 工具函数
+│   └── config                                  // 基础项目数据环境配置
+├── module                                      // 模块库
+│   └── module1                                 // 示范模块1
+│       └── pageConfigData                      // 模块内页面配置文件
+│       └── components                          // 模块内组件库
+│       └── util                                // 模块内专有工具库
+│           └── api                             // 模块接口
+│           └── tool                            // 模块工具函数
+│           └── config                          // 模块独有数据环境配置
+│   └── index.ts                                // 模块注册
+├── router                                      // 路由
+│   └── mainRouter.ts                           // 项目路由配置
+│   └── autoRouter.ts                           // 路由生成，根据模块名为前缀自动生成，可以通过在模组容器Router中配置自定义路由
+```
+
+**示意图**
+<img src='./markDownImage/fileStruct.png'>
+
 
 ## 一些开发过程中需要注意的地方
 
