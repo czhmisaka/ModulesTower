@@ -1,13 +1,12 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-22 15:10:29
- * @FilePath: /configforpagedemo/src/views/PageConfigData/main.ts
+ * @LastEditTime: 2022-10-17 10:05:47
+ * @FilePath: /configforpagedemo/src/views/customPersonalPreview/PageConfigData/main.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
-import { setSize } from '../../components/basicComponents/grid/module/util';
 
 let fucker = true
 export const mainDesktop = [
