@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-22 23:46:13
+ * @LastEditTime: 2022-10-21 22:45:51
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -140,7 +140,7 @@ export const changeCardPosition = (content: { [key: string]: any }, value: { [ke
 
 
 /**
- * @name: changeCardPosition
+ * @name: changeCardSize
  * @description: 使用组件名称修改组件Size
  * @authors: CZH
  * @Date: 2022-08-17 21:01:15

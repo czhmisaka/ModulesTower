@@ -1,16 +1,16 @@
 /*
  * @Date: 2021-12-30 19:54:50
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-05 12:19:28
- * @FilePath: /configforpagedemo/src/config/pageConfigs/index.ts
+ * @LastEditTime: 2022-10-22 01:43:29
+ * @FilePath: /configforpagedemo/src/utils/config/pageConfigs/index.ts
  */
 
 
 // 两个工具函数，看不看都无所谓
-const upperFirst = (str: string) => {
+export const upperFirst = (str: string) => {
     return str.replace(/^\S/, s => s.toUpperCase())
 }
-const camelCase = function (str: string) {
+export const camelCase = function (str: string) {
     return str.replace(/(^\w|(\s+\w))/g, (_: any, $1: any) => {
         return $1.trim().toUpperCase()
     })

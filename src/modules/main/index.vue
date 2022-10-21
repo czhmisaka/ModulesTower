@@ -34,6 +34,7 @@ export default defineComponent({
     gridDesktop,
   },
   methods: {
+    onChange() {},
     async init() {
       if (window.location.origin.split(".czht.top").length > 1) {
         localName = window.location.origin.split(".czht.top")[0].split("://")[1];
