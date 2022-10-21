@@ -1,17 +1,17 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-11 16:38:37
+ * @LastEditTime: 2022-10-21 09:00:54
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { routerCellMaker, noMenu } from './util'
+import { routerCellMaker, noMenu, getModuleFromView } from './util';
 import { isMobile } from '../utils/Env';
 
 const routes: Array<RouteRecordRaw> = [
-  routerCellMaker('/desktop/:PageName', 'Home', () => import('../views/main/Home.vue'), noMenu()),
+  routerCellMaker('/desktop/:PageName', 'Home', () => import('../modules/main/index.vue'), noMenu()),
 ]
-
+  
 const router = createRouter({
   history: createWebHashHistory(),
   routes
@@ -30,5 +30,7 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
+console.log(getModuleFromView())
 
 export default router

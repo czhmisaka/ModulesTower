@@ -1,11 +1,12 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-21 21:01:11
+ * @LastEditTime: 2022-10-21 09:06:35
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
 import { RouteRecordRaw } from 'vue-router';
+import { CardComponentTemplate } from '../components/basicComponents/grid/module/dataTemplate';
 
 /**
  * @name: metaInfoTemplate
@@ -66,6 +67,37 @@ export const routerCellMaker = (
         }
     }
     return routerCell;
+}
+
+export interface modulesCell {
+    name: string,
+    path: string,
+    components: CardComponentTemplate[],
+    baseInfo?: {
+        info: string,
+        output?: boolean,
+        authorize?: string
+        fitScreenSize?: string
+    },
+}
+
+export const getModuleFromView = () => {
+    let moduleList = [] as modulesCell[]
+    const requireModule = require.context(
+        '@/modules/',
+        true,
+    )
+    requireModule.keys().map((fileName: string) => {
+        console.log(fileName, 'asd')
+        if (fileName.split('/').length == 2) {
+            moduleList.push({
+                name: fileName.split('./')[1],
+                path: fileName,
+                components: []
+            })
+        }
+    })
+    return moduleList
 }
 
 export default {}
