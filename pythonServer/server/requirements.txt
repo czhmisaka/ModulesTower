@@ -68,3 +68,4 @@ wcwidth==0.2.5
 websockets==8.1
 peewee==3.14.10
 redis==4.2.2
+Minio==7.1.12

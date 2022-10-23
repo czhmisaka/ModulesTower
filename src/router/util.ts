@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-22 02:07:37
+ * @LastEditTime: 2022-10-23 22:58:33
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -74,6 +74,7 @@ export interface modulesCellTemplate {
     path: string,
     routers: RouteRecordRaw[],
     components: CardComponentTemplate[],
+    output?: { [key: string]: any },
     baseInfo?: {
         info: string,
         output?: boolean,
@@ -82,11 +83,23 @@ export interface modulesCellTemplate {
     },
 }
 
-
+let moduleList = [] as modulesCellTemplate[]
 const pageConfigData = '/PageConfigData/'
+const component = '/component/'
 
-export const getModuleFromView = (basePath = 'desktop') => {
-    let moduleList = [] as modulesCellTemplate[]
+/**
+ * @name: getModuleFromView
+ * @description: 从@/modules文件夹中遍历并生成模块文件列表
+ * @authors: CZH
+ * @Date: 2022-10-23 21:51:34
+ * @param {*} basePath
+ */
+export const getModuleFromView = (init = false, basePath = 'desktop') => {
+    if (!init) {
+        console.log('asd', moduleList)
+        return moduleList;
+    }
+    moduleList = [] as modulesCellTemplate[];
     const requireModule = require.context(
         '@/modules/',
         true,
@@ -106,16 +119,18 @@ export const getModuleFromView = (basePath = 'desktop') => {
         }
     })
     const moduleNameKeyList = moduleList.map((cell: modulesCellTemplate) => cell.name);
+
     function getKey(routerName: string) {
         return moduleNameKeyList.indexOf(routerName);
     }
+
     requireList.map((fileName: string) => {
         const moduleName = fileName.split('./')[1].split('/')[0]
-        if (fileName.indexOf(pageConfigData) != -1 && fileName.split(pageConfigData).length > 1 && fileName.split(pageConfigData)[1].indexOf('.ts') != -1) {
-            const routerName = fileName.split(pageConfigData)[1].replace('.ts', '');
-            if (routerName.toUpperCase() != 'index'.toUpperCase()) {
-                console.log('')
-            }
+        if (fileName.indexOf(component) != -1 && fileName.split(component).length > 1 && fileName.split(component)[1].indexOf('.ts') != -1) {
+            const routerName = fileName.split(component)[1].replace('.ts', '');
+            console.log(fileName)
+            // if (routerName.toUpperCase() != 'index'.toUpperCase()) {
+            // }
         }
     })
     return moduleList

@@ -1,3 +1,9 @@
+'''
+Date: 2022-10-23 15:32:48
+LastEditors: CZH
+LastEditTime: 2022-10-23 20:56:51
+FilePath: /configforpagedemo/pythonServer/server/api/v1/items.py
+'''
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time    : 2020/10/16 15:21
@@ -23,9 +29,18 @@ from schemas.response import resp
 from core.config import settings
 from common.sys_redis import redis_client
 from models.users import User
+from minio import Minio
 
 router = APIRouter()
 
+@router.get("/test1",name='测试接口1')
+def print(
+    print,
+) -> Any:
+    '''
+    任意返回
+    '''
+    return resp.ok(data=print)
 
 @router.get("/test", name="测试接口")
 def items_test(
@@ -53,7 +68,6 @@ def get_all_user_info(
     user, pagination = User().fetch_all(page=page,page_size=page_size)
 
     return resp.ok(data=user, pagination=pagination)
-
 
 @router.post("/upload/file", summary="上传图片", name="上传图片")
 def upload_image(

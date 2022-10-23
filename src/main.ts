@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-11 16:40:22
+ * @LastEditTime: 2022-10-23 22:58:38
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
@@ -11,7 +11,7 @@ import './registerServiceWorker'
 import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import pageModules from './utils/config/pageConfigs'
+import { getModuleFromView, modulesCellTemplate } from '@/router/util'
 import * as Icons from '@element-plus/icons-vue'
 import utils from './utils'
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
@@ -19,8 +19,11 @@ import Vue3DraggableResizable from 'vue3-draggable-resizable'
 
 const app = createApp(App)
 
-app.config.globalProperties.$pageModules = pageModules
-app.config.globalProperties.$utils = utils
+
+app.config.globalProperties.$modulesList = getModuleFromView;
+app.config.globalProperties.$utils = utils;
+
+
 for (let x in Icons) {
     if (utils.isValidKey(x, Icons)) {
         app.component(x, Icons[x])

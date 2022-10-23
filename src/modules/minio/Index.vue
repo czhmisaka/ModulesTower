@@ -59,6 +59,7 @@ export default defineComponent({
     };
   },
   mounted() {
+    console.log(this.$modulesList, "qwe");
     this.init();
   },
 });

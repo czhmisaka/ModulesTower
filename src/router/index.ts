@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-22 02:03:47
+ * @LastEditTime: 2022-10-23 22:50:41
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
@@ -16,14 +16,12 @@ const routes: Array<RouteRecordRaw> = [
 
 const moduleList = getModuleFromView();
 
+console.log(moduleList,'qwes')
 moduleList.map((module: modulesCellTemplate) => {
   module.routers.map((route: RouteRecordRaw) => {
     routes.push(route)
   })
 })
-
-console.log(routes)
-
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -33,13 +31,9 @@ const router = createRouter({
 // 路由守卫
 // 控制默认到index界面执行匹配
 router.beforeEach((to, from, next) => {
-  console.log(to,'asd',to.matched)
   if (to.matched.length === 0) {
-    next('/desktop/main/main')
-    // if (isMobile())
-    //   next('/desktop/mobile')
-    // else
-    //   next('/desktop/main')
+    next()
+    // next('/desktop/main/main')
   }
   else {
     next()
