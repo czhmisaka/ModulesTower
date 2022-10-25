@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-03 20:00:22
- * @FilePath: /configforpagedemo/src/views/Home.vue
+ * @LastEditTime: 2022-10-25 18:07:39
+ * @FilePath: /configforpagedemo/src/modules/main/Index.vue
 -->
 
 <template>
@@ -43,6 +43,7 @@ export default defineComponent({
         }
       } else if (this.$route.params) {
         let { PageName } = this.$route.params;
+        PageName = PageName.toUpperCase();
         if (isValidKey(PageName, PageConfig)) {
           this.desktopData = PageConfig[PageName];
         } else {
@@ -61,7 +62,7 @@ export default defineComponent({
   },
   data: () => {
     return {
-      desktopData: PageConfig["main"],
+      desktopData: PageConfig["MAIN"],
       Env: {},
     };
   },

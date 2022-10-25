@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-23 22:58:33
+ * @LastEditTime: 2022-10-25 17:47:24
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -84,8 +84,10 @@ export interface modulesCellTemplate {
 }
 
 let moduleList = [] as modulesCellTemplate[]
+
+// 文档路径
 const pageConfigData = '/PageConfigData/'
-const component = '/component/'
+const component = '/component/' 
 
 /**
  * @name: getModuleFromView

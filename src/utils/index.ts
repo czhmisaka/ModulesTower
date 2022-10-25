@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 18:14:41
+ * @LastEditTime: 2022-10-25 16:48:21
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions } from "./cellClass";
@@ -66,6 +66,10 @@ export const createCusApp = (options: Component, rootProps?: Record<string, unkn
 }
 
 
+import { ModuleComponentList } from './autoComponentsForModel'
+
+
+
 // 全量导出模式
 export default {
     /**
@@ -85,7 +89,8 @@ export default {
         }
     },
     isValidKey,
-    deepClone
+    deepClone,
+    ModuleComponentList
 }
 
 

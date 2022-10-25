@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-03 20:00:22
- * @FilePath: /configforpagedemo/src/views/Home.vue
+ * @LastEditTime: 2022-10-24 18:51:39
+ * @FilePath: /configforpagedemo/src/modules/minio/Index.vue
 -->
 
 <template>
@@ -27,7 +27,6 @@ import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
 import { isValidKey } from "@/utils/index";
 
-let localName = "";
 export default defineComponent({
   components: {
     gridDesktop,

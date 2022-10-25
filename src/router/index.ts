@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-23 22:50:41
+ * @LastEditTime: 2022-10-25 18:07:19
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
@@ -14,9 +14,8 @@ const routes: Array<RouteRecordRaw> = [
 
 
 
-const moduleList = getModuleFromView();
+const moduleList = getModuleFromView(true);
 
-console.log(moduleList,'qwes')
 moduleList.map((module: modulesCellTemplate) => {
   module.routers.map((route: RouteRecordRaw) => {
     routes.push(route)
@@ -32,8 +31,8 @@ const router = createRouter({
 // 控制默认到index界面执行匹配
 router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {
-    next()
-    // next('/desktop/main/main')
+    // next()
+    next('/desktop/main/main')
   }
   else {
     next()
