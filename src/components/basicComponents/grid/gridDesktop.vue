@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 18:44:50
+ * @LastEditTime: 2022-10-26 12:49:35
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -44,6 +44,7 @@
           :baseData="baseData"
           :sizeUnit="gridRowNumAndUnit()"
           :gridList="gridList"
+          :componentLists="componentLists"
           @onChange="(value, options) => cardOnChange(index, value, options)"
         />
       </grid-item>
@@ -85,6 +86,7 @@ import componentsListModal from "@/components/basicComponents/grid/module/baseTo
 import GridLayout from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridLayout.vue";
 import GridItem from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridItem.vue";
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
+import { componentLists } from "./module/gridCard/module/componentLists";
 
 let interval = null as any;
 let componentBoxInfo = {} as {
@@ -158,6 +160,8 @@ export default defineComponent({
       gridList: [],
       // 更新组件用
       updateTimes: 0,
+      // 组件列表
+      componentLists,
 
       // 基础数据存放
       baseData: {

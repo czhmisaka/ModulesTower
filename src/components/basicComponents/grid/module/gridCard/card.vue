@@ -1,20 +1,30 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-18 11:51:57
+ * @LastEditTime: 2022-10-26 12:53:50
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
 import cardBox from "./module/cardBox.vue";
 import { getIcon } from "@/utils";
 import { defineComponent, h, watch, toRefs, ref, getCurrentInstance } from "vue";
-import { componentGetter, gridCellTemplate } from "./../dataTemplate";
-import { componentLists } from "./module/componentLists";
+import {
+  componentGetter,
+  gridCellTemplate,
+  CardComponentTemplate,
+} from "./../dataTemplate";
 import { ElIcon } from "element-plus";
+import { componentLists } from "./module/componentLists";
 export default defineComponent({
   name: "gridCardBox",
   emits: ["onChange", "openComponentsList"],
   props: {
+    componentLists: {
+      type: Object,
+      default: () => {
+        return {} as { [key: string]: CardComponentTemplate };
+      },
+    },
     detail: {
       type: Object,
       default: () => {
@@ -139,7 +149,10 @@ export default defineComponent({
             },
           }),
           h(
-            componentGetter(props.detail.component, componentLists).component,
+            componentGetter(props.detail.component, {
+              ...props.componentLists,
+              ...componentLists,
+            }).component,
             {
               onOnChange: (key: string, value: any, options: { [key: string]: any }) => {
                 context.emit("onChange", key, value, options);
