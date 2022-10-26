@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-10-20 22:00:19
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-20 22:05:31
- * @FilePath: /configforpagedemo/src/components/minio/fileList.vue
+ * @LastEditTime: 2022-10-26 09:48:24
+ * @FilePath: /configforpagedemo/src/modules/minio/component/fileList.vue
 -->
 <template>
   <span> </span>
@@ -11,6 +11,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "minio_fileList",
+  name: "fileList",
 });
 </script>

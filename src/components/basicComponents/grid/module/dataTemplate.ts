@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-12 17:55:07
+ * @LastEditTime: 2022-10-26 11:01:17
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -32,6 +32,7 @@ export const gridSizeConfig = (size: gridInfo_SizeType = gridInfo_SizeType.middl
     }
     return gridInfo_SizeTypeToGridSize[size];
 }
+
 export enum gridInfo_SizeType {
     small = 'small',
     middle = 'middle',
@@ -166,6 +167,25 @@ export interface CardComponentTemplate {
     [key: string]: any,
 }
 
+
+export interface componentInfo {
+    description?: string,
+    label?: string,
+    group?: string,
+    context?: Array<any>,
+    gridInfo?: { [key: string]: gridSizeCell },
+    [key: string]: any
+}
+export interface propInfo {
+    [key: string]: {
+        label: string,
+        type: inputType,
+        localData?: {
+            [key: string]: any,
+        }
+    }
+}
+
 /**
  * @name: cardComponentMaker
  * @description: 可用组件生成器
@@ -174,24 +194,9 @@ export interface CardComponentTemplate {
  */
 export const cardComponentMaker = (
     component: any,
-    props: {
-        [key: string]: {
-            label: string,
-            type: inputType,
-            localData?: {
-                [key: string]: any,
-            }
-        }
-    },
-    baseProps: { [key: string]: any },
-    compontentInfo: {
-        description?: string,
-        label?: string,
-        group?: string,
-        context?: Array<any>,
-        gridInfo?: { [key: string]: gridSizeCell },
-        [key: string]: any
-    } = {},
+    props: propInfo = {},
+    baseProps: { [key: string]: any } = {},
+    compontentInfo: componentInfo = {},
 ): CardComponentTemplate => {
     let cardComponent = {
         name: compontentInfo.label,
