@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 11:28:54
+ * @LastEditTime: 2022-10-26 21:32:31
  * @FilePath: /configforpagedemo/src/modules/minio/component/index.ts
  */
 import { CardComponentTemplate, cardComponentMaker, componentInfo, propInfo } from '../../../components/basicComponents/grid/module/dataTemplate';
@@ -31,24 +31,22 @@ let componentLists = {} as { [key: string]: CardComponentTemplate }
 componentList.map((module: any) => {
     let propsDetail = {} as propInfo;
     let baseProps = {} as { [key: string]: any }
-    let componentInfo = {} as componentInfo;
+    let componentInfo = { label: preName + "_" + module.name, } as componentInfo;
 
-    if (Object.keys(module).indexOf('propsDetail')) {
+    if (Object.keys(module).indexOf('propsDetail') > -1) {
         propsDetail = { ...module.propsDetail }
     }
 
-    if (Object.keys(module).indexOf('baseProps')) {
+    if (Object.keys(module).indexOf('baseProps') > -1) {
         baseProps = { ...module.baseProps }
     }
 
-    if (Object.keys(module).indexOf('componentInfo')) {
-        componentInfo = {
-            label: module.name,
-            ...module.componentInfo
-        }
+    if (Object.keys(module).indexOf('componentInfo') > -1) {
+        componentInfo = { ...componentInfo, ...module.componentInfo }
     }
 
-    componentLists[preName + "_" + componentInfo.label] = cardComponentMaker(defineAsyncComponent(module), propsDetail, baseProps, componentInfo);
+
+    componentLists[componentInfo.label] = cardComponentMaker(defineAsyncComponent(module), propsDetail, baseProps, componentInfo);
 })
 
 

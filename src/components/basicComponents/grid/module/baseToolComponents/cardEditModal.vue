@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 16:46:22
+ * @LastEditTime: 2022-10-26 21:40:42
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -36,7 +36,7 @@
               >
                 <el-option
                   :value="index"
-                  v-for="(item, index) in componentLists"
+                  v-for="(item, index) in componentList"
                   :key="item.name + '_' + index"
                 >
                   {{ item.compontentInfo.label + ":" + item.compontentInfo.description }}
@@ -143,11 +143,18 @@ export default defineComponent({
   components: {
     Codemirror,
   },
-  props: ["detail", "gridList", "componentIndex", "sizeUnit"],
+  props: ["detail", "gridList", "componentIndex", "sizeUnit", "componentLists"],
+  computed: {
+    // componentsType.componentList 加载方式中可使用的组件列表
+    componentList() {
+      return {
+        ...componentLists,
+        ...this.componentLists,
+      };
+    },
+  },
   data() {
     return {
-      // componentsType.componentList 加载方式中可使用的组件列表
-      componentLists,
       modalControl: {
         isOpen: false,
       } as { [key: string]: any },
@@ -194,8 +201,8 @@ export default defineComponent({
 
       // componentList 模式属性预先加载
       if (this.detail.component.type == cardComponentType.componentList) {
-        const props = componentGetter(this.detail.component, componentLists).settngDetail
-          .props;
+        const props = componentGetter(this.detail.component, this.componentList)
+          .settngDetail.props;
         for (let x in props) {
           this.componentsPropsInputTemplate.push({
             key: x,
@@ -233,7 +240,7 @@ export default defineComponent({
      */
     async componentLoaderChange() {
       const { cardComponentDetail } = this;
-      let cardComponent = componentGetter(cardComponentDetail, componentLists);
+      let cardComponent = componentGetter(cardComponentDetail, this.componentList);
 
       // 根据不同的组件加载模式执行对应的检查方式
       switch (cardComponentDetail.type) {

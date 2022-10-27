@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-25 17:47:24
+ * @LastEditTime: 2022-10-27 09:12:31
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -87,7 +87,7 @@ let moduleList = [] as modulesCellTemplate[]
 
 // 文档路径
 const pageConfigData = '/PageConfigData/'
-const component = '/component/' 
+const component = '/component/'
 
 /**
  * @name: getModuleFromView
@@ -128,13 +128,13 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
 
     requireList.map((fileName: string) => {
         const moduleName = fileName.split('./')[1].split('/')[0]
-        if (fileName.indexOf(component) != -1 && fileName.split(component).length > 1 && fileName.split(component)[1].indexOf('.ts') != -1) {
-            const routerName = fileName.split(component)[1].replace('.ts', '');
-            console.log(fileName)
-            // if (routerName.toUpperCase() != 'index'.toUpperCase()) {
-            // }
+        if (fileName.indexOf('component/index.ts') > -1) {
+            console.log(moduleName, fileName, requireModule(fileName))
+            let componentMoudle =  requireModule(fileName)
+            
         }
     })
+    console.log(moduleList, 'asd')
     return moduleList
 }
 

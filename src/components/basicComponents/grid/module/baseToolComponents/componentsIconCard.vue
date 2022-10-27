@@ -1,15 +1,13 @@
 <!--
  * @Date: 2022-07-24 15:31:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-05 10:18:24
+ * @LastEditTime: 2022-10-26 21:02:53
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/componentsIconCard.vue
 -->
 <template>
-  <el-card shadow="hover">
-    <template #header>
-      <cardBg></cardBg>
-    </template>
-  </el-card>
+  <cardBg>
+    {{ cardComponents.name }}
+  </cardBg>
 </template>
 
 <script lang="ts">

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-24 18:51:39
+ * @LastEditTime: 2022-10-26 21:44:14
  * @FilePath: /configforpagedemo/src/modules/minio/Index.vue
 -->
 
@@ -17,6 +17,7 @@
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopData.desktopData"
+      :componentLists="component.componentLists"
     />
   </div>
 </template>
@@ -26,6 +27,7 @@ import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
 import { isValidKey } from "@/utils/index";
+import component from "./component/index";
 
 export default defineComponent({
   components: {
@@ -55,10 +57,10 @@ export default defineComponent({
     return {
       desktopData: PageConfig["main"],
       Env: {},
+      component,
     };
   },
   mounted() {
-    console.log(this.$modulesList, "qwe");
     this.init();
   },
 });

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-30 10:48:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-03 23:33:40
+ * @LastEditTime: 2022-10-26 21:37:58
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue
 -->
 
@@ -9,7 +9,7 @@
   <div
     class="background"
     :style="{
-      zIndex: modalStatus.isOpen ? '1000000000' : '-1',
+      zIndex: modalStatus.isOpen ? 10000000 : -1,
       opacity: modalStatus.isOpen ? '1' : '0',
     }"
     @click="modalStatus.isOpen = false"
@@ -17,15 +17,19 @@
     <div class="content" @click.stop="() => {}">
       <div
         class="cell"
-        v-for="(item, index) in componentLists"
+        v-for="(item, index) in Object.keys({ ...componentMap, ...componentLists })"
         :key="index + '_component'"
         :style="{
           cursor: 'pointer',
           userSelect: 'none',
         }"
         @dblclick="addComponent(item)"
+        @touchend="addComponent(item)"
       >
-        <componentsIconCard :cardComponents="componentMap[item]" :sizeUnit="sizeUnit" />
+        <componentsIconCard
+          :cardComponents="{ ...componentMap, ...componentLists }[item]"
+          :sizeUnit="sizeUnit"
+        />
       </div>
     </div>
   </div>
@@ -43,14 +47,13 @@ import {
   CardComponentTemplate,
 } from "../dataTemplate";
 export default defineComponent({
-  props: ["sizeUnit", "gridList"],
+  props: ["sizeUnit", "gridList", "componentLists"],
   components: {
     componentsIconCard,
   },
   data() {
     return {
       componentMap: componentLists,
-      componentLists: Object.keys(componentLists),
 
       // 显示状态控制
       modalStatus: {
@@ -63,11 +66,14 @@ export default defineComponent({
   methods: {
     open() {
       this.modalStatus.isOpen = true;
+      console.log({ ...this.componentMap, ...this.componentLists }, this.componentLists);
     },
 
     // 添加组件
     addComponent(name: string) {
-      const comp = this.componentMap[name] as CardComponentTemplate;
+      const comp = { ...this.componentMap, ...this.componentLists }[
+        name
+      ] as CardComponentTemplate;
       let newComp: gridCellTemplate = gridCellMaker(
         name,
         name,
@@ -130,8 +136,8 @@ export default defineComponent({
     justify-content: flex-start;
     align-content: flex-start;
     .cell {
-      width: 10vw;
-      height: 10vw;
+      width: 16vw;
+      height: 16vw;
       // background-color: #fff;
       // box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
       overflow: hidden;

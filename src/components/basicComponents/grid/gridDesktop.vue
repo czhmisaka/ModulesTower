@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 12:49:35
+ * @LastEditTime: 2022-10-26 21:38:28
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -51,6 +51,7 @@
     </grid-layout>
     <componentsListModal
       :gridList="gridList"
+      :componentLists="componentLists"
       ref="componentsListModal"
       @onChange="
         (index, value) =>
@@ -65,6 +66,7 @@
       :gridList="gridList"
       :componentIndex="baseData._componentIndex"
       :sizeUnit="gridRowNumAndUnit()"
+      :componentLists="componentLists"
       @onChange="
         (index, value) =>
           cardOnChange(index, value, {
@@ -80,13 +82,16 @@ import { defineComponent } from "vue";
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import cardEditModal from "@/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue";
 import { testData } from "./module/testData";
-import { cardOnChangeType, gridCellTemplate } from "./module/dataTemplate";
+import {
+  cardOnChangeType,
+  gridCellTemplate,
+  CardComponentTemplate,
+} from "./module/dataTemplate";
 import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
 import componentsListModal from "@/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue";
 import GridLayout from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridLayout.vue";
 import GridItem from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridItem.vue";
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
-import { componentLists } from "./module/gridCard/module/componentLists";
 
 let interval = null as any;
 let componentBoxInfo = {} as {
@@ -141,6 +146,13 @@ export default defineComponent({
         return testData as Array<gridCellTemplate>;
       },
     },
+
+    componentLists: {
+      type: Object,
+      default: () => {
+        return {} as { [key: string]: CardComponentTemplate };
+      },
+    },
   },
   computed: {},
 
@@ -161,7 +173,6 @@ export default defineComponent({
       // 更新组件用
       updateTimes: 0,
       // 组件列表
-      componentLists,
 
       // 基础数据存放
       baseData: {

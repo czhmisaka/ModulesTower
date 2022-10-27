@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-10-20 22:00:09
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 11:14:24
+ * @LastEditTime: 2022-10-26 21:29:45
  * @FilePath: /configforpagedemo/src/modules/minio/component/fileInfo.vue
 -->
 <template>
@@ -19,7 +19,6 @@ import { defineComponent } from "vue";
 import { MinioFileTemplate } from "./fileTemplate";
 export default defineComponent({
   componentInfo: {
-    label: "fileInfo",
     labelNameCn: "Minio文件展示模块",
     key: "fileInfo",
     description: "一个用来展示Minio提供文件地址的模块，搭配minio相关套件使用",
@@ -41,5 +40,9 @@ export default defineComponent({
       type: inputType.obj,
     },
   } as propInfo,
+
+  async mounted() {
+    this.$emit("ready");
+  },
 });
 </script>
