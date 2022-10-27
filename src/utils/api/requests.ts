@@ -1,13 +1,19 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-21 21:04:38
- * @FilePath: /configforpagedemo/src/api/requests.ts
+ * @LastEditTime: 2022-10-27 23:17:18
+ * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
 import axios from 'axios';
 import { getCookie } from './config/cookie';
 export const CancelToken: any = axios.CancelToken; // axios 的取消请求
+
+
+// development , production
+const Env = process.env.NODE_ENV
+const isDev = () => Env == 'development'
+console.log(Env, 'asd22')
 
 export function isMobile() {
     if (window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {
@@ -17,7 +23,7 @@ export function isMobile() {
     }
 }
 
-let baseURL = process.env.VUE_APP_REQUST_URL
+let baseURL = isDev?'/api':''
 const request = axios.create({
     baseURL: baseURL, // 可以不需要
     timeout: 10000,  // 超时时间

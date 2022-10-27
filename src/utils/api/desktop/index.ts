@@ -1,16 +1,15 @@
 /*
  * @Date: 2022-09-03 20:00:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-12 08:39:23
- * @FilePath: /configforpagedemo/src/utils/api/lowCodeLocalStorage/index.ts
+ * @LastEditTime: 2022-10-27 22:15:42
+ * @FilePath: /configforpagedemo/src/utils/api/desktop/index.ts
  */
 
 import { get, post } from '@/utils/api/requests'
 
 
 export const Api = {
-    getTableList: '/getTableList',
-    
+    getTableList: '/desktop/upload',
 } as { [key: string]: string }
 
 

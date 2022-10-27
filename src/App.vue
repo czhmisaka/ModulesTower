@@ -32,7 +32,6 @@
 import { defineComponent } from "vue";
 import czhHeader from "./components/header/header.vue";
 import czhMenu from "./components/menu/menu.vue";
-import { CreateUser } from "@/utils/api/user/user";
 import lineSlideExchange from "@/components/animate/lineSlideExchange.vue";
 
 function getRandomColor(): string {
@@ -59,16 +58,7 @@ export default defineComponent({
     this.$refs["lineSlideExchange"].start();
     this.$refs["lineSlideExchange"].finish();
   },
-  methods: {
-    async createUser() {
-      let res: any = await CreateUser({
-        name: "admin",
-        password: "123456",
-        email: "1234@123.12",
-      });
-      console.log(res);
-    },
-  },
+  methods: {},
 });
 </script>
 

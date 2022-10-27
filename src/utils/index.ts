@@ -1,12 +1,13 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-25 16:48:21
+ * @LastEditTime: 2022-10-27 23:12:59
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions } from "./cellClass";
 import * as Icons from '@element-plus/icons-vue'
 import { h, createApp, Component } from "vue";
+import { get, post } from './api/requests'
 
 
 // 对象字符串判空
@@ -90,7 +91,10 @@ export default {
     },
     isValidKey,
     deepClone,
-    ModuleComponentList
+    ModuleComponentList,
+    axios: {
+        get, post
+    }
 }
 
 

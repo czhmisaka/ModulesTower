@@ -1,27 +1,39 @@
 /*
  * @Date: 2022-04-05 14:44:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-11 16:41:00
+ * @LastEditTime: 2022-10-27 23:18:20
  * @FilePath: /configforpagedemo/src/utils/api/user/user.ts
  */
 
 
-import {  post } from '@/utils/api/requests'
+import { post, get } from '@/utils/api/requests'
 
-const mainPath = '/users/'
+const modulePath = '/user/'
 
-interface User{
-    name?:string,
-    email?:string,
-    password?:string,
+interface User {
+    name?: string,
+    email?: string,
+    password?: string,
 }
 
 
 // 创建用户
-export const CreateUser = async (data:User) => {
-    let res = await post(`${mainPath}`, data)
+export const CreateUser = async (data: User) => {
+    let res = await post(`${modulePath}`, data)
     return res
 }
 
 
+// 获取所有用户信息
+export const GetAllUser = async () => {
+    let res = await get(`${modulePath}all`, {})
+    return res.data
+}
+
+
+
+export default {
+    CreateUser,
+    GetAllUser
+}
 

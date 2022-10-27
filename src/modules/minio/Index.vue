@@ -28,6 +28,7 @@ import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
 import { isValidKey } from "@/utils/index";
 import component from "./component/index";
+import { GetAllUser } from "@/utils/api/user/user";
 
 export default defineComponent({
   components: {
@@ -60,8 +61,10 @@ export default defineComponent({
       component,
     };
   },
-  mounted() {
+  async mounted() {
     this.init();
+    let res = await GetAllUser();
+    console.log(res);
   },
 });
 </script>
