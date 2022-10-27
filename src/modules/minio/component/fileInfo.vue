@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-10-20 22:00:09
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 21:29:45
+ * @LastEditTime: 2022-10-27 09:20:16
  * @FilePath: /configforpagedemo/src/modules/minio/component/fileInfo.vue
 -->
 <template>
@@ -23,7 +23,7 @@ export default defineComponent({
     key: "fileInfo",
     description: "一个用来展示Minio提供文件地址的模块，搭配minio相关套件使用",
     gridInfo: {
-      normal: gridSizeMaker(1, 1),
+      normal: gridSizeMaker(2, 2),
     },
   } as componentInfo,
   props: {

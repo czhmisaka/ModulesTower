@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 21:44:14
+ * @LastEditTime: 2022-10-27 09:19:44
  * @FilePath: /configforpagedemo/src/modules/minio/Index.vue
 -->
 
@@ -17,7 +17,7 @@
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopData.desktopData"
-      :componentLists="component.componentLists"
+      :componentLists="component"
     />
   </div>
 </template>

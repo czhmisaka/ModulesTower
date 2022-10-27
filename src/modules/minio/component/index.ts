@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 21:32:31
+ * @LastEditTime: 2022-10-27 09:19:27
  * @FilePath: /configforpagedemo/src/modules/minio/component/index.ts
  */
 import { CardComponentTemplate, cardComponentMaker, componentInfo, propInfo } from '../../../components/basicComponents/grid/module/dataTemplate';
@@ -50,9 +50,8 @@ componentList.map((module: any) => {
 })
 
 
-export default {
-    componentLists
-}
+export default componentLists
+
 
 
 

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 21:38:28
+ * @LastEditTime: 2022-10-27 14:38:59
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -224,7 +224,7 @@ export default defineComponent({
 
     /**
      * @name: cardOnChange
-     * @description: waitForWriting
+     * @description: 卡片回传事件处理中心
      * @authors: CZH
      * @Date: 2022-05-12 15:29:55
      */

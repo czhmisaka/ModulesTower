@@ -1,7 +1,7 @@
 '''
 Date: 2022-04-05 18:05:58
 LastEditors: CZH
-LastEditTime: 2022-04-07 20:20:22
+LastEditTime: 2022-10-27 11:24:35
 FilePath: /configforpagedemo/pythonServer/server/api/v1/sys_scheduler.py
 '''
 #!/usr/bin/env python
@@ -67,7 +67,7 @@ async def add_job_to_scheduler(
     """
     简易的任务调度演示 可自行参考文档 https://apscheduler.readthedocs.io/en/stable/
     三种模式
-    date: use when you want to run the job just once at a certain point of time
+    date: use when you want to run the job just once at a certain   point of time
     interval: use when you want to run the job at fixed intervals of time
     cron: use when you want to run the job periodically at certain time(s) of day
     :param seconds:

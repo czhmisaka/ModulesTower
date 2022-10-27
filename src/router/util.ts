@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-27 09:12:31
+ * @LastEditTime: 2022-10-27 09:21:15
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -131,7 +131,9 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
         if (fileName.indexOf('component/index.ts') > -1) {
             console.log(moduleName, fileName, requireModule(fileName))
             let componentMoudle =  requireModule(fileName)
-            
+            if(fileName){
+                console.log('asd')
+            }
         }
     })
     console.log(moduleList, 'asd')

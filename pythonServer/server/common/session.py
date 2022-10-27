@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @Time    : 2020/10/16 11:42
-# @Author  : CoderCharm
-# @File    : session.py
-# @Software: PyCharm
-# @Github  : github/CoderCharm
-# @Email   : wg_python@163.com
-# @Desc    :
+'''
+Date: 2022-10-23 15:32:48
+LastEditors: CZH
+LastEditTime: 2022-10-27 17:31:03
+FilePath: /configforpagedemo/pythonServer/server/common/session.py
+'''
+
 """
 
 """

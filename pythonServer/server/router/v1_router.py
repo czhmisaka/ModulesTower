@@ -1,3 +1,9 @@
+'''
+Date: 2022-10-23 15:32:48
+LastEditors: CZH
+LastEditTime: 2022-10-27 12:22:33
+FilePath: /configforpagedemo/pythonServer/server/router/v1_router.py
+'''
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time    : 2020/10/15 17:45
@@ -22,6 +28,7 @@ from fastapi import APIRouter
 from api.v1.user import router as user_router
 from api.v1.items import router as items_router
 from api.v1.sys_scheduler import router as scheduler_router
+from api.v1.desktop import router as desktop_router
 
 
 api_v1_router = APIRouter()
@@ -30,4 +37,5 @@ api_v1_router = APIRouter()
 # check_authority 权限验证内部包含了 token 验证 如果不校验权限可直接 dependencies=[Depends(check_jwt_token)]
 api_v1_router.include_router(items_router, tags=["测试接口"])
 api_v1_router.include_router(user_router, prefix="/user", tags=["用户"])
+api_v1_router.include_router(desktop_router, prefix="/desktop", tags=["桌面属性"])
 api_v1_router.include_router(scheduler_router, tags=["任务调度"])
