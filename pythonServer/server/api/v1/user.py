@@ -1,3 +1,9 @@
+'''
+Date: 2022-10-23 15:32:48
+LastEditors: CZH
+LastEditTime: 2022-10-27 22:00:48
+FilePath: /configforpagedemo/pythonServer/server/api/v1/user.py
+'''
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time    : 2020/10/16 13:38
@@ -60,7 +66,7 @@ def login_access_token(
     return resp.ok(data={"token": token})
 
 
-@router.get("/user/info", summary="获取用户信息", name="获取用户信息", description="此API没有验证权限")
+@router.get("/user/info", summary="获取个人用户信息", name="获取用户信息", description="此API没有验证权限")
 def get_user_info(
         *,
         current_user: User = Depends(deps.get_current_user)

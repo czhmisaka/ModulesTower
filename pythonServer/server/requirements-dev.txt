@@ -9,4 +9,10 @@ python-jose
 passlib
 PyMySQL
 gunicorn
+Minio
+peewee
 databases[mysql]
+pydantic[email]
+redis
+python-multipart
+apscheduler

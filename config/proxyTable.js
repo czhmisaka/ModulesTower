@@ -2,7 +2,7 @@
 import { headerConfig } from '../src/config/siteConfig/header/index';
  * @Date: 2022-04-05 09:56:17
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-27 20:52:41
+ * @LastEditTime: 2022-10-27 22:03:12
  * @FilePath: /configforpagedemo/config/proxyTable.js
  */
 
@@ -10,7 +10,7 @@ import { headerConfig } from '../src/config/siteConfig/header/index';
 
 const proxyTemplate_dev = {
     name: 'dev',
-    target: 'http://127.0.0.1:8000/api/',
+    target: 'http://127.0.0.1:8010/api/',
     changeOrigin: true,
     ws: true,
     pathRewrite: {}

@@ -1,7 +1,7 @@
 '''
 Date: 2022-04-05 18:05:58
 LastEditors: CZH
-LastEditTime: 2022-10-23 15:46:35
+LastEditTime: 2022-10-27 22:00:19
 FilePath: /configforpagedemo/pythonServer/server/main.py
 '''
 #!/usr/bin/env python
@@ -44,5 +44,5 @@ if __name__ == "__main__":
         if hasattr(route, "methods"):
             print({'path': route.path, 'name': route.name, 'methods': route.methods})
 
-    uvicorn.run(app='main:app', host="127.0.0.1", port=8010, reload=True, debug=True)
+    uvicorn.run(app='main:app', host="127.0.0.1", port=8010, reload=True)
 
