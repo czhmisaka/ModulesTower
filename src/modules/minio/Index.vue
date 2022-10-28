@@ -14,6 +14,7 @@
       overflow: 'hidden',
     }"
   >
+    <a @click="asdad">asdasdasda</a>
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopData.desktopData"
@@ -35,6 +36,9 @@ export default defineComponent({
     gridDesktop,
   },
   methods: {
+    asdad() {
+      window.open("http://www.baidu.com");
+    },
     async init() {
       if (this.$route.params) {
         let { PageName } = this.$route.params;

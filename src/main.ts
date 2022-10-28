@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-23 22:58:38
+ * @LastEditTime: 2022-10-28 16:58:03
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
@@ -35,9 +35,5 @@ app.component('CusIcon', iconCell)
 app.component('vue-drag-resize', Vue3DraggableResizable)
 app.use(router)
 app.use(ElementPlus)
-
-
-
-
 
 app.mount('#app')

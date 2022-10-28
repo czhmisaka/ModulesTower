@@ -1,7 +1,7 @@
 '''
 Date: 2022-10-27 14:00:42
 LastEditors: CZH
-LastEditTime: 2022-10-27 21:45:30
+LastEditTime: 2022-10-27 23:23:59
 FilePath: /configforpagedemo/pythonServer/server/models/desktop.py
 '''
 """
@@ -15,7 +15,7 @@ from peewee import CharField, IntegerField
 
 class desktop(BaseModel):
     """
-    用户表
+    桌面配置表
     """
     id = IntegerField()
     name = CharField()
