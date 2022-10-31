@@ -1,8 +1,8 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-25 18:07:19
- * @FilePath: /configforpagedemo/src/router/index.ts
+ * @LastEditTime: 2022-10-31 09:56:32
+ * @FilePath: /configforpagedemo-toVite/src/router/index.ts
 */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { routerCellMaker, noMenu, getModuleFromView, modulesCellTemplate } from './util';
@@ -31,7 +31,7 @@ const router = createRouter({
 // 控制默认到index界面执行匹配
 router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {
-    // next()
+    console.log('asd')
     next('/desktop/main/main')
   }
   else {

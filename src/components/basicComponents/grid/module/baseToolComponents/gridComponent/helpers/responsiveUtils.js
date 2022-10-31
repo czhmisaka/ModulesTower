@@ -6,9 +6,6 @@ import {
   correctBounds
 } from './utils';
 
-import {
-  Layout
-} from './utils';
 
 /**
  * Given a width, find the highest breakpoint that matches is valid for it (width > breakpoint).

@@ -1,8 +1,8 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-31 08:41:29
- * @FilePath: /configforpagedemo/src/main.ts
+ * @LastEditTime: 2022-10-31 09:10:26
+ * @FilePath: /configforpagedemo-toVite/src/main.ts
  */
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -33,6 +33,8 @@ for (let x in Icons) {
 app.component('CusIcon', iconCell)
 app.component('vue-drag-resize', Vue3DraggableResizable)
 app.use(router)
+
+console.log('asdasdasd')
 app.use(ElementPlus)
 
 app.mount('#app')
