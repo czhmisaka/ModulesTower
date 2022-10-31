@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-28 16:58:03
+ * @LastEditTime: 2022-10-31 08:41:29
  * @FilePath: /configforpagedemo/src/main.ts
  */
 import { createApp } from 'vue'
@@ -15,7 +15,6 @@ import { getModuleFromView, modulesCellTemplate } from '@/router/util'
 import * as Icons from '@element-plus/icons-vue'
 import utils from './utils'
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
-
 
 const app = createApp(App)
 

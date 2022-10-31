@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "cd pythonServer/server && python3 main.py",
     "dev": "vue-cli-service serve --experimental-modules",
+    "vdev":"vite",
     "build": "NODE_ENV=production && vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
