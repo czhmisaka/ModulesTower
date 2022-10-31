@@ -17,12 +17,12 @@ export function addCookie(objName: string, objValue: string) {
 export function getCookie(objName: string) {//获取指定名称的cookie的值
     let arrStr = document.cookie.split("; ");
     for (let i = 0; i < arrStr.length; i++) {
-        let  temp = arrStr[i].split("=");
+        let temp = arrStr[i].split("=");
         if (temp[0] == objName) return unescape(temp[1]);  //解码
     }
     return "";
 }
 // 删除cookie
 export function clearCookie(name: string) {
-    addCookie(name, "", -1);
+    addCookie(name, "");
 }  
