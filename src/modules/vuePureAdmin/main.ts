@@ -1,6 +1,12 @@
+/*
+ * @Date: 2022-10-28 10:38:15
+ * @LastEditors: CZH
+ * @LastEditTime: 2022-11-02 18:40:10
+ * @FilePath: /configforpagedemo/src/modules/vuePureAdmin/main.ts
+ */
 import App from "./App.vue";
 import router from "./router";
-import { setupStore } from "@/store";
+import { setupStore } from "@/modules/vuePureAdmim/store";
 import ElementPlus from "element-plus";
 import { useI18n } from "@/plugins/i18n";
 import { getServerConfig } from "./config";

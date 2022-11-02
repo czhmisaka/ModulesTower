@@ -12,12 +12,12 @@ import en from "element-plus/lib/locale/lang/en";
 export default defineComponent({
   name: "app",
   components: {
-    [ElConfigProvider.name]: ElConfigProvider
+    [ElConfigProvider.name]: ElConfigProvider,
   },
   computed: {
     currentLocale() {
       return this.$storage.locale?.locale === "zh" ? zhCn : en;
-    }
-  }
+    },
+  },
 });
 </script>
