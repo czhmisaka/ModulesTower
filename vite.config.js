@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-02 09:26:04
+ * @LastEditTime: 2022-11-02 15:35:42
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -21,10 +21,9 @@ import {
   viteCommonjs
 } from '@originjs/vite-plugin-commonjs';
 
-
+// 配置参考
 // https://vitejs.dev/config/
 export default defineConfig(({
-  command,
   mode
 }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -83,8 +82,5 @@ export default defineConfig(({
       }
     },
     base: url_pre,
-    build: {
-
-    }
   }
 })
