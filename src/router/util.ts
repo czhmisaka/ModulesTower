@@ -1,7 +1,11 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 14:29:33
+<<<<<<< HEAD
+ * @LastEditTime: 2022-11-03 14:53:26
+=======
+ * @LastEditTime: 2022-11-03 14:46:12
+>>>>>>> master
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -102,7 +106,9 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
     }
     moduleList = [] as modulesCellTemplate[];
     const requireModule = require.context(
-        '../modules'
+        '@/modules/',
+        true,
+        /.\.ts|\.vue/g
     )
     const requireList = requireModule.keys() as string[];
     requireList.map((fileName: string) => {

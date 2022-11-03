@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 10:38:33
+ * @LastEditTime: 2022-11-03 14:52:01
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
@@ -35,9 +35,9 @@ const router = createRouter({
 // 路由守卫
 // 控制默认到index界面执行匹配
 router.beforeEach((to, from, next) => {
-  next()
+    next()
 })
 
-
+  
 
 export default router
