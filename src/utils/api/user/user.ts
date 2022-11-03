@@ -1,14 +1,14 @@
 /*
  * @Date: 2022-04-05 14:44:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-27 23:18:20
+ * @LastEditTime: 2022-11-03 14:59:34
  * @FilePath: /configforpagedemo/src/utils/api/user/user.ts
  */
 
 
 import { post, get } from '@/utils/api/requests'
 
-const modulePath = '/user/'
+const modulePath = 'user/'
 
 interface User {
     name?: string,

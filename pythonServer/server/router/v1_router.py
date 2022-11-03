@@ -1,7 +1,7 @@
 '''
 Date: 2022-10-23 15:32:48
 LastEditors: CZH
-LastEditTime: 2022-10-27 12:22:33
+LastEditTime: 2022-11-03 15:19:23
 FilePath: /configforpagedemo/pythonServer/server/router/v1_router.py
 '''
 #!/usr/bin/env python
@@ -35,7 +35,7 @@ api_v1_router = APIRouter()
 
 # api_v1_router.include_router(items_router, tags=["测试API"], dependencies=[Depends(check_jwt_token)])
 # check_authority 权限验证内部包含了 token 验证 如果不校验权限可直接 dependencies=[Depends(check_jwt_token)]
-api_v1_router.include_router(items_router, tags=["测试接口"])
-api_v1_router.include_router(user_router, prefix="/user", tags=["用户"])
-api_v1_router.include_router(desktop_router, prefix="/desktop", tags=["桌面属性"])
-api_v1_router.include_router(scheduler_router, tags=["任务调度"])
+api_v1_router.include_router(items_router, prefix="/api",tags=["测试接口"])
+api_v1_router.include_router(user_router, prefix="/api/user", tags=["用户"])
+api_v1_router.include_router(desktop_router, prefix="/api/desktop", tags=["桌面属性"])
+api_v1_router.include_router(scheduler_router,prefix="/api/scheduler" ,tags=["任务调度"])
