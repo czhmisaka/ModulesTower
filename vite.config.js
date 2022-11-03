@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-02 15:35:42
+ * @LastEditTime: 2022-11-03 12:19:19
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -32,10 +32,7 @@ export default defineConfig(({
 
   return {
     resolve: {
-      alias: [{
-          find: /^~/,
-          replacement: ''
-        },
+      alias: [
         {
           find: '@',
           replacement: path.resolve(__dirname, 'src')

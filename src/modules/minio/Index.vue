@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-27 09:19:44
+ * @LastEditTime: 2022-11-03 10:37:09
  * @FilePath: /configforpagedemo/src/modules/minio/Index.vue
 -->
 
@@ -14,7 +14,6 @@
       overflow: 'hidden',
     }"
   >
-    <a @click="asdad">asdasdasda</a>
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopData.desktopData"
@@ -36,9 +35,6 @@ export default defineComponent({
     gridDesktop,
   },
   methods: {
-    asdad() {
-      window.open("http://www.baidu.com");
-    },
     async init() {
       if (this.$route.params) {
         let { PageName } = this.$route.params;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-27 09:19:27
+ * @LastEditTime: 2022-11-03 10:46:47
  * @FilePath: /configforpagedemo/src/modules/minio/component/index.ts
  */
 import { CardComponentTemplate, cardComponentMaker, componentInfo, propInfo } from '../../../components/basicComponents/grid/module/dataTemplate';
@@ -14,43 +14,43 @@ const preName = moduleInfo.name;
 let componentList = [] as any[];
 
 // 搜索当前文件夹内的所有.vue 文件，构建组件对象
-const componentsFiles = require.context('./', true, /.vue$/)
-componentsFiles.keys().map((componentsName: string) => {
-    let data = componentsFiles(componentsName)['default']
-    if (!data['name']) {
-        data = {
-            ...data,
-            name: componentsName.split('/')[componentsName.split('/').length - 1].split('.vue')[0]
-        }
-    }
-    componentList.push(data)
-})
+// const componentsFiles = require.context('./', true, /.vue$/)
+// componentsFiles.keys().map((componentsName: string) => {
+//     let data = componentsFiles(componentsName)['default']
+//     if (!data['name']) {
+//         data = {
+//             ...data,
+//             name: componentsName.split('/')[componentsName.split('/').length - 1].split('.vue')[0]
+//         }
+//     }
+//     componentList.push(data)
+// })
 
-let componentLists = {} as { [key: string]: CardComponentTemplate }
+// let componentLists = {} as { [key: string]: CardComponentTemplate }
 
-componentList.map((module: any) => {
-    let propsDetail = {} as propInfo;
-    let baseProps = {} as { [key: string]: any }
-    let componentInfo = { label: preName + "_" + module.name, } as componentInfo;
+// componentList.map((module: any) => {
+//     let propsDetail = {} as propInfo;
+//     let baseProps = {} as { [key: string]: any }
+//     let componentInfo = { label: preName + "_" + module.name, } as componentInfo;
 
-    if (Object.keys(module).indexOf('propsDetail') > -1) {
-        propsDetail = { ...module.propsDetail }
-    }
+//     if (Object.keys(module).indexOf('propsDetail') > -1) {
+//         propsDetail = { ...module.propsDetail }
+//     }
 
-    if (Object.keys(module).indexOf('baseProps') > -1) {
-        baseProps = { ...module.baseProps }
-    }
+//     if (Object.keys(module).indexOf('baseProps') > -1) {
+//         baseProps = { ...module.baseProps }
+//     }
 
-    if (Object.keys(module).indexOf('componentInfo') > -1) {
-        componentInfo = { ...componentInfo, ...module.componentInfo }
-    }
-
-
-    componentLists[componentInfo.label] = cardComponentMaker(defineAsyncComponent(module), propsDetail, baseProps, componentInfo);
-})
+//     if (Object.keys(module).indexOf('componentInfo') > -1) {
+//         componentInfo = { ...componentInfo, ...module.componentInfo }
+//     }
 
 
-export default componentLists
+//     componentLists[componentInfo.label] = cardComponentMaker(defineAsyncComponent(module), propsDetail, baseProps, componentInfo);
+// })
+
+
+// export default componentLists
 
 
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-02 09:21:21
+ * @LastEditTime: 2022-11-03 14:29:33
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -91,20 +91,18 @@ const component = '/component/'
 
 /**
  * @name: getModuleFromView
- * @description: 从@/modules文件夹中遍历并生成模块文件列表
+ * @description: 从@/modules文件夹中遍历并生成模块文件列表,基于模块单体页面构建，不参与主体页面构建流程，自带动画效果
  * @authors: CZH
  * @Date: 2022-10-23 21:51:34
  * @param {*} basePath
  */
 export const getModuleFromView = (init = false, basePath = 'desktop') => {
     if (!init) {
-        console.log('asd', moduleList)
         return moduleList;
     }
     moduleList = [] as modulesCellTemplate[];
     const requireModule = require.context(
-        '@/modules/',
-        true,
+        '../modules'
     )
     const requireList = requireModule.keys() as string[];
     requireList.map((fileName: string) => {
@@ -129,15 +127,14 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
     requireList.map((fileName: string) => {
         const moduleName = fileName.split('./')[1].split('/')[0]
         if (fileName.indexOf('component/index.ts') > -1) {
-            // console.log(moduleName, fileName, requireModule(fileName))
-            // let componentMoudle =  requireModule(fileName)
-            if(fileName){
-                console.log('asd')
+            let componentMoudle = requireModule(fileName)
+            if (fileName) {
+                console.log('fileName', fileName)
             }
         }
     })
-    console.log(moduleList, 'asd')
     return moduleList
+    // return []
 }
 
 export default {}
