@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-02 09:21:21
+ * @LastEditTime: 2022-11-03 14:46:12
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -98,14 +98,15 @@ const component = '/component/'
  */
 export const getModuleFromView = (init = false, basePath = 'desktop') => {
     if (!init) {
-        console.log('asd', moduleList)
         return moduleList;
     }
     moduleList = [] as modulesCellTemplate[];
     const requireModule = require.context(
         '@/modules/',
         true,
+        /.\.ts|\.vue/g
     )
+    console.log('asd', requireModule.keys())
     const requireList = requireModule.keys() as string[];
     requireList.map((fileName: string) => {
         if (fileName.split('/').length == 3 && fileName.indexOf('/Index.vue') != -1) {
