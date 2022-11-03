@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 14:59:57
+ * @LastEditTime: 2022-11-03 16:33:04
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -21,6 +21,15 @@ import {
   viteCommonjs
 } from '@originjs/vite-plugin-commonjs';
 
+/** 当前执行node命令时文件夹的地址（工作目录） */
+const root = process.cwd();
+
+/** 路径查找 */
+const pathResolve = (dir) => {
+  return path.resolve(__dirname, ".", dir);
+};
+
+
 // 配置参考
 // https://vitejs.dev/config/
 export default defineConfig(({
@@ -31,13 +40,16 @@ export default defineConfig(({
   url_pre = env.VITE_APP_BUILDPREFIX;
 
   return {
+    base: url_pre,
+    root,
     resolve: {
-      alias: [
-        {
-          find: '@',
-          replacement: path.resolve(__dirname, 'src')
-        }
-      ],
+      alias: [{
+        find: "@",
+        replacement: pathResolve('src')
+      }, {
+        find: "@build",
+        replacement: pathResolve("build")
+      }],
       extensions: [
         '.mjs',
         '.js',
@@ -65,6 +77,22 @@ export default defineConfig(({
         }
       })
     ],
+    build: {
+      sourcemap: false,
+      // 消除打包大小超过500kb警告
+      chunkSizeWarningLimit: 4000,
+      rollupOptions: {
+        input: {
+          index: pathResolve("index.html")
+        },
+        // 静态资源分类打包
+        output: {
+          chunkFileNames: "static/js/[name]-[hash].js",
+          entryFileNames: "static/js/[name]-[hash].js",
+          assetFileNames: "static/[ext]/[name]-[hash].[ext]"
+        }
+      }
+    },
     server: {
       strictPort: false,
       port: 9050,
@@ -78,6 +106,5 @@ export default defineConfig(({
         }
       }
     },
-    base: url_pre,
   }
 })
