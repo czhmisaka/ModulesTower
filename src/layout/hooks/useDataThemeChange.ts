@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { getConfig } from "@/config";
+import { getConfig } from "@/utils/config/appConfig";
 import { find } from "lodash-unified";
 import { useLayout } from "./useLayout";
 import { themeColorsType } from "../types";

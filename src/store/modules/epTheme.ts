@@ -1,6 +1,6 @@
 import { store } from "@/store";
 import { defineStore } from "pinia";
-import { getConfig } from "@/config";
+import { getConfig } from "@/utils/config/appConfig";
 import type { StorageConfigs } from "/#/index";
 import { storageLocal } from "@pureadmin/utils";
 

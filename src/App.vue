@@ -58,15 +58,10 @@ export default defineComponent({
   },
   methods: {
     getRandomColor(): string {
-      return (
-        "#" +
-        (function (color) {
-          return (color += "0123456789abcdef"[Math.floor(Math.random() * 16)]) &&
-            color.length == 6
-            ? color
-            : arguments.callee(color);
-        })("")
-      );
+      let r = Math.floor(Math.random() * 255);
+      let g = Math.floor(Math.random() * 255);
+      let b = Math.floor(Math.random() * 255);
+      return "rgba(" + this.r + "," + this.g + "," + this.b + ",1)";
     },
   },
 });

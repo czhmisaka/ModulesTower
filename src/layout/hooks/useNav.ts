@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { getConfig } from "@/config";
+import { getConfig } from "@/utils/config/appConfig";
 import { emitter } from "@/utils/mitt";
 import { routeMetaType } from "../types";
 import { useGlobal } from "@pureadmin/utils";

@@ -1,16 +1,14 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-04 11:26:28
+ * @LastEditTime: 2022-11-04 16:39:37
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
   loadEnv
 } from 'vite';
 import pkg from "./package.json";
-import {
-  nodeResolve
-} from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 import path from 'path';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
@@ -82,7 +80,7 @@ export default ({
       alias: {
         "@": pathResolve('src'),
         "@build": pathResolve("build"),
-        "fs": require.resolve('rollup-plugin-node-builtins'),
+        "fs": require.resolve('rollup-plugin-node-builtins/src/es6/util.js'),
       },
       extensions: [
         '.mjs',
@@ -95,8 +93,6 @@ export default ({
       ]
     },
     plugins: [
-      vue(),
-      vueJsx(),
       ViteRequireContext(),
       viteCommonjs(),
       envCompatible(),

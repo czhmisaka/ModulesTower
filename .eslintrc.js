@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-04 09:40:42
+ * @LastEditTime: 2022-11-04 15:21:13
  * @FilePath: /configforpagedemo/.eslintrc.js
  */
 module.exports = {
@@ -38,13 +38,7 @@ module.exports = {
     defineExpose: "readonly",
     withDefaults: "readonly"
   },
-  extends: [
-    'plugin:vue/vue3-essential',
-    'eslint:recommended',
-    '@vue/typescript/recommended',
-    "@vue/prettier",
-    "@vue/eslint-config-typescript"
-  ],
+  extends: [],
   parser: "vue-eslint-parser",
   parserOptions: {
     parser: "@typescript-eslint/parser",
@@ -56,9 +50,8 @@ module.exports = {
     }
   },
 
-  overrides: [
-    {
-      files: ["*.ts", "*.vue" ,"*.js"],
+  overrides: [{
+      files: ["*.ts", "*.vue", "*.js", "*.config.js"],
       rules: {
         "no-undef": "off"
       }
@@ -112,20 +105,6 @@ module.exports = {
         },
         svg: "always",
         math: "always"
-      }
-    ],
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        argsIgnorePattern: "^_",
-        varsIgnorePattern: "^_"
-      }
-    ],
-    "no-unused-vars": [
-      "error",
-      {
-        argsIgnorePattern: "^_",
-        varsIgnorePattern: "^_"
       }
     ],
     "prettier/prettier": [

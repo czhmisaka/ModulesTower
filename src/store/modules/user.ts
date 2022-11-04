@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-04 09:04:57
+ * @LastEditTime: 2022-11-04 15:43:48
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -13,7 +13,6 @@ import { storageSession } from "@pureadmin/utils";
 import { UserResult, RefreshTokenResult, getLogin, refreshTokenApi } from "@/utils/api/admin/user";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
-ß
 export const useUserStore = defineStore({
   id: "pure-user",
   state: (): userType => ({

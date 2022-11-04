@@ -19,7 +19,7 @@
 }
 </style>
 <script>
-const elementResizeDetectorMaker = require("element-resize-detector");
+import elementResizeDetectorMaker from "element-resize-detector";
 
 import {
   bottom,

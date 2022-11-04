@@ -17,11 +17,6 @@ declare module "vue" {
     Auth: typeof import("../src/components/ReAuth")["Auth"];
   }
 }
-
-declare module "*.svg?component" {
-  export default string;
-}
-
 declare global {
   const __APP_INFO__: {
     pkg: {

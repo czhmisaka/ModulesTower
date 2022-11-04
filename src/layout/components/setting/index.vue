@@ -1,16 +1,7 @@
 <script setup lang="ts">
-import {
-  ref,
-  unref,
-  watch,
-  reactive,
-  computed,
-  nextTick,
-  useCssModule
-} from "vue";
-import { getConfig } from "@/config";
+import { ref, unref, watch, reactive, computed, nextTick, useCssModule } from "vue";
+import { getConfig } from "@/utils/config/appConfig";
 import { useRouter } from "vue-router";
-import panel from "../panel/index.vue";
 import { emitter } from "@/utils/mitt";
 import { resetRouter } from "@/router";
 import { templateRef } from "@vueuse/core";
@@ -25,7 +16,7 @@ import {
   debounce,
   useGlobal,
   storageLocal,
-  storageSession
+  storageSession,
 } from "@pureadmin/utils";
 import { toggleTheme } from "@pureadmin/theme/dist/browser-utils";
 
@@ -49,7 +40,7 @@ const {
   themeColors,
   dataThemeChange,
   setEpThemeColor,
-  setLayoutThemeColor
+  setLayoutThemeColor,
 } = useDataThemeChange();
 
 /* body添加layout属性，作用于src/style/sidebar.scss */
@@ -57,7 +48,7 @@ if (unref(layoutTheme)) {
   let layout = unref(layoutTheme).layout;
   let theme = unref(layoutTheme).theme;
   toggleTheme({
-    scopeName: `layout-theme-${theme}`
+    scopeName: `layout-theme-${theme}`,
   });
   setLayoutModel(layout);
 }
@@ -73,18 +64,18 @@ const settings = reactive({
   tabsVal: $storage.configure.hideTabs,
   showLogo: $storage.configure.showLogo,
   showModel: $storage.configure.showModel,
-  multiTagsCache: $storage.configure.multiTagsCache
+  multiTagsCache: $storage.configure.multiTagsCache,
 });
 
 const getThemeColorStyle = computed(() => {
-  return color => {
+  return (color) => {
     return { background: color };
   };
 });
 
 /** 当网页为暗黑模式时不显示亮白色切换选项 */
 const showThemeColors = computed(() => {
-  return themeColor => {
+  return (themeColor) => {
     return themeColor === "light" && isDark.value ? false : true;
   };
 });
@@ -110,18 +101,14 @@ const greyChange = (value): void => {
 
 /** 色弱模式设置 */
 const weekChange = (value): void => {
-  toggleClass(
-    settings.weakVal,
-    "html-weakness",
-    document.querySelector("html")
-  );
+  toggleClass(settings.weakVal, "html-weakness", document.querySelector("html"));
   storageConfigureChange("weak", value);
 };
 
 const tagsChange = () => {
   let showVal = settings.tabsVal;
   storageConfigureChange("hideTabs", showVal);
-  emitter.emit("tagViewsChange", showVal as unknown as string);
+  emitter.emit("tagViewsChange", (showVal as unknown) as string);
 };
 
 const multiTagsCacheChange = () => {
@@ -160,7 +147,7 @@ function logoChange() {
 }
 
 function setFalse(Doms): any {
-  Doms.forEach(v => {
+  Doms.forEach((v) => {
     toggleClass(false, isSelect, unref(v));
   });
 }
@@ -189,11 +176,8 @@ watch($storage, ({ layout }) => {
 
 /** 主题色 激活选择项 */
 const getThemeColor = computed(() => {
-  return current => {
-    if (
-      current === layoutTheme.value.theme &&
-      layoutTheme.value.theme !== "light"
-    ) {
+  return (current) => {
+    if (current === layoutTheme.value.theme && layoutTheme.value.theme !== "light") {
       return "#fff";
     } else if (
       current === layoutTheme.value.theme &&
@@ -215,15 +199,14 @@ function setLayoutModel(layout: string) {
     theme: layoutTheme.value.theme,
     darkMode: $storage.layout?.darkMode,
     sidebarStatus: $storage.layout?.sidebarStatus,
-    epThemeColor: $storage.layout?.epThemeColor
+    epThemeColor: $storage.layout?.epThemeColor,
   };
   useAppStoreHook().setLayout(layout);
 }
 
 /* 初始化项目配置 */
 nextTick(() => {
-  settings.greyVal &&
-    document.querySelector("html")?.setAttribute("class", "html-grey");
+  settings.greyVal && document.querySelector("html")?.setAttribute("class", "html-grey");
   settings.weakVal &&
     document.querySelector("html")?.setAttribute("class", "html-weakness");
   settings.tabsVal && tagsChange();
@@ -378,11 +361,7 @@ nextTick(() => {
     </ul>
 
     <el-divider />
-    <el-button
-      type="danger"
-      style="width: 90%; margin: 24px 15px"
-      @click="onReset"
-    >
+    <el-button type="danger" style="width: 90%; margin: 24px 15px" @click="onReset">
       <IconifyIconOffline
         icon="fa-sign-out"
         width="15"

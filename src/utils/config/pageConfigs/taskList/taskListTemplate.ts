@@ -1,14 +1,14 @@
 /*
  * @Date: 2021-12-30 19:54:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-01-05 12:12:20
- * @FilePath: /configforpagedemo/src/config/pageConfigs/taskList/taskListTemplate.ts
+ * @LastEditTime: 2022-11-04 16:49:50
+ * @FilePath: /configforpagedemo/src/utils/config/pageConfigs/taskList/taskListTemplate.ts
  */
 
 
 
 
-const moduleConfig = {
+export const moduleConfig = {
     name: 'czh',
 }
 

@@ -1,11 +1,9 @@
 /*
-import { headerConfig } from '../src/config/siteConfig/header/index';
  * @Date: 2022-04-05 09:56:17
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-27 23:21:15
+ * @LastEditTime: 2022-11-04 16:49:25
  * @FilePath: /configforpagedemo/config/proxyTable.js
  */
-
 
 
 const proxyTemplate_dev = {
