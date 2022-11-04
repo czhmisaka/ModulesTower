@@ -47,44 +47,19 @@
   font: bold 200% Consolas, Monaco, monospace;
 }
 
-@media screen and (max-width: 1180px) {
-  .login-container {
-    grid-gap: 9rem;
-  }
 
-  .login-form {
-    width: 290px;
-  }
-
-  .login-form h2 {
-    font-size: 2.4rem;
-    margin: 8px 0;
-  }
-
-  .img img {
-    width: 360px;
-  }
-
-  .avatar {
-    width: 280px;
-    height: 80px;
-  }
+.wave {
+  display: none;
 }
 
-@media screen and (max-width: 968px) {
-  .wave {
-    display: none;
-  }
+.img {
+  display: none;
+}
 
-  .img {
-    display: none;
-  }
+.login-container {
+  grid-template-columns: 1fr;
+}
 
-  .login-container {
-    grid-template-columns: 1fr;
-  }
-
-  .login-box {
-    justify-content: center;
-  }
+.login-box {
+  justify-content: center;
 }

@@ -61,7 +61,7 @@ export default defineComponent({
       let r = Math.floor(Math.random() * 255);
       let g = Math.floor(Math.random() * 255);
       let b = Math.floor(Math.random() * 255);
-      return "rgba(" + this.r + "," + this.g + "," + this.b + ",1)";
+      return "rgba(" + r + "," + g + "," + b + "," + Math.random() + ")";
     },
   },
 });
