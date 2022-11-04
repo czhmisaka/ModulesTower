@@ -34,13 +34,16 @@ import czhHeader from "./components/header/header.vue";
 import czhMenu from "./components/menu/menu.vue";
 import lineSlideExchange from "@/components/animate/lineSlideExchange.vue";
 
+function getRandomColor(): string {
+  return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
+}
 export default defineComponent({
   components: { czhHeader, czhMenu, lineSlideExchange },
   data() {
     return {
       menu: [],
-      sColor: this.getRandomColor(),
-      eColor: this.getRandomColor(),
+      sColor: getRandomColor(),
+      eColor: getRandomColor(),
       rotate: Math.random() * 360,
       linesNumber: 60,
     };
@@ -56,14 +59,7 @@ export default defineComponent({
     this.$refs["lineSlideExchange"].start();
     this.$refs["lineSlideExchange"].finish();
   },
-  methods: {
-    getRandomColor(): string {
-      let r = Math.floor(Math.random() * 255);
-      let g = Math.floor(Math.random() * 255);
-      let b = Math.floor(Math.random() * 255);
-      return "rgba(" + r + "," + g + "," + b + "," + Math.random() + ")";
-    },
-  },
+  methods: {},
 });
 </script>
 
