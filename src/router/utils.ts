@@ -163,9 +163,10 @@ function initRouter() {
           (v: RouteRecordRaw) => {
             // 防止重复添加路由
             if (
-              router.options.routes[0].children.findIndex(
-                value => value.path === v.path
-              ) !== -1
+              router.options.routes[0]['children'] && 
+                router.options.routes[0].children.findIndex(
+                  value => value.path === v.path
+                ) !== -1
             ) {
               return;
             } else {

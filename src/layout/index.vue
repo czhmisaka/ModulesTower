@@ -39,13 +39,13 @@ const set: setType = reactive({
       hideSidebar: !set.sidebar.opened,
       openSidebar: set.sidebar.opened,
       withoutAnimation: set.sidebar.withoutAnimation,
-      mobile: set.device === "mobile"
+      mobile: set.device === "mobile",
     };
   }),
 
   hideTabs: computed(() => {
     return $storage?.configure.hideTabs;
-  })
+  }),
 });
 
 function setTheme(layoutModel: string) {
@@ -55,7 +55,7 @@ function setTheme(layoutModel: string) {
     theme: $storage.layout?.theme,
     darkMode: $storage.layout?.darkMode,
     sidebarStatus: $storage.layout?.sidebarStatus,
-    epThemeColor: $storage.layout?.epThemeColor
+    epThemeColor: $storage.layout?.epThemeColor,
   };
 }
 
@@ -110,8 +110,8 @@ const layoutHeader = defineComponent({
             ? isDark.value
               ? "box-shadow: 0 1px 4px #0d0d0d"
               : "box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08)"
-            : ""
-        ]
+            : "",
+        ],
       },
       {
         default: () => [
@@ -122,11 +122,11 @@ const layoutHeader = defineComponent({
           !pureSetting.hiddenSideBar && layout.value.includes("horizontal")
             ? h(Horizontal)
             : null,
-          h(tag)
-        ]
+          h(tag),
+        ],
       }
     );
-  }
+  },
 });
 </script>
 
@@ -134,9 +134,7 @@ const layoutHeader = defineComponent({
   <div :class="['app-wrapper', set.classes]" v-resize>
     <div
       v-show="
-        set.device === 'mobile' &&
-        set.sidebar.opened &&
-        layout.includes('vertical')
+        set.device === 'mobile' && set.sidebar.opened && layout.includes('vertical')
       "
       class="app-mask"
       @click="useAppStoreHook().toggleSideBar()"
@@ -147,22 +145,14 @@ const layoutHeader = defineComponent({
         (layout.includes('vertical') || layout.includes('mix'))
       "
     />
-    <div
-      :class="[
-        'main-container',
-        pureSetting.hiddenSideBar ? 'main-hidden' : ''
-      ]"
-    >
+    <div :class="['main-container', pureSetting.hiddenSideBar ? 'main-hidden' : '']">
       <div v-if="set.fixedHeader">
         <layout-header />
         <!-- 主体内容 -->
         <app-main :fixed-header="set.fixedHeader" />
       </div>
       <el-scrollbar v-else>
-        <el-backtop
-          title="回到顶部"
-          target=".main-container .el-scrollbar__wrap"
-        >
+        <el-backtop title="回到顶部" target=".main-container .el-scrollbar__wrap">
           <backTop />
         </el-backtop>
         <layout-header />

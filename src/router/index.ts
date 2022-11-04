@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-04 17:28:42
+ * @LastEditTime: 2022-11-04 17:37:35
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -49,15 +49,15 @@ import remainingRouter from "./modules/remaining";
 
 
 // 路由存放
-const routes: Array<RouteRecordRaw> = []
-const routes_table = [homeRouter,errorRouter]
+const routes = [homeRouter, errorRouter]
+const router_modules = []
 
 
 // 注入各个模块的展示界面
 const moduleList = getModuleFromView(true);
 moduleList.map((module: modulesCellTemplate) => {
   module.routers.map((route: RouteRecordRaw) => {
-    routes.push(route)
+    router_modules.push(route)
   })
 })
 
@@ -65,11 +65,11 @@ moduleList.map((module: modulesCellTemplate) => {
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
-  formatFlatteningRoutes(buildHierarchyTree(ascending(routes_table)))
+  formatFlatteningRoutes(buildHierarchyTree(ascending(routes)))
 );
 
 /** 用于渲染菜单，保持原始层级 */
-export const constantMenus: Array<RouteComponent> = ascending(routes_table).concat(
+export const constantMenus: Array<RouteComponent> = ascending(routes).concat(
   ...remainingRouter
 );
 
@@ -83,7 +83,7 @@ export const remainingPaths = Object.keys(remainingRouter).map(v => {
 // 建立路由
 export const router = createRouter({
   history: createWebHashHistory(),
-  routes: routes.concat(constantRoutes.concat(...(remainingRouter as any)))
+  routes: constantRoutes.concat(...(remainingRouter as any)).concat(router_modules)
 })
 
 

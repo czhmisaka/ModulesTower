@@ -3,7 +3,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 22:44:33
+ * @LastEditTime: 2022-11-04 17:43:04
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -64,6 +64,7 @@ export const routerCellMaker = (
         name,
         component,
         meta: {
+            name: name,
             ...meta,
             options,
         }
