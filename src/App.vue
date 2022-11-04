@@ -54,8 +54,6 @@ export default defineComponent({
     },
   },
   mounted() {
-    console.log(this.$modulesList(), "asd12");
-
     this.$refs["lineSlideExchange"].start();
     this.$refs["lineSlideExchange"].finish();
   },

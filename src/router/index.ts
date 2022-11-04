@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 23:18:08
+ * @LastEditTime: 2022-11-04 17:28:42
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -49,9 +49,8 @@ import remainingRouter from "./modules/remaining";
 
 
 // 路由存放
-const routes: Array<RouteRecordRaw> = [
-  // routerCellMaker('/desktop/:PageName', 'Home', () => import('../modules/main/Index.vue'), noMenu()),
-]
+const routes: Array<RouteRecordRaw> = []
+const routes_table = [homeRouter,errorRouter]
 
 
 // 注入各个模块的展示界面
@@ -66,11 +65,11 @@ moduleList.map((module: modulesCellTemplate) => {
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
-  formatFlatteningRoutes(buildHierarchyTree(ascending(routes)))
+  formatFlatteningRoutes(buildHierarchyTree(ascending(routes_table)))
 );
 
 /** 用于渲染菜单，保持原始层级 */
-export const constantMenus: Array<RouteComponent> = ascending(routes).concat(
+export const constantMenus: Array<RouteComponent> = ascending(routes_table).concat(
   ...remainingRouter
 );
 
