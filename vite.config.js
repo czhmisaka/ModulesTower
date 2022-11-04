@@ -1,25 +1,37 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 16:33:04
+ * @LastEditTime: 2022-11-04 11:26:28
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
-  defineConfig,
   loadEnv
 } from 'vite';
+import pkg from "./package.json";
+import {
+  nodeResolve
+} from '@rollup/plugin-node-resolve';
 import path from 'path';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import ViteRequireContext from '@originjs/vite-plugin-require-context';
-import requireTransform from 'vite-plugin-require-transform';
 import envCompatible from 'vite-plugin-env-compatible';
+
+
+
+import {
+  warpperEnv
+} from "./build";
 import {
   createHtmlPlugin
 } from 'vite-plugin-html';
 import {
   viteCommonjs
 } from '@originjs/vite-plugin-commonjs';
+import {
+  getPluginsList
+} from "./build/plugins";
+
 
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root = process.cwd();
@@ -29,27 +41,49 @@ const pathResolve = (dir) => {
   return path.resolve(__dirname, ".", dir);
 };
 
+const {
+  dependencies,
+  devDependencies,
+  name,
+  version
+} = pkg;
+const __APP_INFO__ = {
+  pkg: {
+    dependencies,
+    devDependencies,
+    name,
+    version
+  },
+  lastBuildTime: new Date().getTime()
+};
+
+
+
 
 // 配置参考
 // https://vitejs.dev/config/
-export default defineConfig(({
-  mode
+export default ({
+  mode,
+  command
 }) => {
-  const env = loadEnv(mode, process.cwd(), '')
-  let url_pre = '/';
-  url_pre = env.VITE_APP_BUILDPREFIX;
-
+  const {
+    VITE_CDN,
+    VITE_PORT,
+    VITE_LEGACY,
+    VITE_COMPRESSION,
+    VITE_PUBLIC_PATH,
+    VITE_PROXY_DOMAIN,
+    VITE_PROXY_DOMAIN_REAL
+  } = warpperEnv(loadEnv(mode, root));
   return {
-    base: url_pre,
+    base: VITE_PUBLIC_PATH,
     root,
     resolve: {
-      alias: [{
-        find: "@",
-        replacement: pathResolve('src')
-      }, {
-        find: "@build",
-        replacement: pathResolve("build")
-      }],
+      alias: {
+        "@": pathResolve('src'),
+        "@build": pathResolve("build"),
+        "fs": require.resolve('rollup-plugin-node-builtins'),
+      },
       extensions: [
         '.mjs',
         '.js',
@@ -66,17 +100,20 @@ export default defineConfig(({
       ViteRequireContext(),
       viteCommonjs(),
       envCompatible(),
-      requireTransform({
-        fileRegex: /.ts$|.tsx$|.vue$/
-      }),
+      nodeResolve(),
       createHtmlPlugin({
         inject: {
           data: {
             title: 'configForDesktopPage'
           }
         }
-      })
+      }),
+      ...getPluginsList(command, VITE_LEGACY, VITE_CDN, VITE_COMPRESSION),
     ],
+    optimizeDeps: {
+      include: ["pinia", "lodash-es", "@vueuse/core", "dayjs"],
+      exclude: ["@pureadmin/theme/dist/browser-utils"]
+    },
     build: {
       sourcemap: false,
       // 消除打包大小超过500kb警告
@@ -106,5 +143,8 @@ export default defineConfig(({
         }
       }
     },
+    define: {
+      __APP_INFO__: JSON.stringify(__APP_INFO__)
+    }
   }
-})
+}

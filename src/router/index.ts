@@ -1,12 +1,51 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 14:52:01
+ * @LastEditTime: 2022-11-03 23:18:08
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+
+import {
+  Router,
+  RouterHistory,
+  createRouter,
+  RouteRecordRaw,
+  RouteComponent,
+  createWebHistory,
+  createWebHashHistory,
+  RouteRecordNormalized
+} from "vue-router";
 import { routerCellMaker, noMenu, getModuleFromView, modulesCellTemplate } from './util';
 import { isMobile } from '../utils/Env';
+import { getConfig } from "@/utils/config/appConfig";
+
+import { toRouteType } from "./types";
+import NProgress from "@/utils/progress";
+import { findIndex } from "lodash-unified";
+import { sessionKey, type DataInfo } from "@/utils/auth";
+import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
+import { usePermissionStoreHook } from "@/store/modules/permission";
+
+import {
+  ascending,
+  initRouter,
+  isOneOfArray,
+  getHistoryMode,
+  findRouteByPath,
+  handleAliveRoute,
+  formatTwoStageRoutes,
+  formatFlatteningRoutes
+} from "./utils";
+import {
+  buildHierarchyTree,
+  openLink,
+  isUrl,
+  storageSession
+} from "@pureadmin/utils";
+
+import homeRouter from "./modules/home";
+import errorRouter from "./modules/error";
+import remainingRouter from "./modules/remaining";
 
 
 // 路由存放
@@ -17,7 +56,6 @@ const routes: Array<RouteRecordRaw> = [
 
 // 注入各个模块的展示界面
 const moduleList = getModuleFromView(true);
-console.log(moduleList,'asd11')
 moduleList.map((module: modulesCellTemplate) => {
   module.routers.map((route: RouteRecordRaw) => {
     routes.push(route)
@@ -26,18 +64,135 @@ moduleList.map((module: modulesCellTemplate) => {
 
 
 
+/** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
+export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
+  formatFlatteningRoutes(buildHierarchyTree(ascending(routes)))
+);
+
+/** 用于渲染菜单，保持原始层级 */
+export const constantMenus: Array<RouteComponent> = ascending(routes).concat(
+  ...remainingRouter
+);
+
+/** 不参与菜单的路由 */
+export const remainingPaths = Object.keys(remainingRouter).map(v => {
+  return remainingRouter[v].path;
+});
+
+
+
 // 建立路由
-const router = createRouter({
+export const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes: routes.concat(constantRoutes.concat(...(remainingRouter as any)))
 })
+
+
+/** 重置路由 */
+export function resetRouter() {
+  router.getRoutes().forEach(route => {
+    const { name, meta } = route;
+    if (name && router.hasRoute(name) && meta?.backstage) {
+      router.removeRoute(name);
+      router.options.routes = formatTwoStageRoutes(
+        formatFlatteningRoutes(buildHierarchyTree(ascending(routes)))
+      );
+    }
+  });
+  usePermissionStoreHook().clearAllCachePage();
+}
+
+
+/** 路由白名单 */
+const whiteList = ["/login"];
+
+router.beforeEach((to: toRouteType, _from, next) => {
+  if (to.meta?.keepAlive) {
+    const newMatched = to.matched;
+    handleAliveRoute(newMatched, "add");
+    // 页面整体刷新和点击标签页刷新
+    if (_from.name === undefined || _from.name === "Redirect") {
+      handleAliveRoute(newMatched);
+    }
+  }
+  const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey);
+  NProgress.start();
+  const externalLink = isUrl(to?.name as string);
+  if (!externalLink) {
+    to.matched.some(item => {
+      if (!item.meta.title) return "";
+      const Title = getConfig().Title;
+      if (Title) document.title = `${item.meta.title} | ${Title}`;
+      else document.title = item.meta.title as string;
+    });
+  }
+  if (userInfo) {
+    // 无权限跳转403页面
+    if (to.meta?.roles && !isOneOfArray(to.meta?.roles, userInfo?.roles)) {
+      next({ path: "/error/403" });
+    }
+    if (_from?.name) {
+      // name为超链接
+      if (externalLink) {
+        openLink(to?.name as string);
+        NProgress.done();
+      } else {
+        next();
+      }
+    } else {
+      // 刷新
+      if (
+        usePermissionStoreHook().wholeMenus.length === 0 &&
+        to.path !== "/login"
+      )
+        initRouter().then((router: Router) => {
+          if (!useMultiTagsStoreHook().getMultiTagsCache) {
+            const { path } = to;
+            const index = findIndex(remainingRouter, v => {
+              return v.path == path;
+            });
+            const routes: any =
+              index === -1
+                ? router.options.routes[0].children
+                : router.options.routes;
+            const route = findRouteByPath(path, routes);
+            // query、params模式路由传参数的标签页不在此处处理
+            if (route && route.meta?.title) {
+              useMultiTagsStoreHook().handleTags("push", {
+                path: route.path,
+                name: route.name,
+                meta: route.meta
+              });
+            }
+          }
+          router.push(to.fullPath);
+        });
+      next();
+    }
+  } else {
+    if (to.path !== "/login") {
+      if (whiteList.indexOf(to.path) !== -1) {
+        next();
+      } else {
+        next({ path: "/login" });
+      }
+    } else {
+      next();
+    }
+  }
+});
+
+router.afterEach(() => {
+  NProgress.done();
+});
+
 
 // 路由守卫
 // 控制默认到index界面执行匹配
 router.beforeEach((to, from, next) => {
-    next()
+  next()
 })
 
-  
+
 
 export default router

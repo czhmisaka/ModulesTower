@@ -1,17 +1,15 @@
+
+
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
-<<<<<<< HEAD
- * @LastEditTime: 2022-11-03 14:53:26
-=======
- * @LastEditTime: 2022-11-03 14:46:12
->>>>>>> master
+ * @LastEditTime: 2022-11-03 22:44:33
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
-import { RouteRecordRaw } from 'vue-router';
-import { CardComponentTemplate } from '../components/basicComponents/grid/module/dataTemplate';
+import { CardComponentTemplate } from '../components/basicComponents/grid/module/dataTemplate'
 
+import { RouteRecordRaw } from 'vue-router';
 /**
  * @name: metaInfoTemplate
  * @description: 路由meta数据控制
@@ -140,7 +138,5 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
         }
     })
     return moduleList
-    // return []
 }
 
-export default {}

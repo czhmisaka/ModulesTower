@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 10:38:00
+ * @LastEditTime: 2022-11-03 22:21:05
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
@@ -34,17 +34,13 @@ import czhHeader from "./components/header/header.vue";
 import czhMenu from "./components/menu/menu.vue";
 import lineSlideExchange from "@/components/animate/lineSlideExchange.vue";
 
-function getRandomColor(): string {
-  return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
-}
-
 export default defineComponent({
   components: { czhHeader, czhMenu, lineSlideExchange },
   data() {
     return {
       menu: [],
-      sColor: getRandomColor(),
-      eColor: getRandomColor(),
+      sColor: this.getRandomColor(),
+      eColor: this.getRandomColor(),
       rotate: Math.random() * 360,
       linesNumber: 60,
     };
@@ -60,7 +56,19 @@ export default defineComponent({
     this.$refs["lineSlideExchange"].start();
     this.$refs["lineSlideExchange"].finish();
   },
-  methods: {},
+  methods: {
+    getRandomColor(): string {
+      return (
+        "#" +
+        (function (color) {
+          return (color += "0123456789abcdef"[Math.floor(Math.random() * 16)]) &&
+            color.length == 6
+            ? color
+            : arguments.callee(color);
+        })("")
+      );
+    },
+  },
 });
 </script>
 

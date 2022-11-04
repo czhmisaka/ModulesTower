@@ -3,7 +3,7 @@
 		"target": "esnext",
 		"module": "esnext",
 		"strict": false,
-		"noImplicitAny": true,
+		"suppressImplicitAnyIndexErrors": true,
 		"jsx": "preserve",
 		"importHelpers": true,
 		"moduleResolution": "node",
@@ -14,31 +14,46 @@
 		"allowSyntheticDefaultImports": true,
 		"sourceMap": true,
 		"baseUrl": ".",
+		"strictFunctionTypes": false,
+		"isolatedModules": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowJs": false,
+		"incremental": true,
 		"types": [
 			"vite/client",
 			"webpack-env",
-			"node"
+			"node",
+			"element-plus/global",
+			"@pureadmin/table/volar",
+			"unplugin-vue-define-options",
+			"@pureadmin/descriptions/volar"
 		],
 		"paths": {
-			"@/*": [
-				"src/*"
-			]
+			"@/*": ["src/*"],
+			"@build/*": ["build/*"],
+			"/#/*": ["types/*"]
 		},
 		"lib": [
 			"esnext",
 			"dom",
 			"dom.iterable",
 			"scripthost"
-		]
+		],
+		"typeRoots": ["./node_modules/@types/", "./types"]
 	},
 	"include": [
 		"src/**/*.ts",
 		"src/**/*.tsx",
 		"src/**/*.vue",
+		"types/*.d.ts",
+		"mock/*.ts",
+		"src/**/*.tsx",
+		"src/**/*.vue",
 		"tests/**/*.ts",
 		"tests/**/*.tsx",
 		"src/components/basicComponents/cell/icon/iconCell.js",
-		"config/proxyTable.ts"
+		"config/proxyTable.ts",
+		"types/*.d.ts",
 	],
 	"exclude": [
 		"node_modules"
