@@ -1,7 +1,12 @@
 <!--
+ * @Author: czhmisaka
+ * @Date: 2022-11-07 23:21:58
+ * @FilePath: \ConfigForDesktopPage\src\modules\main\Index.vue
+-->
+<!--
  * @Date: 2021-12-30 17:48:16
- * @LastEditors: CZH
- * @LastEditTime: 2022-10-25 18:07:39
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-11-07 23:21:58
  * @FilePath: /configforpagedemo/src/modules/main/Index.vue
 -->
 
