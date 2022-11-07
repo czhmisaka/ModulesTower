@@ -14,7 +14,7 @@ const {
   pureApp,
   username,
   avatarsStyle,
-  toggleSideBar
+  toggleSideBar,
 } = useNav();
 </script>
 
@@ -53,20 +53,13 @@ const {
         <template #dropdown>
           <el-dropdown-menu class="logout">
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline
-                icon="logout-circle-r-line"
-                style="margin: 5px"
-              />
+              <IconifyIconOffline icon="logout-circle-r-line" style="margin: 5px" />
               退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <span
-        class="set-icon navbar-bg-hover"
-        title="打开项目配置"
-        @click="onPanel"
-      >
+      <span class="set-icon navbar-bg-hover" title="打开项目配置" @click="onPanel">
         <IconifyIconOffline icon="setting" />
       </span>
     </div>

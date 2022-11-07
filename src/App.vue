@@ -5,19 +5,9 @@
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
-  <el-container class="wholePage">
-    <el-header style="padding: 0px; z-index: 1000" v-if="meta.headerMenu">
-      <czhHeader />
-    </el-header>
-    <el-container>
-      <el-aside style="padding: 0px; z-index: 100" v-if="meta.asideMenu">
-        <czhMenu :name="menu" />
-      </el-aside>
-      <el-main style="padding: 0px; z-index: 10">
-        <router-view />
-      </el-main>
-    </el-container>
-  </el-container>
+  <el-config-provider :locale="currentLocale">
+    <router-view />
+  </el-config-provider>
   <lineSlideExchange
     ref="lineSlideExchange"
     :linesNumber="linesNumber"
@@ -30,15 +20,15 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import czhHeader from "./components/header/header.vue";
-import czhMenu from "./components/menu/menu.vue";
+import { ElConfigProvider } from "element-plus";
+import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import lineSlideExchange from "@/components/animate/lineSlideExchange.vue";
 
 function getRandomColor(): string {
   return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
 }
 export default defineComponent({
-  components: { czhHeader, czhMenu, lineSlideExchange },
+  components: { lineSlideExchange, [ElConfigProvider.name]: ElConfigProvider },
   data() {
     return {
       menu: [],
@@ -51,6 +41,9 @@ export default defineComponent({
   computed: {
     meta() {
       return this.$route.meta;
+    },
+    currentLocale() {
+      return zhCn;
     },
   },
   mounted() {

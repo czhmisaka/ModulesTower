@@ -1,11 +1,11 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-04 08:43:24
+ * @LastEditTime: 2022-11-07 09:59:41
  * @FilePath: /configforpagedemo/src/main.ts
  */
 
-import { createApp } from 'vue'
+import { createApp, Directive } from 'vue'
 import App from './App.vue'
 import iconCell from './components/basicComponents/cell/icon/iconCell.vue'
 import './registerServiceWorker'
@@ -52,14 +52,19 @@ app.component("IconifyIconOnline", IconifyIconOnline);
 app.component("FontIcon", FontIcon);
 
 
+// 自定义指令
+import * as directives from "@/directives";
+Object.keys(directives).forEach(key => {
+    app.directive(key, (directives as { [key: string]: Directive })[key]);
+});
+
 // 全局注册按钮级别权限组件
 import { Auth } from "@/components/ReAuth";
 app.component("Auth", Auth);
 
 
-app.config.globalProperties.$modulesList = getModuleFromView;
-app.config.globalProperties.$utils = utils;
-
+// app.config.globalProperties.$modulesList = getModuleFromView;
+// app.config.globalProperties.$utils = utils;
 
 for (let x in Icons) {
     if (utils.isValidKey(x, Icons)) {
@@ -70,16 +75,14 @@ for (let x in Icons) {
 }
 app.component('CusIcon', iconCell)
 app.component('vue-drag-resize', Vue3DraggableResizable)
-app.use(MotionPlugin).use(ElementPlus);
 
 
 getServerConfig(app).then(async config => {
-    console.log('asd', router.getRoutes())
     app.use(router);
     await router.isReady();
-    setupStore(app);
-
     injectResponsiveStorage(app, config);
+    setupStore(app);
     app.use(MotionPlugin).use(ElementPlus);
+    console.log('asd', router.getRoutes())
     app.mount("#app");
 });

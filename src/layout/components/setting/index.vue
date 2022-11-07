@@ -4,6 +4,7 @@ import { getConfig } from "@/utils/config/appConfig";
 import { useRouter } from "vue-router";
 import { emitter } from "@/utils/mitt";
 import { resetRouter } from "@/router";
+import panel from "../panel/index.vue";
 import { templateRef } from "@vueuse/core";
 import { removeToken } from "@/utils/auth";
 import { routerArrays } from "@/layout/types";
