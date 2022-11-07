@@ -41,7 +41,13 @@ export default defineComponent({
         if (isValidKey(PageName, PageConfig)) {
           this.desktopData = PageConfig[PageName];
         } else {
-          this.$message("没找到对应的页面呢");
+          this.$message("没找到对应的页面呢,已前往模块首页");
+          this.$router.push({
+            ...this.route,
+            params: {
+              PageName: Object.keys(PageConfig)[0],
+            },
+          });
         }
       }
     },

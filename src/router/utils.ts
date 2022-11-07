@@ -81,9 +81,15 @@ function filterNoPermissionTree(data: RouteComponent[]) {
     isOneOfArray(v.meta?.roles, currentRoles)
   );
   newTree.forEach(
-    (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
+    (v: any) => {
+      if (v.children && v.children.length == 0) {
+        delete v.children
+      }
+      return v.children && (v.children = filterNoPermissionTree(v.children))
+    }
   );
-  return filterChildrenTree(newTree);
+  const res = filterChildrenTree(newTree)
+  return res;
 }
 
 /** 批量删除缓存路由(keepalive) */
@@ -163,10 +169,10 @@ function initRouter() {
           (v: RouteRecordRaw) => {
             // 防止重复添加路由
             if (
-              router.options.routes[0]['children'] && 
-                router.options.routes[0].children.findIndex(
-                  value => value.path === v.path
-                ) !== -1
+              router.options.routes[0]['children'] &&
+              router.options.routes[0].children.findIndex(
+                value => value.path === v.path
+              ) !== -1
             ) {
               return;
             } else {

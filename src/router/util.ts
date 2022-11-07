@@ -3,12 +3,13 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-07 16:05:29
+ * @LastEditTime: 2022-11-07 20:14:52
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
 import { CardComponentTemplate } from '../components/basicComponents/grid/module/dataTemplate'
-
+import type { RouteConfigsTable } from "/#/index";
+const Layout = () => import("@/layout/index.vue");
 import { RouteRecordRaw } from 'vue-router';
 
 /**
@@ -27,26 +28,6 @@ export interface metaInfoTemplate {
     }
 }
 
-export const noAsideMenu = (options: { [key: string]: any } = {}): metaInfoTemplate => {
-    return {
-        menuInfo: {
-            asideMenu: false,
-            headerMenu: true,
-        },
-        options,
-    }
-}
-export const noMenu = (options: { [key: string]: any } = {}): metaInfoTemplate => {
-    return {
-        menuInfo: {
-            asideMenu: false,
-            headerMenu: false,
-        },
-        options,
-    }
-}
-
-
 /**
  * @name: routerCellMaker
  * @description: 路由单元构建函数
@@ -57,18 +38,22 @@ export const routerCellMaker = (
     path: string,
     name: string,
     component: any,
-    meta: metaInfoTemplate,
-    options: { [key: string]: any } = {},
-): RouteRecordRaw => {
-    let routerCell: RouteRecordRaw = {
+    options: { meta?: { [key: string]: any }, router?: { [key: string]: any } } = {},
+    children: RouteConfigsTable[] = []
+): RouteConfigsTable => {
+    let routerCell: RouteConfigsTable = {
         path,
         name,
         component,
+        children,
         meta: {
-            name: name,
-            ...meta,
-            options,
-        }
+            title: name,
+            extraIcon: {
+                name: 'bxs:package'
+            },
+            ...options['meta'],
+        },
+        ...options['router']
     }
     return routerCell;
 }
@@ -84,7 +69,7 @@ export const routerCellMaker = (
 export interface modulesCellTemplate {
     name: string,
     path: string,
-    routers: RouteRecordRaw[],
+    routers: RouteConfigsTable[],
     components: CardComponentTemplate[],
     output?: { [key: string]: any },
     children?: { [key: string]: any }[],
@@ -134,7 +119,7 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
      * @name: getModuleName
      * @description: 获取模组名(文件夹名)
      * @authors: CZH
-     * @Date: 2022-11-07 14:42:27
+     * @Date: 2022-11-07 14:42:27‘
      * @param {string} fileName
      */
     function getModuleName(fileName: string): string {
@@ -185,7 +170,7 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
             name: moduleName,
             path: `@/modules/${moduleName}/`,
             routers: [
-                routerCellMaker(`/${basePath}/${moduleName}/:PageName`, moduleName, () => import('../modules/' + moduleName + '/Index.vue'), noMenu())
+                routerCellMaker(`/${basePath}/${moduleName}/:PageName`, moduleName, () => import('../modules/' + moduleName + '/Index.vue'))
             ],
             baseInfo: { info: '' },
             output: {},
@@ -244,7 +229,7 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
             if (module.name == moduleName) {
                 const pageMap = requireModule(fileName)['PageConfig']
                 Object.keys(pageMap).map((pageName: string) => {
-
+                    
                 })
             }
             return module
@@ -254,4 +239,19 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
     console.log(moduleList, 'asd')
     return moduleList
 }
+
+
+
+export const baseModuleRouter: RouteConfigsTable = {
+    path: "/desktop",
+    name: "modules",
+    component: Layout,
+    redirect: "/desktop/",
+    meta: {
+        icon: "bxs:package",
+        title: "模块",
+        rank: 0
+    },
+    children: []
+};
 

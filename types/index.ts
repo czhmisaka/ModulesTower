@@ -123,6 +123,7 @@ export interface RouteConfigsTable {
     showLink?: boolean;
     /** 菜单升序排序，值越高排的越后（只针对顶级路由）`可选` */
     rank?: number;
+    [key: string]: any;
   };
   /** 子路由配置项 */
   children?: Array<RouteChildrenConfigsTable>;

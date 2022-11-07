@@ -25,7 +25,7 @@
 <script lang="ts">
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
-import { PageConfig } from "./PageConfigData/index";
+import { PageConfig, desktopDataTemplate } from "./PageConfigData/index";
 import { isValidKey } from "../../utils/index";
 
 let localName = "";
@@ -46,9 +46,15 @@ export default defineComponent({
         PageName = PageName.toUpperCase();
         if (isValidKey(PageName, PageConfig)) {
           this.desktopData = PageConfig[PageName];
-        } else {
-          this.$router.push("/");
         }
+      } else {
+        this.$message("没找到对应的页面呢,已前往模块首页");
+        this.$router.push({
+          ...this.route,
+          params: {
+            PageName: Object.keys(PageConfig)[0],
+          },
+        });
       }
     },
   },
@@ -62,7 +68,7 @@ export default defineComponent({
   },
   data: () => {
     return {
-      desktopData: PageConfig["MAIN"],
+      desktopData: PageConfig["MAIN"] as desktopDataTemplate,
       Env: {},
     };
   },

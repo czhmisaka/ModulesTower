@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-04 17:37:35
+ * @LastEditTime: 2022-11-07 20:16:27
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -15,7 +15,7 @@ import {
   createWebHashHistory,
   RouteRecordNormalized
 } from "vue-router";
-import { routerCellMaker, noMenu, getModuleFromView, modulesCellTemplate } from './util';
+import { routerCellMaker, getModuleFromView, modulesCellTemplate } from './util';
 import { isMobile } from '../utils/Env';
 import { getConfig } from "@/utils/config/appConfig";
 
@@ -46,22 +46,23 @@ import {
 import homeRouter from "./modules/home";
 import errorRouter from "./modules/error";
 import remainingRouter from "./modules/remaining";
-
-
-// 路由存放
-const routes = [homeRouter, errorRouter]
-const router_modules = []
+import { RouteConfigsTable } from '../../types/index';
+import { baseModuleRouter } from './util';
 
 
 // 注入各个模块的展示界面
 const moduleList = getModuleFromView(true);
-moduleList.map((module: modulesCellTemplate) => {
-  module.routers.map((route: RouteRecordRaw) => {
-    router_modules.push(route)
+moduleList.map((module: modulesCellTemplate, index: number) => {
+  module.routers.map((route: RouteConfigsTable, i: number) => {
+    if (i == 0 && index == 0) {
+      baseModuleRouter.redirect = route.path
+    }
+    baseModuleRouter.children.push(route)
   })
 })
 
-
+// 路由存放
+const routes = [homeRouter, errorRouter, baseModuleRouter]
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
@@ -70,8 +71,11 @@ export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
 
 /** 用于渲染菜单，保持原始层级 */
 export const constantMenus: Array<RouteComponent> = ascending(routes).concat(
-  ...remainingRouter
+  ...remainingRouter,
 );
+
+console.log(constantMenus, 'asdd')
+
 
 /** 不参与菜单的路由 */
 export const remainingPaths = Object.keys(remainingRouter).map(v => {
@@ -83,7 +87,7 @@ export const remainingPaths = Object.keys(remainingRouter).map(v => {
 // 建立路由
 export const router = createRouter({
   history: createWebHashHistory(),
-  routes: constantRoutes.concat(...(remainingRouter as any)).concat(router_modules)
+  routes: constantRoutes.concat(...(remainingRouter as any))
 })
 
 

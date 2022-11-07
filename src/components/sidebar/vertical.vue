@@ -1,3 +1,9 @@
+<!--
+ * @Date: 2022-11-04 17:22:52
+ * @LastEditors: CZH
+ * @LastEditTime: 2022-11-07 20:21:25
+ * @FilePath: /configforpagedemo/src/components/sidebar/vertical.vue
+-->
 <script setup lang="ts">
 import Logo from "./logo.vue";
 import { useRoute } from "vue-router";
@@ -16,8 +22,7 @@ const showLogo = ref(
   storageLocal.getItem<StorageConfigs>("responsive-configure")?.showLogo ?? true
 );
 
-const { routers, device, pureApp, isCollapse, menuSelect, toggleSideBar } =
-  useNav();
+const { routers, device, pureApp, isCollapse, menuSelect, toggleSideBar } = useNav();
 
 let subMenuData = ref([]);
 
@@ -29,10 +34,7 @@ const menuData = computed(() => {
 
 function getSubMenuData(path: string) {
   // path的上级路由组成的数组
-  const parentPathArr = getParentPaths(
-    path,
-    usePermissionStoreHook().wholeMenus
-  );
+  const parentPathArr = getParentPaths(path, usePermissionStoreHook().wholeMenus);
   // 当前路由的父级路由信息
   const parenetRoute = findRouteByPath(
     parentPathArr[0] || path,
@@ -45,7 +47,7 @@ function getSubMenuData(path: string) {
 getSubMenuData(route.path);
 
 onBeforeMount(() => {
-  emitter.on("logoChange", key => {
+  emitter.on("logoChange", (key) => {
     showLogo.value = key;
   });
 });
@@ -74,7 +76,7 @@ watch(
         :collapse="isCollapse"
         :default-active="route.path"
         :collapse-transition="false"
-        @select="indexPath => menuSelect(indexPath, routers)"
+        @select="(indexPath) => menuSelect(indexPath, routers)"
       >
         <sidebar-item
           v-for="routes in menuData"
