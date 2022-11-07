@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-11-07 23:19:31
+ * @LastEditTime: 2022-11-07 23:23:55
  * @FilePath: \ConfigForDesktopPage\src\App.vue
 -->
 <template>
