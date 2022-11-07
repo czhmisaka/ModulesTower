@@ -1,3 +1,9 @@
+<!--
+ * @Date: 2022-11-04 17:22:52
+ * @LastEditors: CZH
+ * @LastEditTime: 2022-11-07 14:06:57
+ * @FilePath: /configforpagedemo/src/layout/components/sidebar/leftCollapse.vue
+-->
 <script setup lang="ts">
 import { useDark } from "@pureadmin/utils";
 
@@ -6,7 +12,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  isActive: false
+  isActive: false,
 });
 const { isDark } = useDark();
 
@@ -42,6 +48,7 @@ const toggleClick = () => {
   width: 100%;
   height: 40px;
   line-height: 40px;
+  text-align: left;
   box-shadow: 0 0 6px -2px var(--el-color-primary);
 }
 </style>

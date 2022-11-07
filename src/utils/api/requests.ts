@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 10:04:19
+ * @LastEditTime: 2022-11-07 15:25:04
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -13,7 +13,6 @@ export const CancelToken: any = axios.CancelToken; // axios 的取消请求
 // development , production
 const Env = process.env.NODE_ENV
 const isDev = () => Env == 'development'
-console.log(Env, isDev, 'asd22')
 
 export function isMobile() {
     if (window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {

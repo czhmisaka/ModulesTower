@@ -9,69 +9,77 @@ const { layout, isCollapse } = useNav();
 
 const props = defineProps({
   item: {
-    type: Object as PropType<childrenType>
+    type: Object as PropType<childrenType>,
   },
   isNest: {
     type: Boolean,
-    default: false
+    default: false,
   },
   basePath: {
     type: String,
-    default: ""
+    default: "",
+  },
+});
+
+const getExtraIconStyle = computed(
+  (): CSSProperties => {
+    if (!isCollapse.value) {
+      return {
+        position: "absolute",
+        right: "10px",
+      };
+    } else {
+      return {
+        position: "static",
+      };
+    }
   }
-});
+);
 
-const getExtraIconStyle = computed((): CSSProperties => {
-  if (!isCollapse.value) {
+const getNoDropdownStyle = computed(
+  (): CSSProperties => {
     return {
-      position: "absolute",
-      right: "10px"
-    };
-  } else {
-    return {
-      position: "static"
+      display: "flex",
+      alignItems: "center",
     };
   }
-});
+);
 
-const getNoDropdownStyle = computed((): CSSProperties => {
-  return {
-    display: "flex",
-    alignItems: "center"
-  };
-});
-
-const getDivStyle = computed((): CSSProperties => {
-  return {
-    width: !isCollapse.value ? "" : "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    overflow: "hidden"
-  };
-});
+const getDivStyle = computed(
+  (): CSSProperties => {
+    return {
+      width: !isCollapse.value ? "" : "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      overflow: "hidden",
+    };
+  }
+);
 
 const getMenuTextStyle = computed(() => {
   return {
     overflow: "hidden",
     textOverflow: "ellipsis",
-    outline: "none"
+    outline: "none",
   };
 });
 
-const getSubTextStyle = computed((): CSSProperties => {
-  return {
-    width: !isCollapse.value ? "210px" : "",
-    display: "inline-block",
-    overflow: "hidden",
-    textOverflow: "ellipsis"
-  };
-});
+const getSubTextStyle = computed(
+  (): CSSProperties => {
+    return {
+      width: !isCollapse.value ? "auto" : "",
+      display: "inline-block",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    };
+  }
+);
 
 const getSpanStyle = computed(() => {
   return {
     overflow: "hidden",
-    textOverflow: "ellipsis"
+    textOverflow: "ellipsis",
   };
 });
 
@@ -89,19 +97,16 @@ function hoverMenu(key) {
     // 如果文本内容的整体宽度大于其可视宽度，则文本溢出
     menuTextRef.value?.scrollWidth > menuTextRef.value?.clientWidth
       ? Object.assign(key, {
-          showTooltip: true
+          showTooltip: true,
         })
       : Object.assign(key, {
-          showTooltip: false
+          showTooltip: false,
         });
     hoverMenuMap.set(key, true);
   });
 }
 
-function hasOneShowingChild(
-  children: childrenType[] = [],
-  parent: childrenType
-) {
+function hasOneShowingChild(children: childrenType[] = [], parent: childrenType) {
   const showingChildren = children.filter((item: any) => {
     onlyOneChild.value = item;
     return true;
@@ -155,11 +160,7 @@ function resolvePath(routePath) {
         />
       </div>
       <div
-        v-if="
-          isCollapse &&
-          layout === 'vertical' &&
-          props.item?.pathList?.length === 1
-        "
+        v-if="isCollapse && layout === 'vertical' && props.item?.pathList?.length === 1"
         :style="getDivStyle"
       >
         <span :style="getMenuTextStyle">
@@ -167,9 +168,7 @@ function resolvePath(routePath) {
         </span>
       </div>
       <div
-        v-if="
-          isCollapse && layout === 'mix' && props.item?.pathList?.length === 2
-        "
+        v-if="isCollapse && layout === 'mix' && props.item?.pathList?.length === 2"
         :style="getDivStyle"
       >
         <span :style="getMenuTextStyle">
@@ -214,9 +213,7 @@ function resolvePath(routePath) {
   <el-sub-menu v-else ref="subMenu" :index="resolvePath(props.item.path)">
     <template #title>
       <div v-if="toRaw(props.item.meta.icon)" class="sub-menu-icon">
-        <component
-          :is="useRenderIcon(props.item.meta && toRaw(props.item.meta.icon))"
-        />
+        <component :is="useRenderIcon(props.item.meta && toRaw(props.item.meta.icon))" />
       </div>
       <span v-if="layout === 'horizontal'">
         {{ props.item.meta.title }}
