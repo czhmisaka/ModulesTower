@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-11 16:36:12
- * @FilePath: /configforpagedemo/src/views/main/PageConfigData/main.ts
+ * @LastEditTime: 2022-11-08 19:53:30
+ * @FilePath: /configforpagedemo/src/modules/main/PageConfigData/main.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate"

@@ -19,26 +19,25 @@ export default defineComponent({
       h(
         cardBg,
         {
-          style: {
-            cursor: "poioter",
-          },
           ondblclick: (e: any) => {
             setData(context, {
-              editable: true,
+              editable: !props.baseData.editable,
             });
           },
           ontouchend: (e: any) => {
             setData(context, {
-              editable: true,
+              editable: !props.baseData.editable,
             });
           },
+          style: {
+            cursor: "pointer",
+          },
         },
-        () =>
-          h(iconCell, {
-            name: props.baseData.editable ? "Lock" : "Unlock",
-            sizeUnit: props.sizeUnit,
-            detail: props.detail,
-          })
+        h(iconCell, {
+          name: props.baseData.editable ? "Lock" : "Unlock",
+          sizeUnit: props.sizeUnit,
+          detail: props.detail,
+        })
       ),
     ];
   },

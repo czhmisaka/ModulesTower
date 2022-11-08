@@ -129,26 +129,31 @@ export default defineComponent({
                 ]
               )
             : null,
-          h(cardBox, {
-            style: {
-              width: "100%",
-              height: "100%",
-              zIndex:
-                props.baseData.editable && !props?.detail?.options?.isSettingTool
-                  ? "100000000000"
-                  : "-1",
-              // background: props?.detail?.options?.isSettingTool ? "white" : "black",
-            },
-            blockSize: props.sizeUnit.blockSize,
-            detail: props.detail,
-            sizeUnit: props.sizeUnit,
-            onOnChange: (
-              value: { [key: string]: any },
-              options: { [key: string]: any }
-            ) => {
-              context.emit("onChange", value, options);
-            },
-          }),
+          props.baseData.editable && !props?.detail?.options?.isSettingTool
+            ? h(cardBox, {
+                style: {
+                  width: "100%",
+                  height: "100%",
+                  zIndex:
+                    props.baseData.editable && !props?.detail?.options?.isSettingTool
+                      ? "100000000000"
+                      : "-1",
+                  // background:
+                  //   props.baseData.editable && !props?.detail?.options?.isSettingTool
+                  //     ? "white"
+                  //     : "black",
+                },
+                blockSize: props.sizeUnit.blockSize,
+                detail: props.detail,
+                sizeUnit: props.sizeUnit,
+                onOnChange: (
+                  value: { [key: string]: any },
+                  options: { [key: string]: any }
+                ) => {
+                  context.emit("onChange", value, options);
+                },
+              })
+            : null,
           h(
             componentGetter(props.detail.component, {
               ...props.componentLists,

@@ -36,6 +36,9 @@ export default defineComponent({
               func()({ props, context, e });
             }
           },
+          style: {
+            cursor: "pointer",
+          },
         },
         () =>
           props.tips
