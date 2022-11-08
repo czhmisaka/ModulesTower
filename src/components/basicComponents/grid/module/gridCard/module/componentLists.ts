@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-10 22:29:51
+ * @LastEditTime: 2022-11-08 17:08:26
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';

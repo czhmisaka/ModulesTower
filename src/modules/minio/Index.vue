@@ -36,7 +36,7 @@ export default defineComponent({
   methods: {
     async init() {
       if (this.$route) {
-        let  PageName  = this.$route.path.split("/")[
+        let PageName = this.$route.path.split("/")[
           this.$route.path.split("/").length - 1
         ];
         if (isValidKey(PageName, PageConfig)) {

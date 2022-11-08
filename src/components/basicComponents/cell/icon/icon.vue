@@ -47,11 +47,12 @@ export default defineComponent({
                   width: "auto",
                 },
                 {
-                  reference: h(iconCell, {
-                    name: props.name,
-                    sizeUnit: props.sizeUnit,
-                    detail: props.detail,
-                  }),
+                  reference: () =>
+                    h(iconCell, {
+                      name: props.name,
+                      sizeUnit: props.sizeUnit,
+                      detail: props.detail,
+                    }),
                 }
               )
             : h(iconCell, {

@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-08 16:04:06
+ * @LastEditTime: 2022-11-08 16:43:08
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -65,8 +65,6 @@ moduleList.map((module: modulesCellTemplate, index: number) => {
 
 // 路由存放
 const routes = [homeRouter, errorRouter, ...baseModuleRouterList]
-
-console.log(routes, 'qweddas')
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(

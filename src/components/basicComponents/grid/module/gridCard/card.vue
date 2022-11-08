@@ -134,9 +134,10 @@ export default defineComponent({
               width: "100%",
               height: "100%",
               zIndex:
-                props.baseData.editable && !props.detail.options.isSettingTool
+                props.baseData.editable && !props?.detail?.options?.isSettingTool
                   ? "100000000000"
                   : "-1",
+              // background: props?.detail?.options?.isSettingTool ? "white" : "black",
             },
             blockSize: props.sizeUnit.blockSize,
             detail: props.detail,

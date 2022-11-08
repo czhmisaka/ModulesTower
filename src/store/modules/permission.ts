@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 17:22:52
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-07 20:42:56
+ * @LastEditTime: 2022-11-08 16:43:28
  * @FilePath: /configforpagedemo/src/store/modules/permission.ts
  */
 import { defineStore } from "pinia";
@@ -23,7 +23,6 @@ export const usePermissionStore = defineStore({
   actions: {
     /** 组装整体路由生成的菜单 */
     handleWholeMenus(routes: any[]) {
-      console.log('qwe',filterTree(ascending(this.constantMenus.concat(routes))))
       this.wholeMenus = filterNoPermissionTree(filterTree(ascending(this.constantMenus.concat(routes))));
     },
     cacheOperate({ mode, name }: cacheType) {

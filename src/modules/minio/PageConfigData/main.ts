@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 21:02:21
+ * @LastEditTime: 2022-11-08 17:31:21
  * @FilePath: /configforpagedemo/src/modules/minio/PageConfigData/main.ts
  */
 
@@ -13,7 +13,7 @@ export const mainDesktop = [
         type: cardComponentType.componentList
     }, {
         isSettingTool: true
-    }).setPosition(1, 0).setSize(1, 1),
+    }).setPosition(2, 0).setSize(1, 1),
     gridCellMaker('openComponents', '打开组件菜单', {}, {
         type: cardComponentType.componentList,
         name: 'icon'

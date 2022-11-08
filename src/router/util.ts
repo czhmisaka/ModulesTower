@@ -3,7 +3,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-08 16:12:01
+ * @LastEditTime: 2022-11-08 16:42:35
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -236,10 +236,7 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
             return module
         })
     })
-
-
-
-    console.log(moduleList, 'asssssd')
+    
     return moduleList
 }
 
