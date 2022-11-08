@@ -27,7 +27,7 @@
     "codemirror-editor-vue3": "^2.1.7",
     "core-js": "^3.6.5",
     "echarts": "^5.3.3",
-    "element-plus": "^2.2.16",
+    "element-plus": "^2.2.20",
     "fs": "^0.0.1-security",
     "js-cookie": "^3.0.1",
     "mitt": "^3.0.0",

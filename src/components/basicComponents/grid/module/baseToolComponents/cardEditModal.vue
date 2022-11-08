@@ -7,7 +7,10 @@
 
 <template>
   <span>
-    <div :class="'baseModal ' + (modalControl.isOpen ? 'open' : 'close')" @click="close">
+    <div
+      :class="'baseModal ' + (modalControl.isOpen ? 'open' : 'close')"
+      @click="close(true)"
+    >
       <div class="formModalBox" @click.stop="fuckNothing">
         <el-card header="组件模式" class="card">
           <el-form ref="form" v-on:submit.prevent>
@@ -35,11 +38,15 @@
                 @change="componentLoaderChange"
               >
                 <el-option
+                  v-for="(item, index) in Object.keys(componentList)"
                   :value="index"
-                  v-for="(item, index) in componentList"
-                  :key="item.name + '_' + index"
+                  :key="componentList[item].name + '_' + index"
                 >
-                  {{ item.compontentInfo.label + ":" + item.compontentInfo.description }}
+                  {{
+                    componentList[item].compontentInfo.label +
+                    ":" +
+                    componentList[item].compontentInfo.description
+                  }}
                 </el-option>
               </el-select>
             </el-form-item>
@@ -315,10 +322,9 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .baseModal {
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  //   z-index: 1000000000;
+  width: 100%;
+  height: 100%;
+  position: absolute;
   z-index: -1;
   opacity: 0;
   top: 0px;
@@ -335,7 +341,7 @@ export default defineComponent({
 
 .open {
   opacity: 1;
-  z-index: 10000000000;
+  z-index: 1000;
   .formModalBox {
     transform: scale(1);
   }
@@ -344,15 +350,16 @@ export default defineComponent({
 .formModalBox {
   transition: all 0.4s;
   position: absolute;
-  width: 80vw;
-  top: 10vh;
-  height: 80vh;
+  width: 80%;
+  top: 10%;
+  height: 80%;
   min-width: 800px;
   max-width: 1400px;
   border-radius: 12px;
   background: #fefefe;
   overflow-x: hidden;
   overflow-y: scroll;
+  z-index: 1;
   .card {
     width: calc(100% - 20px);
     height: auto;

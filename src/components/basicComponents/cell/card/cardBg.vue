@@ -33,7 +33,7 @@ export default defineComponent({
             ...props.cusStyle,
           },
         },
-        slots.default?.(props, context)
+        { default: () => slots.default?.(props, context) }
       );
   },
 });

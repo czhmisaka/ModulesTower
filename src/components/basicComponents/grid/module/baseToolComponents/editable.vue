@@ -33,11 +33,12 @@ export default defineComponent({
             cursor: "pointer",
           },
         },
-        h(iconCell, {
-          name: props.baseData.editable ? "Lock" : "Unlock",
-          sizeUnit: props.sizeUnit,
-          detail: props.detail,
-        })
+        () =>
+          h(iconCell, {
+            name: !props.baseData.editable ? "Lock" : "Unlock",
+            sizeUnit: props.sizeUnit,
+            detail: props.detail,
+          })
       ),
     ];
   },
