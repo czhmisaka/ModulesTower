@@ -6,7 +6,7 @@
 -->
 
 <template>
-  <div ref="screen" style="width: 100%; height: 100%">
+  <div ref="screenId" style="width: 100%; height: 100%">
     <grid-layout
       class="bases"
       :layout="gridListToLayout()"
@@ -309,6 +309,8 @@ export default defineComponent({
      * @Date: 2022-05-04 18:14:23
      */
     gridRowNumAndUnit() {
+      console.log("gridLayout", this.$refs["screenId"]);
+      console.dir(this.$refs["screenId"]);
       let screen = {
         width:
           document.getElementById("screenId")?.offsetWidth || document.body.offsetWidth,

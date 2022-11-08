@@ -1,3 +1,9 @@
+/*
+ * @Date: 2022-11-04 17:22:52
+ * @LastEditors: CZH
+ * @LastEditTime: 2022-11-08 12:50:24
+ * @FilePath: /configforpagedemo/build/cdn.ts
+ */
 import { Plugin as importToCDN } from "vite-plugin-cdn-import";
 
 /**
@@ -20,7 +26,6 @@ export const cdn = importToCDN({
       var: "VueRouter",
       path: "vue-router.global.min.js"
     },
-    // 项目中没有直接安装vue-demi，但是pinia用到了，所以需要在引入pinia前引入vue-demi（https://github.com/vuejs/pinia/blob/v2/packages/pinia/package.json#L77）
     {
       name: "vue-demi",
       var: "VueDemi",

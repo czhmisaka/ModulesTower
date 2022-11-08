@@ -8,8 +8,8 @@
 <template>
   <div
     :style="{
-      width: '100vw',
-      height: '100vh',
+      width: '100%',
+      height: '100%',
       background: 'rgba(0,0,0,0.02)',
       overflow: 'hidden',
     }"
@@ -17,7 +17,6 @@
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopData.desktopData"
-      :componentLists="component"
     />
   </div>
 </template>
