@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-08 15:54:38
+ * @LastEditTime: 2022-11-08 21:12:52
  * @FilePath: /configforpagedemo/src/main.ts
  */
 
@@ -63,8 +63,8 @@ import { Auth } from "@/components/ReAuth";
 app.component("Auth", Auth);
 
 
-// app.config.globalProperties.$modulesList = getModuleFromView;
-// app.config.globalProperties.$utils = utils;
+app.config.globalProperties.$modulesList = getModuleFromView;
+app.config.globalProperties.$utils = utils;
 
 for (let x in Icons) {
     if (utils.isValidKey(x, Icons)) {
@@ -82,6 +82,6 @@ getServerConfig(app).then(async config => {
     await router.isReady();
     injectResponsiveStorage(app, config);
     setupStore(app);
-    app.use(MotionPlugin).use(ElementPlus);
+    app.use(MotionPlugin).use(ElementPlus,{ zIndex: 100000 });
     app.mount("#app");
 });

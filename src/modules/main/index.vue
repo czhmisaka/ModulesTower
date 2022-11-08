@@ -17,6 +17,7 @@
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopData.desktopData"
+      :component-lists="componentsList"
     />
   </div>
 </template>
@@ -65,9 +66,11 @@ export default defineComponent({
     return {
       desktopData: PageConfig["MAIN"],
       Env: {},
+      componentsList: {},
     };
   },
   async mounted() {
+    this.componentsList = this.$modulesList().getAllComponents();
     this.init();
     let res = await GetAllUser();
     console.log(res);

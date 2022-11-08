@@ -17,6 +17,7 @@
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopData.desktopData"
+      :component-lists="component"
     />
   </div>
 </template>
