@@ -3,7 +3,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-07 20:14:52
+ * @LastEditTime: 2022-11-08 16:12:01
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -39,7 +39,7 @@ export const routerCellMaker = (
     name: string,
     component: any,
     options: { meta?: { [key: string]: any }, router?: { [key: string]: any } } = {},
-    children: RouteConfigsTable[] = []
+    children?: RouteConfigsTable[]
 ): RouteConfigsTable => {
     let routerCell: RouteConfigsTable = {
         path,
@@ -48,9 +48,7 @@ export const routerCellMaker = (
         children,
         meta: {
             title: name,
-            extraIcon: {
-                name: 'bxs:package'
-            },
+            icon: 'bxs:package',
             ...options['meta'],
         },
         ...options['router']
@@ -170,7 +168,7 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
             name: moduleName,
             path: `@/modules/${moduleName}/`,
             routers: [
-                routerCellMaker(`/${basePath}/${moduleName}/:PageName`, moduleName, () => import('../modules/' + moduleName + '/Index.vue'))
+                routerCellMaker(`/${moduleName}`, moduleName, () => import('../modules/' + moduleName + '/Index.vue'), {}, [])
             ],
             baseInfo: { info: '' },
             output: {},
@@ -208,6 +206,23 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
         })
     })
 
+    // 添加默认路由方案 (output配置中可以关闭)    
+    dealRequireList((dealName, len) => dealName == pageConfigData, (fileName: string) => {
+        const moduleName = getModuleName(fileName)
+        moduleList.map((module: modulesCellTemplate) => {
+            if (module.name == moduleName) {
+                const pageMap = requireModule(fileName)['PageConfig']
+                Object.keys(pageMap).map((pageName: string) => {
+                    module.routers[0].children.push({
+                        ...routerCellMaker(
+                            `/${moduleName}/${pageName}`, moduleName + '_' + pageName, () => import('../modules/' + moduleName + '/Index.vue'))
+                    })
+                })
+            }
+            return module
+        })
+    })
+
     // 处理路由列表
     dealRequireList((dealName, len) => dealName == router, (fileName: string) => {
         const moduleName = getModuleName(fileName)
@@ -222,21 +237,9 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
         })
     })
 
-    // 添加默认路由方案 (output配置中可以关闭)    
-    dealRequireList((dealName, len) => dealName == pageConfigData, (fileName: string) => {
-        const moduleName = getModuleName(fileName)
-        moduleList.map((module: modulesCellTemplate) => {
-            if (module.name == moduleName) {
-                const pageMap = requireModule(fileName)['PageConfig']
-                Object.keys(pageMap).map((pageName: string) => {
-                    
-                })
-            }
-            return module
-        })
-    })
 
-    console.log(moduleList, 'asd')
+
+    console.log(moduleList, 'asssssd')
     return moduleList
 }
 

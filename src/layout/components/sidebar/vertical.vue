@@ -27,12 +27,6 @@ const { routers, device, pureApp, isCollapse, menuSelect, toggleSideBar } = useN
 let subMenuData = ref([]);
 
 const menuData = computed(() => {
-  console.log(
-    pureApp.layout === "mix" && device.value !== "mobile"
-      ? subMenuData.value
-      : usePermissionStoreHook().wholeMenus,
-    "asddd"
-  );
   return pureApp.layout === "mix" && device.value !== "mobile"
     ? subMenuData.value
     : usePermissionStoreHook().wholeMenus;

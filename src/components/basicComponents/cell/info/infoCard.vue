@@ -103,7 +103,7 @@ export default defineComponent({
                     opacity: content.value ? 1 : 0,
                     position: "relative",
                     overflow: "hidden",
-                    width: "calc( 100% - 24px)",
+                    width: "100%",
                     top: "calc( 100% - 60px)",
                     height: "60px",
                     background: isBlack.value

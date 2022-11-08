@@ -82,9 +82,9 @@ function filterNoPermissionTree(data: RouteComponent[]) {
   );
   newTree.forEach(
     (v: any) => {
-      if (v.children && v.children.length == 0) {
-        delete v.children
-      }
+      // if (v.children && v.children.length == 0) {
+      //   delete v.children
+      // }
       return v.children && (v.children = filterNoPermissionTree(v.children))
     }
   );

@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-07 20:16:27
+ * @LastEditTime: 2022-11-08 16:04:06
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -52,17 +52,21 @@ import { baseModuleRouter } from './util';
 
 // 注入各个模块的展示界面
 const moduleList = getModuleFromView(true);
+let baseModuleRouterList = [] as RouteConfigsTable[]
 moduleList.map((module: modulesCellTemplate, index: number) => {
   module.routers.map((route: RouteConfigsTable, i: number) => {
-    if (i == 0 && index == 0) {
-      baseModuleRouter.redirect = route.path
-    }
-    baseModuleRouter.children.push(route)
+    // if (i == 0 && index == 0) {
+    //   baseModuleRouter.redirect = route.path
+    // }
+    // baseModuleRouter.children.push(route)
+    baseModuleRouterList.push(route)
   })
 })
 
 // 路由存放
-const routes = [homeRouter, errorRouter, baseModuleRouter]
+const routes = [homeRouter, errorRouter, ...baseModuleRouterList]
+
+console.log(routes, 'qweddas')
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
@@ -74,7 +78,6 @@ export const constantMenus: Array<RouteComponent> = ascending(routes).concat(
   ...remainingRouter,
 );
 
-console.log(constantMenus, 'asdd')
 
 
 /** 不参与菜单的路由 */

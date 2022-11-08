@@ -2,14 +2,14 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-07 21:02:57
+ * @LastEditTime: 2022-11-08 15:30:31
  * @FilePath: /configforpagedemo/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from './main';
 import { mobileDesktop } from './mobile';
 import { ChenYi } from './ChenYi'
-import { gridCellTemplate } from '../../../components/basicComponents/grid/module/dataTemplate';
-import { isValidKey } from '../../../utils/index';
+import { gridCellTemplate } from '@/components/basicComponents/grid/module/dataTemplate';
+import { isValidKey } from '@/utils/index';
 
 export interface desktopDataTemplate { desktopData?: gridCellTemplate[], gridColNum?: number }
 

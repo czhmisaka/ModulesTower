@@ -16,8 +16,6 @@ import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
 
-console.log("asdddd");
-
 defineOptions({
   name: "Login",
 });

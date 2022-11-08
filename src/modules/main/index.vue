@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-25 18:07:39
- * @FilePath: /configforpagedemo/src/modules/main/Index.vue
+ * @LastEditTime: 2022-11-03 10:37:09
+ * @FilePath: /configforpagedemo/src/modules/minio/Index.vue
 -->
 
 <template>
@@ -15,7 +15,6 @@
     }"
   >
     <gridDesktop
-      @onChange="onChange"
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopData.desktopData"
     />
@@ -25,36 +24,32 @@
 <script lang="ts">
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
-import { PageConfig, desktopDataTemplate } from "./PageConfigData/index";
-import { isValidKey } from "../../utils/index";
+import { PageConfig } from "./PageConfigData/index";
+import { isValidKey } from "@/utils/index";
+import { GetAllUser } from "@/utils/api/user/user";
 
-let localName = "";
 export default defineComponent({
   components: {
     gridDesktop,
   },
   methods: {
-    onChange() {},
     async init() {
-      if (window.location.origin.split(".czht.top").length > 1) {
-        localName = window.location.origin.split(".czht.top")[0].split("://")[1];
-        if (isValidKey(localName, PageConfig)) {
-          this.desktopData = PageConfig[localName];
-        }
-      } else if (this.$route.params) {
-        let { PageName } = this.$route.params;
-        PageName = PageName.toUpperCase();
+      if (this.$route) {
+        let PageName = this.$route.path.split("/")[
+          this.$route.path.split("/").length - 1
+        ];
         if (isValidKey(PageName, PageConfig)) {
           this.desktopData = PageConfig[PageName];
+        } else {
+          this.$message("没找到对应的页面呢,已前往模块首页");
+          this.$router.push({
+            ...this.route,
+            params: {
+              PageName: Object.keys(PageConfig)[0],
+              s,
+            },
+          });
         }
-      } else {
-        this.$message("没找到对应的页面呢,已前往模块首页");
-        this.$router.push({
-          ...this.route,
-          params: {
-            PageName: Object.keys(PageConfig)[0],
-          },
-        });
       }
     },
   },
@@ -68,12 +63,14 @@ export default defineComponent({
   },
   data: () => {
     return {
-      desktopData: PageConfig["MAIN"] as desktopDataTemplate,
+      desktopData: PageConfig["MAIN"],
       Env: {},
     };
   },
-  mounted() {
+  async mounted() {
     this.init();
+    let res = await GetAllUser();
+    console.log(res);
   },
 });
 </script>

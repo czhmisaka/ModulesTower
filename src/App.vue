@@ -49,6 +49,7 @@ export default defineComponent({
   mounted() {
     this.$refs["lineSlideExchange"].start();
     this.$refs["lineSlideExchange"].finish();
+    console.log(this.$router.options.routes, "asd");
   },
   methods: {},
 });

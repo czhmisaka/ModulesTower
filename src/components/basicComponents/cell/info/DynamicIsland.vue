@@ -153,7 +153,7 @@ export default defineComponent({
     },
     "context.message": {
       handler(val) {
-        console.log("asd", val);
+        // console.log("asd", val);
       },
     },
     "context.info": {

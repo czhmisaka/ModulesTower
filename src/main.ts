@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-07 09:59:41
+ * @LastEditTime: 2022-11-08 15:54:38
  * @FilePath: /configforpagedemo/src/main.ts
  */
 
@@ -83,6 +83,5 @@ getServerConfig(app).then(async config => {
     injectResponsiveStorage(app, config);
     setupStore(app);
     app.use(MotionPlugin).use(ElementPlus);
-    console.log('asd', router.getRoutes())
     app.mount("#app");
 });

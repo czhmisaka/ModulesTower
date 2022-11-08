@@ -126,7 +126,6 @@ export default defineComponent({
         };
       },
     },
-
     // 可编辑状态 // 目前尚未实装功能
     editable: {
       type: Boolean,
@@ -309,20 +308,22 @@ export default defineComponent({
      * @Date: 2022-05-04 18:14:23
      */
     gridRowNumAndUnit() {
-      console.log("gridLayout", this.$refs["screenId"]);
-      console.dir(this.$refs["screenId"]);
+      let width = 0;
+      let height = 0;
+      if (this.$refs["screenId"]) {
+        width = this.$refs["screenId"].offsetWidth;
+        height = this.$refs["screenId"].offsetHeight;
+      }
       let screen = {
-        width:
-          document.getElementById("screenId")?.offsetWidth || document.body.offsetWidth,
-        height:
-          document.getElementById("screenId")?.offsetHeight || document.body.offsetHeight,
+        width: width || document.body.offsetWidth,
+        height: height || document.body.offsetHeight,
         rowNum: 0,
         colNum: this.gridColNum,
         unit: "vw",
         blockSize: 0, // px单位的 单个grid单元大小
         margin: this.cusStyle?.margin || 12,
       };
-      if (screen.height * 1 > screen.width * 1 || this.cusStyle.wholeScreen == true) {
+      if (this.cusStyle.wholeScreen == true) {
         screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
         screen.unit = "vh";
         screen.blockSize = screen.height / (this.cusStyle.maxRows || this.gridColNum);

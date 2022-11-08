@@ -35,8 +35,10 @@ export default defineComponent({
   },
   methods: {
     async init() {
-      if (this.$route.params) {
-        let { PageName } = this.$route.params;
+      if (this.$route) {
+        let  PageName  = this.$route.path.split("/")[
+          this.$route.path.split("/").length - 1
+        ];
         if (isValidKey(PageName, PageConfig)) {
           this.desktopData = PageConfig[PageName];
         } else {
@@ -61,7 +63,7 @@ export default defineComponent({
   },
   data: () => {
     return {
-      desktopData: PageConfig["main"],
+      desktopData: PageConfig["MAIN"],
       Env: {},
       component,
     };
