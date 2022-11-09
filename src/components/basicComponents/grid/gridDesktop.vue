@@ -7,6 +7,9 @@
 
 <template>
   <div ref="screenId" style="width: 100%; height: 100%">
+    {{ gridRowNumAndUnit() }}
+    <br />
+    {{ cusStyle }}
     <grid-layout
       class="bases"
       :layout="gridListToLayout()"
