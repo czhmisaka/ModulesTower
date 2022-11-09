@@ -1,19 +1,13 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 19:34:40
+ * @LastEditTime: 2022-11-09 20:49:45
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType, gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
 export const mainDesktop = [
-    gridCellMaker('editable', '编辑', {}, {
-        name: 'setting_editable',
-        type: cardComponentType.componentList
-    }, {
-        isSettingTool: true
-    }).setPosition(3, 8).setSize(1, 1),
     gridCellMaker('MenuList', '菜单列表', {}, {
         name: 'userManage_menuList',
         type: cardComponentType.componentList
@@ -41,4 +35,10 @@ export const mainDesktop = [
             }
         },
     }).setPosition(2, 8).setSize(1, 1),
+    gridCellMaker('editable', '编辑', {}, {
+        name: 'setting_editable',
+        type: cardComponentType.componentList
+    }, {
+        isSettingTool: true
+    }).setPosition(3, 4).setSize(1, 1),
 ] as gridCellTemplate[]

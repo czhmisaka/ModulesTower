@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 19:32:45
+ * @LastEditTime: 2022-11-09 20:43:02
  * @FilePath: /configforpagedemo/src/modules/userManage/component/index.ts
  */
 import { CardComponentTemplate, cardComponentMaker, componentInfo, propInfo } from '../../../components/basicComponents/grid/module/dataTemplate';
@@ -47,9 +47,6 @@ componentList.map((module: any) => {
 
     componentLists[componentInfo.label] = cardComponentMaker(module, propsDetail, baseProps, componentInfo);
 })
-
-console.log('asd',componentLists)
-
 
 export default componentLists
 

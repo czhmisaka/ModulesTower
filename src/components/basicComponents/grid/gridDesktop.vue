@@ -6,10 +6,13 @@
 -->
 
 <template>
-  <div ref="screenId" style="width: 100%; height: 100%">
-    {{ gridRowNumAndUnit() }}
-    <br />
-    {{ cusStyle }}
+  <div
+    ref="screenId"
+    :style="{
+      overflow: cusStyle.wholeScreen ? 'hidden' : 'auto',
+    }"
+    class="baseGrid"
+  >
     <grid-layout
       class="bases"
       :layout="gridListToLayout()"
@@ -21,7 +24,8 @@
       :vertical-compact="false"
       :prevent-collision="false"
       :use-css-transforms="true"
-      :margin="[baseData.margin, baseData.margin]"
+      :maxRows="cusStyle.maxRows || 30"
+      :margin="[gridRowNumAndUnit().margin, gridRowNumAndUnit().margin]"
     >
       <grid-item
         v-for="(item, index) in gridListToLayout()"
@@ -329,7 +333,9 @@ export default defineComponent({
       if (this.cusStyle.wholeScreen == true) {
         screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
         screen.unit = "vh";
-        screen.blockSize = screen.height / (this.cusStyle.maxRows || this.gridColNum);
+        let rowOrColKey = this.cusStyle.maxRows || this.gridColNum;
+        screen.blockSize =
+          (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
       } else {
         screen.rowNum = Math.floor(screen.height / this.gridColNum);
         screen.blockSize =
@@ -405,15 +411,12 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .baseGrid {
-  width: 100vw;
-  height: 100vh;
-  display: grid;
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
 }
 
-.base {
-  width: 100vw;
-  height: 100vh;
-}
 @keyframes hoverFadeInOut {
   0% {
     background-color: rgba(0, 0, 0, 0);

@@ -78,7 +78,23 @@ const transitionMain = defineComponent({
   >
     <router-view>
       <template #default="{ Component, route }">
-        <el-scrollbar v-if="props.fixedHeader">
+        <div v-if="route.meta['wholeScreen']" class="wholeScreen-box">
+          <transitionMain :route="route">
+            <keep-alive
+              v-if="keepAlive"
+              :include="usePermissionStoreHook().cachePageList"
+            >
+              <component :is="Component" :key="route.fullPath" class="main-content" />
+            </keep-alive>
+            <component
+              v-else
+              :is="Component"
+              :key="route.fullPath"
+              class="main-content"
+            />
+          </transitionMain>
+        </div>
+        <el-scrollbar v-else-if="props.fixedHeader">
           <el-backtop title="回到顶部" target=".app-main .el-scrollbar__wrap">
             <backTop />
           </el-backtop>
@@ -135,5 +151,8 @@ const transitionMain = defineComponent({
 .main-content {
   margin: 12px;
   width: calc(100% - 24px) !important;
+}
+.wholeScreen-box {
+  height: calc(100% - 24px);
 }
 </style>

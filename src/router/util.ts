@@ -3,7 +3,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 19:10:10
+ * @LastEditTime: 2022-11-09 20:41:51
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -213,11 +213,15 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
         const moduleName = getModuleName(fileName)
         moduleList.map((module: modulesCellTemplate) => {
             if (module.name == moduleName) {
-                const pageMap = requireModule(fileName)['PageConfig']
+                const pageMap = requireModule(fileName)['PageConfig'];
                 Object.keys(pageMap).map((pageName: string) => {
                     module.routers[0].children.push({
                         ...routerCellMaker(
-                            `/${moduleName}/${pageName}`, moduleName + '_' + pageName, () => import('../modules/' + moduleName + '/Index.vue'))
+                            `/${moduleName}/${pageName}`, moduleName + '_' + pageName, () => import('../modules/' + moduleName + '/Index.vue'), {
+                            meta: {
+                                ...pageMap[pageName]['cusStyle']
+                            }
+                        })
                     })
                 })
             }
