@@ -8,9 +8,9 @@
 <template>
   <div
     :style="{
-      width: '100%',
-      height: '100%',
-      background: 'rgba(0,0,0,0.02)',
+      width: 'calc(100% )',
+      height: 'calc(100% )',
+      background: 'rgba(0,0,0,0)',
       overflow: 'hidden',
     }"
   >

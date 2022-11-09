@@ -26,6 +26,14 @@ export default defineComponent({
       normal: gridSizeMaker(2, 2),
     },
   } as componentInfo,
+
+  propsDetail: {
+    file: {
+      label: "文件信息",
+      type: inputType.obj,
+    },
+  } as propInfo,
+
   props: {
     file: {
       type: Object,
@@ -34,13 +42,6 @@ export default defineComponent({
       },
     },
   },
-  propsDetail: {
-    file: {
-      label: "文件信息",
-      type: inputType.obj,
-    },
-  } as propInfo,
-
   async mounted() {
     this.$emit("ready");
   },

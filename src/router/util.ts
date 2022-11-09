@@ -3,7 +3,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-08 21:15:57
+ * @LastEditTime: 2022-11-09 19:10:10
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -97,6 +97,8 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
     if (!init) {
         return moduleList;
     }
+
+    // 如果你找到了这里的 require.context 搜索出了问题，先看一下是不是出现了空文件夹，如有则删除。  -- czh 20221109
 
     moduleList = [] as modulesCellTemplate[];
     const requireModule = require.context(

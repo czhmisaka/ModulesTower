@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-08 17:31:21
- * @FilePath: /configforpagedemo/src/modules/minio/PageConfigData/main.ts
+ * @LastEditTime: 2022-11-09 16:58:52
+ * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType, gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate"
@@ -13,7 +13,13 @@ export const mainDesktop = [
         type: cardComponentType.componentList
     }, {
         isSettingTool: true
-    }).setPosition(2, 0).setSize(1, 1),
+    }).setPosition(3, 0).setSize(1, 1),
+    gridCellMaker('MenuList', '菜单列表', {}, {
+        name: 'userManage_menuList',
+        type: cardComponentType.componentList
+    }, {
+        isSettingTool: false
+    }).setPosition(0, 0).setSize(3, 8),
     gridCellMaker('openComponents', '打开组件菜单', {}, {
         type: cardComponentType.componentList,
         name: 'icon'
@@ -28,5 +34,5 @@ export const mainDesktop = [
                 })
             }
         },
-    }).setPosition(0, 0).setSize(1, 1),
+    }).setPosition(3, 1).setSize(1, 1),
 ] as gridCellTemplate[]

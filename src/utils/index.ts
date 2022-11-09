@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-27 23:12:59
+ * @LastEditTime: 2022-11-09 18:40:09
  * @FilePath: /configforpagedemo/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions } from "./cellClass";
@@ -67,7 +67,6 @@ export const createCusApp = (options: Component, rootProps?: Record<string, unkn
 }
 
 
-import { ModuleComponentList } from './autoComponentsForModel'
 
 
 
@@ -91,7 +90,6 @@ export default {
     },
     isValidKey,
     deepClone,
-    ModuleComponentList,
     axios: {
         get, post
     }

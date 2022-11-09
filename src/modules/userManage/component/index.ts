@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 14:52:24
- * @FilePath: /configforpagedemo/src/modules/minio/component/index.ts
+ * @LastEditTime: 2022-11-09 14:49:12
+ * @FilePath: /configforpagedemo/src/modules/userManage/component/index.ts
  */
 import { CardComponentTemplate, cardComponentMaker, componentInfo, propInfo } from '../../../components/basicComponents/grid/module/dataTemplate';
 import { defineAsyncComponent } from 'vue';
@@ -46,7 +46,7 @@ componentList.map((module: any) => {
     }
 
 
-    componentLists[componentInfo.label] = cardComponentMaker(defineAsyncComponent(module), propsDetail, baseProps, componentInfo);
+    componentLists[componentInfo.label] = cardComponentMaker(module, propsDetail, baseProps, componentInfo);
 })
 
 

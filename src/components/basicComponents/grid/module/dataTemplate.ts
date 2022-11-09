@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 11:01:17
+ * @LastEditTime: 2022-11-09 16:53:11
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -9,6 +9,7 @@
 import { cardUtil } from "./util";
 import { defineAsyncComponent, defineComponent, ref, h } from 'vue';
 import { createApp } from 'vue';
+import { type } from '../../../../store/modules/types';
 
 export enum cardOnChangeType {
     upOnChange = 'upOnChange',
@@ -135,7 +136,8 @@ export enum inputType {
     number = 'number',
     numberSlider = 'numberSlider',
     obj = 'object',
-    functionEditor = 'functionEditor'
+    functionEditor = 'functionEditor',
+    array = 'array'
 }
 
 export interface CardComponentTemplate {
@@ -228,15 +230,14 @@ export interface cardComponent {
 
 export const componentGetter = (component: cardComponent, componentLists: { [key: string]: any }): any => {
     switch (component.type) {
-
         case cardComponentType.componentList:
-            if (Object.keys(componentLists).indexOf(component.name)) {
+            if (Object.keys(componentLists).indexOf(component.name) > -1) {
                 return componentLists[component.name];
             }
             else {
                 return componentLists['iframe']
             }
-
+            break;
         case cardComponentType.fromData:
             if (!component.data)
                 return '';
@@ -247,15 +248,15 @@ export const componentGetter = (component: cardComponent, componentLists: { [key
                 // component: defineComponent(eval('(()=>{return '+component.data+'})()')),
                 component: createApp(eval('(()=>{return ' + component.data + '})()')),
             }
-
+            break;
         case cardComponentType.cusComponent:
             break;
     }
 }
 
 /**
- * @name: 函数名
- * @description: waitForWriting
+ * @name: gridCellMaker
+ * @description: 构建矩阵单元
  * @authors: CZH
  *  @Date: 2022-04-30 14:25:29
  * @param {string} label
@@ -285,7 +286,7 @@ export const gridCellMaker = (label: string, labelNameCN: string, size: { [key: 
             }
         }
     }
-    gridCell.gridInfo.default.size = gridCell.gridInfo.size.middle;
+    gridCell.gridInfo.default.size = Object.keys(size).length > 0 ? size[Object.keys(size)[0]] : gridSizeMaker(2, 2)
     for (let key in cardUtil) {
         gridCell[key] = cardUtil[key]
     }
