@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-10 16:11:01
+ * @LastEditTime: 2022-11-10 17:43:31
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -9,6 +9,20 @@ import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType, grid
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
 
 import { post, get } from "@/utils/api/requests";
+
+function buildDataToTree(data, cell) {
+    const result = [];
+    data.map(x => {
+        if (x.parentId == cell.id) {
+            result.push(x)
+        }
+    })
+    result.map(x => {
+        x = buildDataToTree(data, x)
+    })
+    cell['children'] = result
+    return cell;
+}
 
 export const mainDesktop = [
     gridCellMaker('MenuList', '菜单列表', {}, {
@@ -18,7 +32,18 @@ export const mainDesktop = [
         props: {
             menuDataFunc: async (context) => {
                 let res = await post('/web/usc/unit/list', {})
-                return res.data
+                let data = res.data;
+                let unitList = data.map(x => {
+                    if (data.map(c => c.id).indexOf(x.parentId) == -1)
+                        return buildDataToTree(data, x)
+                    else return null
+                }).filter(Boolean)
+                return unitList
+            },
+            outputKey: 'outputKey',
+            defaultProps: {
+                label: 'name',
+                children: 'children'
             },
         },
         isSettingTool: false
@@ -27,7 +52,6 @@ export const mainDesktop = [
         name: 'userManage_searchTable',
         type: cardComponentType.componentList
     }, {
-
         isSettingTool: false
     }).setPosition(3, 0).setSize(9, 8),
     // gridCellMaker('openComponents', '打开组件菜单', {}, {

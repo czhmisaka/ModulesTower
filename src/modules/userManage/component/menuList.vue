@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, watch } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
 import {
@@ -78,17 +78,16 @@ export default defineComponent({
      * @param {*} node
      */
     nodeClick(node) {
+      let outputKey = this.outputKey || "menuList_output";
       let data = {};
-      data[this.outputKey] = node;
+      data[outputKey] = node;
       setData(this, data);
     },
 
     async init() {
-      console.log(this.menuDataFunc, "asddd");
-      if (this.menuDataFunc && typeof this.menuDataFunc == "function") {
+      if (this.menuDataFunc) {
         let that = this;
-        that.menuData = await this.menuDataFunc(that);
-        await that.$forceUpdate();
+        that.menuData = await that.menuDataFunc(that);
       }
     },
   },

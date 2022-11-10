@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-07 15:25:04
+ * @LastEditTime: 2022-11-10 16:25:27
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -22,14 +22,13 @@ export function isMobile() {
     }
 }
 
-let baseURL = isDev ? '/api' : ''
+let baseURL = isDev ? '/' : '/'
 const request = axios.create({
     baseURL: baseURL, // 可以不需要
     timeout: 10000,  // 超时时间
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        'x-no-encrypt': true
     },
     validateStatus() {
         return true;

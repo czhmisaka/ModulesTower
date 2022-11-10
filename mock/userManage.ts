@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-09 17:19:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-10 16:06:58
+ * @LastEditTime: 2022-11-10 17:01:31
  * @FilePath: /configforpagedemo/mock/userManage.ts
  */
 // 模拟后端动态生成路由
@@ -42,7 +42,7 @@ export const fakerDataMaker = (obj: { [key: string]: fakeDataType }) => {
     switch (obj[x]) {
 
       case fakeDataType.number:
-        backData[x] = Math.random() * 1000000;
+        backData[x] = Math.floor(Math.random() * 1000000);
         break;
 
       case fakeDataType.dataString:
@@ -50,7 +50,7 @@ export const fakerDataMaker = (obj: { [key: string]: fakeDataType }) => {
         break;
 
       case fakeDataType.string:
-        backData[x] = randomString(Math.floor(Math.random() * 20))
+        backData[x] = randomString(Math.floor(Math.random() * 20 + 1))
         break;
 
     }
@@ -77,9 +77,13 @@ export const unitlistMaker = (numbers) => {
     zzdCode: fakeDataType.number,
   }
   let unitList = []
-  for (let i in numbers) {
+  for (let i = 0; i < numbers; i++) {
     unitList.push(fakerDataMaker(template))
   }
+  unitList.map((x, i) => {
+    if (i > 0 && i % 2 == 0)
+      unitList[i].parentId = unitList[i - 1].id
+  })
   return unitList;
 }
 
@@ -89,7 +93,8 @@ export default [
     method: "post",
     response: () => {
       return {
-        success: true,
+        code: 200,
+        type: "success",
         data: unitlistMaker(20)
       };
     }
@@ -142,12 +147,10 @@ function randomName(length) {
 }
 //随机自定义长度包含中文字的字符串
 function randomString(length) {
-  console.log('1')
   var str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   str += randomName(24)
   var result = '';
   for (var i = length; i > 0; --i)
     result += str[Math.floor(Math.random() * str.length)];
-  console.log(result)
   return result;
 }
