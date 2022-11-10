@@ -6,7 +6,9 @@
 -->
 <template>
   <cardBg>
-    <el-tree :data="menuData" :props="defaultProps" @node-click="nodeClick" />
+    <div class="menuBox">
+      <el-tree :data="menuData" :props="defaultProps" @node-click="nodeClick" />
+    </div>
   </cardBg>
 </template>
 
@@ -94,4 +96,10 @@ export default defineComponent({
 });
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="scss" scoped>
+.menuBox {
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+}
+</style>
