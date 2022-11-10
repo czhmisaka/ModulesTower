@@ -1,68 +1,153 @@
 /*
  * @Date: 2022-11-09 17:19:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 19:13:19
+ * @LastEditTime: 2022-11-10 16:06:58
  * @FilePath: /configforpagedemo/mock/userManage.ts
  */
 // 模拟后端动态生成路由
 import { MockMethod } from "vite-plugin-mock";
-
-
-const unitCell = {
-  id: "integer($int64)",
-  createUserId: "integer($int64)",
-  createTime: "integer($int64)",
-  updateUserId: "integer($int64)",
-  updateTime: "integer($int64)",
-  orderNumber: "integer($int32)",
-  top: "boolean",
-  deleted: "boolean",
-  name: "string",
-  description: "string",
-  parentId: "integer($int64)",
-  parentIds: "string",
-  parentNames: "string",
-  regionId: "integer($int64)",
-  zzdCode: "string",
+export interface unitCellTemplate {
+  id: string,
+  createUserId: string,
+  createTime: string,
+  updateUserId: string,
+  updateTime: string,
+  orderNumber: string,
+  top: string,
+  deleted: string,
+  name: string,
+  description: string,
+  parentId: string,
+  parentIds: string,
+  parentNames: string,
+  regionId: string,
+  zzdCode: string,
 }
 
-const permissionRouter = {
-  path: "/list",
-  meta: {
-    title: "权限管理",
-    icon: "lollipop",
-    rank: 10
-  },
-  children: [
-    {
-      path: "/permission/page/index",
-      name: "PermissionPage",
-      meta: {
-        title: "页面权限",
-        roles: ["admin", "common"]
-      }
-    },
-    {
-      path: "/permission/button/index",
-      name: "PermissionButton",
-      meta: {
-        title: "按钮权限",
-        roles: ["admin", "common"],
-        auths: ["btn_add", "btn_edit", "btn_delete"]
-      }
+export enum fakeDataType {
+  string = "string",
+  number = "number",
+  dataString = "dataString"
+}
+
+/**
+ * @name: fakerDataMaker
+ * @description: 假数据生成函数
+ * @authors: CZH
+ * @Date: 2022-11-10 15:52:00
+ */
+export const fakerDataMaker = (obj: { [key: string]: fakeDataType }) => {
+  let backData = {} as { [key: string]: any }
+  for (let x in obj) {
+    switch (obj[x]) {
+
+      case fakeDataType.number:
+        backData[x] = Math.random() * 1000000;
+        break;
+
+      case fakeDataType.dataString:
+        backData[x] = new Date(Math.random() * new Date().getTime()).getTime() + '';
+        break;
+
+      case fakeDataType.string:
+        backData[x] = randomString(Math.floor(Math.random() * 20))
+        break;
+
     }
-  ]
-};
+  }
+  return backData;
+}
+
+export const unitlistMaker = (numbers) => {
+  let template = {
+    id: fakeDataType.number,
+    createUserId: fakeDataType.number,
+    createTime: fakeDataType.dataString,
+    updateUserId: fakeDataType.number,
+    updateTime: fakeDataType.dataString,
+    orderNumber: fakeDataType.number,
+    top: fakeDataType.string,
+    deleted: fakeDataType.string,
+    name: fakeDataType.string,
+    description: fakeDataType.string,
+    parentId: fakeDataType.number,
+    parentIds: fakeDataType.string,
+    parentNames: fakeDataType.string,
+    regionId: fakeDataType.number,
+    zzdCode: fakeDataType.number,
+  }
+  let unitList = []
+  for (let i in numbers) {
+    unitList.push(fakerDataMaker(template))
+  }
+  return unitList;
+}
 
 export default [
   {
-    url: "/web/usc/unit/",
-    method: "get",
+    url: "/web/usc/unit/list",
+    method: "post",
     response: () => {
       return {
         success: true,
-        data: [permissionRouter]
+        data: unitlistMaker(20)
       };
     }
   }
 ] as MockMethod[];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function randomNum(min, max) {
+  return Math.floor(Math.random() * (min - max) + max)
+}
+
+// 解码Unicode
+function solveUnicode(str) {
+  //Unicode显示方式是\u4e00
+  str = "\\u" + str
+  str = str.replace(/\\/g, "%");
+  //转换中文
+  str = unescape(str);
+  //将其他受影响的转换回原来
+  str = str.replace(/%/g, "\\");
+  return str;
+}
+//生成随机汉字包括生僻字
+function randomName(length) {
+  let name = ""
+  for (let i = 0; i < length; i++) {
+    let unicodeNum = ""
+    unicodeNum = randomNum(0x4e00, 0x9fa5).toString(16)
+    name += solveUnicode(unicodeNum)
+  }
+  return name
+}
+//随机自定义长度包含中文字的字符串
+function randomString(length) {
+  console.log('1')
+  var str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  str += randomName(24)
+  var result = '';
+  for (var i = length; i > 0; --i)
+    result += str[Math.floor(Math.random() * str.length)];
+  console.log(result)
+  return result;
+}

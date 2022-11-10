@@ -32,9 +32,9 @@ export default defineComponent({
   } as componentInfo,
 
   propsDetail: {
-    menuData: {
-      label: "菜单列表",
-      type: inputType.obj,
+    menuDataFunc: {
+      label: "菜单列表数据（async）",
+      type: inputType.functionEditor,
     },
     outputKey: {
       label: "baseData输出key",
@@ -47,7 +47,9 @@ export default defineComponent({
   } as propInfo,
 
   baseProps: {
-    menuData: [],
+    menuDataFunc: () => {
+      return [];
+    },
     outputKey: "menuSelectCell",
     defaultProps: {
       children: "children",
@@ -55,15 +57,16 @@ export default defineComponent({
     },
   },
 
-  props: ["baseData", "sizeUnit", "menuData", "outputKey", "defaultProps"],
+  props: ["baseData", "sizeUnit", "menuDataFunc", "outputKey", "defaultProps"],
   components: { cardBg },
   watch: {},
   data: () => {
     return {
-      defaultProps: {},
+      menuData: [],
     };
   },
   async mounted() {
+    await this.init();
     this.$emit("ready");
   },
   methods: {
@@ -78,6 +81,15 @@ export default defineComponent({
       let data = {};
       data[this.outputKey] = node;
       setData(this, data);
+    },
+
+    async init() {
+      console.log(this.menuDataFunc, "asddd");
+      if (this.menuDataFunc && typeof this.menuDataFunc == "function") {
+        let that = this;
+        that.menuData = await this.menuDataFunc(that);
+        await that.$forceUpdate();
+      }
     },
   },
 });

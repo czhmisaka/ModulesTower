@@ -26,7 +26,7 @@ export default defineComponent({
             width: "100%",
             height: "100%",
             background: "#FFFFFF",
-            borderRadius: "12px",
+            borderRadius: "6px",
             overflow: "hidden",
             boxShadow:
               "  0px 0px 2.2px rgba(0, 0, 0, 0.1), 0px 0px 5.3px rgba(0, 0, 0, 0.005),0px 0px 10px rgba(0, 0, 0, 0.007),0px 0px 17.9px rgba(0, 0, 0, 0.009),0px 0px 33.4px rgba(0, 0, 0, 0.01),0px 0px 80px rgba(0, 0, 0, 0.01)",

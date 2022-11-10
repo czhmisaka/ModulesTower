@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-21 22:45:51
+ * @LastEditTime: 2022-11-10 15:26:13
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -41,7 +41,7 @@ export const deepMerge = (target: any, other: any) => {
                 target[key] = val;
             }
         }
-    } 
+    }
     // else if (targetToString === "[object Array]") {
     //     for (let [key, val] of Object.entries(other)) {
     //         if (target[key]) {
@@ -191,7 +191,7 @@ export const changeCardProperties = (content: { [key: string]: any }, value: { [
         Object.keys(value).map((name: string) => {
             data[name] = {
                 options: {
-                    props:value[name]
+                    props: value[name]
                 },
             }
         })
@@ -203,4 +203,18 @@ export const changeCardProperties = (content: { [key: string]: any }, value: { [
     } catch (err) {
         console.error('changeVisible 错误:', err, content, value);
     }
+}
+
+
+/**
+ * @todo @czh 开发中
+ * @name: baseDataWatcher
+ * @description: 快速生成baseData数据的监听器 
+ * @authors: CZH
+ * @Date: 2022-11-10 15:23:17
+ * @param {object} model
+ */
+export const baseDataWatcher = (model: { [key: string]: any } = {}) => {
+    let watchMap = {} as { [key: string]: any }
+    return watchMap;
 }

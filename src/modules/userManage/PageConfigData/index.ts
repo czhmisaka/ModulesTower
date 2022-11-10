@@ -2,7 +2,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 20:54:13
+ * @LastEditTime: 2022-11-10 08:55:04
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -27,8 +27,8 @@ const pageConfig = {
         gridColNum: 12,
         cusStyle: {
             wholeScreen: true,
-            maxRows: 9,
-            margin: 6
+            maxRows: 8,
+            margin: 12
         },
     },
 } as { [key: string]: desktopDataTemplate }

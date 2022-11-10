@@ -83,9 +83,9 @@ export default defineComponent({
           style: {
             width: "100%",
             height: "100%",
-            overflow: "hidden",
+            // overflow: "hidden",
             userSelect: "none",
-            transition: isShow() ? "opacity 0.4s,margin 1s" : "opacity 0.4s,margin 0.6s",
+            transition: isShow() ? "opacity 0.4s,margin 1s" : "opacity 0.4,margin 0.6s",
             margin: isShow() ? "0px" : "0px 0px 0px -30px",
             opacity: isShow() ? 1 : 0,
             Animation: props.baseData.editable
