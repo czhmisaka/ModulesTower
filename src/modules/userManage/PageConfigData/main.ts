@@ -1,14 +1,14 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-11 10:31:14
+ * @LastEditTime: 2022-11-11 17:48:42
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType, gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
 import { post, get } from "@/utils/api/requests";
-
+import { SearchCellStorage, tableCellTemplateMaker, DataCell } from '../component/searchTable/searchTable'
 
 
 /**
@@ -23,11 +23,24 @@ import { post, get } from "@/utils/api/requests";
  */
 function buildDataToTree(data, cell, id = 'id', pid = 'parentId') {
     const result = [];
-    data.map(x => x[pid] == cell[id] && result.push(x))
+    data.map(x => x[pid] == cell[id] && cell[id] != x[id] && result.push(x))
     result.map(x => buildDataToTree(data, x))
     cell['children'] = result
     return cell;
 }
+
+const MenuTableCellStorage = new SearchCellStorage([
+    tableCellTemplateMaker('ID', 'id'),
+    tableCellTemplateMaker('创建时间', 'createTime', DataCell()),
+    tableCellTemplateMaker('排序', 'orderNumber'),
+    tableCellTemplateMaker('更新时间', 'updateTime', DataCell()),
+    tableCellTemplateMaker('部门名称', 'name'),
+    tableCellTemplateMaker('上级部门', 'parentNames')
+])
+
+
+
+
 
 export const mainDesktop = [
     gridCellMaker('MenuList', '菜单列表', {}, {
@@ -38,8 +51,9 @@ export const mainDesktop = [
             menuDataFunc: async (context) => {
                 let res = await post('/web/usc/unit/list', {})
                 let data = res.data;
+                const inKeyList = data.map(c => c.id)
                 let unitList = data.map(x => {
-                    if (data.map(c => c.id).indexOf(x.parentId) == -1)
+                    if (inKeyList.indexOf(x.parentId) == -1)
                         return buildDataToTree(data, x)
                     else return null
                 }).filter(Boolean)
@@ -59,21 +73,6 @@ export const mainDesktop = [
     }, {
         isSettingTool: false
     }).setPosition(3, 0).setSize(9, 8),
-    // gridCellMaker('openComponents', '打开组件菜单', {}, {
-    //     type: cardComponentType.componentList,
-    //     name: 'icon'
-    // }, {
-    //     isSettingTool: true,
-    //     props: {
-    //         name: 'Grid',
-    //         onClickFunc: (content: any) => {
-    //             const { context } = content;
-    //             context.emit('onChange', {}, {
-    //                 type: [cardOnChangeType.openComponentsList]
-    //             })
-    //         }
-    //     },
-    // }).setPosition(2, 8).setSize(1, 1),
     gridCellMaker('editable', '编辑', {}, {
         name: 'setting_editable',
         type: cardComponentType.componentList

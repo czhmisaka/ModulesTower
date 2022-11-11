@@ -2,7 +2,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-11 10:17:07
+ * @LastEditTime: 2022-11-11 17:12:54
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -15,11 +15,11 @@
  * @Date: 2022-11-10 09:33:04
  */
 export class SearchCellStorage {
-    storage = []
-    constructor(storage) {
+    storage = [] as tableCellTemplate[]
+    constructor(storage: tableCellTemplate[]) {
         this.storage = storage;
     }
-    getByLabel(label: string) {
+    getByLabel(label: string, options?: tableCellOptions) {
         let back = {} as { [key: string]: any };
         this.storage.map((cell) => {
             if (label && label == cell.label) back = cell;
@@ -28,22 +28,16 @@ export class SearchCellStorage {
             label: `-${label}-`,
             prop: `no_label_${Math.random()}`
         }
-        return back
+        return { ...back, ...options }
     }
 }
 
+import { formInputType } from './inputCell/input'
 
-export enum formInputTemplate { 
-    select,
-    selects,
-    inputList,
-    input,
-    areaCascader,
-    datePicker,
-    radioGroup,
-    radio
+// 主要是懒得重复写了
+export interface stringAnyObj {
+    [key: string]: any
 }
-
 /**
  * @name: 表格单元配置
  * @description: tableCellOptions
@@ -51,10 +45,22 @@ export enum formInputTemplate {
  * @Date: 2022-11-10 09:30:21
  */
 export interface tableCellOptions {
-    label?: string,
-    key?: string,
-    input?: formInputTemplate,
+    input?: {
+        type: formInputType,
+        inputOptions: stringAnyObj,
+        style: stringAnyObj
+    },
+    table: {
+        showFunc: (data: any, key: string) => any
+        type: showType,
+        style?: stringAnyObj
+    }
     [key: string]: any
+}
+
+export enum showType {
+    func,
+    funcComponent
 }
 
 /**
@@ -63,8 +69,22 @@ export interface tableCellOptions {
  * @authors: CZH
  * @Date: 2022-11-10 09:52:01
  */
-export interface tableCellTemplate {
+export interface tableCellTemplate extends tableCellOptions {
+    label: string,
+    key: string,
+    [key: string]: any
+}
 
+
+export const DataCell = (): tableCellOptions => {
+    let tableCellOption = {} as tableCellOptions
+    tableCellOption.table = {
+        type: showType.func,
+        showFunc: (data: any, key: string) => {
+            return new Date(data[key]).toLocaleString() as any;
+        }
+    }
+    return tableCellOption
 }
 
 
@@ -77,11 +97,16 @@ export interface tableCellTemplate {
  * @param {string} key
  * @param {tableCellOptions} options
  */
-export const tableCellTemplateMaker = (label: string, key: string, options: tableCellOptions = {}) => {
+export const tableCellTemplateMaker = (label: string, key: string, options: tableCellOptions = {
+    table: {
+        showFunc: (data, key) => data[key],
+        type: showType.func
+    }
+}): tableCellTemplate => {
     return {
         label,
         key,
-        ...options
+        ...options,
     }
 }
 

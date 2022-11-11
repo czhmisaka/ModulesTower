@@ -5,24 +5,21 @@
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputCell.vue
 -->
 <template>
-  <div class="formBox">
-    <el-form
-      @submit.native.prevent
-      :model="inputQuery"
-      label-suffix=":"
-      label-width="150px"
-    >
-      <inputCellVue></inputCellVue>
-    </el-form>
-  </div>
+  <div class="formBox">FormProvider</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, h } from "vue";
-import inputCellVue from "./inputCell/index.vue";
+import { FormProvider, createSchemaField } from "@formily/vue";
+import { ElInput } from "element-plus";
+const { SchemaField } = createSchemaField({
+  components: {
+    ElInput,
+  },
+});
 export default defineComponent({
-  name: "输入单元组件",
-  components: { inputCellVue },
+  name: "表单组件",
+  components: {},
   props: ["query", "queryItemTemplate", "queryItemConfig", "btnList"],
   data() {
     return {
@@ -31,10 +28,12 @@ export default defineComponent({
   },
 
   methods: {
-    // 返回数据修改事件
+    // 上报数据修改事件
     onChange() {
       this.$emit("onChange", this.inputQuery);
     },
+
+    // 处理当前数据处理事件
   },
 });
 </script>

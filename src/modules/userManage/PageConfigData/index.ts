@@ -2,7 +2,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-10 08:55:04
+ * @LastEditTime: 2022-11-11 16:28:45
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -22,7 +22,18 @@ export interface desktopDataTemplate {
 
 
 const pageConfig = {
-    main: {
+    user: {
+        name:'用户管理',
+        desktopData: mainDesktop,
+        gridColNum: 12,
+        cusStyle: {
+            wholeScreen: true,
+            maxRows: 8,
+            margin: 12
+        },
+    },
+    department: {
+        name:'部门管理',
         desktopData: mainDesktop,
         gridColNum: 12,
         cusStyle: {

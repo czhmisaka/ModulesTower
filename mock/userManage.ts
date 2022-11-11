@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-09 17:19:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-10 17:01:31
+ * @LastEditTime: 2022-11-11 18:23:24
  * @FilePath: /configforpagedemo/mock/userManage.ts
  */
 // 模拟后端动态生成路由
@@ -87,6 +87,9 @@ export const unitlistMaker = (numbers) => {
   return unitList;
 }
 
+
+
+
 export default [
   {
     url: "/web/usc/unit/list",
@@ -95,8 +98,20 @@ export default [
       return {
         code: 200,
         type: "success",
-        data: unitlistMaker(20)
+        data: unitlistMaker(40)
       };
+    }
+  },
+  {
+    url: "/web/usc/unit/list",
+    method: "post",
+    response: () => {
+      return {
+        code: 200,
+        type: "success",
+        data: unitlistMaker(40)
+      };
+      
     }
   }
 ] as MockMethod[];

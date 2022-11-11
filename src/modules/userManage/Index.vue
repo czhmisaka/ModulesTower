@@ -65,7 +65,7 @@ export default defineComponent({
   },
   data: () => {
     return {
-      desktopData: PageConfig["MAIN"],
+      desktopData: PageConfig[Object.keys(PageConfig)[0]],
       Env: {},
       component,
     };

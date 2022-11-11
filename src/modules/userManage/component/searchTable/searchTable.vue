@@ -73,6 +73,13 @@ export default defineComponent({
     this.$emit("ready");
   },
   methods: {
+    async preDataLoad() {
+      if (this.preLoadData) {
+        let that = this;
+        await this.preLoadData(that);
+      }
+    },
+
     queryChange() {},
 
     btnClick() {},

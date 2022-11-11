@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-04 16:39:37
+ * @LastEditTime: 2022-11-11 12:47:21
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -14,7 +14,6 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import ViteRequireContext from '@originjs/vite-plugin-require-context';
 import envCompatible from 'vite-plugin-env-compatible';
-
 
 
 import {
