@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:55
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-08 12:50:13
+ * @LastEditTime: 2022-11-11 10:35:12
  * @FilePath: /configforpagedemo/components.d.ts
  */
 
@@ -48,7 +48,6 @@ declare module 'vue' {
     InfoCell: typeof import('./src/components/basicComponents/cell/info/infoCell.vue')['default']
     InfoFile: typeof import('./src/components/basicComponents/cell/info/infoFile/infoFile.vue')['default']
     InfoList: typeof import('./src/components/basicComponents/list/info/infoList.vue')['default']
-    InputCell: typeof import('./src/components/basicComponents/cell/input/inputCell.vue')['default']
     InputList: typeof import('./src/components/basicComponents/list/input/inputList.vue')['default']
     LessIcon: typeof import('./src/components/basicComponents/cell/icon/lessIcon.vue')['default']
     LineSlideExchange: typeof import('./src/components/animate/lineSlideExchange.vue')['default']

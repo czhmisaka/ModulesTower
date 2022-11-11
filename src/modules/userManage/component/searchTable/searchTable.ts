@@ -1,7 +1,8 @@
+
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-10 14:16:24
+ * @LastEditTime: 2022-11-11 10:17:07
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -32,6 +33,17 @@ export class SearchCellStorage {
 }
 
 
+export enum formInputTemplate { 
+    select,
+    selects,
+    inputList,
+    input,
+    areaCascader,
+    datePicker,
+    radioGroup,
+    radio
+}
+
 /**
  * @name: 表格单元配置
  * @description: tableCellOptions
@@ -41,6 +53,7 @@ export class SearchCellStorage {
 export interface tableCellOptions {
     label?: string,
     key?: string,
+    input?: formInputTemplate,
     [key: string]: any
 }
 

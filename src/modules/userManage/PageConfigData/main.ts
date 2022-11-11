@@ -1,25 +1,30 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-10 17:43:31
+ * @LastEditTime: 2022-11-11 10:31:14
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType, gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
-
 import { post, get } from "@/utils/api/requests";
 
-function buildDataToTree(data, cell) {
+
+
+/**
+ * @name: buildDataToTree
+ * @description: 从 listdata 生成 treeData
+ * @authors: CZH
+ * @Date: 2022-11-11 10:28:41
+ * @param {*} data
+ * @param {*} cell
+ * @param {*} id
+ * @param {*} pid
+ */
+function buildDataToTree(data, cell, id = 'id', pid = 'parentId') {
     const result = [];
-    data.map(x => {
-        if (x.parentId == cell.id) {
-            result.push(x)
-        }
-    })
-    result.map(x => {
-        x = buildDataToTree(data, x)
-    })
+    data.map(x => x[pid] == cell[id] && result.push(x))
+    result.map(x => buildDataToTree(data, x))
     cell['children'] = result
     return cell;
 }

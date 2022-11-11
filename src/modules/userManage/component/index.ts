@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 20:43:02
+ * @LastEditTime: 2022-11-11 09:45:35
  * @FilePath: /configforpagedemo/src/modules/userManage/component/index.ts
  */
 import { CardComponentTemplate, cardComponentMaker, componentInfo, propInfo } from '../../../components/basicComponents/grid/module/dataTemplate';
@@ -26,26 +26,57 @@ componentsFiles.keys().map((componentsName: string) => {
     componentList.push(data)
 })
 
+export enum selectTypeTemplate {
+    all,
+    one
+}
+
 let componentLists = {} as { [key: string]: CardComponentTemplate }
+
+/**
+ * @name: tagInObj
+ * @description: 检索函数
+ * @authors: CZH
+ * @Date: 2022-11-11 09:43:27
+ * @param {object} obj
+ * @param {string} tagList
+ * @param {*} selectType
+ */
+function tagInObj(obj: { [key: string]: any }, tagList: string[], selectType = selectTypeTemplate.all) {
+    let keyList = Object.keys(obj)
+    let result = []
+    tagList.map(tag => {
+        if (keyList.indexOf(tag) > -1) {
+            result.push(tag)
+        }
+    })
+    switch (selectType) {
+        case selectTypeTemplate.all:
+            return tagList.length == result.length
+        case selectTypeTemplate.one:
+            return result.length > 0
+    }
+}
 
 componentList.map((module: any) => {
     let propsDetail = {} as propInfo;
     let baseProps = {} as { [key: string]: any }
     let componentInfo = { label: preName + "_" + module.name, } as componentInfo;
 
-    if (Object.keys(module).indexOf('propsDetail') > -1) {
+    if (tagInObj(module, ['propsDetail'])) {
         propsDetail = { ...module.propsDetail }
     }
 
-    if (Object.keys(module).indexOf('baseProps') > -1) {
+    if (tagInObj(module, ['baseProps'])) {
         baseProps = { ...module.baseProps }
     }
 
-    if (Object.keys(module).indexOf('componentInfo') > -1) {
+    if (tagInObj(module, ['componentInfo'])) {
         componentInfo = { ...componentInfo, ...module.componentInfo }
     }
 
-    componentLists[componentInfo.label] = cardComponentMaker(module, propsDetail, baseProps, componentInfo);
+    if (tagInObj(module, ['propsDetail', 'componentInfo'], selectTypeTemplate.one))
+        componentLists[componentInfo.label] = cardComponentMaker(module, propsDetail, baseProps, componentInfo);
 })
 
 export default componentLists

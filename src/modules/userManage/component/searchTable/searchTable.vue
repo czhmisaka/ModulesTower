@@ -5,7 +5,10 @@
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable.vue
 -->
 <template>
-  <cardBg> </cardBg>
+  <cardBg>
+    <inputForm @change="queryChange" @btnClick="btnClick" />
+    <infoTable />
+  </cardBg>
 </template>
 
 <script lang="ts">
@@ -18,6 +21,7 @@ import {
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { changeCardSize } from "@/components/basicComponents/grid/module/cardApi/index";
+import inputForm from "./inputForm.vue";
 
 export default defineComponent({
   componentInfo: {
@@ -46,18 +50,33 @@ export default defineComponent({
       label: "搜索单元模板列表",
       type: inputType.array,
     },
+    btnList: {
+      label: "按钮行为列表",
+      type: inputType.array,
+    },
   } as propInfo,
   baseProps: {},
 
-  props: ["baseData", "preLoadData", "searchFunc", "showTypeList", "searchTypeList"],
-  components: { cardBg },
+  props: [
+    "baseData",
+    "preLoadData",
+    "searchFunc",
+    "showTypeList",
+    "searchTypeList",
+    "btnList",
+  ],
+  components: { cardBg, inputForm },
   data() {
     return {};
   },
   async mounted() {
     this.$emit("ready");
   },
-  methods: {},
+  methods: {
+    queryChange() {},
+
+    btnClick() {},
+  },
 });
 </script>
 
