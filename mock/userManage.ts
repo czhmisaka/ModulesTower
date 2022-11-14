@@ -1,28 +1,11 @@
 /*
  * @Date: 2022-11-09 17:19:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-11 18:23:24
+ * @LastEditTime: 2022-11-14 09:54:11
  * @FilePath: /configforpagedemo/mock/userManage.ts
  */
 // 模拟后端动态生成路由
 import { MockMethod } from "vite-plugin-mock";
-export interface unitCellTemplate {
-  id: string,
-  createUserId: string,
-  createTime: string,
-  updateUserId: string,
-  updateTime: string,
-  orderNumber: string,
-  top: string,
-  deleted: string,
-  name: string,
-  description: string,
-  parentId: string,
-  parentIds: string,
-  parentNames: string,
-  regionId: string,
-  zzdCode: string,
-}
 
 export enum fakeDataType {
   string = "string",
@@ -88,6 +71,9 @@ export const unitlistMaker = (numbers) => {
 }
 
 
+export const userListMaker = (number) => {
+
+}
 
 
 export default [
@@ -103,34 +89,18 @@ export default [
     }
   },
   {
-    url: "/web/usc/unit/list",
+    url: "/web/usc/user/list",
     method: "post",
     response: () => {
       return {
         code: 200,
         type: "success",
-        data: unitlistMaker(40)
+        data: userListMaker(40)
       };
-      
+
     }
   }
 ] as MockMethod[];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

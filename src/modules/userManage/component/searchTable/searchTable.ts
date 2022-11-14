@@ -2,7 +2,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-11 17:12:54
+ * @LastEditTime: 2022-11-14 12:33:27
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -28,11 +28,27 @@ export class SearchCellStorage {
             label: `-${label}-`,
             prop: `no_label_${Math.random()}`
         }
-        return { ...back, ...options }
+        if (options)
+            return { ...back, ...options }
+        else return {
+            input: { type: formInputType.input },
+            ...back
+        }
     }
 }
 
-import { formInputType } from './inputCell/input'
+
+export enum formInputType {
+    select = "select",
+    selects = "selects",
+    inputList = "inputList",
+    input = "input",
+    areaCascader = "areaCascader",
+    datePicker = "datePicker",
+    radioGroup = "radioGroup",
+    radio = "radio"
+}
+
 
 // 主要是懒得重复写了
 export interface stringAnyObj {
@@ -47,8 +63,9 @@ export interface stringAnyObj {
 export interface tableCellOptions {
     input?: {
         type: formInputType,
-        inputOptions: stringAnyObj,
-        style: stringAnyObj
+        inputOptions?: stringAnyObj,
+        style?: stringAnyObj,
+        [key: string]: any
     },
     table: {
         showFunc: (data: any, key: string) => any
@@ -87,6 +104,8 @@ export const DataCell = (): tableCellOptions => {
     return tableCellOption
 }
 
+// export const searchCell = 
+
 
 /**
  * @name: tableCellTemplateMaker
@@ -110,3 +129,31 @@ export const tableCellTemplateMaker = (label: string, key: string, options: tabl
     }
 }
 
+
+/**
+ * @name: propertiesMaker
+ * @description: 使用tableCellTemplate 转换为 json schema 的properties 对象
+ * @authors: CZH
+ * @Date: 2022-11-14 10:39:07
+ * @param {tableCellTemplate[]} cellList
+ * @param {stringAnyObj} queryItemConfig
+ */
+export const propertiesMaker = (cellList: tableCellTemplate[], queryItemConfig: stringAnyObj[] = []) => {
+    let properties = {} as stringAnyObj;
+    cellList.map(cell => {
+        const { input } = cell
+        if (input)
+            switch (input.type) {
+                case formInputType.input:
+                    properties[cell.key] = {
+                        "title": cell.label,
+                        "type": "string",
+                        "ui:options": {
+                            "placeholder": "请输入"
+                        }
+                    }
+                    break;
+            }
+    })
+    return properties;
+};

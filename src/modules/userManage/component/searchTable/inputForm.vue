@@ -5,35 +5,103 @@
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputCell.vue
 -->
 <template>
-  <div class="formBox">FormProvider</div>
+  <div class="formBox">
+    <VueForm
+      v-model="formData"
+      :style="{
+        textAlign: 'left',
+      }"
+      :schema="schema"
+      :ui-schema="uiSchema"
+      :formProps="formProps"
+    >
+      <div slot-scope="{ formData }" :style="{ textAlign: 'right' }">
+        <el-button>重置</el-button>
+        <el-button type="primary" @click="handleSubmit(formData)">搜索</el-button>
+      </div>
+    </VueForm>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, h } from "vue";
-import { FormProvider, createSchemaField } from "@formily/vue";
-import { ElInput } from "element-plus";
-const { SchemaField } = createSchemaField({
-  components: {
-    ElInput,
-  },
-});
+import VueForm from "@lljj/vue3-form-element";
+import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
+
 export default defineComponent({
   name: "表单组件",
-  components: {},
   props: ["query", "queryItemTemplate", "queryItemConfig", "btnList"],
+  watch: {
+    query: {
+      handler(val) {
+        if (val && Object.keys(val).length > 0)
+          val.map((x: string) => {
+            if (this.formData[x] != val[x]) {
+              this.formData[x] = val[x];
+            }
+          });
+      },
+      deep: true,
+      immediate: true,
+    },
+    queryItemTemplate: {
+      handler(val) {
+        this.initForm(val);
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
+
+  components: { VueForm },
   data() {
     return {
-      inputQuery: [],
+      formData: {},
+      uiSchema: {},
+      formFooter: {
+        show: false,
+      },
+      formProps: {
+        layoutColumn: 3,
+        inline: false,
+        inlineFooter: false,
+        labelSuffix: "：",
+        labelPosition: "left",
+        isMiniDes: false,
+        defaultSelectFirstOption: true,
+      },
+      schema: {
+        title: "搜索",
+        type: "object",
+        properties: {},
+      },
     };
   },
 
+  async mounted() {
+    await this.initForm(this.queryItemTemplate);
+  },
   methods: {
-    // 上报数据修改事件
-    onChange() {
-      this.$emit("onChange", this.inputQuery);
+    /**
+     * @name: 初始化搜索用表单和对象
+     * @description: initForm
+     * @authors: CZH
+     * @Date: 2022-11-14 10:17:28
+     */
+    async initForm(queryItemTemplate: tableCellTemplate[] = this.queryItemTemplate) {
+      let properties = {} as stringAnyObj;
+      properties = propertiesMaker(queryItemTemplate);
+      this.schema.properties = properties;
     },
 
-    // 处理当前数据处理事件
+    // 上报数据修改事件
+    onChange() {
+      this.$emit("inputChange", this.inputQuery);
+    },
+
+    handleSubmit(formRefFn: any) {
+      console.log(formRefFn);
+    },
   },
 });
 </script>

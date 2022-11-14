@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-11 17:48:42
+ * @LastEditTime: 2022-11-14 12:18:21
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -29,7 +29,7 @@ function buildDataToTree(data, cell, id = 'id', pid = 'parentId') {
     return cell;
 }
 
-const MenuTableCellStorage = new SearchCellStorage([
+const depTableCellStorage = new SearchCellStorage([
     tableCellTemplateMaker('ID', 'id'),
     tableCellTemplateMaker('创建时间', 'createTime', DataCell()),
     tableCellTemplateMaker('排序', 'orderNumber'),
@@ -37,6 +37,14 @@ const MenuTableCellStorage = new SearchCellStorage([
     tableCellTemplateMaker('部门名称', 'name'),
     tableCellTemplateMaker('上级部门', 'parentNames')
 ])
+
+const searchTemplate = [
+    depTableCellStorage.getByLabel("ID"),
+    depTableCellStorage.getByLabel("创建时间"),
+    depTableCellStorage.getByLabel("更新时间"),
+    depTableCellStorage.getByLabel("部门名称"),
+    depTableCellStorage.getByLabel("上级部门"),
+]
 
 
 
@@ -71,6 +79,15 @@ export const mainDesktop = [
         name: 'userManage_searchTable',
         type: cardComponentType.componentList
     }, {
+        props: {
+            searchItemTemplate: searchTemplate,
+            searchFunc: async (context: any) => {
+                const { query } = context
+                let res = await post('/web/usc/user/list', { ...query });
+                console.log(res)
+                return res.data
+            }
+        },
         isSettingTool: false
     }).setPosition(3, 0).setSize(9, 8),
     gridCellMaker('editable', '编辑', {}, {

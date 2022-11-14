@@ -5,8 +5,17 @@
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable.vue
 -->
 <template>
-  <cardBg>
-    <inputForm @change="queryChange" @btnClick="btnClick" />
+  <cardBg
+    :cusStyle="{
+      padding: '12px',
+    }"
+  >
+    <inputForm
+      v-model="query"
+      @btnClick="search"
+      :btnList="btnList"
+      :queryItemTemplate="searchItemTemplate"
+    />
     <infoTable />
   </cardBg>
 </template>
@@ -22,6 +31,7 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { changeCardSize } from "@/components/basicComponents/grid/module/cardApi/index";
 import inputForm from "./inputForm.vue";
+import infoTable from "./infoTable.vue";
 
 export default defineComponent({
   componentInfo: {
@@ -42,11 +52,11 @@ export default defineComponent({
       label: "搜索函数",
       type: inputType.functionEditor,
     },
-    showTypeList: {
+    showItemTemplate: {
       label: "展示单元模板列表",
       type: inputType.array,
     },
-    searchTypeList: {
+    searchItemTemplate: {
       label: "搜索单元模板列表",
       type: inputType.array,
     },
@@ -61,13 +71,15 @@ export default defineComponent({
     "baseData",
     "preLoadData",
     "searchFunc",
-    "showTypeList",
-    "searchTypeList",
+    "showItemTemplate",
+    "searchItemTemplate",
     "btnList",
   ],
-  components: { cardBg, inputForm },
+  components: { cardBg, inputForm, infoTable },
   data() {
-    return {};
+    return {
+      query: {},
+    };
   },
   async mounted() {
     this.$emit("ready");
@@ -82,7 +94,12 @@ export default defineComponent({
 
     queryChange() {},
 
-    btnClick() {},
+    async search(query: { [key: string]: any }) {
+      if (this.searchFunc) {
+        let result = await this.searchFunc("");
+        console.log(result);
+      }
+    },
   },
 });
 </script>
