@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 14:53:49
+ * @LastEditTime: 2022-11-14 18:24:00
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';
@@ -52,15 +52,6 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
             small: gridSizeMaker(1, 1),
         }
     }),
-    // 'cardCell': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/cell/card/cardCell.vue')), {}, {}, {
-    //     label: 'cardCell',
-    //     labelNameCN: '卡片',
-    //     key: 'cardCell',
-    //     description: '卡片背景',
-    //     gridInfo: {
-    //         small: gridSizeMaker(1, 1),
-    //     }
-    // }),
     'setting_editable': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/grid/module/baseToolComponents/editable.vue')), {}, {}, {
         label: 'EditSwitch',
         labelNameCN: '编辑开关',

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 21:40:42
+ * @LastEditTime: 2022-11-14 18:42:56
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -12,6 +12,27 @@
       @click="close(true)"
     >
       <div class="formModalBox" @click.stop="fuckNothing">
+        <el-card header="组件详情" class="card">
+          <el-form ref="form" v-on:submit.prevent>
+            <el-form-item v-if="cardComponentDetail.name">
+              <el-descriptions
+                class="card"
+                v-if="baseComponentInfo"
+                :title="baseComponentInfo.labelNameCN || baseComponentInfo.labelNameCn"
+                direction="vertical"
+                :column="4"
+                border
+              >
+                <el-descriptions-item
+                  v-for="(item, index) in Object.keys(baseComponentInfo)"
+                  :label="item"
+                >
+                  {{ baseComponentInfo[item] }}
+                </el-descriptions-item>
+              </el-descriptions>
+            </el-form-item>
+          </el-form>
+        </el-card>
         <el-card header="组件模式" class="card">
           <el-form ref="form" v-on:submit.prevent>
             <el-form-item label="模式">
@@ -39,7 +60,7 @@
               >
                 <el-option
                   v-for="(item, index) in Object.keys(componentList)"
-                  :value="index"
+                  :value="item"
                   :key="componentList[item].name + '_' + index"
                 >
                   {{
@@ -144,6 +165,7 @@ import { defineComponent } from "vue";
 import Codemirror from "codemirror-editor-vue3";
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/theme/dracula.css";
+import { componentInfo } from "../dataTemplate";
 
 export default defineComponent({
   name: "cardEditModal",
@@ -158,6 +180,12 @@ export default defineComponent({
         ...componentLists,
         ...this.componentLists,
       };
+    },
+    baseComponentInfo() {
+      console.log(this.cardComponentDetail.name);
+      if (Object.keys(this.componentList).indexOf(this.cardComponentDetail.name) > -1)
+        return this.componentList[this.cardComponentDetail.name]["compontentInfo"];
+      else return {};
     },
   },
   data() {

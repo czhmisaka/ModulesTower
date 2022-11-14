@@ -2,7 +2,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-14 12:33:27
+ * @LastEditTime: 2022-11-14 17:09:06
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -45,6 +45,9 @@ export enum formInputType {
     input = "input",
     areaCascader = "areaCascader",
     datePicker = "datePicker",
+    timePicker = 'timePicker',
+    datePickerRanger = 'datePickerRanger',
+    timePickerRanger = 'timePickerRanger',
     radioGroup = "radioGroup",
     radio = "radio"
 }
@@ -151,6 +154,13 @@ export const propertiesMaker = (cellList: tableCellTemplate[], queryItemConfig: 
                         "ui:options": {
                             "placeholder": "请输入"
                         }
+                    }
+                    break;
+                case formInputType.datePicker:
+                    properties[cell.key] = {
+                        "title":cell.label,
+                        "type": "number",
+                        "format": "date"
                     }
                     break;
             }
