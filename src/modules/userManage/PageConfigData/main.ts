@@ -1,14 +1,14 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-14 12:18:21
+ * @LastEditTime: 2022-11-14 19:14:27
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType, gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
 import { post, get } from "@/utils/api/requests";
-import { SearchCellStorage, tableCellTemplateMaker, DataCell } from '../component/searchTable/searchTable'
+import { SearchCellStorage, tableCellTemplateMaker, DataCell, searchCell, formInputType } from '../component/searchTable/searchTable';
 
 
 /**
@@ -40,8 +40,8 @@ const depTableCellStorage = new SearchCellStorage([
 
 const searchTemplate = [
     depTableCellStorage.getByLabel("ID"),
-    depTableCellStorage.getByLabel("创建时间"),
-    depTableCellStorage.getByLabel("更新时间"),
+    depTableCellStorage.getByLabel("创建时间", searchCell(formInputType.datePicker)),
+    depTableCellStorage.getByLabel("更新时间", searchCell(formInputType.datePicker)),
     depTableCellStorage.getByLabel("部门名称"),
     depTableCellStorage.getByLabel("上级部门"),
 ]

@@ -2,7 +2,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-14 17:09:06
+ * @LastEditTime: 2022-11-14 19:15:29
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -70,7 +70,7 @@ export interface tableCellOptions {
         style?: stringAnyObj,
         [key: string]: any
     },
-    table: {
+    table?: {
         showFunc: (data: any, key: string) => any
         type: showType,
         style?: stringAnyObj
@@ -107,7 +107,13 @@ export const DataCell = (): tableCellOptions => {
     return tableCellOption
 }
 
-// export const searchCell = 
+export const searchCell = (formInputType:formInputType):tableCellOptions =>{
+    let tableCellOption = {} as tableCellOptions
+    tableCellOption.input = {
+        type: formInputType,
+    }
+    return tableCellOption
+}
 
 
 /**
