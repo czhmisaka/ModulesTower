@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 17:31:07
+ * @LastEditTime: 2022-11-15 18:47:06
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -109,10 +109,10 @@ export const mainDesktop = [
         },
         isSettingTool: false
     }).setPosition(3, 0).setSize(9, 8),
-    // gridCellMaker('editable', '编辑', {}, {
-    //     name: 'setting_editable',
-    //     type: cardComponentType.componentList
-    // }, {
-    //     isSettingTool: true
-    // }).setPosition(3, 4).setSize(1, 1),
+    gridCellMaker('editable', '编辑', {}, {
+        name: 'setting_editable',
+        type: cardComponentType.componentList
+    }, {
+        isSettingTool: true
+    }).setPosition(0, 7).setSize(1, 1),
 ] as gridCellTemplate[]

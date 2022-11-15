@@ -1,18 +1,31 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 17:35:04
+ * @LastEditTime: 2022-11-15 18:33:22
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
   <cardBg
+    ref="mainBox"
     :cusStyle="{
       padding: '12px',
     }"
   >
-    <inputForm v-model="query" @search="search" :queryItemTemplate="searchItemTemplate" />
+    <inputForm
+      ref="inputBox"
+      v-model="query"
+      @search="search"
+      :queryItemTemplate="searchItemTemplate"
+    />
     <el-divider />
-    <infoTable :template="showItemTemplate" :data-list="PageData" :loading="isLoading" />
+    <infoTable
+      :template="showItemTemplate"
+      :data-list="PageData"
+      :loading="isLoading"
+      :style="{
+        height: TableHeight + 'px',
+      }"
+    />
   </cardBg>
 </template>
 
@@ -38,6 +51,7 @@ export default defineComponent({
       middle: gridSizeMaker(9, 8),
     },
   } as componentInfo,
+
   propsDetail: {
     preLoadData: {
       label: "预加载数据列表",
@@ -64,10 +78,30 @@ export default defineComponent({
       type: inputType.array,
     },
   } as propInfo,
+
   baseProps: {},
 
+  watch: {
+    "sizeUnit.blockSize": {
+      handler(val) {
+        if (this.$refs["mainBox"] && this.$refs["inputBox"]) {
+          console.log(
+            this.$refs["mainBox"].$el.offsetHeight,
+            this.$refs["inputBox"].$el.offsetHeight
+          );
+          this.TableHeight =
+            this.$refs["mainBox"].$el.offsetHeight -
+            this.$refs["inputBox"].$el.offsetHeight -
+            72;
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   props: [
     "baseData",
+    "sizeUnit",
     "preLoadData",
     "searchFunc",
     "showItemTemplate",
@@ -81,6 +115,9 @@ export default defineComponent({
       query: {},
       PageData: {},
       isLoading: false,
+
+      // 计算列表可用高度
+      TableHeight: 500,
     };
   },
   async mounted() {

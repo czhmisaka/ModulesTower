@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 18:16:04
+ * @LastEditTime: 2022-11-15 18:42:51
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -14,7 +14,6 @@
     class="baseGrid"
   >
     <grid-layout
-      class="bases"
       :layout="gridListToLayout()"
       :col-num="gridColNum"
       :row-height="gridRowNumAndUnit().blockSize"
@@ -365,16 +364,14 @@ export default defineComponent({
       ) {
         if (gridCell.options.showInGridDesktop) {
           style = {
-            ...style,
             maxWidth: "10000px",
             zIndex: "100",
             opacity: "1",
           };
         } else {
           style = {
-            ...style,
             maxWidth: "100%",
-            opacity: "0.5",
+            opacity: "0",
             overflow: "hidden",
             zIndex: "1",
           };
