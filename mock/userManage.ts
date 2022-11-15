@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-09 17:19:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-14 09:54:11
+ * @LastEditTime: 2022-11-15 09:14:55
  * @FilePath: /configforpagedemo/mock/userManage.ts
  */
 // 模拟后端动态生成路由
@@ -10,7 +10,11 @@ import { MockMethod } from "vite-plugin-mock";
 export enum fakeDataType {
   string = "string",
   number = "number",
-  dataString = "dataString"
+  dataString = "dataString",
+  longText = "longText",
+  boolean = 'boolean',
+  mail = 'mail',
+  mobile = 'mobile'
 }
 
 /**
@@ -35,6 +39,23 @@ export const fakerDataMaker = (obj: { [key: string]: fakeDataType }) => {
       case fakeDataType.string:
         backData[x] = randomString(Math.floor(Math.random() * 20 + 1))
         break;
+
+      case fakeDataType.longText:
+        backData[x] = randomString(400)
+        break;
+
+      case fakeDataType.boolean:
+        backData[x] = Math.random() > 0.5
+        break;
+
+      case fakeDataType.mail:
+        backData[x] = `${randomEnglishString(Math.random() * 30)}@${randomEnglishString(Math.random() * 10)}.fake`
+        break;
+
+      case fakeDataType.mobile:
+        backData[x] = randomNumber(13)
+        break;
+
 
     }
   }
@@ -72,7 +93,21 @@ export const unitlistMaker = (numbers) => {
 
 
 export const userListMaker = (number) => {
-
+  let template = {
+    name: fakeDataType.string,
+    gender: fakeDataType.number,
+    icon: fakeDataType.longText,
+    description: fakeDataType.longText,
+    adminFlag: fakeDataType.boolean,
+    mobile: fakeDataType.mobile,
+    idCard:fakeDataType.mobile,
+    zzdCode:fakeDataType.number
+  }
+  let unitList = []
+  for (let i = 0; i < number; i++) {
+    unitList.push(fakerDataMaker(template))
+  }
+  return unitList;
 }
 
 
@@ -138,4 +173,23 @@ function randomString(length) {
   for (var i = length; i > 0; --i)
     result += str[Math.floor(Math.random() * str.length)];
   return result;
+}
+
+function randomEnglishString(length) {
+  let str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    result += str[Math.floor(Math.random() * str.length)]
+  }
+  return result
+}
+
+
+function randomNumber(length) {
+  let str = '1234567890'
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    result += str[Math.floor(Math.random() * str.length)]
+  }
+  return result
 }

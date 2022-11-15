@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 19:27:30
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable.vue
+ * @LastEditTime: 2022-11-15 17:35:04
+ * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
   <cardBg
@@ -10,13 +10,9 @@
       padding: '12px',
     }"
   >
-    <inputForm
-      v-model="query"
-      @btnClick="search"
-      :btnList="btnList"
-      :queryItemTemplate="searchItemTemplate"
-    />
-    <infoTable />
+    <inputForm v-model="query" @search="search" :queryItemTemplate="searchItemTemplate" />
+    <el-divider />
+    <infoTable :template="showItemTemplate" :data-list="PageData" :loading="isLoading" />
   </cardBg>
 </template>
 
@@ -29,7 +25,6 @@ import {
   propInfo,
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
-import { changeCardSize } from "@/components/basicComponents/grid/module/cardApi/index";
 import inputForm from "./inputForm.vue";
 import infoTable from "./infoTable.vue";
 
@@ -60,6 +55,10 @@ export default defineComponent({
       label: "搜索单元模板列表",
       type: inputType.array,
     },
+    searchKeyWithBaseData: {
+      label: "需要读取的baseDataKey值",
+      type: inputType.array,
+    },
     btnList: {
       label: "按钮行为列表",
       type: inputType.array,
@@ -73,16 +72,20 @@ export default defineComponent({
     "searchFunc",
     "showItemTemplate",
     "searchItemTemplate",
+    "searchKeyWithBaseData",
     "btnList",
   ],
   components: { cardBg, inputForm, infoTable },
   data() {
     return {
       query: {},
+      PageData: {},
+      isLoading: false,
     };
   },
   async mounted() {
     this.$emit("ready");
+    await this.search();
   },
   methods: {
     async preDataLoad() {
@@ -96,8 +99,11 @@ export default defineComponent({
 
     async search(query: { [key: string]: any }) {
       if (this.searchFunc) {
-        let result = await this.searchFunc("");
-        console.log(result);
+        this.isLoading = true;
+        let result = await this.searchFunc(query);
+        console.log(result, "asd");
+        this.PageData = { data: result };
+        this.isLoading = false;
       }
     },
   },

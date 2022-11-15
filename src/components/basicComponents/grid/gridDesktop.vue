@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-27 14:38:59
+ * @LastEditTime: 2022-11-15 18:16:04
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -368,11 +368,13 @@ export default defineComponent({
             ...style,
             maxWidth: "10000px",
             zIndex: "100",
+            opacity: "1",
           };
         } else {
           style = {
             ...style,
             maxWidth: "100%",
+            opacity: "0.5",
             overflow: "hidden",
             zIndex: "1",
           };
@@ -432,12 +434,9 @@ export default defineComponent({
   opacity: 0;
 }
 .grid-item {
-  transition: max-width 0.4s;
+  transition: opacity 0.4;
 }
 .bgGridCell:hover {
   animation: hoverFadeInOut 1.2s infinite;
-}
-.gridCard {
-  transition: all 0.3s;
 }
 </style>

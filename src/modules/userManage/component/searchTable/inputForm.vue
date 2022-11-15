@@ -1,11 +1,17 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-11 09:46:31
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputCell.vue
+ * @LastEditTime: 2022-11-15 17:25:11
+ * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
-  <div class="formBox">
+  <cardBg
+    class="formBox"
+    :cus-style="{
+      padding: '12px',
+      height: 'auto',
+    }"
+  >
     <VueForm
       v-model="formData"
       :style="{
@@ -16,11 +22,11 @@
       :formProps="formProps"
     >
       <div slot-scope="{ formData }" :style="{ textAlign: 'right' }">
-        <el-button>重置</el-button>
+        <el-button @click="refreshData">重置</el-button>
         <el-button type="primary" @click="handleSubmit(formData)">搜索</el-button>
       </div>
     </VueForm>
-  </div>
+  </cardBg>
 </template>
 
 <script lang="ts">
@@ -28,9 +34,10 @@ import { defineComponent, h } from "vue";
 import VueForm from "@lljj/vue3-form-element";
 import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
 
+import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 export default defineComponent({
   name: "表单组件",
-  props: ["query", "queryItemTemplate", "queryItemConfig", "btnList"],
+  props: ["query", "queryItemTemplate", "queryItemConfig"],
   watch: {
     query: {
       handler(val) {
@@ -53,7 +60,7 @@ export default defineComponent({
     },
   },
 
-  components: { VueForm },
+  components: { VueForm, cardBg },
   data() {
     return {
       formData: {},
@@ -99,9 +106,12 @@ export default defineComponent({
       this.$emit("inputChange", this.inputQuery);
     },
 
-    handleSubmit(formRefFn: any) {
-      console.log(formRefFn);
+    // 回报搜索事件
+    handleSubmit(formData: stringAnyObj) {
+      this.$emit("search", formData);
     },
+
+    refreshData() {},
   },
 });
 </script>

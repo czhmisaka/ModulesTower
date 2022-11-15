@@ -1,14 +1,14 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-14 19:14:27
+ * @LastEditTime: 2022-11-15 17:31:07
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType, gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
 import { post, get } from "@/utils/api/requests";
-import { SearchCellStorage, tableCellTemplateMaker, DataCell, searchCell, formInputType } from '../component/searchTable/searchTable';
+import { SearchCellStorage, tableCellTemplateMaker, DataCell, searchCell, formInputType, stringAnyObj } from '../component/searchTable/searchTable';
 
 
 /**
@@ -29,6 +29,7 @@ function buildDataToTree(data, cell, id = 'id', pid = 'parentId') {
     return cell;
 }
 
+// 部门数据
 const depTableCellStorage = new SearchCellStorage([
     tableCellTemplateMaker('ID', 'id'),
     tableCellTemplateMaker('创建时间', 'createTime', DataCell()),
@@ -46,7 +47,26 @@ const searchTemplate = [
     depTableCellStorage.getByLabel("上级部门"),
 ]
 
+const userTableCellStorage = new SearchCellStorage([
+    tableCellTemplateMaker('姓名', 'name'),
+    tableCellTemplateMaker('性别', 'gender'),
+    tableCellTemplateMaker('图标', 'icon'),
+    tableCellTemplateMaker('简介', 'description'),
+    tableCellTemplateMaker('管理员标识', 'adminFlag'),
+    tableCellTemplateMaker('手机号', 'mobile'),
+    tableCellTemplateMaker('身份证', 'idCard'),
+    tableCellTemplateMaker('浙政钉code', 'zzdCode'),
+])
 
+const userTableSearchTemplate = [
+    userTableCellStorage.getByLabel('姓名'),
+    userTableCellStorage.getByLabel('性别', searchCell(formInputType.radio)),
+    userTableCellStorage.getByLabel('图标', searchCell(formInputType.upload)),
+    userTableCellStorage.getByLabel('管理员标识', searchCell(formInputType.radio)),
+    userTableCellStorage.getByLabel('手机号', searchCell(formInputType.mobile)),
+    userTableCellStorage.getByLabel('身份证', searchCell(formInputType.idCard)),
+    userTableCellStorage.getByLabel('浙政钉code'),
+]
 
 
 
@@ -80,20 +100,19 @@ export const mainDesktop = [
         type: cardComponentType.componentList
     }, {
         props: {
-            searchItemTemplate: searchTemplate,
-            searchFunc: async (context: any) => {
-                const { query } = context
+            searchItemTemplate: userTableSearchTemplate,
+            showItemTemplate: userTableCellStorage.getAll(),
+            searchFunc: async (query: stringAnyObj) => {
                 let res = await post('/web/usc/user/list', { ...query });
-                console.log(res)
                 return res.data
             }
         },
         isSettingTool: false
     }).setPosition(3, 0).setSize(9, 8),
-    gridCellMaker('editable', '编辑', {}, {
-        name: 'setting_editable',
-        type: cardComponentType.componentList
-    }, {
-        isSettingTool: true
-    }).setPosition(3, 4).setSize(1, 1),
+    // gridCellMaker('editable', '编辑', {}, {
+    //     name: 'setting_editable',
+    //     type: cardComponentType.componentList
+    // }, {
+    //     isSettingTool: true
+    // }).setPosition(3, 4).setSize(1, 1),
 ] as gridCellTemplate[]

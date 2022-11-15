@@ -2,7 +2,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-14 19:15:29
+ * @LastEditTime: 2022-11-15 17:11:48
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -35,22 +35,13 @@ export class SearchCellStorage {
             ...back
         }
     }
+
+    getAll() {
+        return this.storage;
+    }
 }
 
 
-export enum formInputType {
-    select = "select",
-    selects = "selects",
-    inputList = "inputList",
-    input = "input",
-    areaCascader = "areaCascader",
-    datePicker = "datePicker",
-    timePicker = 'timePicker',
-    datePickerRanger = 'datePickerRanger',
-    timePickerRanger = 'timePickerRanger',
-    radioGroup = "radioGroup",
-    radio = "radio"
-}
 
 
 // 主要是懒得重复写了
@@ -74,6 +65,7 @@ export interface tableCellOptions {
         showFunc: (data: any, key: string) => any
         type: showType,
         style?: stringAnyObj
+        [key: string]: any
     }
     [key: string]: any
 }
@@ -107,7 +99,19 @@ export const DataCell = (): tableCellOptions => {
     return tableCellOption
 }
 
-export const searchCell = (formInputType:formInputType):tableCellOptions =>{
+export const showCell = (formInputType: formInputType): tableCellOptions => {
+    let tableCellOption = {} as tableCellOptions
+    let showFunc = null
+    tableCellOption.table = {
+        type: showType.func,
+        showFunc: (data: any, key: string) => {
+
+        }
+    }
+    return tableCellOption
+}
+
+export const searchCell = (formInputType: formInputType): tableCellOptions => {
     let tableCellOption = {} as tableCellOptions
     tableCellOption.input = {
         type: formInputType,
@@ -128,7 +132,10 @@ export const searchCell = (formInputType:formInputType):tableCellOptions =>{
 export const tableCellTemplateMaker = (label: string, key: string, options: tableCellOptions = {
     table: {
         showFunc: (data, key) => data[key],
-        type: showType.func
+        type: showType.func,
+        style:{
+            maxHeight:'120px'
+        },
     }
 }): tableCellTemplate => {
     return {
@@ -139,6 +146,31 @@ export const tableCellTemplateMaker = (label: string, key: string, options: tabl
 }
 
 
+
+
+/**
+ * @name: 表单输入类型
+ * @description: formInputType
+ * @authors: CZH
+ * @Date: 2022-11-15 14:15:58
+ */
+export enum formInputType {
+    select = "select",
+    selects = "selects",
+    inputList = "inputList",
+    input = "input",
+    areaCascader = "areaCascader",
+    datePicker = "datePicker",
+    timePicker = 'timePicker',
+    datePickerRanger = 'datePickerRanger',
+    timePickerRanger = 'timePickerRanger',
+    radioGroup = "radioGroup",
+    radio = "radio",
+    upload = 'upload',
+    mobile = 'mobile',
+    idCard = 'idCard'
+}
+
 /**
  * @name: propertiesMaker
  * @description: 使用tableCellTemplate 转换为 json schema 的properties 对象
@@ -147,6 +179,7 @@ export const tableCellTemplateMaker = (label: string, key: string, options: tabl
  * @param {tableCellTemplate[]} cellList
  * @param {stringAnyObj} queryItemConfig
  */
+
 export const propertiesMaker = (cellList: tableCellTemplate[], queryItemConfig: stringAnyObj[] = []) => {
     let properties = {} as stringAnyObj;
     cellList.map(cell => {
@@ -164,10 +197,13 @@ export const propertiesMaker = (cellList: tableCellTemplate[], queryItemConfig: 
                     break;
                 case formInputType.datePicker:
                     properties[cell.key] = {
-                        "title":cell.label,
+                        "title": cell.label,
                         "type": "number",
                         "format": "date"
                     }
+                    break;
+                case formInputType.radio:
+                    properties
                     break;
             }
     })
