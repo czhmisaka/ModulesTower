@@ -2,7 +2,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 17:11:48
+ * @LastEditTime: 2022-11-16 10:46:22
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -133,8 +133,8 @@ export const tableCellTemplateMaker = (label: string, key: string, options: tabl
     table: {
         showFunc: (data, key) => data[key],
         type: showType.func,
-        style:{
-            maxHeight:'120px'
+        style: {
+            maxHeight: '120px'
         },
     }
 }): tableCellTemplate => {
@@ -191,7 +191,7 @@ export const propertiesMaker = (cellList: tableCellTemplate[], queryItemConfig: 
                         "title": cell.label,
                         "type": "string",
                         "ui:options": {
-                            "placeholder": "请输入"
+                            "placeholder": "请输入" + cell.label
                         }
                     }
                     break;
@@ -203,7 +203,13 @@ export const propertiesMaker = (cellList: tableCellTemplate[], queryItemConfig: 
                     }
                     break;
                 case formInputType.radio:
-                    properties
+                    properties[cell.key] = {
+                        "title": cell.label,
+                        "type": "string",
+                        "ui:options": { 
+                            "placeholder": "请输入" + cell.label
+                        }
+                    }
                     break;
             }
     })

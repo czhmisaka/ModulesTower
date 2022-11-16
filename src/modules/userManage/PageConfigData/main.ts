@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 18:47:06
+ * @LastEditTime: 2022-11-16 10:46:32
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -20,7 +20,7 @@ import { SearchCellStorage, tableCellTemplateMaker, DataCell, searchCell, formIn
  * @param {*} cell
  * @param {*} id
  * @param {*} pid
- */
+ */ 
 function buildDataToTree(data, cell, id = 'id', pid = 'parentId') {
     const result = [];
     data.map(x => x[pid] == cell[id] && cell[id] != x[id] && result.push(x))
