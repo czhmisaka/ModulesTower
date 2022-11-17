@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-14 18:42:56
+ * @LastEditTime: 2022-11-17 09:23:06
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -352,7 +352,7 @@ export default defineComponent({
 .baseModal {
   width: 100%;
   height: 100%;
-  position: absolute;
+  position: fixed;
   z-index: -1;
   opacity: 0;
   top: 0px;
@@ -369,7 +369,7 @@ export default defineComponent({
 
 .open {
   opacity: 1;
-  z-index: 1000;
+  z-index: 100000;
   .formModalBox {
     transform: scale(1);
   }
