@@ -47,7 +47,6 @@ export default defineComponent({
             ...this.route,
             params: {
               PageName: Object.keys(PageConfig)[0],
-              s,
             },
           });
         }
@@ -71,6 +70,7 @@ export default defineComponent({
   },
   async mounted() {
     this.componentsList = this.$modulesList().getAllComponents();
+    console.log(this.componentsList, "asdasd");
     this.init();
     let res = await GetAllUser();
     console.log(res);
