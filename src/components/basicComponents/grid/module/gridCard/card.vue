@@ -9,7 +9,6 @@ import cardBox from "./module/cardBox.vue";
 import { getIcon } from "@/utils";
 import { defineComponent, h, watch, toRefs, ref, getCurrentInstance } from "vue";
 import {
-  
   componentGetter,
   gridCellTemplate,
   CardComponentTemplate,
@@ -93,7 +92,7 @@ export default defineComponent({
                 " 0.3s ease-in-out infinite"
               : "none",
           },
-          class:props.detail.options.closeCardAnimate?'':'hoverTime'
+          class: props.detail.options.closeCardAnimate ? "" : "hoverTime",
         },
         [
           isShow()
@@ -231,7 +230,6 @@ export default defineComponent({
   }
 }
 
-.hoverTime:{
-
+.hovertime: {
 }
 </style>
