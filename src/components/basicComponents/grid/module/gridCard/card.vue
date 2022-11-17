@@ -9,6 +9,7 @@ import cardBox from "./module/cardBox.vue";
 import { getIcon } from "@/utils";
 import { defineComponent, h, watch, toRefs, ref, getCurrentInstance } from "vue";
 import {
+  
   componentGetter,
   gridCellTemplate,
   CardComponentTemplate,
@@ -83,7 +84,6 @@ export default defineComponent({
           style: {
             width: "100%",
             height: "100%",
-            // overflow: "hidden",
             userSelect: "none",
             transition: isShow() ? "opacity 0.4s,margin 1s" : "opacity 0.4,margin 0.6s",
             margin: isShow() ? "0px" : "0px 0px 0px -30px",
@@ -93,6 +93,7 @@ export default defineComponent({
                 " 0.3s ease-in-out infinite"
               : "none",
           },
+          class:props.detail.options.closeCardAnimate?'':'hoverTime'
         },
         [
           isShow()
@@ -228,5 +229,9 @@ export default defineComponent({
   100% {
     transform: rotate(0deg);
   }
+}
+
+.hoverTime:{
+
 }
 </style>

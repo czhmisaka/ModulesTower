@@ -53,10 +53,10 @@ export function getPluginsList(
       mockPath: "mock",
       localEnabled: command === "serve",
       prodEnabled: command !== "serve" && prodMock,
-      injectCode: `
+      injectCode: command === "serve"?`
           import { setupProdMockServer } from './mockProdServer';
           setupProdMockServer();
-        `,
+        `:'',
       logger: false
     }),
     // 是否为打包后的文件提供传统浏览器兼容性支持
