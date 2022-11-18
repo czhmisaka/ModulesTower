@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-17 18:13:50
+ * @LastEditTime: 2022-11-18 10:08:19
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -49,6 +49,8 @@ const searchTemplate = [
 
 const userTableCellStorage = new SearchCellStorage([
     tableCellTemplateMaker('姓名', 'name'),
+    tableCellTemplateMaker('姓名1', 'name1'),
+    tableCellTemplateMaker('姓名2', 'name2'),
     tableCellTemplateMaker('性别', 'gender'),
     tableCellTemplateMaker('图标', 'icon'),
     tableCellTemplateMaker('简介', 'description'),
@@ -60,6 +62,8 @@ const userTableCellStorage = new SearchCellStorage([
 
 const userTableSearchTemplate = [
     userTableCellStorage.getByLabel('姓名'),
+    userTableCellStorage.getByLabel('姓名1'),
+    userTableCellStorage.getByLabel('姓名2'),
     userTableCellStorage.getByLabel('性别', searchCell(formInputType.radio)),
     userTableCellStorage.getByLabel('图标', searchCell(formInputType.upload)),
     userTableCellStorage.getByLabel('管理员标识', searchCell(formInputType.radio)),

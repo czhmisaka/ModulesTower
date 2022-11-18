@@ -1,7 +1,7 @@
 '''
 Date: 2022-10-27 14:00:42
 LastEditors: CZH
-LastEditTime: 2022-10-27 23:23:59
+LastEditTime: 2022-11-18 09:35:31
 FilePath: /configforpagedemo/pythonServer/server/models/desktop.py
 '''
 """
@@ -9,7 +9,7 @@ FilePath: /configforpagedemo/pythonServer/server/models/desktop.py
 """
 
 from common.session import BaseModel, paginator
-from peewee import CharField, IntegerField
+from peewee import CharField, IntegerField, TextField
 # from playhouse.shortcuts import model_to_dict, dict_to_model
 
 
@@ -18,12 +18,7 @@ class desktop(BaseModel):
     桌面配置表
     """
     id = IntegerField()
-    name = CharField()
-    email = CharField()
-    phone = IntegerField()
-    username = CharField()
-    avatar = CharField()
-    password = CharField()
+    context = TextField()
 
     # class Meta:
     #     table_name = 'users'

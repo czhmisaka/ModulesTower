@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 18:33:22
+ * @LastEditTime: 2022-11-18 10:58:02
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -40,6 +40,8 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import inputForm from "./inputForm.vue";
 import infoTable from "./infoTable.vue";
+
+let interval = null;
 
 export default defineComponent({
   componentInfo: {
@@ -81,24 +83,7 @@ export default defineComponent({
 
   baseProps: {},
 
-  watch: {
-    "sizeUnit.blockSize": {
-      handler(val) {
-        if (this.$refs["mainBox"] && this.$refs["inputBox"]) {
-          console.log(
-            this.$refs["mainBox"].$el.offsetHeight,
-            this.$refs["inputBox"].$el.offsetHeight
-          );
-          this.TableHeight =
-            this.$refs["mainBox"].$el.offsetHeight -
-            this.$refs["inputBox"].$el.offsetHeight -
-            72;
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
-  },
+  watch: {},
   props: [
     "baseData",
     "sizeUnit",
@@ -123,6 +108,16 @@ export default defineComponent({
   async mounted() {
     this.$emit("ready");
     await this.search();
+    let that = this;
+    if (interval) clearInterval(interval);
+    interval = setInterval(() => {
+      if (this.$refs["mainBox"] && this.$refs["inputBox"]) {
+        this.TableHeight =
+          this.$refs["mainBox"].$el.offsetHeight -
+          this.$refs["inputBox"].$el.offsetHeight -
+          72;
+      }
+    });
   },
   methods: {
     async preDataLoad() {

@@ -1,7 +1,7 @@
 '''
 Date: 2022-10-23 15:32:48
 LastEditors: CZH
-LastEditTime: 2022-10-27 12:20:01
+LastEditTime: 2022-11-18 09:30:15
 FilePath: /configforpagedemo/pythonServer/server/api/v1/desktop.py
 '''
 #!/usr/bin/env python
@@ -43,3 +43,7 @@ def upload(
 ):
     print(pathName,pageConfigData)
     return resp.ok(data={'data':'success'})
+
+@router.get("/getAllModules",name="获取所有的模块包")
+def getAllodules():
+    print('获取所有模块包')

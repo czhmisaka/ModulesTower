@@ -1,11 +1,12 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 17:25:11
+ * @LastEditTime: 2022-11-18 11:00:20
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
   <cardBg
+    ref="formBox"
     class="formBox"
     :cus-style="{
       padding: '12px',
@@ -35,6 +36,7 @@ import VueForm from "@lljj/vue3-form-element";
 import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
 
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+let interval = null;
 export default defineComponent({
   name: "表单组件",
   props: ["query", "queryItemTemplate", "queryItemConfig"],
@@ -61,6 +63,7 @@ export default defineComponent({
   },
 
   components: { VueForm, cardBg },
+
   data() {
     return {
       formData: {},
@@ -70,15 +73,14 @@ export default defineComponent({
       },
       formProps: {
         layoutColumn: 3,
-        inline: false,
         inlineFooter: false,
         labelSuffix: "：",
-        labelPosition: "left",
+        labelPosition: "top",
         isMiniDes: false,
         defaultSelectFirstOption: true,
+        labelWidth: "120px",
       },
       schema: {
-        title: "搜索",
         type: "object",
         properties: {},
       },
@@ -86,8 +88,32 @@ export default defineComponent({
   },
 
   async mounted() {
+    let that = this;
+    if (interval) clearInterval(interval);
+    interval = setInterval(() => {
+      if (that.$refs["formBox"] && that.$refs["formBox"]["$el"]) {
+        let width = that.$refs["formBox"]["$el"].offsetWidth;
+        if (width / 4 > 300) {
+          that.formProps.layoutColumn = 3;
+          that.formProps.labelPosition = "left";
+        } else if (width / 4 > 250) {
+          that.formProps.layoutColumn = 3;
+          that.formProps.labelPosition = "top";
+        } else if (width / 3 > 300) {
+          that.formProps.layoutColumn = 2;
+          that.formProps.labelPosition = "left";
+        } else if (width / 3 > 200) {
+          that.formProps.layoutColumn = 2;
+          that.formProps.labelPosition = "top";
+        } else {
+          that.formProps.layoutColumn = 1;
+          that.formProps.labelPosition = "left";
+        }
+      }
+    }, 500);
     await this.initForm(this.queryItemTemplate);
   },
+
   methods: {
     /**
      * @name: 初始化搜索用表单和对象
