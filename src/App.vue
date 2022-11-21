@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 11:00:24
- * @LastEditors: CZH
- * @LastEditTime: 2022-09-21 20:33:08
- * @FilePath: /configforpagedemo/src/App.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-11-07 23:23:55
+ * @FilePath: \ConfigForDesktopPage\src\App.vue
 -->
 <template>
   <el-container class="wholePage">
@@ -55,6 +55,7 @@ export default defineComponent({
     },
   },
   mounted() {
+    console.log(this.$router.options.routes,'qwe')
     this.$refs["lineSlideExchange"].start();
     this.$refs["lineSlideExchange"].finish();
   },

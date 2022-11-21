@@ -1,8 +1,9 @@
+
 <!--
  * @Date: 2021-12-30 17:48:16
- * @LastEditors: CZH
- * @LastEditTime: 2022-10-25 18:07:39
- * @FilePath: /configforpagedemo/src/modules/main/Index.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-11-15 02:12:49
+ * @FilePath: \ConfigForDesktopPage\src\modules\main\Index.vue
 -->
 
 <template>
