@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-18 10:08:19
+ * @LastEditTime: 2022-11-21 10:06:39
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -80,7 +80,7 @@ export const mainDesktop = [
         type: cardComponentType.componentList
     }, {
         props: {
-            menuDataFunc: async (context) => {
+            treeDataFunc: async (context) => {
                 let res = await post('/web/usc/unit/list', {})
                 let data = res.data;
                 const inKeyList = data.map(c => c.id)
@@ -94,7 +94,7 @@ export const mainDesktop = [
             outputKey: 'outputKey',
             defaultProps: {
                 label: 'name',
-                children: 'children'
+                children: 'children',
             },
         },
         isSettingTool: false
@@ -109,7 +109,8 @@ export const mainDesktop = [
             searchFunc: async (query: stringAnyObj) => {
                 let res = await post('/web/usc/user/list', { ...query });
                 return res.data
-            }
+            },
+            btnList:[]
         },
         isSettingTool: false
     }).setPosition(3, 0).setSize(9, 8),

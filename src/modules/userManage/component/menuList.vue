@@ -1,13 +1,36 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 11:20:27
+ * @LastEditTime: 2022-11-18 17:32:18
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
-  <cardBg>
+  <cardBg
+    :cusStyle="{
+      padding: '12px',
+    }"
+  >
     <div class="menuBox">
-      <el-tree :data="menuData" :props="defaultProps" @node-click="nodeClick" />
+      <el-select
+        :style="{
+          width: '100%',
+        }"
+        v-model="selectedKey"
+        multiple
+        filterable
+        remote
+        reserve-keyword
+        remote-method="fillter"
+        placeholder="搜索"
+      >
+        <el-option
+          v-for="item in searchList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+      <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick" />
     </div>
   </cardBg>
 </template>
@@ -34,8 +57,14 @@ export default defineComponent({
   } as componentInfo,
 
   propsDetail: {
-    menuDataFunc: {
-      label: "菜单列表数据（async）",
+    treeDataFunc: {
+      label: "树状列表数据（一次性获取）",
+      description: "一次性获取所有数据",
+      type: inputType.functionEditor,
+    },
+    treeDataFuncByLevel: {
+      label: "树状列表数据（按照对象获取）",
+      description: "展开节点时才会加载子节点列表，用于应对大数据展示的情况，避免带宽消耗",
       type: inputType.functionEditor,
     },
     outputKey: {
@@ -44,13 +73,23 @@ export default defineComponent({
     },
     defaultProps: {
       label: "数据替换方案",
+      description: "参考文档：https://element-plus.org/zh-CN/component/tree.html#props",
       type: inputType.obj,
     },
   } as propInfo,
 
   baseProps: {
-    menuDataFunc: () => {
-      return [];
+    treeDataFunc: () => {
+      let num = 0;
+      let testData = () => {
+        return { label: "Hello World _ " + num, value: "测试数据" + num++ };
+      };
+      return [
+        {
+          ...testData(),
+          children: [testData(), testData()],
+        },
+      ];
     },
     outputKey: "menuSelectCell",
     defaultProps: {
@@ -59,12 +98,21 @@ export default defineComponent({
     },
   },
 
-  props: ["baseData", "sizeUnit", "menuDataFunc", "outputKey", "defaultProps"],
+  props: [
+    "baseData",
+    "sizeUnit",
+    "treeDataFunc",
+    "outputKey",
+    "defaultProps",
+    "treeDataFuncByLevel",
+  ],
   components: { cardBg },
   watch: {},
   data: () => {
     return {
-      menuData: [],
+      treeData: [],
+      searchList: [],
+      selectedKey: "",
     };
   },
   async mounted() {
@@ -86,12 +134,21 @@ export default defineComponent({
       setData(this, data);
     },
 
+    /**
+     * @name: init
+     * @description: 初始化
+     * @authors: CZH
+     * @Date: 2022-11-18 17:04:57
+     */
     async init() {
-      if (this.menuDataFunc) {
+      console.log(this.treeDataFunc, this.treeData, "pwd");
+      if (this.treeDataFunc) {
         let that = this;
-        that.menuData = await that.menuDataFunc(that);
+        that.treeData = await that.treeDataFunc(that);
       }
     },
+
+    async fillter() {},
   },
 });
 </script>
@@ -100,6 +157,5 @@ export default defineComponent({
 .menuBox {
   width: 100%;
   height: 100%;
-  padding: 6px;
 }
 </style>

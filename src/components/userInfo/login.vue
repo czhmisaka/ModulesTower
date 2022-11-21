@@ -65,8 +65,7 @@ function onProcessLogin() {
       if (getres.data.length == 0) {
         let res = await post("/userinfo", {
           name: userInfo.value.name,
-          avatar:
-            "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.doubanio.com%2Fview%2Frichtext%2Flarge%2Fpublic%2Fp23277515.jpg&refer=http%3A%2F%2Fimg9.doubanio.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664187020&t=448e16291cb2b08d9bff0e22476c3c3c",
+          avatar: "https://avatars.githubusercontent.com/u/22533472?v=4",
         });
         console.log(res);
       } else {

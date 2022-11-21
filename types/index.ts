@@ -103,7 +103,6 @@ export interface RouteChildrenConfigsTable {
 
 /**
  * @description 完整路由配置表
- * @see {@link https://yiming_chang.gitee.io/pure-admin-doc/pages/782b6e/#%E4%B8%80-%E9%85%8D%E7%BD%AE%E9%A1%B9}
  */
 export interface RouteConfigsTable {
   /** 路由地址 `必填` */
@@ -123,6 +122,16 @@ export interface RouteConfigsTable {
     showLink?: boolean;
     /** 菜单升序排序，值越高排的越后（只针对顶级路由）`可选` */
     rank?: number;
+    /** 模块，选配，如果存在则会载入右侧用户头像选框菜单列表中,使用ruleCheck插入权限行为判断 */
+    module?: {
+      moduleName: string;
+      id: string;
+      rank: number;
+      icon: string;
+      ruleCheck: string[];
+      [key: string]: any;
+    };
+
     [key: string]: any;
   };
   /** 子路由配置项 */
