@@ -31,6 +31,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import sideDialogForm from "@/modules/userManage/component/searchTable/sideDialogForm.vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import {
   componentInfo,
@@ -94,7 +95,7 @@ export default defineComponent({
     "searchKeyWithBaseData",
     "btnList",
   ],
-  components: { cardBg, inputForm, infoTable },
+  components: { cardBg, inputForm, infoTable, sideDialogForm },
   data() {
     return {
       query: {},
