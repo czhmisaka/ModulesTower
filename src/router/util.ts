@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 14:46:12
+ * @LastEditTime: 2022-11-21 15:33:35
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -106,7 +106,6 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
         true,
         /.\.ts|\.vue/g
     )
-    console.log('asd', requireModule.keys())
     const requireList = requireModule.keys() as string[];
     requireList.map((fileName: string) => {
         if (fileName.split('/').length == 3 && fileName.indexOf('/Index.vue') != -1) {
@@ -130,8 +129,6 @@ export const getModuleFromView = (init = false, basePath = 'desktop') => {
     requireList.map((fileName: string) => {
         const moduleName = fileName.split('./')[1].split('/')[0]
         if (fileName.indexOf('component/index.ts') > -1) {
-            // console.log(moduleName, fileName, requireModule(fileName))
-            // let componentMoudle =  requireModule(fileName)
             if(fileName){
                 console.log('asd')
             }
