@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 18:42:51
+ * @LastEditTime: 2022-11-21 16:58:20
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -95,8 +95,7 @@ import {
 } from "./module/dataTemplate";
 import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
 import componentsListModal from "@/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue";
-import GridLayout from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridLayout.vue";
-import GridItem from "@/components/basicComponents/grid/module/baseToolComponents/gridComponent/components/GridItem.vue";
+import VueGridLayout from "vue3-grid-layout";
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 
 let interval = null as any;
@@ -109,8 +108,8 @@ export default defineComponent({
   name: "gridDesktop",
   components: {
     card,
-    GridLayout,
-    GridItem,
+    GridLayout: VueGridLayout.GridLayout,
+    GridItem: VueGridLayout.GridItem,
     cardEditModal,
     componentsListModal,
   },

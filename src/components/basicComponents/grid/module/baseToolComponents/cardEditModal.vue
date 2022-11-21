@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-17 09:23:06
+ * @LastEditTime: 2022-11-21 16:56:06
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -163,8 +163,6 @@ import { defineComponent } from "vue";
 
 // 引入编辑器
 import Codemirror from "codemirror-editor-vue3";
-import "codemirror/mode/javascript/javascript.js";
-import "codemirror/theme/dracula.css";
 import { componentInfo } from "../dataTemplate";
 
 export default defineComponent({
