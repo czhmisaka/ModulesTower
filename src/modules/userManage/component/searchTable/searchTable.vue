@@ -15,7 +15,10 @@
       ref="inputBox"
       v-model="query"
       @search="search"
+      @btnClick="btnClick"
       :queryItemTemplate="searchItemTemplate"
+      :inputChange="queryChange"
+      :btn-list="btnList"
     />
     <el-divider />
     <infoTable
@@ -26,6 +29,7 @@
         height: TableHeight + 'px',
       }"
     />
+    <drawerForm ref="drawer" :appendToBody="'false'" :detail="drawerData"></drawerForm>
   </cardBg>
 </template>
 
@@ -41,6 +45,9 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import inputForm from "./inputForm.vue";
 import infoTable from "./infoTable.vue";
+import { btnCellTemplate, stringAnyObj, btnActionTemplate } from "./searchTable";
+
+import drawerForm from "@/modules/userManage/component/searchTable/drawerForm.vue";
 
 let interval = null;
 
@@ -95,12 +102,15 @@ export default defineComponent({
     "searchKeyWithBaseData",
     "btnList",
   ],
-  components: { cardBg, inputForm, infoTable, sideDialogForm },
+  components: { cardBg, inputForm, infoTable, sideDialogForm, drawerForm },
   data() {
     return {
       query: {},
       PageData: {},
       isLoading: false,
+
+      // drawer
+      drawerData: {} as stringAnyObj,
 
       // 计算列表可用高度
       TableHeight: 500,
@@ -128,13 +138,36 @@ export default defineComponent({
       }
     },
 
-    queryChange() {},
+    /**
+     * @name: queryChange
+     * @description: 承接inputForm 回传数据
+     * @authors: CZH
+     * @Date: 2022-11-21 18:24:28
+     */
+    queryChange(query: stringAnyObj) {
+      this.query = query;
+    },
+
+    /**
+     * @name: btnClick
+     * @description: 自定义按钮事件
+     * @authors: CZH
+     * @Date: 2022-11-21 19:04:03
+     * @param {*} btn
+     */
+    async btnClick(btn: btnCellTemplate) {
+      if (btn.type == btnActionTemplate.OpenDrawer) {
+        this.drawerData = btn.drawerProps;
+        this.$refs["drawer"].open();
+      } else if (btn.type == btnActionTemplate.Function) {
+      } else if (btn.type == btnActionTemplate.Url) {
+      }
+    },
 
     async search(query: { [key: string]: any }) {
       if (this.searchFunc) {
         this.isLoading = true;
         let result = await this.searchFunc(query);
-        console.log(result, "asd");
         this.PageData = { data: result };
         this.isLoading = false;
       }

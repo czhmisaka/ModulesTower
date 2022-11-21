@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-21 17:14:30
+ * @LastEditTime: 2022-11-21 19:40:40
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -151,13 +151,39 @@ export enum btnActionTemplate {
   Function = "Function",
   Url = "Url",
 }
-export interface btnCell {
+export interface btnCellTemplate extends stringAnyObj {
   label: string;
   type: btnActionTemplate;
-  drawerDetail: stringAnyObj;
-  function: (that: stringAnyObj) => void;
-  url: string;
+  icon?: "";
+  elType?: "";
+  drawerDetail?: stringAnyObj;
+  function?: (that: stringAnyObj) => void;
+  url?: string;
 }
+/**
+ * @name: btnMaker
+ * @description: 自定义按钮生成函数
+ * @authors: CZH
+ * @Date: 2022-11-21 18:34:08
+ */
+export const btnMaker = (
+  label: string,
+  type: btnActionTemplate,
+  options: {
+    drawerProps?: stringAnyObj;
+    function?: (that: stringAnyObj) => void;
+    url?: string;
+    icon?: string;
+    elType?: string;
+    [key: string]: any;
+  }
+): btnCellTemplate => {
+  return {
+    label,
+    type,
+    ...options,
+  } as btnCellTemplate;
+};
 
 /**
  * @name: 表单输入类型

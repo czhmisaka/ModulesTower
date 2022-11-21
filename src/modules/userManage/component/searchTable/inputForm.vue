@@ -23,6 +23,14 @@
       :formProps="formProps"
     >
       <div slot-scope="{ formData }" :style="{ textAlign: 'right' }">
+        <el-button
+          v-for="item in btnList"
+          @click="btnClick(item)"
+          :type="item.elType"
+          :icon="item.icon"
+        >
+          {{ item.label }}
+        </el-button>
         <el-button @click="refreshData">重置</el-button>
         <el-button type="primary" @click="handleSubmit(formData)">搜索</el-button>
       </div>
@@ -30,11 +38,7 @@
     <div class="TopRight">
       <iconCell
         :name="isOpen ? 'ArrowDownBold' : 'ArrowUpBold'"
-        @click="
-          () => {
-            isOpen ? initForm() : initForm([queryItemTemplate[0]]);
-          }
-        "
+        @click="changeOpen"
         :iconOption="{
           fontSize: '12px',
         }"
@@ -46,13 +50,19 @@
 <script lang="ts">
 import { defineComponent, h } from "vue";
 import VueForm from "@lljj/vue3-form-element";
-import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
+import {
+  stringAnyObj,
+  tableCellTemplate,
+  propertiesMaker,
+  btnCellTemplate,
+  btnActionTemplate,
+} from "./searchTable";
 import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 let interval = null;
 export default defineComponent({
   name: "表单组件",
-  props: ["query", "queryItemTemplate", "queryItemConfig"],
+  props: ["query", "queryItemTemplate", "queryItemConfig", "btnList"],
   watch: {
     query: {
       handler(val) {
@@ -151,7 +161,27 @@ export default defineComponent({
       this.$emit("search", formData);
     },
 
-    refreshData() {},
+    /**
+     * @name: btnClick
+     * @description: 回报自定义按钮事件
+     * @authors: CZH
+     * @Date: 2022-11-21 19:03:17
+     * @param {*} btn
+     */
+    btnClick(btn: btnCellTemplate) {
+      this.$emit("btnClick", btn);
+    },
+
+    changeOpen() {
+      this.isOpen = !this.isOpen;
+      this.isOpen
+        ? this.initForm()
+        : this.initForm(this.queryItemTemplate.slice(0, this.formProps.layoutColumn));
+    },
+
+    refreshData() {
+      this.inputQuery = {};
+    },
   },
 });
 </script>
@@ -160,6 +190,7 @@ export default defineComponent({
 .formBox {
   width: 100%;
   height: auto;
+  transition: all 0.3s;
 }
 
 .TopRight {
