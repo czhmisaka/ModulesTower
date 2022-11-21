@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import sideDialogForm from "@/modules/userManage/component/searchTable/sideDialogForm.vue";
+import sideDialogForm from "@/modules/userManage/component/searchTable/drawerForm.vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import {
   componentInfo,

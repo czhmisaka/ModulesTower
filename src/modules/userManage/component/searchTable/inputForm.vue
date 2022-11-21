@@ -27,6 +27,19 @@
         <el-button type="primary" @click="handleSubmit(formData)">搜索</el-button>
       </div>
     </VueForm>
+    <div class="TopRight">
+      <iconCell
+        :name="isOpen ? 'ArrowDownBold' : 'ArrowUpBold'"
+        @click="
+          () => {
+            isOpen ? initForm() : initForm([queryItemTemplate[0]]);
+          }
+        "
+        :iconOption="{
+          fontSize: '12px',
+        }"
+      />
+    </div>
   </cardBg>
 </template>
 
@@ -34,7 +47,7 @@
 import { defineComponent, h } from "vue";
 import VueForm from "@lljj/vue3-form-element";
 import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
-
+import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 let interval = null;
 export default defineComponent({
@@ -62,7 +75,7 @@ export default defineComponent({
     },
   },
 
-  components: { VueForm, cardBg },
+  components: { VueForm, cardBg, iconCell },
 
   data() {
     return {
@@ -71,6 +84,7 @@ export default defineComponent({
       formFooter: {
         show: false,
       },
+      isOpen: true,
       formProps: {
         layoutColumn: 3,
         inlineFooter: false,
@@ -146,5 +160,14 @@ export default defineComponent({
 .formBox {
   width: 100%;
   height: auto;
+}
+
+.TopRight {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 0px;
+  right: 0px;
+  margin: 18px;
 }
 </style>
