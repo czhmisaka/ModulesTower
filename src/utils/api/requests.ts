@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-10 16:25:27
+ * @LastEditTime: 2022-11-22 17:27:23
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -11,7 +11,7 @@ export const CancelToken: any = axios.CancelToken; // axios 的取消请求
 
 
 // development , production
-const Env = process.env.NODE_ENV
+const Env = import.meta.env.VITE_MODE
 const isDev = () => Env == 'development'
 
 export function isMobile() {

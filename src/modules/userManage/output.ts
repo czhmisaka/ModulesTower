@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-21 18:46:33
+ * @LastEditTime: 2022-11-22 12:43:18
  * @FilePath: /configforpagedemo/src/modules/userManage/output.ts
  */
 export const moduleInfo = {
@@ -13,9 +13,16 @@ export const moduleInfo = {
 
 export const output = {
   cardApi: {},
+  editCard:[
+      {
+          label:'权限编辑',
+          component:()=>{}
+      }
+  ],
 };
 
 // 模组打包配置
 export const modulePackConfig = {
   noDefaultRouter: false,
 };
+

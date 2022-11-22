@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "cd pythonServer/server && python3 main.py",
     "dev": "vite",
-    "build": "vite build --mode production",
+    "build": "rm -rf dist && vite build --mode production",
     "lint": "vue-cli-service lint",
     "preview-vite": "vite preview"
   },

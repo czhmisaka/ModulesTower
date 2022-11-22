@@ -1,3 +1,9 @@
+/*
+ * @Date: 2022-11-21 16:13:14
+ * @LastEditors: CZH
+ * @LastEditTime: 2022-11-22 17:48:31
+ * @FilePath: /configforpagedemo/mock/asyncRoutes.ts
+ */
 // 模拟后端动态生成路由
 import { MockMethod } from "vite-plugin-mock";
 
@@ -41,7 +47,9 @@ export default [
     method: "get",
     response: () => {
       return {
-        success: true,
+        success:true,
+        code: 200,
+        type: "success",
         data: [permissionRouter]
       };
     }

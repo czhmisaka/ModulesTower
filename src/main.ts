@@ -1,14 +1,13 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-17 17:41:32
+ * @LastEditTime: 2022-11-22 17:30:39
  * @FilePath: /configforpagedemo/src/main.ts
  */
 
 import { createApp, Directive } from 'vue'
 import App from './App.vue'
 import iconCell from './components/basicComponents/cell/icon/iconCell.vue'
-import './registerServiceWorker'
 import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
@@ -20,7 +19,6 @@ import Vue3DraggableResizable from 'vue3-draggable-resizable'
 import { getServerConfig } from "@/utils/config/appConfig";
 import { injectResponsiveStorage } from "@/utils/responsive";
 import { setupStore } from "@/store";
-
 
 
 const app = createApp(App)

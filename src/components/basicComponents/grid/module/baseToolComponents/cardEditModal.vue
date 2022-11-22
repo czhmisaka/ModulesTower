@@ -85,7 +85,6 @@
             </el-form-item>
           </el-form>
         </el-card>
-
         <el-card header="组件属性" class="card">
           <el-form :model="componentsProps" v-on:submit.prevent>
             <el-form-item
@@ -97,7 +96,6 @@
             </el-form-item>
           </el-form>
         </el-card>
-
         <el-card
           header="布局属性"
           class="card"

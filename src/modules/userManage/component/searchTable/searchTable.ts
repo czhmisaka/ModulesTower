@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-21 19:40:40
+ * @LastEditTime: 2022-11-22 15:41:24
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -251,6 +251,14 @@ export const propertiesMaker = (
             },
           };
           break;
+        case formInputType.idCard:
+          properties[cell.key] = {
+            title: cell.label,
+            type: "string",
+            "ui:options": {
+              placeholder: "请输入" + cell.label,
+            },
+          };
       }
   });
   return properties;

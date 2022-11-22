@@ -91,6 +91,7 @@ declare global {
     VITE_LEGACY: boolean;
     VITE_CDN: boolean;
     VITE_COMPRESSION: ViteCompression;
+    VITE_MODE:string
   }
 
   declare interface ServerConfigs {

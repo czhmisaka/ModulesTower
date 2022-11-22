@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-11 12:47:21
+ * @LastEditTime: 2022-11-22 18:01:29
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -71,7 +71,7 @@ export default ({
     VITE_PUBLIC_PATH,
     VITE_PROXY_DOMAIN,
     VITE_PROXY_DOMAIN_REAL
-  } = warpperEnv(loadEnv(mode, root));
+  } = warpperEnv(loadEnv(mode, root), mode);
   return {
     base: VITE_PUBLIC_PATH,
     root,
@@ -139,7 +139,9 @@ export default ({
       }
     },
     define: {
-      __APP_INFO__: JSON.stringify(__APP_INFO__)
+      __APP_INFO__: JSON.stringify(__APP_INFO__),
+      'process.env': {},
+      'process.platform': JSON.stringify(__APP_INFO__),
     }
   }
 }

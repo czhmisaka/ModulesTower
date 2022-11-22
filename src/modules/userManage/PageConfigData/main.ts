@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-21 21:25:14
+ * @LastEditTime: 2022-11-22 14:28:29
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -142,6 +142,47 @@ const btnList = [
     icon: "Plus",
     elType: "primary",
   }),
+  btnMaker("新增2 ", btnActionTemplate.OpenDrawer, {
+    drawerProps: {
+      title: "新增用户",
+      queryItemTemplate: userTableSearchTemplate,
+      size: "50%",
+      btnList: [
+        btnMaker("提交", btnActionTemplate.Function, {
+          icon: "Position",
+          function: (that) => {
+            console.log(that, "qwe");
+          },
+        }),
+        btnMaker("新增", btnActionTemplate.OpenDrawer, {
+            drawerProps: {
+              title: "新增用户",
+              queryItemTemplate: userTableSearchTemplate,
+              size: "50%",
+              btnList: [
+                btnMaker("提交", btnActionTemplate.Function, {
+                  icon: "Position",
+                  function: (that) => {
+                    console.log(that, "qwe");
+                  },
+                }),
+                btnMaker("取消", btnActionTemplate.Function, {
+                    icon: "Delete",
+                    elType:'danger',
+                    function: (that) => {
+                      console.log(that, "qwe");
+                    },
+                  }),
+              ],
+            },
+            icon: "Plus",
+            elType: "primary",
+          }),
+      ],
+    },
+    icon: "Plus",
+    elType: "primary",
+  }),
 ];
 
 export const mainDesktop = [
@@ -217,4 +258,19 @@ export const mainDesktop = [
   )
     .setPosition(0, 7)
     .setSize(1, 1),
+    gridCellMaker('openComponents', '打开组件菜单', {}, {
+        type: cardComponentType.componentList,
+        name: 'icon'
+    }, {
+        isSettingTool: true,
+        props: {
+            name: 'Grid',
+            onClickFunc: (content: any) => {
+                const { context } = content;
+                context.emit('onChange', {}, {
+                    type: [cardOnChangeType.openComponentsList]
+                })
+            }
+        },
+    }).setPosition(0, 0).setSize(1, 1),
 ] as gridCellTemplate[];

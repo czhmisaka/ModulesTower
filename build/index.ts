@@ -1,5 +1,11 @@
+/*
+ * @Date: 2022-11-21 16:13:14
+ * @LastEditors: CZH
+ * @LastEditTime: 2022-11-22 17:26:12
+ * @FilePath: /configforpagedemo/build/index.ts
+ */
 /** 处理环境变量 */
-const warpperEnv = (envConf: Recordable): ViteEnv => {
+const warpperEnv = (envConf: Recordable, mode: string): ViteEnv => {
   /** 此处为默认值，无需修改 */
   const ret: ViteEnv = {
     VITE_PORT: 8848,
@@ -9,7 +15,8 @@ const warpperEnv = (envConf: Recordable): ViteEnv => {
     VITE_ROUTER_HISTORY: "",
     VITE_LEGACY: false,
     VITE_CDN: false,
-    VITE_COMPRESSION: "none"
+    VITE_COMPRESSION: "none",
+    VITE_MODE: mode,
   };
 
   for (const envName of Object.keys(envConf)) {
@@ -22,9 +29,9 @@ const warpperEnv = (envConf: Recordable): ViteEnv => {
     }
     ret[envName] = realName;
     if (typeof realName === "string") {
-      process.env[envName] = realName;
+      process["env"][envName] = realName;
     } else if (typeof realName === "object") {
-      process.env[envName] = JSON.stringify(realName);
+      process["env"][envName] = JSON.stringify(realName);
     }
   }
   return ret;
