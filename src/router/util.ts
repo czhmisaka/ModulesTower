@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 16:59:55
+ * @LastEditTime: 2022-11-23 18:46:57
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -184,7 +184,7 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
         children: [],
         components: [] as CardComponentTemplate[],
       });
-      console.log('qwe',moduleName,moduleList)
+      console.log("qwe", moduleName, moduleList);
     }
   );
 
@@ -273,6 +273,7 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
     }
   );
 
+  // 获取所有模块包的组件
   moduleList["getAllComponents"] = () => {
     let back = {};
     moduleList.map((module: modulesCellTemplate) => {
@@ -283,6 +284,9 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
     });
     return back;
   };
+
+  // 获取所有模块包的插入式能力组件
+  moduleList
 
   return moduleList;
 };

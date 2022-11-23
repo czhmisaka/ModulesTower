@@ -54,7 +54,12 @@ import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable"
 import { btnCellTemplate, btnActionTemplate } from "./drawerForm";
 export default defineComponent({
   name: "drawerForm",
-  componentInfo: {} as componentInfo,
+  componentInfo: {
+    labelNameCn: "侧边弹窗组件",
+    key: "drawerForm",
+    description:
+      "展示在右侧边的弹窗组件，在桌面组件引入后可以使用moduleApi中的openDrawerForm事件触发",
+  } as componentInfo,
 
   components: { VueForm },
   props: ["appendToBody", "detail", "baseData"],
