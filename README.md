@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 14:10:08
- * @FilePath: /vue3MarkedComponent/example/assets/ConfigForDesktopPage.md
+ * @LastEditTime: 2022-11-23 14:21:26
+ * @FilePath: /configforpagedemo/README.md
 -->
 
 # configForDesktopPage
@@ -416,9 +416,9 @@ export interface cardComponent {
 ## 新增一条访问权限
 ```mermaid
 graph LR;
-    开始-->创建访问权限-->已有路由能否满足{已有路由能否满足}
+    开始-->创建访问权限-->已有路由能否满足
     已有路由能否满足-- 存在所需路由 ---> 绑定路由到访问权限中
-    已有路由能否满足-- 不存在所需路由 ---> 新增路由 --> 已有页面配置是否满足需求{已有页面配置是否满足需求}
+    已有路由能否满足-- 不存在所需路由 ---> 新增路由 --> 已有页面配置是否满足需求
     已有页面配置是否满足需求 -- 满足 ---> 绑定页面配置到路由 --> 绑定路由到访问权限中
     已有页面配置是否满足需求 -- 不满足 ---> 新增页面配置 --> 拖拽组件调整页面配置 --> 保存页面配置 --> 绑定页面配置到路由
     绑定路由到访问权限中 --> 完成
