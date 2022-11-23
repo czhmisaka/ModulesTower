@@ -386,7 +386,7 @@ export default defineComponent({
   },
 
   async mounted() {
-    console.log(this.$modulesList(), "qws");
+    console.log(this.$modulesList, this.$modulesList.getAllComponents(), "qwe");
     this.forceUpdateGridList();
     if (interval) clearInterval(interval);
     interval = setInterval(async () => {

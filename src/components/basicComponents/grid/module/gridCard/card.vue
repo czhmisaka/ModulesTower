@@ -230,6 +230,10 @@ export default defineComponent({
   }
 }
 
-.hovertime: {
+.hovertime {
+  transition: transform 0.2s;
+}
+.hovertime:hover {
+  transform: scale(1.01);
 }
 </style>

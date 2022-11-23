@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 15:58:13
+ * @LastEditTime: 2022-11-23 16:59:55
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -89,6 +89,7 @@ let moduleList = [] as modulesCellTemplate[];
  * @param {*} basePath
  */
 export const getModuleFromView = (init = false, basePath = "desktop") => {
+  console.log("执行 getModuleFromView qweasd", init);
   if (!init) {
     return moduleList;
   }
@@ -183,6 +184,7 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
         children: [],
         components: [] as CardComponentTemplate[],
       });
+      console.log('qwe',moduleName,moduleList)
     }
   );
 
@@ -194,7 +196,7 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
       moduleList.map((module: modulesCellTemplate) => {
         if (module.name == moduleName) {
           const output = requireModule(fileName);
-          module.output = output;
+          if (output["output"]) module.output = output["output"];
           if (output["moduleInfo"]) {
             const moduleInfo = output["moduleInfo"];
             module.baseInfo = {
@@ -203,11 +205,10 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
             };
             module.routers[0].meta = {
               ...module.routers[0].meta,
-              ...moduleInfo ,
+              ...moduleInfo,
             };
           }
         }
-        console.log(module, "asdqwe");
         return module;
       });
     }

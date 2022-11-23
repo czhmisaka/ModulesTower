@@ -4,6 +4,7 @@ import { childrenType } from "../../types";
 import { useNav } from "@/layout/hooks/useNav";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, toRaw, PropType, nextTick, computed, CSSProperties } from "vue";
+import iconCell from "@/components/basicComponents/cell/icon/icon.vue";
 
 const { layout, isCollapse } = useNav();
 

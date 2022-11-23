@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-14 16:45:16
+ * @LastEditTime: 2022-11-23 16:33:28
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -55,10 +55,6 @@ const moduleList = getModuleFromView(true);
 let baseModuleRouterList = [] as RouteConfigsTable[]
 moduleList.map((module: modulesCellTemplate, index: number) => {
   module.routers.map((route: RouteConfigsTable, i: number) => {
-    // if (i == 0 && index == 0) {
-    //   baseModuleRouter.redirect = route.path
-    // }
-    // baseModuleRouter.children.push(route)
     baseModuleRouterList.push(route)
   })
 })
