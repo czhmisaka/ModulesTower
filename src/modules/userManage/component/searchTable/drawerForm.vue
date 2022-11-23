@@ -45,16 +45,19 @@
 import { defineComponent } from "vue";
 import VueForm from "@lljj/vue3-form-element";
 import {
-  stringAnyObj,
-  tableCellTemplate,
-  propertiesMaker,
-  btnCellTemplate,
-  btnActionTemplate,
-} from "./searchTable";
+  componentInfo,
+  inputType,
+  propInfo,
+  gridSizeMaker,
+} from "@/components/basicComponents/grid/module/dataTemplate";
+import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
+import { btnCellTemplate, btnActionTemplate } from "./drawerForm";
 export default defineComponent({
   name: "drawerForm",
+  componentInfo: {} as componentInfo,
+
   components: { VueForm },
-  props: ["appendToBody", "detail"],
+  props: ["appendToBody", "detail", "baseData"],
   data() {
     return {
       btnActionTemplate,

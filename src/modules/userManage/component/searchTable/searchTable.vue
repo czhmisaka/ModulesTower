@@ -45,8 +45,8 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import inputForm from "./inputForm.vue";
 import infoTable from "./infoTable.vue";
-import { btnCellTemplate, stringAnyObj, btnActionTemplate } from "./searchTable";
-
+import { stringAnyObj } from "./searchTable";
+import { btnActionTemplate, btnCellTemplate } from "./drawerForm";
 import drawerForm from "@/modules/userManage/component/searchTable/drawerForm.vue";
 
 let interval = null;

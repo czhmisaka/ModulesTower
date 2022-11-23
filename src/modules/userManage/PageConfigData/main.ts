@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 09:42:19
+ * @LastEditTime: 2022-11-23 15:06:43
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -26,9 +26,11 @@ import {
   searchCell,
   formInputType,
   stringAnyObj,
+} from "../component/searchTable/searchTable";
+import {
   btnMaker,
   btnActionTemplate,
-} from "../component/searchTable/searchTable";
+} from "../component/searchTable/drawerForm";
 
 /**
  * @name: buildDataToTree
@@ -113,28 +115,28 @@ const btnList = [
           },
         }),
         btnMaker("新增", btnActionTemplate.OpenDrawer, {
-            drawerProps: {
-              title: "新增用户",
-              queryItemTemplate: userTableSearchTemplate,
-              btnList: [
-                btnMaker("提交", btnActionTemplate.Function, {
-                  icon: "Position",
-                  function: (that) => {
-                    console.log(that, "qwe");
-                  },
-                }),
-                btnMaker("取消", btnActionTemplate.Function, {
-                    icon: "Delete",
-                    elType:'danger',
-                    function: (that) => {
-                      console.log(that, "qwe");
-                    },
-                  }),
-              ],
-            },
-            icon: "Plus",
-            elType: "primary",
-          }),
+          drawerProps: {
+            title: "新增用户",
+            queryItemTemplate: userTableSearchTemplate,
+            btnList: [
+              btnMaker("提交", btnActionTemplate.Function, {
+                icon: "Position",
+                function: (that) => {
+                  console.log(that, "qwe");
+                },
+              }),
+              btnMaker("取消", btnActionTemplate.Function, {
+                icon: "Delete",
+                elType: "danger",
+                function: (that) => {
+                  console.log(that, "qwe");
+                },
+              }),
+            ],
+          },
+          icon: "Plus",
+          elType: "primary",
+        }),
       ],
     },
     icon: "Plus",
@@ -215,19 +217,4 @@ export const mainDesktop = [
   )
     .setPosition(0, 7)
     .setSize(1, 1),
-    gridCellMaker('openComponents', '打开组件菜单', {}, {
-        type: cardComponentType.componentList,
-        name: 'icon'
-    }, {
-        isSettingTool: true,
-        props: {
-            name: 'Grid',
-            onClickFunc: (content: any) => {
-                const { context } = content;
-                context.emit('onChange', {}, {
-                    type: [cardOnChangeType.openComponentsList]
-                })
-            }
-        },
-    }).setPosition(0, 0).setSize(1, 1),
 ] as gridCellTemplate[];

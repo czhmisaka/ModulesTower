@@ -1,12 +1,17 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-10 15:26:13
+ * @LastEditTime: 2022-11-23 15:27:42
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
-import { cardOnChangeType, gridCellOptions, gridPositionCell, gridSizeCell } from '../dataTemplate'
-import { deepClone } from './deepClone';
+import {
+  cardOnChangeType,
+  gridCellOptions,
+  gridPositionCell,
+  gridSizeCell,
+} from "../dataTemplate";
+import { deepClone } from "./deepClone";
 
 /**
  * @name: checkContext
@@ -16,12 +21,15 @@ import { deepClone } from './deepClone';
  * @param {object} content
  * @param {object} value
  */
-const checkContext = (content: { [key: string]: any }, value: { [key: string]: any }) => {
-    if (Object.keys(value).length == 0) console.error('setData_数据上报错误:', '当前上报数据为空');
-    else if (!content) console.error('setData_数据上报错误:', '没有组件对象');
-    else return true
-}
-
+const checkContext = (
+  content: { [key: string]: any },
+  value: { [key: string]: any }
+) => {
+  if (Object.keys(value).length == 0)
+    console.error("setData_数据上报错误:", "当前上报数据为空");
+  else if (!content) console.error("setData_数据上报错误:", "没有组件对象");
+  else return true;
+};
 
 /**
  * @name: deepMerge
@@ -32,28 +40,27 @@ const checkContext = (content: { [key: string]: any }, value: { [key: string]: a
  * @param {any} other
  */
 export const deepMerge = (target: any, other: any) => {
-    const targetToString = Object.prototype.toString.call(target);
-    if (targetToString === "[object Object]") {
-        for (let [key, val] of Object.entries(other)) {
-            if (key in target) {
-                target[key] = deepMerge(target[key], val);
-            } else {
-                target[key] = val;
-            }
-        }
+  const targetToString = Object.prototype.toString.call(target);
+  if (targetToString === "[object Object]") {
+    for (let [key, val] of Object.entries(other)) {
+      if (key in target) {
+        target[key] = deepMerge(target[key], val);
+      } else {
+        target[key] = val;
+      }
     }
-    // else if (targetToString === "[object Array]") {
-    //     for (let [key, val] of Object.entries(other)) {
-    //         if (target[key]) {
-    //             target[key] = deepMerge(target[key], val);
-    //         } else {
-    //             target.push(val);
-    //         }
-    //     }
-    // }
-    return target;
-}
-
+  }
+  // else if (targetToString === "[object Array]") {
+  //     for (let [key, val] of Object.entries(other)) {
+  //         if (target[key]) {
+  //             target[key] = deepMerge(target[key], val);
+  //         } else {
+  //             target.push(val);
+  //         }
+  //     }
+  // }
+  return target;
+};
 
 /**
  * @name: setData
@@ -61,22 +68,22 @@ export const deepMerge = (target: any, other: any) => {
  * @authors: CZH
  * @Date: 2022-07-29 16:25:14
  */
-export const setData = (content: {
-    [key: string]: any
-}, value: { [key: string]: any }): void => {
-    if (!checkContext(content, value)) return;
-    try {
-        let func = content['$emit'] ? '$emit' : 'emit';
-        content[func]('onChange', deepClone(value), {
-            type: [
-                cardOnChangeType.onChange
-            ]
-        })
-    } catch (err) {
-        console.error('setData_数据上报错误:', err, content, value);
-    }
-}
-
+export const setData = (
+  content: {
+    [key: string]: any;
+  },
+  value: { [key: string]: any }
+): void => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    content[func]("onChange", deepClone(value), {
+      type: [cardOnChangeType.onChange],
+    });
+  } catch (err) {
+    console.error("setData_数据上报错误:", err, content, value);
+  }
+};
 
 /**
  * @name: changeVisible
@@ -86,25 +93,26 @@ export const setData = (content: {
  * @param {object} content
  * @param {object} value
  */
-export const changeVisible = (content: { [key: string]: any }, value: { [key: string]: Boolean }) => {
-    if (!checkContext(content, value)) return;
-    try {
-        let func = content['$emit'] ? '$emit' : 'emit';
-        let data = {} as gridCellOptions;
-        Object.keys(value).map((name: string) => {
-            data[name] = {
-                options: { showInGridDesktop: value[name] }
-            }
-        })
-        content[func]('onChange', data, {
-            type: [
-                cardOnChangeType.cardConfigChange
-            ]
-        })
-    } catch (err) {
-        console.error('changeVisible 错误:', err, content, value);
-    }
-}
+export const changeVisible = (
+  content: { [key: string]: any },
+  value: { [key: string]: Boolean }
+) => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    let data = {} as gridCellOptions;
+    Object.keys(value).map((name: string) => {
+      data[name] = {
+        options: { showInGridDesktop: value[name] },
+      };
+    });
+    content[func]("onChange", data, {
+      type: [cardOnChangeType.cardConfigChange],
+    });
+  } catch (err) {
+    console.error("changeVisible 错误:", err, content, value);
+  }
+};
 
 /**
  * @name: changeCardPosition
@@ -114,30 +122,30 @@ export const changeVisible = (content: { [key: string]: any }, value: { [key: st
  * @param {object} content
  * @param {object} value
  */
-export const changeCardPosition = (content: { [key: string]: any }, value: { [key: string]: gridPositionCell }) => {
-    if (!checkContext(content, value)) return;
-    try {
-        let func = content['$emit'] ? '$emit' : 'emit';
-        let data = {} as gridCellOptions;
-        Object.keys(value).map((name: string) => {
-            data[name] = {
-                gridInfo: {
-                    default: {
-                        position: value[name]
-                    }
-                }
-            }
-        })
-        content[func]('onChange', data, {
-            type: [
-                cardOnChangeType.cardConfigChange
-            ]
-        })
-    } catch (err) {
-        console.error('changeVisible 错误:', err, content, value);
-    }
-}
-
+export const changeCardPosition = (
+  content: { [key: string]: any },
+  value: { [key: string]: gridPositionCell }
+) => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    let data = {} as gridCellOptions;
+    Object.keys(value).map((name: string) => {
+      data[name] = {
+        gridInfo: {
+          default: {
+            position: value[name],
+          },
+        },
+      };
+    });
+    content[func]("onChange", data, {
+      type: [cardOnChangeType.cardConfigChange],
+    });
+  } catch (err) {
+    console.error("changeVisible 错误:", err, content, value);
+  }
+};
 
 /**
  * @name: changeCardSize
@@ -147,33 +155,30 @@ export const changeCardPosition = (content: { [key: string]: any }, value: { [ke
  * @param {object} content
  * @param {object} value
  */
-export const changeCardSize = (content: { [key: string]: any }, value: { [key: string]: gridSizeCell }) => {
-    if (!checkContext(content, value)) return;
-    try {
-        let func = content['$emit'] ? '$emit' : 'emit';
-        let data = {} as gridCellOptions;
-        Object.keys(value).map((name: string) => {
-            data[name] = {
-                gridInfo: {
-                    default: {
-                        size: value[name]
-                    }
-                }
-            }
-        })
-        content[func]('onChange', data, {
-            type: [
-                cardOnChangeType.cardConfigChange
-            ]
-        })
-    } catch (err) {
-        console.error('changeVisible 错误:', err, content, value);
-    }
-}
-
-
-
-
+export const changeCardSize = (
+  content: { [key: string]: any },
+  value: { [key: string]: gridSizeCell }
+) => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    let data = {} as gridCellOptions;
+    Object.keys(value).map((name: string) => {
+      data[name] = {
+        gridInfo: {
+          default: {
+            size: value[name],
+          },
+        },
+      };
+    });
+    content[func]("onChange", data, {
+      type: [cardOnChangeType.cardConfigChange],
+    });
+  } catch (err) {
+    console.error("changeVisible 错误:", err, content, value);
+  }
+};
 
 /**
  * @name: changeCardProperties
@@ -183,38 +188,46 @@ export const changeCardSize = (content: { [key: string]: any }, value: { [key: s
  * @param {object} content
  * @param {*} value
  */
-export const changeCardProperties = (content: { [key: string]: any }, value: { [key: string]: any }) => {
-    if (!checkContext(content, value)) return;
-    try {
-        let func = content['$emit'] ? '$emit' : 'emit';
-        let data = {} as gridCellOptions;
-        Object.keys(value).map((name: string) => {
-            data[name] = {
-                options: {
-                    props: value[name]
-                },
-            }
-        })
-        content[func]('onChange', deepClone(data), {
-            type: [
-                cardOnChangeType.cardConfigChange
-            ]
-        })
-    } catch (err) {
-        console.error('changeVisible 错误:', err, content, value);
-    }
-}
-
+export const changeCardProperties = (
+  content: { [key: string]: any },
+  value: { [key: string]: any }
+) => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    let data = {} as gridCellOptions;
+    Object.keys(value).map((name: string) => {
+      data[name] = {
+        options: {
+          props: value[name],
+        },
+      };
+    });
+    content[func]("onChange", deepClone(data), {
+      type: [cardOnChangeType.cardConfigChange],
+    });
+  } catch (err) {
+    console.error("changeVisible 错误:", err, content, value);
+  }
+};
 
 /**
  * @todo @czh 开发中
  * @name: baseDataWatcher
- * @description: 快速生成baseData数据的监听器 
+ * @description: 快速生成baseData数据的监听器
  * @authors: CZH
  * @Date: 2022-11-10 15:23:17
  * @param {object} model
  */
 export const baseDataWatcher = (model: { [key: string]: any } = {}) => {
-    let watchMap = {} as { [key: string]: any }
-    return watchMap;
-}
+  let watchMap = {} as { [key: string]: any };
+  return watchMap;
+};
+
+export default {
+  setData,
+  changeCardPosition,
+  changeCardProperties,
+  changeCardSize,
+  changeVisible,
+};
