@@ -1,17 +1,17 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 20:59:15
+ * @LastEditTime: 2022-11-23 22:45:13
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
   <el-drawer
-    v-if="detail"
+    v-if="plugInData"
     v-model="isOpen"
-    :title="detail.title"
-    :size="`${detail.size || 50}%`"
-    :with-header="detail.title ? true : false"
-    :append-to-body="appendToBody"
+    :title="plugInData.title"
+    :size="`${plugInData.size || 50}%`"
+    :with-header="plugInData.title ? true : false"
+    :append-to-body="'True'"
   >
     <div class="formBody">
       <VueForm
@@ -30,7 +30,7 @@
     <div :style="{ textAlign: 'left' }">
       <el-divider></el-divider>
       <el-button
-        v-for="item in detail.btnList"
+        v-for="item in plugInData.btnList"
         @click="btnClick(item)"
         :type="item.elType"
         :icon="item.icon"
@@ -38,7 +38,7 @@
         {{ item.label }}
       </el-button>
     </div>
-    <drawerForm ref="drawer" :detail="drawerData"></drawerForm>
+    <drawerForm ref="drawer" :plugInData="drawerData"></drawerForm>
   </el-drawer>
 </template>
 
@@ -63,7 +63,7 @@ export default defineComponent({
   } as componentInfo,
 
   components: { VueForm },
-  props: ["appendToBody", "detail", "baseData"],
+  props: ["plugInData", "baseData"],
   data() {
     return {
       btnActionTemplate,
@@ -118,8 +118,8 @@ export default defineComponent({
     async open() {
       this.isOpen = true;
       await this.$nextTick();
-      if (this.detail["queryItemTemplate"])
-        await this.initForm(this.detail.queryItemTemplate);
+      if (this.plugInData["queryItemTemplate"])
+        await this.initForm(this.plugInData.queryItemTemplate);
     },
   },
 });
