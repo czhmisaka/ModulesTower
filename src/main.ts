@@ -78,7 +78,7 @@ getServerConfig(app).then(async config => {
     await router.isReady();
     injectResponsiveStorage(app, config);
     setupStore(app);
-    app.config.globalProperties.$modulesList = getModuleFromView();
+    app.config.globalProperties.$modules = getModuleFromView();
     app.config.globalProperties.$utils = utils;
     app.use(MotionPlugin).use(ElementPlus,{ zIndex: 100000 });
     app.mount("#app");

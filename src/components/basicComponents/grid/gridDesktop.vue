@@ -386,7 +386,7 @@ export default defineComponent({
   },
 
   async created() {
-    console.log(this.$modulesList, this.$modulesList.getAllComponents(), "qwe");
+    console.log(this.$modules, this.$modules.getAllComponents(), "qwe");
   },
 
   async mounted() {

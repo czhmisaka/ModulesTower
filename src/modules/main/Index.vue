@@ -35,7 +35,7 @@ export default defineComponent({
   },
   computed: {
     component() {
-      return this.$modulesList.getAllComponents();
+      return this.$modules.getAllComponents();
     },
   },
   methods: {
