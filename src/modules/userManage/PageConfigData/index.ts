@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-22 14:33:29
+ * @LastEditTime: 2022-11-23 09:38:20
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -30,6 +30,13 @@ const pageConfig = {
       maxRows: 8,
       margin: 12,
     },
+    permission: [
+      "searchTable:action1:disable-admin",
+      "searchTable:action2:disable-admin",
+    ],
+    dataPermission:[
+      
+    ],
   },
   department: {
     name: "部门管理",

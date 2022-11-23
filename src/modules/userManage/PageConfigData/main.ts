@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-22 14:28:29
+ * @LastEditTime: 2022-11-23 09:42:19
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -105,7 +105,6 @@ const btnList = [
     drawerProps: {
       title: "新增用户",
       queryItemTemplate: userTableSearchTemplate,
-      size: "50%",
       btnList: [
         btnMaker("提交", btnActionTemplate.Function, {
           icon: "Position",
@@ -117,48 +116,6 @@ const btnList = [
             drawerProps: {
               title: "新增用户",
               queryItemTemplate: userTableSearchTemplate,
-              size: "50%",
-              btnList: [
-                btnMaker("提交", btnActionTemplate.Function, {
-                  icon: "Position",
-                  function: (that) => {
-                    console.log(that, "qwe");
-                  },
-                }),
-                btnMaker("取消", btnActionTemplate.Function, {
-                    icon: "Delete",
-                    elType:'danger',
-                    function: (that) => {
-                      console.log(that, "qwe");
-                    },
-                  }),
-              ],
-            },
-            icon: "Plus",
-            elType: "primary",
-          }),
-      ],
-    },
-    icon: "Plus",
-    elType: "primary",
-  }),
-  btnMaker("新增2 ", btnActionTemplate.OpenDrawer, {
-    drawerProps: {
-      title: "新增用户",
-      queryItemTemplate: userTableSearchTemplate,
-      size: "50%",
-      btnList: [
-        btnMaker("提交", btnActionTemplate.Function, {
-          icon: "Position",
-          function: (that) => {
-            console.log(that, "qwe");
-          },
-        }),
-        btnMaker("新增", btnActionTemplate.OpenDrawer, {
-            drawerProps: {
-              title: "新增用户",
-              queryItemTemplate: userTableSearchTemplate,
-              size: "50%",
               btnList: [
                 btnMaker("提交", btnActionTemplate.Function, {
                   icon: "Position",

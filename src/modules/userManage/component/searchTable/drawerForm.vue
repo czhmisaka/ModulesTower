@@ -8,7 +8,7 @@
   <el-drawer
     v-model="isOpen"
     :title="detail.title"
-    :size="detail.size"
+    :size="`${detail.size || 50}%`"
     :with-header="detail.title ? true : false"
     :append-to-body="appendToBody"
   >
@@ -37,7 +37,7 @@
         {{ item.label }}
       </el-button>
     </div>
-    <drawerForm ref="drawer" :appendToBody="'true'" :detail="drawerData"></drawerForm>
+    <drawerForm ref="drawer" :detail="drawerData"></drawerForm>
   </el-drawer>
 </template>
 
