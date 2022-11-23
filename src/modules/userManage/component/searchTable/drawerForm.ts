@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 15:22:15
+ * @LastEditTime: 2022-11-23 20:58:58
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -60,10 +60,23 @@ export const btnMaker = (
   } as btnCellTemplate;
 };
 
+/**
+ * @name: openDrawerForm
+ * @description: moduleApi，BtnMaker 制作出来的按钮 响应drawerForm事件.
+ * @authors: CZH
+ * @Date: 2022-11-23 19:52:33
+ */
+export const openDrawerForm = (that) => {};
+
+let component = {};
+let moduleName = "userManage_";
+component[drawerForm.name] = drawerForm;
+
 export default {
   moduleApi: {
     btnMaker,
     btnActionTemplate,
+    openDrawerForm,
   },
-  component: { drawerForm },
+  component,
 };

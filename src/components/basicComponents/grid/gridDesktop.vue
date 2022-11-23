@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-21 16:58:20
+ * @LastEditTime: 2022-11-23 21:11:53
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -80,6 +80,16 @@
           })
       "
     />
+    <component
+      v-for="item in Object.keys(PlugInComponents)"
+      :is="PlugInComponents[item]"
+      :ref="`PlugIn_${item}`"
+      :plugInData="plugInData[item]"
+      :baseData="baseData"
+      :gridList="gridList"
+      :componentLists="componentLists"
+      @onChange="(value, options) => cardOnChange(-1, value, options)"
+    ></component>
   </div>
 </template>
 
@@ -176,7 +186,11 @@ export default defineComponent({
       gridList: [],
       // 更新组件用
       updateTimes: 0,
-      // 组件列表
+
+      // 插入式能力组件列表
+      PlugInComponents: {},
+      // 插入式组件数据使用列表
+      plugInData: {},
 
       // 基础数据存放
       baseData: {
@@ -238,7 +252,8 @@ export default defineComponent({
       options: {
         type: Array<cardOnChangeType>;
         [key: string]: any;
-      }
+      },
+      name = ""
     ) {
       options.type.map(async (type) => {
         console.log(
@@ -246,6 +261,10 @@ export default defineComponent({
             ? "组件「" + this.gridList[index].labelNameCN + "」"
             : "桌面组件",
           "请求执行事件<" + type + ">",
+          JSON.parse(JSON.stringify(value))
+        );
+        console.log(
+          index == -1 && `插入式能力组件「${name}」请求事件<${type}>`,
           JSON.parse(JSON.stringify(value))
         );
         if (type == cardOnChangeType.onChange) {
@@ -302,6 +321,14 @@ export default defineComponent({
           this.gridList.splice(index, 1);
         } else if (type == cardOnChangeType.openComponentsList) {
           this.$refs.componentsListModal.open();
+        } else if (type == cardOnChangeType.moduleApi) {
+          if (typeof value == "object") {
+            for (let refs in value) {
+              let that = this;
+              if (that.$refs[refs]) {
+              }
+            }
+          }
         }
       });
     },
@@ -386,7 +413,13 @@ export default defineComponent({
   },
 
   async created() {
-    console.log(this.$modules, this.$modules.getAllComponents(), "qwe");
+    console.log(
+      this.$modules,
+      this.$modules.getAllPluginComponent(),
+      this.$modules.getModuleApi(),
+      "qwe"
+    );
+    this.PlugInComponents = this.$modules.getAllPluginComponent();
   },
 
   async mounted() {

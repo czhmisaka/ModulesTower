@@ -1,11 +1,12 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-21 08:54:50
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/sideDialogForm.vue
+ * @LastEditTime: 2022-11-23 20:59:15
+ * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
   <el-drawer
+    v-if="detail"
     v-model="isOpen"
     :title="detail.title"
     :size="`${detail.size || 50}%`"
@@ -53,7 +54,7 @@ import {
 import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
 import { btnCellTemplate, btnActionTemplate } from "./drawerForm";
 export default defineComponent({
-  name: "drawerForm",
+  name: "userManage_drawerForm",
   componentInfo: {
     labelNameCn: "侧边弹窗组件",
     key: "drawerForm",

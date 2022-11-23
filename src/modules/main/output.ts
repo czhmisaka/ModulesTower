@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 19:09:36
+ * @LastEditTime: 2022-11-23 19:49:22
  * @FilePath: /configforpagedemo/src/modules/main/output.ts
  */
 export const moduleInfo = {
@@ -14,7 +14,6 @@ export const moduleInfo = {
 
 
 export const output = {
-  CardApiInjectComponent: [],
 };
 
 // 模组打包配置

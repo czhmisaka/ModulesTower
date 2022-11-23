@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 19:21:40
+ * @LastEditTime: 2022-11-23 19:53:26
  * @FilePath: /configforpagedemo/src/modules/userManage/output.ts
  */
 export const moduleInfo = {
@@ -15,10 +15,12 @@ export const moduleInfo = {
 import drawerForm from "./component/searchTable/drawerForm";
 
 export const output = {
-  module: {
-    drawerForm,
+  moduleApi: {
+    ...drawerForm.moduleApi,
   },
-  CardApiInjectComponent: [],
+  CardApiInjectComponent: {
+    ...drawerForm.component,
+  },
 };
 
 // 模组打包配置

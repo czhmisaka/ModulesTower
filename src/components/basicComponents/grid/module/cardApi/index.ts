@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 15:27:42
+ * @LastEditTime: 2022-11-23 21:13:18
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -223,6 +223,11 @@ export const baseDataWatcher = (model: { [key: string]: any } = {}) => {
   let watchMap = {} as { [key: string]: any };
   return watchMap;
 };
+
+
+export const moduleApi = (apiName:string)=>{
+
+}
 
 export default {
   setData,

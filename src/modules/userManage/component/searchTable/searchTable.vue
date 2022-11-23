@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-18 15:34:31
+ * @LastEditTime: 2022-11-23 19:22:19
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -29,7 +29,6 @@
         height: TableHeight + 'px',
       }"
     />
-    <drawerForm ref="drawer" :appendToBody="'false'" :detail="drawerData"></drawerForm>
   </cardBg>
 </template>
 

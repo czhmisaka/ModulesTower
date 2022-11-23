@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 18:55:13
+ * @LastEditTime: 2022-11-23 19:50:02
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -285,9 +285,33 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
     return back;
   };
 
-  // 获取所有模块包的插入式能力组件
-  moduleList
+  // 获取所有模块包的 插入式能力组件
+  moduleList["getAllPluginComponent"] = () => {
+    let back = {};
+    moduleList.map((module) => {
+      if (module.output.CardApiInjectComponent) {
+        for (let componentName in module.output.CardApiInjectComponent) {
+          back[componentName] = module.output.CardApiInjectComponent[componentName];
+        }
+      }
+    });
+    return back;
+  };
 
+  // 获取所有模块包的 插入式 onChange能力
+  moduleList["getModuleApi"] = () => {
+    let back = {};
+    moduleList.map((module) => {
+      console.log(module.output,'asdqwe')
+      if (module.output.moduleApi) {
+        for (let apiName in module.output.moduleApi) {
+          back[apiName] = module.output.moduleApi[apiName];
+        }
+      }
+    });
+    return back;
+  };
+  
   return moduleList;
 };
 

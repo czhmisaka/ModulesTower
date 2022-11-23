@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 19:21:09
+ * @LastEditTime: 2022-11-23 19:46:33
  * @FilePath: /configforpagedemo/src/components/ReIcon/src/hooks.ts
  */
 import { iconType } from "./types";
@@ -44,7 +44,6 @@ export function useRenderIcon(icon: any, attrs?: iconType): Component {
     // svg
     return icon;
   } else if (icon[0] == "E" && icon[1] == "L" && icon[2] == "_") {
-    console.log(icon, "qwe", icon.replace("EL_", ""));
     return defineComponent({
       name: "ELIcon",
       render() {
