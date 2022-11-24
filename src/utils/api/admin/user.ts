@@ -1,10 +1,11 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-04 08:45:59
+ * @LastEditTime: 2022-11-24 16:20:27
  * @FilePath: /configforpagedemo/src/utils/api/admin/user.ts
  */
 import { http } from "../../http";
+import { post } from "../requests";
 
 export type UserResult = {
   success: boolean;
@@ -35,8 +36,9 @@ export type RefreshTokenResult = {
 };
 
 /** 登录 */
-export const getLogin = (data?: object) => {
-  return http.request<UserResult>("post", "/login", { data });
+export const getLogin = async (data?: object) => {
+  // return http.request<UserResult>("post", "/login", { data });
+  return await post("/web/usc/login", { lcdp:data });
 };
 
 /** 刷新token */

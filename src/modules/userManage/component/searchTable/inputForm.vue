@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-18 11:00:20
+ * @LastEditTime: 2022-11-24 18:19:10
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -21,8 +21,13 @@
       :schema="schema"
       :ui-schema="uiSchema"
       :formProps="formProps"
+      @change="onChange"
     >
-      <div slot-scope="{ formData }" :style="{ textAlign: 'right' }">
+      <div
+        v-if="btnList.length > 0 || !autoSearch"
+        slot-scope="{ formData }"
+        :style="{ textAlign: 'right' }"
+      >
         <el-button
           v-for="item in btnList"
           @click="btnClick(item)"
@@ -31,8 +36,10 @@
         >
           {{ item.label }}
         </el-button>
-        <el-button @click="refreshData">重置</el-button>
-        <el-button type="primary" @click="handleSubmit(formData)">搜索</el-button>
+        <el-button v-if="!autoSearch" @click="refreshData(-1)">重置</el-button>
+        <el-button v-if="!autoSearch" type="primary" @click="handleSubmit(formData)"
+          >搜索</el-button
+        >
       </div>
     </VueForm>
     <div class="TopRight">
@@ -50,28 +57,18 @@
 <script lang="ts">
 import { defineComponent, h } from "vue";
 import VueForm from "@lljj/vue3-form-element";
-import {
-  stringAnyObj,
-  tableCellTemplate,
-  propertiesMaker,
-  btnCellTemplate,
-  btnActionTemplate,
-} from "./searchTable";
+import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
+import { btnCellTemplate } from "./drawerForm";
 import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 let interval = null;
 export default defineComponent({
   name: "表单组件",
-  props: ["query", "queryItemTemplate", "queryItemConfig", "btnList"],
+  props: ["query", "queryItemTemplate", "queryItemConfig", "btnList", "autoSearch"],
   watch: {
     query: {
       handler(val) {
-        if (val && Object.keys(val).length > 0)
-          val.map((x: string) => {
-            if (this.formData[x] != val[x]) {
-              this.formData[x] = val[x];
-            }
-          });
+        this.refreshData(val);
       },
       deep: true,
       immediate: true,
@@ -112,6 +109,7 @@ export default defineComponent({
   },
 
   async mounted() {
+    this.refreshData(this.query);
     let that = this;
     if (interval) clearInterval(interval);
     interval = setInterval(() => {
@@ -146,6 +144,8 @@ export default defineComponent({
      * @Date: 2022-11-14 10:17:28
      */
     async initForm(queryItemTemplate: tableCellTemplate[] = this.queryItemTemplate) {
+      if (Object.keys(this.query).length > 0) {
+      }
       let properties = {} as stringAnyObj;
       properties = propertiesMaker(queryItemTemplate);
       this.schema.properties = properties;
@@ -153,7 +153,7 @@ export default defineComponent({
 
     // 上报数据修改事件
     onChange() {
-      this.$emit("inputChange", this.inputQuery);
+      this.$emit("inputChange", this.formData);
     },
 
     // 回报搜索事件
@@ -179,8 +179,16 @@ export default defineComponent({
         : this.initForm(this.queryItemTemplate.slice(0, this.formProps.layoutColumn));
     },
 
-    refreshData() {
-      this.inputQuery = {};
+    refreshData(val: any) {
+      if (val == -1) {
+        this.$emit("inputChange", {});
+      } else if (val && Object.keys(val).length > 0) {
+        for (let x in val) {
+          if (this.formData[x] != val[x]) {
+            this.formData[x] = val[x];
+          }
+        }
+      }
     },
   },
 });

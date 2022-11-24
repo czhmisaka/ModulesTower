@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 14:39:01
+ * @LastEditTime: 2022-11-24 17:53:14
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -89,7 +89,6 @@ let moduleList = [] as modulesCellTemplate[];
  * @param {*} basePath
  */
 export const getModuleFromView = (init = false, basePath = "desktop") => {
-  console.log("执行 getModuleFromView qweasd", init);
   if (!init) {
     return moduleList;
   }
@@ -184,7 +183,6 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
         children: [],
         components: [] as CardComponentTemplate[],
       });
-      console.log("qwe", moduleName, moduleList);
     }
   );
 
@@ -303,7 +301,6 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
   moduleList["getModuleApi"] = () => {
     let back = {};
     moduleList.map((module) => {
-      console.log(module.output, "asdqwe", module);
       if (module.output.moduleApi) {
         for (let apiName in module.output.moduleApi) {
           back[`${module.name}_${apiName}`] = module.output.moduleApi[apiName];

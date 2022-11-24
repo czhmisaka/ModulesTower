@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 09:38:20
+ * @LastEditTime: 2022-11-24 15:53:04
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -9,6 +9,7 @@ import { mainDesktop } from "./main";
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { isValidKey } from "@/utils/index";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
+import { apiManage } from "./apiManage";
 
 export interface desktopDataTemplate {
   desktopData?: gridCellTemplate[];
@@ -30,17 +31,12 @@ const pageConfig = {
       maxRows: 8,
       margin: 12,
     },
-    permission: [
-      "searchTable:action1:disable-admin",
-      "searchTable:action2:disable-admin",
-    ],
-    dataPermission:[
-      
-    ],
+    permission: [],
+    dataPermission:[],
   },
   department: {
-    name: "部门管理",
-    desktopData: mainDesktop,
+    name: "API管理",
+    desktopData: apiManage,
     gridColNum: 12,
     cusStyle: {
       wholeScreen: true,

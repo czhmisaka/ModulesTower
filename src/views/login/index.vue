@@ -31,8 +31,8 @@ dataThemeChange();
 const { title } = useNav();
 
 const ruleForm = reactive({
-  username: "admin",
-  password: "admin123",
+  username: "15700197842",
+  password: "zYjc@2021",
 });
 
 const onLogin = async (formEl: FormInstance | undefined) => {
@@ -41,9 +41,10 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username })
+        .loginByUsername({ username: ruleForm.username, password: ruleForm.password })
         .then((res) => {
-          if (res.success) {
+          console.log(res);
+          if (res && res["token"]) {
             // 获取后端路由
             initRouter().then(() => {
               message.success("登录成功");

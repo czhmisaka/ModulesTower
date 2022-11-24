@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 17:20:44
+ * @LastEditTime: 2022-11-24 19:02:26
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -20,7 +20,12 @@
       :height="'100%'"
     >
       <ElTableColumn type="selection" align="center" fixed="left"></ElTableColumn>
-      <ElTableColumn v-for="(item, index) in template" :label="item.label">
+      <ElTableColumn
+        v-for="(item, index) in template"
+        :sortable="item.table.sortable"
+        :sort-by="(row, index) => sortBy(row, index, item.key)"
+        :label="item.label"
+      >
         <template #default="scope">
           <div
             class="flexBox"
@@ -38,7 +43,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { ElTable, ElTableColumn } from "element-plus";
-import { showType } from "./searchTable";
+import { showType, tableCellTemplate } from "./searchTable";
 export default defineComponent({
   components: { ElTable, ElTableColumn },
   props: ["template", "loading", "dataList"],
@@ -46,7 +51,7 @@ export default defineComponent({
   data() {
     return {
       showType,
-      selectedLine: [] as any[],
+      selectedList: [] as any[],
     };
   },
 
@@ -58,10 +63,7 @@ export default defineComponent({
      * @Date: 2022-11-15 15:07:10
      * @param {*} data
      */
-    cellDblclick(data) {
-      console.log(data);
-      console.log(this.$refs["tableBox"].offsetHeight, "asda");
-    },
+    cellDblclick(data) {},
 
     /**
      * @name: selectPosition
@@ -70,7 +72,8 @@ export default defineComponent({
      * @Date: 2022-11-15 15:08:32
      */
     selectPosition(e) {
-      this.selectedLine = e;
+      this.selectedList = e;
+      this.$emit("selectedChange", this.selectedList);
     },
 
     /**
@@ -82,6 +85,10 @@ export default defineComponent({
     tableHeight() {
       if (this.$refs["tableBox"]) return this.$refs["tableBox"].offsetHeight;
       else return null;
+    },
+
+    sortBy(row, index, key) {
+      return row[key];
     },
   },
 });

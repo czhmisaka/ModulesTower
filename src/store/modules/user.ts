@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-04 15:43:48
+ * @LastEditTime: 2022-11-24 16:31:07
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -10,7 +10,12 @@ import { userType } from "./types";
 import { routerArrays } from "@/layout/types";
 import { router, resetRouter } from "@/router";
 import { storageSession } from "@pureadmin/utils";
-import { UserResult, RefreshTokenResult, getLogin, refreshTokenApi } from "@/utils/api/admin/user";
+import {
+  UserResult,
+  RefreshTokenResult,
+  getLogin,
+  refreshTokenApi,
+} from "@/utils/api/admin/user";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
 export const useUserStore = defineStore({
@@ -24,7 +29,7 @@ export const useUserStore = defineStore({
     // 前端生成的验证码（按实际需求替换）
     verifyCode: "",
     // 判断登录页面显示哪个组件（0：登录（默认）、1：手机登录、2：二维码登录、3：注册、4：忘记密码）
-    currentPage: 0
+    currentPage: 0,
   }),
   actions: {
     /** 存储用户名 */
@@ -44,18 +49,22 @@ export const useUserStore = defineStore({
       this.currentPage = value;
     },
     /** 登入 */
-    async loginByUsername(data) {
-      return new Promise<UserResult>((resolve, reject) => {
-        getLogin(data)
-          .then(data => {
-            if (data) {
-              setToken(data.data);
-              resolve(data);
-            }
-          })
-          .catch(error => {
-            reject(error);
-          });
+    async loginByUsername(query) {
+      return new Promise<UserResult>(async (resolve, reject) => {
+        let res = await getLogin(query);
+        console.log(res);
+        if (res && res.data) {
+          let data = {
+            ...res.data,
+            accessToken: res.data.token,
+            refreshToken: res.data.token,
+            username: query.username,
+            roles: ["admin"],
+            expires:new Date(new Date().getTime()+19999999).getTime()
+          };
+          setToken(data);
+          resolve(data);
+        }
       });
     },
     /** 前端登出（不调用接口） */
@@ -71,18 +80,18 @@ export const useUserStore = defineStore({
     async handRefreshToken(data) {
       return new Promise<RefreshTokenResult>((resolve, reject) => {
         refreshTokenApi(data)
-          .then(data => {
+          .then((data) => {
             if (data) {
               setToken(data.data);
               resolve(data);
             }
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error);
           });
       });
-    }
-  }
+    },
+  },
 });
 
 export function useUserStoreHook() {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 14:26:56
+ * @LastEditTime: 2022-11-24 15:41:47
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -30,7 +30,7 @@ export enum btnActionTemplate {
   Url = "Url",
 }
 
-import { tableCellTemplate } from "./searchTable";
+import { tableCellOptions } from "./searchTable";
 
 /**
  * @name: drawerProps
@@ -40,7 +40,7 @@ import { tableCellTemplate } from "./searchTable";
  */
 export interface drawerProps {
   title: string;
-  queryItemTemplate: tableCellTemplate[];
+  queryItemTemplate: tableCellOptions[];
   btnList: btnCellTemplate[];
 }
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 15:02:58
+ * @LastEditTime: 2022-11-24 18:51:30
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -60,6 +60,7 @@ export interface tableCellOptions {
     showFunc: (data: any, key: string) => any;
     type: showType;
     style?: stringAnyObj;
+    sortable?: boolean;
     [key: string]: any;
   };
   [key: string]: any;
@@ -130,6 +131,7 @@ export const tableCellTemplateMaker = (
       style: {
         maxHeight: "120px",
       },
+      sortable: true,
     },
   }
 ): tableCellTemplate => {
@@ -139,7 +141,6 @@ export const tableCellTemplateMaker = (
     ...options,
   };
 };
-
 
 /**
  * @name: 表单输入类型
@@ -177,15 +178,20 @@ export const propertiesMaker = (
   cellList: tableCellTemplate[],
   queryItemConfig: stringAnyObj[] = []
 ) => {
+  function base(cell) {
+    return {
+      title: cell.label,
+      type: "string",
+    };
+  }
   let properties = {} as stringAnyObj;
-  cellList.map((cell) => {
+  cellList.map((cell: tableCellTemplate) => {
     const { input } = cell;
     if (input)
       switch (input.type) {
         case formInputType.input:
           properties[cell.key] = {
-            title: cell.label,
-            type: "string",
+            ...base(cell),
             "ui:options": {
               placeholder: "请输入" + cell.label,
             },
@@ -193,15 +199,14 @@ export const propertiesMaker = (
           break;
         case formInputType.datePicker:
           properties[cell.key] = {
-            title: cell.label,
+            ...base(cell),
             type: "number",
             format: "date",
           };
           break;
         case formInputType.radio:
           properties[cell.key] = {
-            title: cell.label,
-            type: "string",
+            ...base(cell),
             "ui:options": {
               placeholder: "请输入" + cell.label,
             },
@@ -209,12 +214,25 @@ export const propertiesMaker = (
           break;
         case formInputType.idCard:
           properties[cell.key] = {
-            title: cell.label,
-            type: "string",
+            ...base(cell),
             "ui:options": {
               placeholder: "请输入" + cell.label,
             },
           };
+        case formInputType.select:
+          properties[cell.key] = {
+            ...base(cell),
+            "ui:widget": "SelectWidget",
+          };
+          if (input.inputOptions) {
+            properties[cell.key] = {
+              ...properties[cell.key],
+              enum: Object.keys(input.inputOptions),
+              enumNames: Object.keys(input.inputOptions).map(
+                (x) => input.inputOptions[x]
+              ),
+            };
+          }
       }
   });
   return properties;

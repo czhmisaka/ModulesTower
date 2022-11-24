@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 14:49:42
+ * @LastEditTime: 2022-11-24 18:44:11
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -13,12 +13,13 @@
   >
     <inputForm
       ref="inputBox"
-      v-model="query"
+      :query="query"
       @search="search"
       @btnClick="btnClick"
       :queryItemTemplate="searchItemTemplate"
-      :inputChange="queryChange"
+      @inputChange="queryChange"
       :btn-list="btnList"
+      :autoSearch="autoSearch"
     />
     <el-divider />
     <infoTable
@@ -28,6 +29,7 @@
       :style="{
         height: TableHeight + 'px',
       }"
+      @selectedChange="selectedChange"
     />
   </cardBg>
 </template>
@@ -46,6 +48,8 @@ import inputForm from "./inputForm.vue";
 import infoTable from "./infoTable.vue";
 import { stringAnyObj } from "./searchTable";
 import { btnActionTemplate, btnCellTemplate } from "./drawerForm";
+import { Console } from "console";
+import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 
 let interval = null;
 
@@ -61,9 +65,9 @@ export default defineComponent({
   } as componentInfo,
 
   propsDetail: {
-    preLoadData: {
-      label: "预加载数据列表",
-      type: inputType.array,
+    defaultQuery: {
+      label: "初始化搜索值",
+      type: inputType.obj,
     },
     searchFunc: {
       label: "搜索函数",
@@ -85,20 +89,25 @@ export default defineComponent({
       label: "按钮行为列表",
       type: inputType.array,
     },
+    autoSearch: {
+      label: "自动搜索",
+      type: inputType.boolean,
+    },
   } as propInfo,
 
   baseProps: {},
 
   watch: {},
   props: [
+    "defaultQuery",
     "baseData",
     "sizeUnit",
-    "preLoadData",
     "searchFunc",
     "showItemTemplate",
     "searchItemTemplate",
     "searchKeyWithBaseData",
     "btnList",
+    "autoSearch",
   ],
   components: { cardBg, inputForm, infoTable, sideDialogForm },
   data() {
@@ -107,8 +116,8 @@ export default defineComponent({
       PageData: {},
       isLoading: false,
 
-      // drawer
-      drawerData: {} as stringAnyObj,
+      // 当前选择项
+      selectedList: [],
 
       // 计算列表可用高度
       TableHeight: 500,
@@ -116,7 +125,9 @@ export default defineComponent({
   },
   async mounted() {
     this.$emit("ready");
+    this.initData();
     await this.search();
+
     let that = this;
     if (interval) clearInterval(interval);
     interval = setInterval(() => {
@@ -129,10 +140,11 @@ export default defineComponent({
     });
   },
   methods: {
-    async preDataLoad() {
-      if (this.preLoadData) {
-        let that = this;
-        await this.preLoadData(that);
+    async initData() {
+      console.log("qwe,qwe", this.defaultQuery);
+      if (Object.keys(this.defaultQuery).length > 0) {
+        this.query = deepClone(this.defaultQuery);
+        console.log("asdqwe", this.query, deepClone(this.defaultQuery));
       }
     },
 
@@ -144,6 +156,7 @@ export default defineComponent({
      */
     queryChange(query: stringAnyObj) {
       this.query = query;
+      if (this.autoSearch) this.search();
     },
 
     /**
@@ -156,17 +169,28 @@ export default defineComponent({
     async btnClick(btn: btnCellTemplate) {
       if (btn.type == btnActionTemplate.OpenDrawer) {
         this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
-      } else if (btn.type == btnActionTemplate.Function) {
-      } else if (btn.type == btnActionTemplate.Url) {
+      } else if (btn.type == btnActionTemplate.Function && btn.function) {
+        let that = this;
+        await btn.function(that);
+      } else if (btn.type == btnActionTemplate.Url && btn.url) {
+        window.open(btn.url);
       }
     },
 
-    async search(query: { [key: string]: any }) {
+    async selectedChange(selectedList: any[]) {
+      this.selectedList = selectedList;
+    },
+
+    async search(query: { [key: string]: any } = this.query) {
       if (this.searchFunc) {
         this.isLoading = true;
-        let result = await this.searchFunc(query);
-        this.PageData = { data: result };
-        this.isLoading = false;
+        try {
+          let result = await this.searchFunc(query);
+          this.PageData = { data: result };
+        } catch (e) {
+        } finally {
+          this.isLoading = false;
+        }
       }
     },
   },

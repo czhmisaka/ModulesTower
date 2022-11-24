@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 15:06:43
+ * @LastEditTime: 2022-11-24 15:41:00
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -23,6 +23,7 @@ import {
   SearchCellStorage,
   tableCellTemplateMaker,
   DataCell,
+  tableCellTemplate,
   searchCell,
   formInputType,
   stringAnyObj,
@@ -72,7 +73,7 @@ const searchTemplate = [
   ),
   depTableCellStorage.getByLabel("部门名称"),
   depTableCellStorage.getByLabel("上级部门"),
-];
+] as tableCellTemplate[];
 
 const userTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("姓名", "name"),
