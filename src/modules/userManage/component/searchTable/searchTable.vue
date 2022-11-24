@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 19:22:19
+ * @LastEditTime: 2022-11-24 14:49:42
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -46,7 +46,6 @@ import inputForm from "./inputForm.vue";
 import infoTable from "./infoTable.vue";
 import { stringAnyObj } from "./searchTable";
 import { btnActionTemplate, btnCellTemplate } from "./drawerForm";
-import drawerForm from "@/modules/userManage/component/searchTable/drawerForm.vue";
 
 let interval = null;
 
@@ -101,7 +100,7 @@ export default defineComponent({
     "searchKeyWithBaseData",
     "btnList",
   ],
-  components: { cardBg, inputForm, infoTable, sideDialogForm, drawerForm },
+  components: { cardBg, inputForm, infoTable, sideDialogForm },
   data() {
     return {
       query: {},
@@ -156,8 +155,7 @@ export default defineComponent({
      */
     async btnClick(btn: btnCellTemplate) {
       if (btn.type == btnActionTemplate.OpenDrawer) {
-        this.drawerData = btn.drawerProps;
-        this.$refs["drawer"].open();
+        this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
       } else if (btn.type == btnActionTemplate.Function) {
       } else if (btn.type == btnActionTemplate.Url) {
       }

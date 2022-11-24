@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 21:11:53
+ * @LastEditTime: 2022-11-24 14:44:16
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -256,17 +256,19 @@ export default defineComponent({
       name = ""
     ) {
       options.type.map(async (type) => {
-        console.log(
-          index != -1 && index < this.gridList.length
-            ? "组件「" + this.gridList[index].labelNameCN + "」"
-            : "桌面组件",
-          "请求执行事件<" + type + ">",
-          JSON.parse(JSON.stringify(value))
-        );
-        console.log(
-          index == -1 && `插入式能力组件「${name}」请求事件<${type}>`,
-          JSON.parse(JSON.stringify(value))
-        );
+        if (index != -1)
+          console.log(
+            index != -1 && index < this.gridList.length
+              ? "组件「" + this.gridList[index].labelNameCN + "」"
+              : "桌面组件",
+            "请求执行事件<" + type + ">",
+            JSON.parse(JSON.stringify(value))
+          );
+        else
+          console.log(
+            `插入式能力组件「${name}」请求事件<${type}>`,
+            JSON.parse(JSON.stringify(value))
+          );
         if (type == cardOnChangeType.onChange) {
           for (let x in value) {
             this.baseData[x] = value[x];
@@ -324,8 +326,12 @@ export default defineComponent({
         } else if (type == cardOnChangeType.moduleApi) {
           if (typeof value == "object") {
             for (let refs in value) {
-              let that = this;
-              if (that.$refs[refs]) {
+              if (this.$refs[`PlugIn_${refs}`]) {
+                this.plugInData[refs] = value[refs];
+                const plugInComponent = this.$refs[`PlugIn_${refs}`][0];
+                if (plugInComponent["open"]) {
+                  plugInComponent["open"]();
+                }
               }
             }
           }

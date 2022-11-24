@@ -1,12 +1,15 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 22:50:38
+ * @LastEditTime: 2022-11-24 14:26:56
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
 export const OpenDrawerBtn = () => {};
 
+import { checkContext } from "@/components/basicComponents/grid/module/cardApi";
+import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
+import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
 import drawerForm from "./drawerForm.vue";
 export const drawerFormSon = drawerForm;
 
@@ -56,6 +59,7 @@ export interface btnCellTemplate extends stringAnyObj {
   function?: (that: stringAnyObj) => void;
   url?: string;
 }
+
 /**
  * @name: btnMaker
  * @description: 自定义按钮生成函数
@@ -66,7 +70,7 @@ export const btnMaker = (
   label: string,
   type: btnActionTemplate,
   options: {
-    drawerProps?: stringAnyObj;
+    drawerProps?: drawerProps;
     function?: (that: stringAnyObj) => void;
     url?: string;
     icon?: string;
@@ -89,8 +93,20 @@ export const btnMaker = (
  */
 export const openDrawerForm = (
   content: { [key: string]: any },
-  value: stringAnyObj
-) => {};
+  value: drawerProps
+) => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    let data = {};
+    data[moduleName + drawerForm.name] = value;
+    content[func]("onChange", deepClone(data), {
+      type: [cardOnChangeType.moduleApi],
+    });
+  } catch (err) {
+    console.error("openDrawerForm_数据上报错误:", err, content, value);
+  }
+};
 
 let component = {};
 let moduleName = "userManage_";

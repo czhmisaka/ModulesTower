@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 21:13:18
+ * @LastEditTime: 2022-11-24 10:50:36
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -21,7 +21,7 @@ import { deepClone } from "./deepClone";
  * @param {object} content
  * @param {object} value
  */
-const checkContext = (
+export const checkContext = (
   content: { [key: string]: any },
   value: { [key: string]: any }
 ) => {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 22:45:13
+ * @LastEditTime: 2022-11-24 14:27:50
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -54,13 +54,7 @@ import {
 import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
 import { btnCellTemplate, btnActionTemplate } from "./drawerForm";
 export default defineComponent({
-  name: "userManage_drawerForm",
-  componentInfo: {
-    labelNameCn: "侧边弹窗组件",
-    key: "drawerForm",
-    description:
-      "展示在右侧边的弹窗组件，在桌面组件引入后可以使用moduleApi中的openDrawerForm事件触发",
-  } as componentInfo,
+  name: "drawerForm",
 
   components: { VueForm },
   props: ["plugInData", "baseData"],

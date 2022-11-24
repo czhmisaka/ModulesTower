@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 19:50:02
+ * @LastEditTime: 2022-11-24 14:39:01
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -291,7 +291,8 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
     moduleList.map((module) => {
       if (module.output.CardApiInjectComponent) {
         for (let componentName in module.output.CardApiInjectComponent) {
-          back[componentName] = module.output.CardApiInjectComponent[componentName];
+          back[`${module.name}_${componentName}`] =
+            module.output.CardApiInjectComponent[componentName];
         }
       }
     });
@@ -302,16 +303,16 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
   moduleList["getModuleApi"] = () => {
     let back = {};
     moduleList.map((module) => {
-      console.log(module.output,'asdqwe')
+      console.log(module.output, "asdqwe", module);
       if (module.output.moduleApi) {
         for (let apiName in module.output.moduleApi) {
-          back[apiName] = module.output.moduleApi[apiName];
+          back[`${module.name}_${apiName}`] = module.output.moduleApi[apiName];
         }
       }
     });
     return back;
   };
-  
+
   return moduleList;
 };
 
