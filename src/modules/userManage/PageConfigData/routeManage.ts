@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 18:58:50
- * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/apiManage.ts
+ * @LastEditTime: 2022-11-25 12:25:48
+ * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
 import {
@@ -33,29 +33,39 @@ import {
   btnActionTemplate,
 } from "../component/searchTable/drawerForm";
 
-export const apiManage = async () => {
+export const department = async () => {
   // 部门数据
   const APITableCellStorage = new SearchCellStorage([
-    tableCellTemplateMaker("URL", "url"),
-    tableCellTemplateMaker("方法", "method"),
-    tableCellTemplateMaker("接口分类", "tags"),
-    tableCellTemplateMaker("接口释义", "description"),
+    tableCellTemplateMaker("ID", "id"),
+    tableCellTemplateMaker("创建者ID", "createUserId"),
+    tableCellTemplateMaker(
+      "创建时间",
+      "createTime",
+      DataCell({
+        width: "200px",
+      })
+    ),
+    tableCellTemplateMaker("更新者", "updateUserId"),
+    tableCellTemplateMaker(
+      "更新时间",
+      "updateTime",
+      DataCell({
+        width: "200px",
+      })
+    ),
+    tableCellTemplateMaker("排序", "orderNumber"),
+    tableCellTemplateMaker("是否置顶", "top"),
+    tableCellTemplateMaker("删除", "deleted"),
+    tableCellTemplateMaker("部门名称", "name"),
+    tableCellTemplateMaker("简介", "description"),
+    tableCellTemplateMaker("上级部门ID", "parentId"),
+    tableCellTemplateMaker("所有上级部门ID", "parentIds"),
+    tableCellTemplateMaker("上级部门", "parentNames"),
+    tableCellTemplateMaker("所属行政区划ID", "regionId"),
+    tableCellTemplateMaker("浙政钉Code", "zzdCode"),
   ]);
 
-  let apiGroup = await get("/web/usc/url/group", {});
-  let apiMap = {};
-  apiGroup.data.map((x) => {
-    apiMap[x] = x;
-  });
-
-  const userTableSearchTemplate = [
-    tableCellTemplateMaker("接口分组", "name", {
-      input: {
-        type: formInputType.select,
-        inputOptions: apiMap,
-      },
-    }),
-  ];
+  const userTableSearchTemplate = [];
 
   const btnList = [];
   return [
@@ -69,13 +79,11 @@ export const apiManage = async () => {
       },
       {
         props: {
-          defaultQuery: { name: apiGroup.data[apiGroup.data.length - 1] },
-          autoSearch: true,
           searchItemTemplate: userTableSearchTemplate,
           showItemTemplate: APITableCellStorage.getAll(),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};
-            let res = await post("/web/usc/url/list", { ...query });
+            let res = await post("/web/usc/unit/list", { ...query });
             return res && res.data ? res.data : [];
           },
           searchKeyWithBaseData: ["outputKey"],
