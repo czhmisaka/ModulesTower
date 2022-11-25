@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 10:56:06
+ * @LastEditTime: 2022-11-25 15:12:25
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -52,57 +52,51 @@ export const mainDesktop = async () => {
     return cell;
   }
 
-  // 部门数据
-  const depTableCellStorage = new SearchCellStorage([
-    tableCellTemplateMaker("ID", "id"),
-    tableCellTemplateMaker("创建时间", "createTime", DataCell()),
-    tableCellTemplateMaker("排序", "orderNumber"),
-    tableCellTemplateMaker("更新时间", "updateTime", DataCell()),
-    tableCellTemplateMaker("部门名称", "name"),
-    tableCellTemplateMaker("上级部门", "parentNames"),
-  ]);
-
-  const searchTemplate = [
-    depTableCellStorage.getByLabel("ID"),
-    depTableCellStorage.getByLabel(
-      "创建时间",
-      searchCell(formInputType.datePicker)
-    ),
-    depTableCellStorage.getByLabel(
-      "更新时间",
-      searchCell(formInputType.datePicker)
-    ),
-    depTableCellStorage.getByLabel("部门名称"),
-    depTableCellStorage.getByLabel("上级部门"),
-  ] as tableCellTemplate[];
-
   const userTableCellStorage = new SearchCellStorage([
-    tableCellTemplateMaker("姓名", "name"),
-    tableCellTemplateMaker("姓名1", "name1"),
-    tableCellTemplateMaker("姓名2", "name2"),
-    tableCellTemplateMaker("性别", "gender"),
-    tableCellTemplateMaker("图标", "icon"),
-    tableCellTemplateMaker("简介", "description"),
-    tableCellTemplateMaker("管理员标识", "adminFlag"),
-    tableCellTemplateMaker("手机号", "mobile"),
-    tableCellTemplateMaker("身份证", "idCard"),
-    tableCellTemplateMaker("浙政钉code", "zzdCode"),
+    tableCellTemplateMaker("name", "name"),
+    tableCellTemplateMaker("gender", "gender"),
+    tableCellTemplateMaker("icon", "icon"),
+    tableCellTemplateMaker("description", "description"),
+    tableCellTemplateMaker("adminFlag", "adminFlag"),
+    tableCellTemplateMaker("mail", "mail"),
+    tableCellTemplateMaker("mobile", "mobile"),
+    tableCellTemplateMaker(
+      "birthday",
+      "birthday",
+      DataCell({
+        width: "200px",
+      })
+    ),
+    tableCellTemplateMaker("idCard", "idCard"),
+    tableCellTemplateMaker("zzdCode", "zzdCode"),
+    tableCellTemplateMaker("id", "id"),
+    tableCellTemplateMaker("createUserId", "createUserId"),
+    tableCellTemplateMaker(
+      "createTime",
+      "createTime",
+      DataCell({
+        width: "200px",
+      })
+    ),
+    tableCellTemplateMaker("updateUserId", "updateUserId"),
+    tableCellTemplateMaker(
+      "updateTime",
+      "updateTime",
+      DataCell({
+        width: "200px",
+      })
+    ),
+    tableCellTemplateMaker("orderNumber", "orderNumber"),
   ]);
 
-  const userTableSearchTemplate = [
-    userTableCellStorage.getByLabel("姓名"),
-    userTableCellStorage.getByLabel("姓名1"),
-    userTableCellStorage.getByLabel("姓名2"),
-    userTableCellStorage.getByLabel("性别", searchCell(formInputType.radio)),
-    userTableCellStorage.getByLabel("图标", searchCell(formInputType.upload)),
-    userTableCellStorage.getByLabel(
-      "管理员标识",
-      searchCell(formInputType.radio)
-    ),
-    userTableCellStorage.getByLabel("手机号", searchCell(formInputType.mobile)),
-    userTableCellStorage.getByLabel("身份证", searchCell(formInputType.idCard)),
-    userTableCellStorage.getByLabel("浙政钉code"),
-  ];
+  const searchTable = new SearchCellStorage([
+    tableCellTemplateMaker("用户名", "name"),
+    tableCellTemplateMaker("手机号", "mobile"),
+    tableCellTemplateMaker("组织", "unitId"),
+    tableCellTemplateMaker("角色", "roleId"),
+  ]);
+
+  const userTableSearchTemplate = [];
 
   const btnList = [
     btnMaker("新增", btnActionTemplate.OpenDrawer, {

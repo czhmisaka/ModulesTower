@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 11:01:17
+ * @LastEditTime: 2022-11-25 14:37:59
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -24,7 +24,7 @@ export interface desktopDataTemplate {
 
 const pageConfig = {
   user: {
-    name: "用户管理",
+    name: "用户管理(基于部门)",
     desktopData: mainDesktop,
     gridColNum: 12,
     cusStyle: {
