@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 10:37:09
- * @FilePath: /configforpagedemo/src/modules/minio/Index.vue
+ * @LastEditTime: 2022-11-25 11:02:04
+ * @FilePath: /configforpagedemo/src/modules/userManage/Index.vue
 -->
 
 <template>
@@ -16,7 +16,7 @@
   >
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
-      :desktopData="desktopData.desktopData"
+      :desktopData="desktopDataList"
       :component-lists="component"
       :cus-style="desktopData?.cusStyle"
     />
@@ -43,6 +43,8 @@ export default defineComponent({
         ];
         if (isValidKey(PageName, PageConfig)) {
           this.desktopData = PageConfig[PageName];
+          this.desktopDataList = await this.desktopData.desktopData();
+          console.log(await this.desktopData.desktopData(), "asdqwe");
         } else {
           this.$message("没找到对应的页面呢,已前往模块首页");
           this.$router.push({
@@ -65,6 +67,7 @@ export default defineComponent({
   },
   data: () => {
     return {
+      desktopDataList: [],
       desktopData: PageConfig[Object.keys(PageConfig)[0]],
       Env: {},
       component,

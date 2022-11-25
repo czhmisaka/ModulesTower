@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 16:31:03
+ * @LastEditTime: 2022-11-25 10:51:30
  * @FilePath: /configforpagedemo/src/main.ts
  */
 
@@ -78,6 +78,7 @@ getServerConfig(app).then(async config => {
     await router.isReady();
     injectResponsiveStorage(app, config);
     setupStore(app);
+    console.log(router.getRoutes())
     app.config.globalProperties.$modules = getModuleFromView();
     app.config.globalProperties.$utils = utils;
     app.use(MotionPlugin).use(ElementPlus,{ zIndex: 100000 });

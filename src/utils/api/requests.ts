@@ -1,12 +1,12 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 16:38:23
+ * @LastEditTime: 2022-11-25 10:50:19
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
 import axios from "axios";
-import { getCookie } from "./config/cookie";
+import { clearCookie, getCookie } from "./config/cookie";
 import { getHeaders } from "./user/header";
 export const CancelToken: any = axios.CancelToken; // axios 的取消请求
 
@@ -48,7 +48,6 @@ let pendingList: string[] = []; // 声明一个数组用于存储每个ajax请�
  */
 const queue: any[] = [];
 // axios内置的中断ajax的方法
-const cancelToken = axios.CancelToken;
 
 // 同样的url、方法、参数可以视为相同的请求
 const configString = (config: any) => {
@@ -61,15 +60,17 @@ const configString = (config: any) => {
   ) {
     return `${config.url}_${config.method}_${config.data}_${Math.random()}`;
   }
-  return `${config.url}_${config.method}_${config.data}`;
+  // return `${config.url}_${config.method}_${config.data}`;
+  return `${config.url}_${config.method}_${config.data}_${Math.random()}`;
 };
+
 // 响应拦截调用
 // 中断重复的请求，并从队列中移除
 const removeQueue = (config: any) => {
   for (let i = 0, size = queue.length; i < size; i++) {
     const task = queue[i];
     if (task.token === configString(config)) {
-      task.cancel();
+      if (task.cancel) task.cancel();
       queue.splice(i, 1);
       break;
     }
@@ -81,7 +82,7 @@ const removeQueue = (config: any) => {
 request.interceptors.request.use((config) => {
   removeQueue(config);
   // 添加cancelToken
-  config.cancelToken = new cancelToken((c) => {
+  config.cancelToken = new CancelToken((c) => {
     queue.push({ token: configString(config), cancel: c });
   });
   //一定要将config return 出去
@@ -98,6 +99,9 @@ request.interceptors.response.use(
     const res = response.data;
     if ((res.code === 200 && res.type != "error") || res.type == "success") {
       return Promise.resolve(res);
+    } else if (res.code === 401) {
+      // 未登录状态
+      
     } else {
       return Promise.reject(res);
     }
@@ -113,9 +117,6 @@ export const get = (url: string, params: any) => {
     url,
     method: "get",
     params,
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
   });
 };
 
@@ -124,8 +125,5 @@ export function post(url: string, data: object) {
     url,
     method: "post",
     data,
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
   });
 }

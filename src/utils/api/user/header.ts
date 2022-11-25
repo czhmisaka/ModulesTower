@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 16:43:19
+ * @LastEditTime: 2022-11-25 10:21:21
  * @FilePath: /configforpagedemo/src/utils/api/user/header.ts
  */
 
@@ -10,14 +10,15 @@ import { getCookie } from "./cookie";
 /**
  * @name: getheaderTemplate
  * @description: 获取headers模板
- * @authors: CZH
+ * @authors: CZH  
  * @Date: 2022-10-09 14:39:06
  */
 const getheaderTemplate = () => {
-  console.log(getCookie("authorized-token").replaceAll("%2C", ","));
-  let data = JSON.parse(getCookie("authorized-token").replaceAll("%2C", ","));
+  let str = getCookie("authorized-token").replaceAll("%2C", ",");
+  if (!str) str = "{}";
+  let data = JSON.parse(str);
   let back = {
-    "token": data["accessToken"], // 向后台发送的token
+    token: data["accessToken"], // 向后台发送的token
     "Content-Type": "application/json;charset=utf-8",
     "ddm-parameter-encrypt": true,
   };

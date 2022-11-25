@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 15:53:04
+ * @LastEditTime: 2022-11-25 11:01:17
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -10,9 +10,10 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { apiManage } from "./apiManage";
+import { department } from "./departmenet";
 
 export interface desktopDataTemplate {
-  desktopData?: gridCellTemplate[];
+  desktopData?: () => Promise<gridCellTemplate[]>;
   gridColNum?: number;
   cusStyle?: {
     wholeScreen: boolean;
@@ -32,11 +33,21 @@ const pageConfig = {
       margin: 12,
     },
     permission: [],
-    dataPermission:[],
+    dataPermission: [],
   },
-  department: {
+  apiManage: {
     name: "API管理",
     desktopData: apiManage,
+    gridColNum: 12,
+    cusStyle: {
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 12,
+    },
+  },
+  department: {
+    name: "部门管理",
+    desktopData: department,
     gridColNum: 12,
     cusStyle: {
       wholeScreen: true,

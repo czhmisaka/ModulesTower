@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 19:02:26
+ * @LastEditTime: 2022-11-25 12:25:16
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -25,6 +25,7 @@
         :sortable="item.table.sortable"
         :sort-by="(row, index) => sortBy(row, index, item.key)"
         :label="item.label"
+        :width="item.table?.width || 'auto'"
       >
         <template #default="scope">
           <div
@@ -104,5 +105,6 @@ export default defineComponent({
   height: 100%;
   text-align: center;
   text-overflow: ellipsis;
+  user-select: text;
 }
 </style>

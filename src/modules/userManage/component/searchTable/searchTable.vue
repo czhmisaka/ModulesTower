@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 18:44:11
+ * @LastEditTime: 2022-11-25 11:08:05
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -124,8 +124,8 @@ export default defineComponent({
     };
   },
   async mounted() {
-    this.$emit("ready");
     this.initData();
+    this.$emit("ready");
     await this.search();
 
     let that = this;
@@ -141,10 +141,8 @@ export default defineComponent({
   },
   methods: {
     async initData() {
-      console.log("qwe,qwe", this.defaultQuery);
       if (Object.keys(this.defaultQuery).length > 0) {
         this.query = deepClone(this.defaultQuery);
-        console.log("asdqwe", this.query, deepClone(this.defaultQuery));
       }
     },
 

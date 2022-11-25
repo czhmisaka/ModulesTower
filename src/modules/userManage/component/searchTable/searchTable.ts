@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 18:51:30
+ * @LastEditTime: 2022-11-25 11:25:22
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -83,13 +83,14 @@ export interface tableCellTemplate extends tableCellOptions {
   [key: string]: any;
 }
 
-export const DataCell = (): tableCellOptions => {
+export const DataCell = (options:stringAnyObj={}): tableCellOptions => {
   let tableCellOption = {} as tableCellOptions;
   tableCellOption.table = {
     type: showType.func,
     showFunc: (data: any, key: string) => {
       return new Date(data[key]).toLocaleString() as any;
     },
+    ...options,
   };
   return tableCellOption;
 };

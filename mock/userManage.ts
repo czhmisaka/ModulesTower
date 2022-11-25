@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-09 17:19:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-15 09:14:55
+ * @LastEditTime: 2022-11-25 11:22:59
  * @FilePath: /configforpagedemo/mock/userManage.ts
  */
 // 模拟后端动态生成路由
@@ -111,31 +111,6 @@ export const userListMaker = (number) => {
 }
 
 
-export default [
-  {
-    url: "/web/usc/unit/list",
-    method: "post",
-    response: () => {
-      return {
-        code: 200,
-        type: "success",
-        data: unitlistMaker(40)
-      };
-    }
-  },
-  {
-    url: "/web/usc/user/list",
-    method: "post",
-    response: () => {
-      return {
-        code: 200,
-        type: "success",
-        data: userListMaker(40)
-      };
-
-    }
-  }
-] as MockMethod[];
 
 
 
