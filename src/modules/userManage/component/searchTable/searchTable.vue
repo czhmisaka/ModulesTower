@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 11:08:05
+ * @LastEditTime: 2022-11-28 10:11:11
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -141,7 +141,7 @@ export default defineComponent({
   },
   methods: {
     async initData() {
-      if (Object.keys(this.defaultQuery).length > 0) {
+      if (this.defaultQuery && Object.keys(this.defaultQuery).length > 0) {
         this.query = deepClone(this.defaultQuery);
       }
     },
