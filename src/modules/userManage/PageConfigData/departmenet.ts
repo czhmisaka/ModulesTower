@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 12:25:48
+ * @LastEditTime: 2022-11-28 14:36:29
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -88,6 +88,7 @@ export const department = async () => {
           },
           searchKeyWithBaseData: ["outputKey"],
           btnList,
+          autoSearch:true,
         },
         isSettingTool: false,
       }

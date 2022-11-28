@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 18:19:10
+ * @LastEditTime: 2022-11-28 14:33:41
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -12,6 +12,7 @@
       padding: '12px',
       height: 'auto',
     }"
+    v-if="Object.keys(schema.properties).length > 0 || btnList.length > 0 || !autoSearch"
   >
     <VueForm
       v-model="formData"
@@ -42,7 +43,7 @@
         >
       </div>
     </VueForm>
-    <div class="TopRight">
+    <div class="TopRight" v-if="isNeedClose">
       <iconCell
         :name="isOpen ? 'ArrowDownBold' : 'ArrowUpBold'"
         @click="changeOpen"
@@ -79,6 +80,12 @@ export default defineComponent({
       },
       deep: true,
       immediate: true,
+    },
+  },
+
+  computed: {
+    isNeedClose() {
+      return Object.keys(this.schema.properties).length >= 3;
     },
   },
 

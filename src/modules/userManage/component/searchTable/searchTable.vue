@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 10:11:11
+ * @LastEditTime: 2022-11-28 12:28:50
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -184,8 +184,11 @@ export default defineComponent({
         this.isLoading = true;
         try {
           let result = await this.searchFunc(query);
-          this.PageData = { data: result };
+          if (result && result.length) this.PageData = { data: result };
+          else if (typeof result == "object" && result.pageNumber) {
+          }
         } catch (e) {
+          console.log("【searchTable】组件search事件报错", e);
         } finally {
           this.isLoading = false;
         }

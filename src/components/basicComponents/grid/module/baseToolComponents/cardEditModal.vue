@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-21 16:56:06
+ * @LastEditTime: 2022-11-28 14:50:13
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -93,6 +93,20 @@
               :label="formItem.label"
             >
               <el-input v-model="componentsProps[formItem.key]" />
+            </el-form-item>
+          </el-form>
+        </el-card>
+        <el-card header="组件权限" class="card">
+          <el-form :model="componentsProps" v-on:submit.prevent>
+            <el-form-item
+              v-for="(formItem, index) in componentsPropsInputTemplate"
+              :key="index + '_FormItem'"
+              :label="formItem.label"
+            >
+              <el-select v-model="premission[index + '_FormItem']" placeholder="">
+                <el-option :label="true" :value="true"></el-option>
+                <el-option :label="false" :value="false"></el-option>
+              </el-select>
             </el-form-item>
           </el-form>
         </el-card>
@@ -189,6 +203,8 @@ export default defineComponent({
       modalControl: {
         isOpen: false,
       } as { [key: string]: any },
+
+      premission: {} as { [key: string]: any },
 
       // 组件属性配置
       componentsProps: {} as { [key: string]: any },

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 10:13:11
+ * @LastEditTime: 2022-11-28 14:35:58
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/pageConfigManage.ts
  */
 
@@ -36,7 +36,7 @@ import {
 export const pageConfigManage = async () => {
   // 页面配置数据
   const pageConfigDataTableCellStorage = new SearchCellStorage([
-
+    // tableCellTemplateMaker(''),
   ]);
 
   const SearchTemplate = [];

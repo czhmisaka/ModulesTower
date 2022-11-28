@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 15:12:25
+ * @LastEditTime: 2022-11-28 15:47:24
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -135,8 +135,25 @@ export const mainDesktop = async () => {
           }),
         ],
       },
+      premission:['admin'],
       icon: "Plus",
       elType: "primary",
+    }),
+    btnMaker("删除", btnActionTemplate.OpenDrawer, {
+      drawerProps: {
+        title: "删除用户",
+        queryItemTemplate: userTableSearchTemplate,
+        btnList: [
+          btnMaker("提交", btnActionTemplate.Function, {
+            icon: "Position",
+            function: (that) => {
+              console.log(that, "qwe");
+            },
+          })
+        ],
+      },
+      icon: "Delete",
+      elType: "danger",
     }),
   ];
   return [
@@ -198,19 +215,19 @@ export const mainDesktop = async () => {
     )
       .setPosition(3, 0)
       .setSize(9, 8),
-    gridCellMaker(
-      "editable",
-      "编辑",
-      {},
-      {
-        name: "setting_editable",
-        type: cardComponentType.componentList,
-      },
-      {
-        isSettingTool: true,
-      }
-    )
-      .setPosition(0, 7)
-      .setSize(1, 1),
+    // gridCellMaker(
+    //   "editable",
+    //   "编辑",
+    //   {},
+    //   {
+    //     name: "setting_editable",
+    //     type: cardComponentType.componentList,
+    //   },
+    //   {
+    //     isSettingTool: true,
+    //   }
+    // )
+    //   .setPosition(0, 7)
+    //   .setSize(1, 1),
   ] as gridCellTemplate[];
 };
