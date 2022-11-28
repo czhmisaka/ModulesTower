@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 20:38:53
+ * @LastEditTime: 2022-11-28 21:26:49
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/pageConfigManage.ts
  */
 
@@ -64,8 +64,10 @@ export const pageConfigManage = async () => {
           showItemTemplate: pageConfigDataTableCellStorage.getAll(),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};
+            console.log(query)
+
             let res = await post("/web/usc/page/config/page", { ...query });
-            return res && res.data ? res.data.list : [];
+            return res.data 
           },
           searchKeyWithBaseData: ["outputKey"],
           btnList,

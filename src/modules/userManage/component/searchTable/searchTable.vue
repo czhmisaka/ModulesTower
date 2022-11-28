@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 21:17:06
+ * @LastEditTime: 2022-11-28 21:27:19
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -32,6 +32,10 @@
       @selectedChange="selectedChange"
     />
     <el-pagination
+      :style="{
+        marginTop: '6px',
+        float: 'right',
+      }"
       v-model:current-page="PageData.pageNum"
       v-model:page-size="PageData.pageSize"
       :page-sizes="[100, 200, 300, 400]"
@@ -39,8 +43,8 @@
       :background="true"
       layout="total, sizes, prev, pager, next, jumper"
       :total="PageData.total"
-      @size-change="search"
-      @current-change="search"
+      @size-change="(e) => search({ pageSize: e })"
+      @current-change="(e) => search({ pageNum: e })"
       :hide-on-single-page="false"
     />
   </cardBg>
@@ -158,12 +162,15 @@ export default defineComponent({
     if (interval) clearInterval(interval);
     interval = setInterval(() => {
       if (that.$refs["mainBox"] && that.$refs["inputBox"]) {
+        let baseHeight = 0;
+        if (that.PageData.total) baseHeight = 32;
         if (that.$refs["inputBox"].$el.offsetHeight)
           that.TableHeight =
             that.$refs["mainBox"].$el.offsetHeight -
             that.$refs["inputBox"].$el.offsetHeight -
-            48;
-        else that.TableHeight = that.$refs["mainBox"].$el.offsetHeight - 24;
+            48 -
+            baseHeight;
+        else that.TableHeight = that.$refs["mainBox"].$el.offsetHeight - 24 - baseHeight;
       }
     }, 500);
   },
@@ -208,12 +215,16 @@ export default defineComponent({
     },
 
     async search(query: { [key: string]: any } = this.query) {
-      console.log(query);
+      this.query = {
+        ...this.query,
+        ...query,
+      };
       if (this.searchFunc) {
         this.isLoading = true;
         try {
-          let result = await this.searchFunc(query);
-          if (result) this.PageData.data = result;
+          let result = await this.searchFunc(this.query);
+          if (result.total) this.PageData = result;
+          else this.PageData.data = result;
         } catch (e) {
           console.log("【searchTable】组件search事件报错", e);
         } finally {
