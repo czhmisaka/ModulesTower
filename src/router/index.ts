@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 16:48:47
+ * @LastEditTime: 2022-11-28 18:52:44
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -87,6 +87,8 @@ export const router = createRouter({
   history: createWebHashHistory(),
   routes: constantRoutes.concat(...(remainingRouter as any))
 })
+
+console.log(constantRoutes.concat(...(remainingRouter as any)),'asdasd')
 
 
 /** 重置路由 */

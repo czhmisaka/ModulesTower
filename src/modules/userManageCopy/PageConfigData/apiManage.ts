@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 19:59:35
+ * @LastEditTime: 2022-11-25 18:58:50
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/apiManage.ts
  */
 
@@ -28,6 +28,10 @@ import {
   formInputType,
   stringAnyObj,
 } from "@/modules/userManage/component/searchTable/searchTable";
+import {
+  btnMaker,
+  btnActionTemplate,
+} from "@/modules/userManage/component/searchTable/drawerForm";
 
 export const apiManage = async () => {
   // 部门数据
