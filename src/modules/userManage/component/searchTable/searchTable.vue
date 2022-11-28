@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 12:28:50
+ * @LastEditTime: 2022-11-28 21:17:06
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -21,15 +21,27 @@
       :btn-list="btnList"
       :autoSearch="autoSearch"
     />
-    <el-divider />
     <infoTable
       :template="showItemTemplate"
-      :data-list="PageData"
+      :data-list="PageData.data"
       :loading="isLoading"
+      :onSearch="search"
       :style="{
         height: TableHeight + 'px',
       }"
       @selectedChange="selectedChange"
+    />
+    <el-pagination
+      v-model:current-page="PageData.pageNum"
+      v-model:page-size="PageData.pageSize"
+      :page-sizes="[100, 200, 300, 400]"
+      :small="true"
+      :background="true"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="PageData.total"
+      @size-change="search"
+      @current-change="search"
+      :hide-on-single-page="false"
     />
   </cardBg>
 </template>
@@ -50,7 +62,7 @@ import { stringAnyObj } from "./searchTable";
 import { btnActionTemplate, btnCellTemplate } from "./drawerForm";
 import { Console } from "console";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
-
+import { tableCellTemplateMaker, PageDataTemplate } from "./searchTable";
 let interval = null;
 
 export default defineComponent({
@@ -85,6 +97,10 @@ export default defineComponent({
       label: "需要读取的baseDataKey值",
       type: inputType.array,
     },
+    pageConfig: {
+      label: "分页配置",
+      type: inputType.obj,
+    },
     btnList: {
       label: "按钮行为列表",
       type: inputType.array,
@@ -95,7 +111,16 @@ export default defineComponent({
     },
   } as propInfo,
 
-  baseProps: {},
+  baseProps: {
+    autoSearch: false,
+    defaultQuery: { helloworld: "hello world" },
+    searchFunc: (data) => {
+      return [data];
+    },
+    showItemTemplate: [tableCellTemplateMaker("HELLO WORLD", "helloworld")],
+    searchItemTemplate: [tableCellTemplateMaker("HELLO WORLD", "helloworld")],
+    btnList: [],
+  },
 
   watch: {},
   props: [
@@ -108,12 +133,13 @@ export default defineComponent({
     "searchKeyWithBaseData",
     "btnList",
     "autoSearch",
+    "pageConfig",
   ],
   components: { cardBg, inputForm, infoTable, sideDialogForm },
   data() {
     return {
       query: {},
-      PageData: {},
+      PageData: {} as PageDataTemplate,
       isLoading: false,
 
       // 当前选择项
@@ -131,13 +157,15 @@ export default defineComponent({
     let that = this;
     if (interval) clearInterval(interval);
     interval = setInterval(() => {
-      if (this.$refs["mainBox"] && this.$refs["inputBox"]) {
-        this.TableHeight =
-          this.$refs["mainBox"].$el.offsetHeight -
-          this.$refs["inputBox"].$el.offsetHeight -
-          72;
+      if (that.$refs["mainBox"] && that.$refs["inputBox"]) {
+        if (that.$refs["inputBox"].$el.offsetHeight)
+          that.TableHeight =
+            that.$refs["mainBox"].$el.offsetHeight -
+            that.$refs["inputBox"].$el.offsetHeight -
+            48;
+        else that.TableHeight = that.$refs["mainBox"].$el.offsetHeight - 24;
       }
-    });
+    }, 500);
   },
   methods: {
     async initData() {
@@ -180,13 +208,12 @@ export default defineComponent({
     },
 
     async search(query: { [key: string]: any } = this.query) {
+      console.log(query);
       if (this.searchFunc) {
         this.isLoading = true;
         try {
           let result = await this.searchFunc(query);
-          if (result && result.length) this.PageData = { data: result };
-          else if (typeof result == "object" && result.pageNumber) {
-          }
+          if (result) this.PageData.data = result;
         } catch (e) {
           console.log("【searchTable】组件search事件报错", e);
         } finally {

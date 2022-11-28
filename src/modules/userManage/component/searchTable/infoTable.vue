@@ -1,14 +1,14 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 17:27:29
+ * @LastEditTime: 2022-11-28 20:51:17
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
   <div ref="tableBox" class="tableBox">
     <ElTable
       ref="tableController"
-      :data="dataList.data"
+      :data="dataList"
       @selection-change="selectPosition"
       border
       stripe
@@ -27,11 +27,6 @@
         :label="item.label"
         :width="item.table?.width || 'auto'"
       >
-        <template #header>
-          <div class="columHeader">
-            {{ item.label }}
-          </div>
-        </template>
         <template #default="scope">
           <div
             class="flexBox"

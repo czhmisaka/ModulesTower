@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 18:52:44
+ * @LastEditTime: 2022-11-28 20:08:47
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -88,7 +88,6 @@ export const router = createRouter({
   routes: constantRoutes.concat(...(remainingRouter as any))
 })
 
-console.log(constantRoutes.concat(...(remainingRouter as any)),'asdasd')
 
 
 /** 重置路由 */
@@ -110,8 +109,6 @@ export function resetRouter() {
 const whiteList = ["/login"];
 
 router.beforeEach((to: toRouteType, _from, next) => {
-  console.log(to,_from,to.matched,'qwe')
-
   if (to.meta?.keepAlive) {
     const newMatched = to.matched;
     handleAliveRoute(newMatched, "add");

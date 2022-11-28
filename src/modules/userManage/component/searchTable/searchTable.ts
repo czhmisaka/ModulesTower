@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 11:25:22
+ * @LastEditTime: 2022-11-28 20:46:52
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -37,6 +37,14 @@ export class SearchCellStorage {
   getAll() {
     return this.storage;
   }
+}
+
+
+export interface PageDataTemplate extends stringAnyObj {
+  data:stringAnyObj[];
+  pageNum:number,
+  pageSize:number,
+  total:number
 }
 
 // 主要是懒得重复写了
@@ -113,6 +121,9 @@ export const searchCell = (formInputType: formInputType): tableCellOptions => {
   return tableCellOption;
 };
 
+
+
+
 /**
  * @name: tableCellTemplateMaker
  * @description: 表单构建模块
@@ -134,6 +145,9 @@ export const tableCellTemplateMaker = (
       },
       sortable: true,
     },
+    input: {
+      type: formInputType.input
+    }
   }
 ): tableCellTemplate => {
   return {

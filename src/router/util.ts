@@ -245,7 +245,7 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
                 {
                   meta: {
                     ...pageMap[pageName]["cusStyle"],
-                    name:
+                    title:
                       pageMap[pageName]["name"] || moduleName + "_" + pageName,
                   },
                 }

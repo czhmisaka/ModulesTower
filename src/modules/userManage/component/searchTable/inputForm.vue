@@ -1,58 +1,67 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 14:33:41
+ * @LastEditTime: 2022-11-28 21:14:25
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
-  <cardBg
-    ref="formBox"
-    class="formBox"
-    :cus-style="{
-      padding: '12px',
-      height: 'auto',
-    }"
-    v-if="Object.keys(schema.properties).length > 0 || btnList.length > 0 || !autoSearch"
+  <div
+    v-if="
+      (queryItemTemplate && queryItemTemplate.length > 0) ||
+      (btnList && btnList.length > 0) ||
+      !autoSearch
+    "
   >
-    <VueForm
-      v-model="formData"
-      :style="{
-        textAlign: 'left',
+    <cardBg
+      ref="formBox"
+      class="formBox"
+      :cus-style="{
+        padding: '12px',
+        height: 'auto',
+        paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '12px' : '0px',
       }"
-      :schema="schema"
-      :ui-schema="uiSchema"
-      :formProps="formProps"
-      @change="onChange"
     >
-      <div
-        v-if="btnList.length > 0 || !autoSearch"
-        slot-scope="{ formData }"
-        :style="{ textAlign: 'right' }"
-      >
-        <el-button
-          v-for="item in btnList"
-          @click="btnClick(item)"
-          :type="item.elType"
-          :icon="item.icon"
-        >
-          {{ item.label }}
-        </el-button>
-        <el-button v-if="!autoSearch" @click="refreshData(-1)">重置</el-button>
-        <el-button v-if="!autoSearch" type="primary" @click="handleSubmit(formData)"
-          >搜索</el-button
-        >
-      </div>
-    </VueForm>
-    <div class="TopRight" v-if="isNeedClose">
-      <iconCell
-        :name="isOpen ? 'ArrowDownBold' : 'ArrowUpBold'"
-        @click="changeOpen"
-        :iconOption="{
-          fontSize: '12px',
+      <VueForm
+        v-model="formData"
+        :style="{
+          textAlign: 'left',
         }"
-      />
-    </div>
-  </cardBg>
+        :schema="schema"
+        :ui-schema="uiSchema"
+        :formProps="formProps"
+        @change="onChange"
+      >
+        <div
+          v-if="btnList.length > 0 || !autoSearch"
+          slot-scope="{ formData }"
+          :style="{ textAlign: 'right' }"
+        >
+          <el-button
+            v-for="item in btnList"
+            @click="btnClick(item)"
+            :type="item.elType"
+            :icon="item.icon"
+          >
+            {{ item.label }}
+          </el-button>
+          <el-button v-if="!autoSearch" @click="refreshData(-1)">重置</el-button>
+          <el-button v-if="!autoSearch" type="primary" @click="handleSubmit(formData)"
+            >搜索</el-button
+          >
+        </div>
+      </VueForm>
+      <div class="TopRight" v-if="isNeedClose">
+        <iconCell
+          :name="isOpen ? 'ArrowDownBold' : 'ArrowUpBold'"
+          @click="changeOpen"
+          :iconOption="{
+            fontSize: '12px',
+          }"
+        />
+      </div>
+    </cardBg>
+    <el-divider />
+  </div>
 </template>
 
 <script lang="ts">

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 14:44:16
+ * @LastEditTime: 2022-11-28 20:09:33
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -419,12 +419,6 @@ export default defineComponent({
   },
 
   async created() {
-    console.log(
-      this.$modules,
-      this.$modules.getAllPluginComponent(),
-      this.$modules.getModuleApi(),
-      "qwe"
-    );
     this.PlugInComponents = this.$modules.getAllPluginComponent();
   },
 

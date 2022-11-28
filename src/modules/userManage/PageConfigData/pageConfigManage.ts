@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 14:35:58
+ * @LastEditTime: 2022-11-28 20:38:53
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/pageConfigManage.ts
  */
 
@@ -36,7 +36,14 @@ import {
 export const pageConfigManage = async () => {
   // 页面配置数据
   const pageConfigDataTableCellStorage = new SearchCellStorage([
-    // tableCellTemplateMaker(''),
+    tableCellTemplateMaker("createUserId", "createUserId"),
+    tableCellTemplateMaker("创建时间", "createTime"),
+    tableCellTemplateMaker("最近更新用户ID", "updateUserId"),
+    tableCellTemplateMaker("更新时间", "updateTime"),
+    tableCellTemplateMaker("排序", "orderNumber"),
+    tableCellTemplateMaker("置顶", "top"),
+    tableCellTemplateMaker("配置", "config"),
+    tableCellTemplateMaker("pageConfigId", "pageConfigId"),
   ]);
 
   const SearchTemplate = [];
@@ -63,6 +70,7 @@ export const pageConfigManage = async () => {
           searchKeyWithBaseData: ["outputKey"],
           btnList,
         },
+        autoSearch: true,
         isSettingTool: false,
       }
     )
