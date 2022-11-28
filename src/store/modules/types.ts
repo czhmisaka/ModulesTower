@@ -1,8 +1,15 @@
+/*
+ * @Date: 2022-11-21 16:13:14
+ * @LastEditors: CZH
+ * @LastEditTime: 2022-11-28 17:14:05
+ * @FilePath: /configforpagedemo/src/store/modules/types.ts
+ */
 import { RouteRecordName } from "vue-router";
 
 export type cacheType = {
   mode: string;
   name?: RouteRecordName;
+  path?:string
 };
 
 export type positionType = {

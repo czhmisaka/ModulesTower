@@ -245,23 +245,23 @@ function handleAliveRoute(matched: RouteRecordNormalized[], mode?: string) {
   switch (mode) {
     case "add":
       matched.forEach(v => {
-        usePermissionStoreHook().cacheOperate({ mode: "add", name: v.name });
+        usePermissionStoreHook().cacheOperate({ mode: "add", name: v.path });
       });
       break;
     case "delete":
       usePermissionStoreHook().cacheOperate({
         mode: "delete",
-        name: matched[matched.length - 1].name
+        path: matched[matched.length - 1].path
       });
       break;
     default:
       usePermissionStoreHook().cacheOperate({
         mode: "delete",
-        name: matched[matched.length - 1].name
+        path: matched[matched.length - 1].path
       });
       useTimeoutFn(() => {
         matched.forEach(v => {
-          usePermissionStoreHook().cacheOperate({ mode: "add", name: v.name });
+          usePermissionStoreHook().cacheOperate({ mode: "add", path: v.path });
         });
       }, 100);
   }

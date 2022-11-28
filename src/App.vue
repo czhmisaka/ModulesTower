@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 16:35:13
+ * @LastEditTime: 2022-11-28 16:07:11
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
@@ -47,6 +47,7 @@ export default defineComponent({
     },
   },
   mounted() {
+    console.log(this.$router);
     this.$refs["lineSlideExchange"].start();
     this.$refs["lineSlideExchange"].finish();
   },

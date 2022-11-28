@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 12:25:16
+ * @LastEditTime: 2022-11-28 17:27:29
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -27,6 +27,11 @@
         :label="item.label"
         :width="item.table?.width || 'auto'"
       >
+        <template #header>
+          <div class="columHeader">
+            {{ item.label }}
+          </div>
+        </template>
         <template #default="scope">
           <div
             class="flexBox"
@@ -106,5 +111,11 @@ export default defineComponent({
   text-align: center;
   text-overflow: ellipsis;
   user-select: text;
+  font-weight: 300;
+}
+.columHeader {
+  position: absolute;
+  padding-left: 20px;
+  overflow: hidden;
 }
 </style>

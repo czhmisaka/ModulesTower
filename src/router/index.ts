@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 16:33:28
+ * @LastEditTime: 2022-11-28 16:48:47
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -59,8 +59,10 @@ moduleList.map((module: modulesCellTemplate, index: number) => {
   })
 })
 
+
 // 路由存放
 const routes = [homeRouter, errorRouter, ...baseModuleRouterList]
+
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
@@ -71,7 +73,6 @@ export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
 export const constantMenus: Array<RouteComponent> = ascending(routes).concat(
   ...remainingRouter,
 );
-
 
 
 /** 不参与菜单的路由 */
@@ -107,6 +108,8 @@ export function resetRouter() {
 const whiteList = ["/login"];
 
 router.beforeEach((to: toRouteType, _from, next) => {
+  console.log(to,_from,to.matched,'qwe')
+
   if (to.meta?.keepAlive) {
     const newMatched = to.matched;
     handleAliveRoute(newMatched, "add");

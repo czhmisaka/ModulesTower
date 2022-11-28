@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 10:37:09
- * @FilePath: /configforpagedemo/src/modules/minio/Index.vue
+ * @LastEditTime: 2022-11-28 16:20:28
+ * @FilePath: /configforpagedemo/src/modules/main/Index.vue
 -->
 
 <template>
@@ -27,7 +27,6 @@
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
-import { GetAllUser } from "@/utils/api/user/user";
 
 export default defineComponent({
   components: {
@@ -73,8 +72,6 @@ export default defineComponent({
   },
   async mounted() {
     this.init();
-    let res = await GetAllUser();
-    console.log(res);
   },
 });
 </script>
