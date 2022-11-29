@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 11:01:36
+ * @LastEditTime: 2022-11-29 16:02:52
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -30,6 +30,7 @@
         height: TableHeight + 'px',
       }"
       @selectedChange="selectedChange"
+      @onChange="(value, options) => $emit('onChange', value, options)"
     />
     <el-pagination
       :style="{
@@ -168,7 +169,7 @@ export default defineComponent({
           that.TableHeight =
             that.$refs["mainBox"].$el.offsetHeight -
             that.$refs["inputBox"].$el.offsetHeight -
-            48 -
+            34 -
             baseHeight;
         else that.TableHeight = that.$refs["mainBox"].$el.offsetHeight - 24 - baseHeight;
       }

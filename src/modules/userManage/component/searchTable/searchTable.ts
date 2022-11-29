@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 20:46:52
+ * @LastEditTime: 2022-11-29 15:10:19
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -39,18 +39,35 @@ export class SearchCellStorage {
   }
 }
 
-
 export interface PageDataTemplate extends stringAnyObj {
-  data:stringAnyObj[];
-  pageNum:number,
-  pageSize:number,
-  total:number
+  data: stringAnyObj[];
+  pageNum: number;
+  pageSize: number;
+  total: number;
 }
 
 // 主要是懒得重复写了
 export interface stringAnyObj {
   [key: string]: any;
 }
+
+export interface tableCellOptionsInputPropertiesTemplate {
+  inputOptions?: stringAnyObj;
+  style?: stringAnyObj;
+  [key: string]: any;
+}
+export interface tableCellOptionsInputTemplate
+  extends tableCellOptionsInputPropertiesTemplate {
+  type: formInputType;
+}
+export interface tableCellOptionsTableTemplate {
+  showFunc: (data: any, key: string) => any;
+  type: showType;
+  style?: stringAnyObj;
+  sortable?: boolean;
+  [key: string]: any;
+}
+
 /**
  * @name: 表格单元配置
  * @description: tableCellOptions
@@ -58,19 +75,8 @@ export interface stringAnyObj {
  * @Date: 2022-11-10 09:30:21
  */
 export interface tableCellOptions {
-  input?: {
-    type: formInputType;
-    inputOptions?: stringAnyObj;
-    style?: stringAnyObj;
-    [key: string]: any;
-  };
-  table?: {
-    showFunc: (data: any, key: string) => any;
-    type: showType;
-    style?: stringAnyObj;
-    sortable?: boolean;
-    [key: string]: any;
-  };
+  input?: tableCellOptionsInputTemplate;
+  table?: tableCellOptionsTableTemplate;
   [key: string]: any;
 }
 
@@ -91,38 +97,45 @@ export interface tableCellTemplate extends tableCellOptions {
   [key: string]: any;
 }
 
-export const DataCell = (options:stringAnyObj={}): tableCellOptions => {
+/**
+ * @name: DataCell
+ * @description: 创建表单日期显示
+ * @authors: CZH
+ * @Date: 2022-11-29 14:52:10
+ * @param {stringAnyObj} options
+ */
+export const DataCell = (options: stringAnyObj = {}): tableCellOptions => {
+  return showCell(showType.func, {
+    showFunc: (data: any, key: string) => new Date(data[key]).toLocaleString(),
+    ...options,
+  });
+};
+
+export const showCell = (
+  showType: showType,
+  options?: tableCellOptionsTableTemplate | stringAnyObj
+): tableCellOptions => {
   let tableCellOption = {} as tableCellOptions;
   tableCellOption.table = {
-    type: showType.func,
-    showFunc: (data: any, key: string) => {
-      return new Date(data[key]).toLocaleString() as any;
-    },
+    type: showType,
+    sortable: true,
+    showFunc: (data: any, key: string) => data[key],
     ...options,
   };
   return tableCellOption;
 };
 
-export const showCell = (formInputType: formInputType): tableCellOptions => {
-  let tableCellOption = {} as tableCellOptions;
-  let showFunc = null;
-  tableCellOption.table = {
-    type: showType.func,
-    showFunc: (data: any, key: string) => {},
-  };
-  return tableCellOption;
-};
-
-export const searchCell = (formInputType: formInputType): tableCellOptions => {
+export const searchCell = (
+  formInputType: formInputType,
+  options?: tableCellOptionsInputPropertiesTemplate
+): tableCellOptions => {
   let tableCellOption = {} as tableCellOptions;
   tableCellOption.input = {
     type: formInputType,
+    ...options,
   };
   return tableCellOption;
 };
-
-
-
 
 /**
  * @name: tableCellTemplateMaker
@@ -140,14 +153,15 @@ export const tableCellTemplateMaker = (
     table: {
       showFunc: (data, key) => data[key],
       type: showType.func,
+      sortable: true,
+      width: 'auto',
       style: {
         maxHeight: "120px",
       },
-      sortable: true,
     },
     input: {
-      type: formInputType.input
-    }
+      type: formInputType.input,
+    },
   }
 ): tableCellTemplate => {
   return {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 21:14:25
+ * @LastEditTime: 2022-11-29 15:19:29
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -60,7 +60,12 @@
         />
       </div>
     </cardBg>
-    <el-divider />
+    <el-divider
+      :style="{
+        width: 'calc(100% - 24px)',
+        margin: '12px',
+      }"
+    />
   </div>
 </template>
 

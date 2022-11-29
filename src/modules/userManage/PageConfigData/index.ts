@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 11:06:33
+ * @LastEditTime: 2022-11-29 14:19:36
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -12,6 +12,7 @@ import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deep
 import { apiManage } from "./apiManage";
 import { department } from "./departmenet";
 import { pageConfigManage } from "./pageConfigManage";
+import { menuManage } from "./menuManage";
 
 export interface desktopDataTemplate {
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -56,7 +57,7 @@ const pageConfig = {
       margin: 12,
     },
   },
-  pageConfigManage:{
+  pageConfigManage: {
     name: "页面配置管理",
     desktopData: pageConfigManage,
     gridColNum: 12,
@@ -65,7 +66,17 @@ const pageConfig = {
       maxRows: 8,
       margin: 12,
     },
-  }
+  },
+  menuManage: {
+    name: "菜单管理",
+    desktopData: menuManage,
+    gridColNum: 12,
+    cusStyle: {
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 12,
+    },
+  },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

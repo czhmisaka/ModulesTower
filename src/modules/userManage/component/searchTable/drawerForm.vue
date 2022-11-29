@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 13:54:39
+ * @LastEditTime: 2022-11-29 16:18:41
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -13,7 +13,7 @@
     :with-header="plugInData.title ? true : false"
     :append-to-body="'True'"
   >
-    <div class="formBody">
+    <div class="formBody" v-if="!plugInData['noEdit']">
       <VueForm
         v-if="isOpen"
         v-model="formData"
@@ -26,6 +26,18 @@
       >
         <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
       </VueForm>
+    </div>
+    <div class="formBody" v-else>
+      <el-card>
+        <el-form ref="form" v-on:submit.prevent :label-position="'top'">
+          <el-form-item v-for="item in plugInData['queryItemTemplate']">
+            <template #label>
+              <h2 style="font-weight: 900">{{ item.label }}</h2>
+            </template>
+            {{ item.table.showFunc(plugInData["data"], item.key) }}
+          </el-form-item>
+        </el-form>
+      </el-card>
     </div>
     <div :style="{ textAlign: 'left' }">
       <el-divider></el-divider>
@@ -104,7 +116,6 @@ export default defineComponent({
         this.$refs["drawer"].open();
       } else if (btn.type == btnActionTemplate.Function) {
         let that = this;
-        console.log(btn, "asd");
         await btn.function(that);
       } else if (btn.type == btnActionTemplate.Url) {
       }
@@ -115,6 +126,7 @@ export default defineComponent({
       await this.$nextTick();
       if (this.plugInData["queryItemTemplate"])
         await this.initForm(this.plugInData.queryItemTemplate);
+      if (this.plugInData["data"]) this.formData = this.plugInData["data"];
     },
   },
 });

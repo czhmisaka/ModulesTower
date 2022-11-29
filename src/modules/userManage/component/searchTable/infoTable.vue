@@ -1,22 +1,22 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 20:51:17
+ * @LastEditTime: 2022-11-29 16:04:15
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
   <div ref="tableBox" class="tableBox">
     <ElTable
       ref="tableController"
+      :header-cell-style="tableHeader"
       :data="dataList"
       @selection-change="selectPosition"
-      border
-      stripe
       v-loading="loading"
       style="cursor: default"
       @cell-dblclick="cellDblclick"
       :row-style="{ 'min-height': '60px', 'min-width': '100px' }"
       :fit="true"
+      :border="false"
       :height="'100%'"
     >
       <ElTableColumn type="selection" align="center" fixed="left"></ElTableColumn>
@@ -27,13 +27,36 @@
         :label="item.label"
         :width="item.table?.width || 'auto'"
       >
+        <template #header>
+          <div class="ColumnHeader">
+            <el-popover
+              placement="top-start"
+              trigger="hover"
+              :show-after="400"
+              :content="`${item.label}`"
+            >
+              <template #reference>
+                {{ item.label }}
+              </template>
+            </el-popover>
+          </div>
+        </template>
         <template #default="scope">
           <div
             class="flexBox"
             :style="item.table?.style"
             v-if="item.table.type == showType.func"
           >
-            {{ item.table.showFunc(scope.row, item.key) }}
+            <el-popover
+              placement="top-start"
+              trigger="hover"
+              :show-after="500"
+              :content="item.table.showFunc(scope.row, item.key)"
+            >
+              <template #reference>
+                {{ item.table.showFunc(scope.row, item.key) }}
+              </template>
+            </el-popover>
           </div>
         </template>
       </ElTableColumn>
@@ -56,6 +79,16 @@ export default defineComponent({
     };
   },
 
+  computed: {
+    tableHeader() {
+      return {
+        backgroundColor: "#f8f9fb",
+        fontWeight: 900,
+        color: "#333",
+      };
+    },
+  },
+
   methods: {
     /**
      * @name: cellDblclick
@@ -64,7 +97,16 @@ export default defineComponent({
      * @Date: 2022-11-15 15:07:10
      * @param {*} data
      */
-    cellDblclick(data) {},
+    cellDblclick(data) {
+      console.log(data, "asd");
+      this.$modules.getModuleApi()["userManage_openDrawerForm"](this, {
+        title: "详情",
+        queryItemTemplate: this.template,
+        btnList: [],
+        data,
+        noEdit: true,
+      });
+    },
 
     /**
      * @name: selectPosition
@@ -98,19 +140,25 @@ export default defineComponent({
 <style lang="scss" scoped>
 .tableBox {
   height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
 .flexBox {
-  overflow: hidden;
-  display: flex;
-  height: 100%;
-  text-align: center;
-  text-overflow: ellipsis;
+  text-align: left;
   user-select: text;
   font-weight: 300;
-}
-.columHeader {
-  position: absolute;
-  padding-left: 20px;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ColumnHeader {
+  float: left;
+  width: calc(100% - 26px);
+  user-select: text;
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

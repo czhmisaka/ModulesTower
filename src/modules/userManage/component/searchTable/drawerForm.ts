@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 14:10:14
+ * @LastEditTime: 2022-11-29 16:03:48
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -42,6 +42,8 @@ export interface drawerProps {
   title: string;
   queryItemTemplate: tableCellOptions[];
   btnList: btnCellTemplate[];
+  data?: stringAnyObj;
+  noEdit?: boolean;
 }
 
 /**
