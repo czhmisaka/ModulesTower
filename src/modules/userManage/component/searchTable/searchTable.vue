@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 21:27:19
+ * @LastEditTime: 2022-11-29 11:01:36
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -214,6 +214,13 @@ export default defineComponent({
       this.selectedList = selectedList;
     },
 
+    /**
+     * @name: search
+     * @description: 执行搜索事件
+     * @authors: CZH
+     * @Date: 2022-11-29 11:01:28
+     * @param {*} query
+     */
     async search(query: { [key: string]: any } = this.query) {
       this.query = {
         ...this.query,

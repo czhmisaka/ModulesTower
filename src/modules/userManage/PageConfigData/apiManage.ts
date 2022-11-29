@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 19:59:35
+ * @LastEditTime: 2022-11-29 11:16:48
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/apiManage.ts
  */
 
@@ -45,12 +45,7 @@ export const apiManage = async () => {
   });
 
   const userTableSearchTemplate = [
-    tableCellTemplateMaker("接口分组", "name", {
-      input: {
-        type: formInputType.select,
-        inputOptions: apiMap,
-      },
-    }),
+  
   ];
 
   const btnList = [];
@@ -66,7 +61,7 @@ export const apiManage = async () => {
       {
         props: {
           defaultQuery: { name: apiGroup.data[apiGroup.data.length - 1] },
-          autoSearch: true,
+          autoSearch: false,
           searchItemTemplate: userTableSearchTemplate,
           showItemTemplate: APITableCellStorage.getAll(),
           searchFunc: async (query: stringAnyObj) => {

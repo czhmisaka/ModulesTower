@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 21:26:49
+ * @LastEditTime: 2022-11-29 11:07:00
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/pageConfigManage.ts
  */
 
@@ -45,6 +45,7 @@ export const pageConfigManage = async () => {
     tableCellTemplateMaker("配置", "config"),
     tableCellTemplateMaker("pageConfigId", "pageConfigId"),
   ]);
+
 
   const SearchTemplate = [];
 
