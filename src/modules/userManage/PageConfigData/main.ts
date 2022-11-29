@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 15:47:24
+ * @LastEditTime: 2022-11-29 11:26:12
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -102,11 +102,11 @@ export const mainDesktop = async () => {
     btnMaker("新增", btnActionTemplate.OpenDrawer, {
       drawerProps: {
         title: "新增用户",
-        queryItemTemplate: userTableSearchTemplate,
+        queryItemTemplate: userTableCellStorage.getAll(),
         btnList: [
           btnMaker("提交", btnActionTemplate.Function, {
             icon: "Position",
-            function: (that) => {
+            function: async (that) => {
               console.log(that, "qwe");
             },
           }),
@@ -118,7 +118,7 @@ export const mainDesktop = async () => {
                 btnMaker("提交", btnActionTemplate.Function, {
                   icon: "Position",
                   function: (that) => {
-                    console.log(that, "qwe");
+                    return console.log(that, "qwe");
                   },
                 }),
                 btnMaker("取消", btnActionTemplate.Function, {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 15:41:47
+ * @LastEditTime: 2022-11-29 14:10:14
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -100,7 +100,7 @@ export const openDrawerForm = (
     let func = content["$emit"] ? "$emit" : "emit";
     let data = {};
     data[moduleName + drawerForm.name] = value;
-    content[func]("onChange", deepClone(data), {
+    content[func]("onChange", data, {
       type: [cardOnChangeType.moduleApi],
     });
   } catch (err) {

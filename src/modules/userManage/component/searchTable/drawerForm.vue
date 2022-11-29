@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 14:27:50
+ * @LastEditTime: 2022-11-29 13:54:39
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -104,6 +104,7 @@ export default defineComponent({
         this.$refs["drawer"].open();
       } else if (btn.type == btnActionTemplate.Function) {
         let that = this;
+        console.log(btn, "asd");
         await btn.function(that);
       } else if (btn.type == btnActionTemplate.Url) {
       }
