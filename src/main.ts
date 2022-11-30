@@ -71,7 +71,6 @@ for (let x in Icons) {
 }
 app.component('vue-drag-resize', Vue3DraggableResizable)
 
-
 getServerConfig(app).then(async config => {
     app.use(router);
     await router.isReady();
