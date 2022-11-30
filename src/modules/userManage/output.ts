@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 11:17:03
+ * @LastEditTime: 2022-11-30 10:49:59
  * @FilePath: /configforpagedemo/src/modules/userManage/output.ts
  */
 export const moduleInfo = {
@@ -12,7 +12,7 @@ export const moduleInfo = {
   author: "czh & ljh",
 };
 
-import drawerForm from "./component/searchTable/drawerForm";
+import drawerForm from "@/modules/userManage/component/searchTable/drawerForm";
 
 export const output = {
   moduleApi: {

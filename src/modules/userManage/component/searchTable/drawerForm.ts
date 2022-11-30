@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 10:43:45
+ * @LastEditTime: 2022-11-30 10:50:22
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -10,7 +10,7 @@ export const OpenDrawerBtn = () => {};
 import { checkContext } from "@/components/basicComponents/grid/module/cardApi";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
-import drawerFormVue from "./drawerForm.vue";
+import drawerFormVue from "@/modules/userManage/component/searchTable/drawerForm.vue";
 
 // 主要是懒得重复写了
 export interface stringAnyObj {
