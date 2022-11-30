@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 16:03:48
+ * @LastEditTime: 2022-11-30 10:43:45
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -10,8 +10,7 @@ export const OpenDrawerBtn = () => {};
 import { checkContext } from "@/components/basicComponents/grid/module/cardApi";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
-import drawerForm from "./drawerForm.vue";
-export const drawerFormSon = drawerForm;
+import drawerFormVue from "./drawerForm.vue";
 
 // 主要是懒得重复写了
 export interface stringAnyObj {
@@ -101,7 +100,7 @@ export const openDrawerForm = (
   try {
     let func = content["$emit"] ? "$emit" : "emit";
     let data = {};
-    data[moduleName + drawerForm.name] = value;
+    data[moduleName + drawerFormVue.name] = value;
     content[func]("onChange", data, {
       type: [cardOnChangeType.moduleApi],
     });
@@ -112,7 +111,7 @@ export const openDrawerForm = (
 
 let component = {};
 let moduleName = "userManage_";
-component[drawerForm.name] = drawerForm;
+component[drawerFormVue.name] = drawerFormVue;
 
 export default {
   moduleApi: {

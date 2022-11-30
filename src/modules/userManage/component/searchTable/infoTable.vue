@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 19:29:40
+ * @LastEditTime: 2022-11-30 10:29:29
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -156,7 +156,6 @@ export default defineComponent({
 .ColumnHeader {
   float: left;
   width: calc(100% - 26px);
-  user-select: text;
   font-weight: 900;
   overflow: hidden;
   text-overflow: ellipsis;

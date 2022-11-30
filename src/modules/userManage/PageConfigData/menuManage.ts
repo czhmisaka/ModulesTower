@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 09:37:57
+ * @LastEditTime: 2022-11-30 10:27:39
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/menuManage.ts
  */
 
@@ -12,12 +12,6 @@ import {
   cardOnChangeType,
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
-import {
-  changeVisible,
-  changeCardSize,
-  changeCardPosition,
-  changeCardProperties,
-} from "@/components/basicComponents/grid/module/cardApi/index";
 import { post, get } from "@/utils/api/requests";
 import {
   SearchCellStorage,
