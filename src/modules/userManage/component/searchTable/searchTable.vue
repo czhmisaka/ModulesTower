@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 16:02:52
+ * @LastEditTime: 2022-11-29 18:20:07
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -158,7 +158,6 @@ export default defineComponent({
     this.initData();
     this.$emit("ready");
     await this.search();
-
     let that = this;
     if (interval) clearInterval(interval);
     interval = setInterval(() => {

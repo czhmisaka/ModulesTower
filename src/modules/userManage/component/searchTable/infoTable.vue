@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 16:04:15
+ * @LastEditTime: 2022-11-29 19:29:40
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -18,6 +18,7 @@
       :fit="true"
       :border="false"
       :height="'100%'"
+      row-key="id"
     >
       <ElTableColumn type="selection" align="center" fixed="left"></ElTableColumn>
       <ElTableColumn
@@ -26,6 +27,7 @@
         :sort-by="(row, index) => sortBy(row, index, item.key)"
         :label="item.label"
         :width="item.table?.width || 'auto'"
+        :prop="item.key"
       >
         <template #header>
           <div class="ColumnHeader">
@@ -41,7 +43,7 @@
             </el-popover>
           </div>
         </template>
-        <template #default="scope">
+        <template #default="scope" v-if="item.table.type != showType.dataKey">
           <div
             class="flexBox"
             :style="item.table?.style"
@@ -98,7 +100,6 @@ export default defineComponent({
      * @param {*} data
      */
     cellDblclick(data) {
-      console.log(data, "asd");
       this.$modules.getModuleApi()["userManage_openDrawerForm"](this, {
         title: "详情",
         queryItemTemplate: this.template,

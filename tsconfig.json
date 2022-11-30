@@ -51,7 +51,6 @@
 		"src/**/*.vue",
 		"tests/**/*.ts",
 		"tests/**/*.tsx",
-		"src/components/basicComponents/cell/icon/iconCell.js",
 		"config/proxyTable.ts",
 		"types/*.d.ts",
 	],

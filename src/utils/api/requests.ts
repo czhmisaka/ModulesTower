@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 10:50:19
+ * @LastEditTime: 2022-11-30 08:46:24
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -9,6 +9,8 @@ import axios from "axios";
 import { clearCookie, getCookie } from "./config/cookie";
 import { getHeaders } from "./user/header";
 export const CancelToken: any = axios.CancelToken; // axios 的取消请求
+import { ElMessage } from "element-plus";
+import { useUserStoreHook } from "@/store/modules/user";
 
 // development , production
 const Env = import.meta.env.VITE_MODE;
@@ -101,7 +103,10 @@ request.interceptors.response.use(
       return Promise.resolve(res);
     } else if (res.code === 401) {
       // 未登录状态
-      
+      ElMessage({
+        message: "登录过期啦",
+        type: "warning",
+      });useUserStoreHook().logOut();
     } else {
       return Promise.reject(res);
     }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-25 10:51:30
+ * @LastEditTime: 2022-11-30 09:26:07
  * @FilePath: /configforpagedemo/src/main.ts
  */
 
@@ -69,7 +69,6 @@ for (let x in Icons) {
         console.log('icon 加载失败 : ', x)
     }
 }
-app.component('CusIcon', iconCell)
 app.component('vue-drag-resize', Vue3DraggableResizable)
 
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 15:10:19
+ * @LastEditTime: 2022-11-29 19:36:06
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -83,6 +83,7 @@ export interface tableCellOptions {
 export enum showType {
   func,
   funcComponent,
+  dataKey
 }
 
 /**
@@ -236,6 +237,7 @@ export const propertiesMaker = (
         case formInputType.radio:
           properties[cell.key] = {
             ...base(cell),
+            "type": "boolean",
             "ui:options": {
               placeholder: "请输入" + cell.label,
             },

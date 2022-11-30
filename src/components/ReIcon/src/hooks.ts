@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 19:46:33
+ * @LastEditTime: 2022-11-30 08:54:53
  * @FilePath: /configforpagedemo/src/components/ReIcon/src/hooks.ts
  */
 import { iconType } from "./types";
@@ -10,7 +10,6 @@ import { IconifyIconOnline, IconifyIconOffline, FontIcon } from "../index";
 import { ElIcon } from "element-plus";
 import { getIcon } from "@/utils";
 
-import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 
 /**
  * 支持fontawesome4、5+、iconfont、remixicon、element-plus的icons、自定义svg
