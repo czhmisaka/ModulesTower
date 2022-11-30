@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 08:38:12
+ * @LastEditTime: 2022-11-30 09:37:57
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/menuManage.ts
  */
 
@@ -99,6 +99,9 @@ export const menuManage = async () => {
             });
           },
           searchKeyWithBaseData: ["outputKey"],
+          defaultQuery: {
+            showLink: true,
+          },
           btnList,
         },
         autoSearch: true,

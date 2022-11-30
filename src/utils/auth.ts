@@ -1,3 +1,9 @@
+/*
+ * @Date: 2022-11-21 16:13:14
+ * @LastEditors: CZH
+ * @LastEditTime: 2022-11-30 10:03:43
+ * @FilePath: /configforpagedemo/src/utils/auth.ts
+ */
 import Cookies from "js-cookie";
 import { storageSession } from "@pureadmin/utils";
 import { useUserStoreHook } from "@/store/modules/user";
@@ -20,6 +26,9 @@ export const TokenKey = "authorized-token";
 
 /** 获取`token` */
 export function getToken(): DataInfo<number> {
+  console.log(Cookies.get(TokenKey)
+  ? JSON.parse(Cookies.get(TokenKey))
+  : storageSession.getItem(sessionKey),'asdasdasdasd')
   // 此处与`TokenKey`相同，此写法解决初始化时`Cookies`中不存在`TokenKey`报错
   return Cookies.get(TokenKey)
     ? JSON.parse(Cookies.get(TokenKey))

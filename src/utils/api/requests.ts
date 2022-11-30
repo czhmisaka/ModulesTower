@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 08:46:24
+ * @LastEditTime: 2022-11-30 10:05:16
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -33,7 +33,6 @@ const request = axios.create({
   baseURL: baseURL, // 可以不需要
   timeout: 10000, // 超时时间
   withCredentials: true,
-  headers: getHeaders(),
   validateStatus() {
     return true;
   },
@@ -106,7 +105,8 @@ request.interceptors.response.use(
       ElMessage({
         message: "登录过期啦",
         type: "warning",
-      });useUserStoreHook().logOut();
+      });
+      useUserStoreHook().logOut();
     } else {
       return Promise.reject(res);
     }
@@ -121,6 +121,7 @@ export const get = (url: string, params: any) => {
   return request({
     url,
     method: "get",
+    headers: getHeaders(),
     params,
   });
 };
@@ -128,6 +129,7 @@ export const get = (url: string, params: any) => {
 export function post(url: string, data: object) {
   return request({
     url,
+    headers: getHeaders(),
     method: "post",
     data,
   });
