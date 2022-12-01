@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 20:09:33
+ * @LastEditTime: 2022-12-01 10:51:40
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -329,7 +329,7 @@ export default defineComponent({
               if (this.$refs[`PlugIn_${refs}`]) {
                 this.plugInData[refs] = value[refs];
                 const plugInComponent = this.$refs[`PlugIn_${refs}`][0];
-                if (plugInComponent["open"]) {
+                if (plugInComponent && plugInComponent["open"]) {
                   plugInComponent["open"]();
                 }
               }

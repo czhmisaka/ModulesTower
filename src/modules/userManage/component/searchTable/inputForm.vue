@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 15:19:29
+ * @LastEditTime: 2022-11-30 16:06:07
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -168,7 +168,7 @@ export default defineComponent({
       if (Object.keys(this.query).length > 0) {
       }
       let properties = {} as stringAnyObj;
-      properties = propertiesMaker(queryItemTemplate);
+      properties = await propertiesMaker(queryItemTemplate, this);
       this.schema.properties = properties;
     },
 

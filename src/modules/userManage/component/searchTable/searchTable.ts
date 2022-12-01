@@ -1,9 +1,11 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 19:36:06
+ * @LastEditTime: 2022-12-01 10:23:42
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
+
+import { btnCellTemplate } from "./drawerForm";
 
 /**
  * @name: searchCellStorage
@@ -34,6 +36,50 @@ export class SearchCellStorage {
       };
   }
 
+  /**
+   * @name: getByLabelArr
+   * @description: 使用label获取元素
+   * @authors: CZH
+   * @Date: 2022-11-30 15:35:47
+   * @param {string} labelArr
+   */
+  getByLabelArr(labelArr: string[]) {
+    let back = [];
+    for (let key in labelArr) {
+      back.push(this.getByKey(labelArr[key]));
+    }
+    return back.filter(Boolean);
+  }
+
+  getByKey(key: string, options?: tableCellOptions) {
+    let back = {} as { [key: string]: any };
+    this.storage.map((cell) => {
+      if (key && key == cell.key) back = cell;
+    });
+    if (!back.key) return null;
+    if (options) return { ...back, ...options };
+    else
+      return {
+        input: { type: formInputType.input },
+        ...back,
+      };
+  }
+
+  /**
+   * @name: getByKeyArr
+   * @description: 使用key获取元素
+   * @authors: CZH
+   * @Date: 2022-11-30 15:36:15
+   * @param {string} keyArr
+   */
+  getByKeyArr(keyArr: string[]) {
+    let back = [];
+    for (let key in keyArr) {
+      back.push(this.getByKey(keyArr[key]));
+    }
+    return back.filter(Boolean);
+  }
+
   getAll() {
     return this.storage;
   }
@@ -52,7 +98,15 @@ export interface stringAnyObj {
 }
 
 export interface tableCellOptionsInputPropertiesTemplate {
+  // 表单属性
+  propertiesOption?: stringAnyObj;
+  // 输入值属性，不同输入方式有不同的数据解构方案
   inputOptions?: stringAnyObj;
+  // 动态数据输入属性，其他同上
+  funcInputOptionsLoader?: (obj: stringAnyObj) => stringAnyObj;
+  // 当这个值被修改的时候触发的函数
+  onChangeFunc?: (that: stringAnyObj) => void;
+  // 一些style
   style?: stringAnyObj;
   [key: string]: any;
 }
@@ -61,7 +115,7 @@ export interface tableCellOptionsInputTemplate
   type: formInputType;
 }
 export interface tableCellOptionsTableTemplate {
-  showFunc: (data: any, key: string) => any;
+  showFunc?: (data: any, key: string) => any;
   type: showType;
   style?: stringAnyObj;
   sortable?: boolean;
@@ -83,7 +137,8 @@ export interface tableCellOptions {
 export enum showType {
   func,
   funcComponent,
-  dataKey
+  dataKey,
+  btnList,
 }
 
 /**
@@ -138,6 +193,16 @@ export const searchCell = (
   return tableCellOption;
 };
 
+// 构建表单内的数据操作实例
+export const actionCell = (btnList: btnCellTemplate[]) => {
+  let tableCellOption = {} as tableCellOptions;
+  tableCellOption.table = {
+    type: showType.btnList,
+    btnList: btnList,
+  };
+  return tableCellOption;
+};
+
 /**
  * @name: tableCellTemplateMaker
  * @description: 表单构建模块
@@ -150,12 +215,16 @@ export const searchCell = (
 export const tableCellTemplateMaker = (
   label: string,
   key: string,
-  options: tableCellOptions = {
+  options: tableCellOptions = {}
+): tableCellTemplate => {
+  return {
+    label,
+    key,
     table: {
       showFunc: (data, key) => data[key],
       type: showType.func,
       sortable: true,
-      width: 'auto',
+      width: "auto",
       style: {
         maxHeight: "120px",
       },
@@ -163,11 +232,6 @@ export const tableCellTemplateMaker = (
     input: {
       type: formInputType.input,
     },
-  }
-): tableCellTemplate => {
-  return {
-    label,
-    key,
     ...options,
   };
 };
@@ -204,9 +268,9 @@ export enum formInputType {
  * @param {stringAnyObj} queryItemConfig
  */
 
-export const propertiesMaker = (
+export const propertiesMaker = async (
   cellList: tableCellTemplate[],
-  queryItemConfig: stringAnyObj[] = []
+  that: stringAnyObj
 ) => {
   function base(cell) {
     return {
@@ -215,56 +279,114 @@ export const propertiesMaker = (
     };
   }
   let properties = {} as stringAnyObj;
-  cellList.map((cell: tableCellTemplate) => {
+  for (let i = 0; i < cellList.length; i++) {
+    const cell = cellList[i];
     const { input } = cell;
-    if (input)
-      switch (input.type) {
-        case formInputType.input:
-          properties[cell.key] = {
-            ...base(cell),
-            "ui:options": {
-              placeholder: "请输入" + cell.label,
-            },
-          };
-          break;
-        case formInputType.datePicker:
-          properties[cell.key] = {
-            ...base(cell),
-            type: "number",
-            format: "date",
-          };
-          break;
-        case formInputType.radio:
-          properties[cell.key] = {
-            ...base(cell),
-            "type": "boolean",
-            "ui:options": {
-              placeholder: "请输入" + cell.label,
-            },
-          };
-          break;
-        case formInputType.idCard:
-          properties[cell.key] = {
-            ...base(cell),
-            "ui:options": {
-              placeholder: "请输入" + cell.label,
-            },
-          };
-        case formInputType.select:
-          properties[cell.key] = {
-            ...base(cell),
-            "ui:widget": "SelectWidget",
-          };
-          if (input.inputOptions) {
-            properties[cell.key] = {
-              ...properties[cell.key],
-              enum: Object.keys(input.inputOptions),
-              enumNames: Object.keys(input.inputOptions).map(
-                (x) => input.inputOptions[x]
-              ),
-            };
-          }
+    if (input && input.type)
+      if (input.type == formInputType.input) {
+        properties[cell.key] = {
+          ...base(cell),
+          "ui:options": {
+            placeholder: "请输入" + cell.label,
+          },
+        };
       }
-  });
+    if (input.type == formInputType.datePicker) {
+      properties[cell.key] = {
+        ...base(cell),
+        type: "number",
+        format: "date",
+      };
+    }
+    if (input.type == formInputType.radio) {
+      properties[cell.key] = {
+        ...base(cell),
+        type: "boolean",
+        "ui:options": {
+          placeholder: "请输入" + cell.label,
+        },
+      };
+    }
+    if (input.type == formInputType.idCard) {
+      properties[cell.key] = {
+        ...base(cell),
+        "ui:options": {
+          placeholder: "请输入" + cell.label,
+        },
+      };
+    }
+    if (input.type == formInputType.select) {
+      properties[cell.key] = {
+        ...base(cell),
+        "ui:widget": "SelectWidget",
+        "ui:options": {
+          attrs: {
+            clearable: "true",
+          },
+        },
+      };
+      if (input.inputOptions) {
+        properties[cell.key] = {
+          ...properties[cell.key],
+          enum: Object.keys(input.inputOptions),
+          enumNames: Object.keys(input.inputOptions).map(
+            (x) => input.inputOptions[x]
+          ),
+        };
+      }
+      if (input.funcInputOptionsLoader) {
+        const inputOptions = await input.funcInputOptionsLoader(that);
+        properties[cell.key] = {
+          ...properties[cell.key],
+          enum: Object.keys(inputOptions),
+          enumNames: Object.keys(inputOptions).map((x) => inputOptions[x]),
+        };
+      }
+    }
+    if (input.type == formInputType.inputList) {
+      properties[cell.key] = {
+        ...base(cell),
+        "ui:widget": "SelectWidget",
+        type: "array",
+        uniqueItems: true,
+        items: {
+          type: "string",
+        },
+        "ui:options": {
+          attrs: {
+            clearable: true,
+            multiple: true,
+            "collapse-tags": true,
+            "allow-create": true,
+            filterable: true,
+          },
+        },
+      };
+      if (input.inputOptions) {
+        properties[cell.key].items = {
+          ...properties[cell.key].items,
+          enum: Object.keys(input.inputOptions),
+          enumNames: Object.keys(input.inputOptions).map(
+            (x) => input.inputOptions[x]
+          ),
+        };
+      }
+      if (input.funcInputOptionsLoader) {
+        const inputOptions = await input.funcInputOptionsLoader(that);
+        properties[cell.key].items = {
+          ...properties[cell.key].items,
+          enum: Object.keys(inputOptions),
+          enumNames: Object.keys(inputOptions).map((x) => inputOptions[x]),
+        };
+      }
+    }
+    if (input.propertiesOption) {
+      properties[cell.key] = {
+        ...properties[cell.key],
+        ...input.propertiesOption,
+      };
+    }
+  }
+  console.log(properties, "asdasd");
   return properties;
 };

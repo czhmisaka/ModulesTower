@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 10:43:25
+ * @LastEditTime: 2022-12-01 16:41:21
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -18,7 +18,7 @@
         v-if="isOpen"
         v-model="formData"
         :style="{
-          textAlign: 'left',
+          textAlign: 'top',
         }"
         :schema="schema"
         :ui-schema="uiSchema"
@@ -28,16 +28,18 @@
       </VueForm>
     </div>
     <div class="formBody" v-else>
-      <el-card>
-        <el-form ref="form" v-on:submit.prevent :label-position="'top'">
-          <el-form-item v-for="item in plugInData['queryItemTemplate']">
-            <template #label>
-              <h2 style="font-weight: 900">{{ item.label }}</h2>
-            </template>
+      <el-descriptions class="margin-top" :column="1" border>
+        <el-descriptions-item
+          v-for="item in plugInData['queryItemTemplate'].filter(
+            (x) => x.table.type != showType.btnList
+          )"
+          :label="item.label"
+        >
+          <span v-if="item.table.type == showType.func">
             {{ item.table.showFunc(plugInData["data"], item.key) }}
-          </el-form-item>
-        </el-form>
-      </el-card>
+          </span>
+        </el-descriptions-item>
+      </el-descriptions>
     </div>
     <div :style="{ textAlign: 'left' }">
       <el-divider></el-divider>
@@ -63,19 +65,89 @@ import {
   propInfo,
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
-import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
-import { btnCellTemplate, btnActionTemplate } from "./drawerForm";
+import { tableCellTemplate, propertiesMaker, showType } from "./searchTable";
+
+// windows 系统下有引入顺序问题，所以在组件内直接创建使用
+// 主要是懒得重复写了
+export interface stringAnyObj {
+  [key: string]: any;
+}
+
+/**
+ * @name: btnCell
+ * @description: 自定义事件按钮
+ * @authors: CZH
+ * @Date: 2022-11-21 17:11:45
+ */
+export enum btnActionTemplate {
+  OpenDrawer = "OpenDrawer",
+  Function = "Function",
+  Url = "Url",
+}
+
+import { tableCellOptions } from "./searchTable";
+import { th } from "element-plus/es/locale";
+import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
+
+/**
+ * @name: drawerProps
+ * @description: 弹窗属性事件
+ * @authors: CZH
+ * @Date: 2022-11-23 22:49:56
+ */
+export interface drawerProps {
+  title: string;
+  queryItemTemplate: tableCellOptions[];
+  btnList: btnCellTemplate[];
+  data?: stringAnyObj;
+  noEdit?: boolean;
+}
+
+/**
+ * @name: btnCellTemplate
+ * @description: 按钮对象
+ * @authors: CZH
+ * @Date: 2022-11-23 22:50:42
+ */
+export interface btnCellTemplate extends stringAnyObj {
+  label: string;
+  type: btnActionTemplate;
+  icon?: "";
+  elType?: "";
+  drawerDetail?: drawerProps;
+  function?: (that: stringAnyObj) => void;
+  url?: string;
+}
+let formDataForCheck = {};
 export default defineComponent({
   name: "drawerForm",
-
   components: { VueForm },
   props: ["plugInData", "baseData"],
+  watch: {
+    formData: {
+      handler(val) {
+        Object.keys(val).map((key) => {
+          if (val[key] != formDataForCheck[key]) {
+            const queryItemTemplate = this.plugInData["queryItemTemplate"];
+            queryItemTemplate.map((cell) => {
+              if (cell.key == key && cell.input && cell.input.onChangeFunc)
+                cell.input.onChangeFunc(this);
+            });
+            formDataForCheck[key] = val[key];
+          }
+        });
+      },
+      immediate: true,
+      deep: true,
+    },
+  },
   data() {
     return {
       btnActionTemplate,
       isOpen: false,
       formData: {},
       uiSchema: {},
+      showType,
       formFooter: {
         show: false,
       },
@@ -104,10 +176,12 @@ export default defineComponent({
      * @authors: CZH
      * @Date: 2022-11-14 10:17:28
      */
-    async initForm(queryItemTemplate: tableCellTemplate[] = this.queryItemTemplate) {
+    async initForm(
+      queryItemTemplate: tableCellTemplate[] = this.plugInData.queryItemTemplate
+    ) {
       let properties = {} as stringAnyObj;
-      properties = propertiesMaker(queryItemTemplate);
-      this.schema.properties = properties;
+      properties = await propertiesMaker(queryItemTemplate, this);
+      this.schema = { ...this.schema, properties, ...(this.plugInData["schema"] || {}) };
     },
 
     async btnClick(btn: btnCellTemplate) {
@@ -121,12 +195,16 @@ export default defineComponent({
       }
     },
 
+    async close() {},
+
     async open() {
-      this.isOpen = true;
       await this.$nextTick();
       if (this.plugInData["queryItemTemplate"])
         await this.initForm(this.plugInData.queryItemTemplate);
       if (this.plugInData["data"]) this.formData = this.plugInData["data"];
+      else this.formData = {};
+      formDataForCheck = deepClone(this.formData);
+      this.isOpen = true;
     },
   },
 });

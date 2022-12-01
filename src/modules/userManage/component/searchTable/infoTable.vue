@@ -1,14 +1,14 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 10:29:29
+ * @LastEditTime: 2022-12-01 14:03:41
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
   <div ref="tableBox" class="tableBox">
     <ElTable
       ref="tableController"
-      :header-cell-style="tableHeader"
+      :header-cell-style="isDark ? tableHeaderDark : tableHeader"
       :data="dataList"
       @selection-change="selectPosition"
       v-loading="loading"
@@ -60,6 +60,11 @@
               </template>
             </el-popover>
           </div>
+          <div
+            class="flexBox"
+            :style="item.table?.style"
+            v-if="item.table.type == showType.btnList"
+          ></div>
         </template>
       </ElTableColumn>
     </ElTable>
@@ -70,6 +75,7 @@
 import { defineComponent, ref } from "vue";
 import { ElTable, ElTableColumn } from "element-plus";
 import { showType, tableCellTemplate } from "./searchTable";
+import { useDark } from "@pureadmin/utils";
 export default defineComponent({
   components: { ElTable, ElTableColumn },
   props: ["template", "loading", "dataList"],
@@ -87,6 +93,13 @@ export default defineComponent({
         backgroundColor: "#f8f9fb",
         fontWeight: 900,
         color: "#333",
+      };
+    },
+    tableHeaderDark() {
+      return {
+        backgroundColor: "rgba(0,0,0,0.3)",
+        fontWeight: 900,
+        color: "#ddd",
       };
     },
   },
@@ -134,6 +147,13 @@ export default defineComponent({
     sortBy(row, index, key) {
       return row[key];
     },
+  },
+
+  setup() {
+    const { isDark } = useDark();
+    return {
+      isDark,
+    };
   },
 });
 </script>

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 10:50:22
+ * @LastEditTime: 2022-12-01 16:41:02
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -31,6 +31,11 @@ export enum btnActionTemplate {
 
 import { tableCellOptions } from "./searchTable";
 
+export enum closeType {
+  outLayerClickClose,
+  btnClose,
+}
+
 /**
  * @name: drawerProps
  * @description: 弹窗属性事件
@@ -40,9 +45,11 @@ import { tableCellOptions } from "./searchTable";
 export interface drawerProps {
   title: string;
   queryItemTemplate: tableCellOptions[];
-  btnList: btnCellTemplate[];
+  schema?:stringAnyObj,
+  btnList?: btnCellTemplate[];
   data?: stringAnyObj;
   noEdit?: boolean;
+  afterFunction?: (closeType: closeType, that: stringAnyObj) => void;
 }
 
 /**
