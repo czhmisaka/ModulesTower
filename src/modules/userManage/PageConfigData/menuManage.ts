@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 16:48:10
+ * @LastEditTime: 2022-12-02 18:29:12
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/menuManage.ts
  */
 
@@ -32,32 +32,30 @@ import {
 } from "@/modules/userManage/types";
 import { ElMessage } from "element-plus";
 
-const typeToModule = {
-  1: "模块",
-  2: "目录",
-  3: "菜单",
-  4: "按钮",
-};
-
-const submit = btnMaker("提交", btnActionTemplate.Function, {
-  function: async (that, data) => {
-    let res = await post(
-      `/web/usc/menu/${data.id ? "update" : "insert"}`,
-      data
-    );
-    if (res["message"] == "成功") {
-      that.$message.success(res["message"]);
-      setTimeout(() => {
-        that.close();
-      }, 500);
-    } else {
-      that.$message.danger(res["message"]);
-    }
-  },
-});
-
 export const menuManage = async () => {
-  // 节点为
+  const typeToModule = {
+    1: "模块",
+    2: "目录",
+    3: "菜单",
+    4: "按钮",
+  };
+
+  const submit = btnMaker("提交", btnActionTemplate.Function, {
+    function: async (that, data) => {
+      let res = await post(
+        `/web/usc/menu/${data.id ? "update" : "insert"}`,
+        data
+      );
+      if (res["message"] == "成功") {
+        that.$message.success(res["message"]);
+        setTimeout(() => {
+          that.close();
+        }, 500);
+      } else {
+        that.$message.danger(res["message"]);
+      }
+    },
+  });
 
   // 页面配置数据
   const pageConfigDataTableCellStorage = new SearchCellStorage([
@@ -306,8 +304,8 @@ export const menuManage = async () => {
             showLink: true,
           },
           btnList,
+          autoSearch: false,
         },
-        autoSearch: true,
         isSettingTool: false,
       }
     )

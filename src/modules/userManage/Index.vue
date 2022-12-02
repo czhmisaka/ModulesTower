@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 17:24:23
+ * @LastEditTime: 2022-12-02 19:10:37
  * @FilePath: /configforpagedemo/src/modules/userManage/Index.vue
 -->
 
@@ -20,6 +20,7 @@
       :component-lists="component"
       :cus-style="desktopData?.cusStyle"
     />
+    {{ dataText }}
   </div>
 </template>
 
@@ -49,7 +50,9 @@ export default defineComponent({
         if (Object.keys(PageConfig).indexOf(PageName) > -1) {
           let res = PageConfig[PageName];
           this.desktopData = res;
-          // this.desktopData = JSON.parse(
+          // console.log(res["desktopData"], "asd");
+          // console.dir(res["desktopData"]);
+          // this.dataText = JSON.parse(
           //   JSON.stringify(res, function (key, val) {
           //     if (typeof val === "function") {
           //       return val + "";
@@ -58,30 +61,11 @@ export default defineComponent({
           //   }),
           //   function (key, val) {
           //     if (val.indexOf && val.indexOf("function") > -1) {
-          //       return eval("(function(){return " + val + " })()");
+          //       console.log(val, "qwe");
+          //       return eval("function (){ return " + val + ")")();
           //     }
           //     return val;
           //   }
-          // );
-          // console.log(
-          //   res,
-          //   JSON.parse(
-          //     JSON.stringify(res, function (key, val) {
-          //       if (typeof val === "function") {
-          //         console.log(val, "asd1");
-          //         return val + "";
-          //       }
-          //       return val;
-          //     }),
-          //     function (key, val) {
-          //       if (val.indexOf && val.indexOf("function") > -1) {
-          //         console.log(val, "asd2");
-          //         return eval("(function(){return " + val + " })()");
-          //       }
-          //       return val;
-          //     }
-          //   ),
-          //   "asd"
           // );
           this.desktopDataList = await this.desktopData.desktopData();
         } else {
@@ -109,6 +93,7 @@ export default defineComponent({
       desktopDataList: [],
       desktopData: PageConfig[Object.keys(PageConfig)[0]],
       Env: {},
+      dataText: "",
     };
   },
   async mounted() {

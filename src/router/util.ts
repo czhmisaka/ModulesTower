@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 17:00:36
+ * @LastEditTime: 2022-12-02 19:10:27
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -9,6 +9,16 @@ import { CardComponentTemplate } from "../components/basicComponents/grid/module
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
 import { RouteRecordRaw } from "vue-router";
+
+
+import { transformSync } from "@babel/core";
+
+function transform(scriptText: string) {
+  const transformed = transformSync(scriptText, {
+    presets: ["@babel/preset-env"],
+  });
+  return transformed.code;
+}
 
 /**
  * @name: metaInfoTemplate
