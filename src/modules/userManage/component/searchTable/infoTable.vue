@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-01 14:03:41
+ * @LastEditTime: 2022-12-02 16:41:51
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -13,7 +13,6 @@
       @selection-change="selectPosition"
       v-loading="loading"
       style="cursor: default"
-      @cell-dblclick="cellDblclick"
       :row-style="{ 'min-height': '60px', 'min-width': '100px' }"
       :fit="true"
       :border="false"
@@ -26,8 +25,9 @@
         :sortable="item.table.sortable"
         :sort-by="(row, index) => sortBy(row, index, item.key)"
         :label="item.label"
-        :width="item.table?.width || 'auto'"
+        :width="item.table.type == showType.btnList ? 140 : item.table?.width || 'auto'"
         :prop="item.key"
+        :fixed="item.table.fixed"
       >
         <template #header>
           <div class="ColumnHeader">
@@ -53,7 +53,7 @@
               placement="top-start"
               trigger="hover"
               :show-after="500"
-              :content="item.table.showFunc(scope.row, item.key)"
+              :content="item.table.showFunc(scope.row, item.key) + ''"
             >
               <template #reference>
                 {{ item.table.showFunc(scope.row, item.key) }}
@@ -64,7 +64,20 @@
             class="flexBox"
             :style="item.table?.style"
             v-if="item.table.type == showType.btnList"
-          ></div>
+          >
+            <el-button
+              v-if="btnList(item, scope.row)"
+              :loading="btnList(item, scope.row)[0].isLoading"
+              size="small"
+              @click="btnClick(btnList(item, scope.row)[0], scope.row)"
+              :type="btnList(item, scope.row)[0].elType"
+              :icon="btnList(item, scope.row)[0].icon"
+            >
+            </el-button>
+            <el-button size="small" type="default" @click="cellDblclick(scope.row)">
+              详情
+            </el-button>
+          </div>
         </template>
       </ElTableColumn>
     </ElTable>
@@ -73,9 +86,15 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { ElTable, ElTableColumn } from "element-plus";
-import { showType, tableCellTemplate } from "./searchTable";
+import { ElButton, ElPopover, ElTable, ElTableColumn } from "element-plus";
 import { useDark } from "@pureadmin/utils";
+import {
+  template,
+  sortBy,
+} from ".pnpm/registry.npmmirror.com+lodash-unified@1.0.3_3ib2ivapxullxkx3xftsimdk7u/node_modules/lodash-unified";
+import loading from "element-plus/es/components/loading";
+import tableHeader from "element-plus/es/components/table/src/table-header";
+import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../../types";
 export default defineComponent({
   components: { ElTable, ElTableColumn },
   props: ["template", "loading", "dataList"],
@@ -105,6 +124,11 @@ export default defineComponent({
   },
 
   methods: {
+    btnList(item, data) {
+      if (!item.table.btnList) return false;
+      return item.table.btnList.filter((x) => x.isShow(data));
+    },
+
     /**
      * @name: cellDblclick
      * @description: 行内双击事件
@@ -113,10 +137,18 @@ export default defineComponent({
      * @param {*} data
      */
     cellDblclick(data) {
+      let btnList = [];
+      this.template.map((item) => {
+        if (item.table.type == showType.btnList && item.table.btnList) {
+          item.table.btnList.map((btn) => {
+            btnList.push(btn);
+          });
+        }
+      });
       this.$modules.getModuleApi()["userManage_openDrawerForm"](this, {
         title: "详情",
         queryItemTemplate: this.template,
-        btnList: [],
+        btnList,
         data,
         noEdit: true,
       });
@@ -142,6 +174,27 @@ export default defineComponent({
     tableHeight() {
       if (this.$refs["tableBox"]) return this.$refs["tableBox"].offsetHeight;
       else return null;
+    },
+
+    /**
+     * @name: btnClick
+     * @description: 按钮点击事件
+     * @authors: CZH
+     * @Date: 2022-12-02 09:27:05
+     * @param {*} btn
+     */
+    async btnClick(btn: btnCellTemplate, data?: stringAnyObj) {
+      btn["isLoading"] = true;
+      if (btn.type == btnActionTemplate.OpenDrawer) {
+        this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
+      } else if (btn.type == btnActionTemplate.Function && btn.function) {
+        let that = this;
+        await btn.function(that, data);
+        this.$emit("onSearch");
+      } else if (btn.type == btnActionTemplate.Url) {
+        window.open(btn.url);
+      }
+      btn["isLoading"] = false;
     },
 
     sortBy(row, index, key) {

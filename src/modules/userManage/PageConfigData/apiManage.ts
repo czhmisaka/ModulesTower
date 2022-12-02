@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 14:34:37
+ * @LastEditTime: 2022-12-02 12:57:18
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/apiManage.ts
  */
 
@@ -22,12 +22,9 @@ import { post, get } from "@/utils/api/requests";
 import {
   SearchCellStorage,
   tableCellTemplateMaker,
-  DataCell,
-  tableCellTemplate,
   searchCell,
-  formInputType,
-  stringAnyObj,
 } from "@/modules/userManage/component/searchTable/searchTable";
+import { formInputType, stringAnyObj } from "@/modules/userManage/types";
 
 export const apiManage = async () => {
   // 部门数据

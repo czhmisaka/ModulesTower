@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 11:07:00
+ * @LastEditTime: 2022-12-02 12:55:38
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/pageConfigManage.ts
  */
 
@@ -19,19 +19,8 @@ import {
   changeCardProperties,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { post, get } from "@/utils/api/requests";
-import {
-  SearchCellStorage,
-  tableCellTemplateMaker,
-  DataCell,
-  tableCellTemplate,
-  searchCell,
-  formInputType,
-  stringAnyObj,
-} from "@/modules/userManage/component/searchTable/searchTable";
-import {
-  btnMaker,
-  btnActionTemplate,
-} from "@/modules/userManage/component/searchTable/drawerForm";
+import { SearchCellStorage, tableCellTemplateMaker } from "@/modules/userManage/component/searchTable/searchTable";
+import { stringAnyObj } from "@/modules/userManage/types";
 
 export const pageConfigManage = async () => {
   // 页面配置数据

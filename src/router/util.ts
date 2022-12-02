@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 19:55:59
+ * @LastEditTime: 2022-12-02 17:00:36
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";

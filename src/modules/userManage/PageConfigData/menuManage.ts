@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-01 16:40:24
+ * @LastEditTime: 2022-12-02 16:48:10
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/menuManage.ts
  */
 
@@ -13,52 +13,75 @@ import {
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { post, get } from "@/utils/api/requests";
+
+import { bounds } from "@ctrl/tinycolor";
+import { btnMaker } from "../component/searchTable/drawerForm";
 import {
   SearchCellStorage,
   tableCellTemplateMaker,
-  DataCell,
-  tableCellTemplate,
-  searchCell,
-  formInputType,
-  stringAnyObj,
   showCell,
-  showType,
+  searchCell,
   actionCell,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import {
-  btnMaker,
+  showType,
+  formInputType,
+  stringAnyObj,
   btnActionTemplate,
-} from "@/modules/userManage/component/searchTable/drawerForm";
-import { bounds } from "@ctrl/tinycolor";
+  drawerProps,
+} from "@/modules/userManage/types";
+import { ElMessage } from "element-plus";
+
+const typeToModule = {
+  1: "模块",
+  2: "目录",
+  3: "菜单",
+  4: "按钮",
+};
+
+const submit = btnMaker("提交", btnActionTemplate.Function, {
+  function: async (that, data) => {
+    let res = await post(
+      `/web/usc/menu/${data.id ? "update" : "insert"}`,
+      data
+    );
+    if (res["message"] == "成功") {
+      that.$message.success(res["message"]);
+      setTimeout(() => {
+        that.close();
+      }, 500);
+    } else {
+      that.$message.danger(res["message"]);
+    }
+  },
+});
 
 export const menuManage = async () => {
+  // 节点为
+
   // 页面配置数据
   const pageConfigDataTableCellStorage = new SearchCellStorage([
     tableCellTemplateMaker("id", "id", showCell(showType.dataKey)),
     tableCellTemplateMaker("父级ID", "parentId"),
     tableCellTemplateMaker("名称", "name", searchCell(formInputType.input)),
     tableCellTemplateMaker("图标", "icon"),
-    tableCellTemplateMaker(
-      "类型",
-      "type",
-      searchCell(formInputType.select, {
-        inputOptions: {
-          1: "模块",
-          2: "目录",
-          3: "菜单",
-          4: "按钮",
-        },
-      })
-    ),
+    tableCellTemplateMaker("类型", "type", {
+      ...showCell(showType.func, {
+        showFunc: (data, key) => typeToModule[data[key]],
+      }),
+      ...searchCell(formInputType.select, {
+        inputOptions: typeToModule,
+      }),
+    }),
     tableCellTemplateMaker(
       "URL",
       "urls",
       searchCell(formInputType.inputList, {
-        inputOptions: {
-          1: "模块",
-          2: "目录",
-          3: "菜单",
-          4: "按钮",
+        inputOptions: {},
+        propertiesOption: {
+          "ui:options": {
+            placeholder: "选择或者输入自定义URL",
+          },
         },
       })
     ),
@@ -83,12 +106,109 @@ export const menuManage = async () => {
             : "",
       })
     ),
+  ]);
+
+  pageConfigDataTableCellStorage.push(
     tableCellTemplateMaker(
       "操作",
       "actionaction",
-      actionCell([btnMaker("删除", btnActionTemplate.Function, {})])
-    ),
-  ]);
+      actionCell(
+        [
+          btnMaker("删除", btnActionTemplate.Function, {
+            icon: "Delete",
+            elType: "danger",
+            isShow: (data) => !data.children || data.children.length == 0,
+            function: async (that, data) => {
+              if (data.children && data.children.length > 0)
+                return ElMessage.warning("【无法删除】：存在子节点");
+              let res = await post("/web/usc/menu/delete", { id: data.id });
+              if (res.message == "成功") ElMessage.success(res.message);
+              else ElMessage.error(res.message);
+            },
+          }),
+
+          btnMaker("新增", btnActionTemplate.Function, {
+            icon: "Plus",
+            elType: "primary",
+            isShow: (data) => {
+              return data.type != 4;
+            },
+            function: async (that, data) => {
+              let propsArr = ["name", "icon", "urls", "pageConfigId", "meta"];
+              if (data.type < 3) propsArr.push("showLink");
+              let drawerProps = {
+                title: `新增${typeToModule[data.type + 1]}`,
+                schema: { required: ["type", "name", "showLink"] },
+                queryItemTemplate: [
+                  pageConfigDataTableCellStorage.getByKey(
+                    "type",
+                    searchCell(formInputType.select, {
+                      inputOptions: typeToModule,
+                      propertiesOption: {
+                        "ui:options": {
+                          disabled: true,
+                        },
+                      },
+                    })
+                  ),
+                  ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
+                ],
+                data: {
+                  parentId: data.id,
+                  type: data.type + 1 + "",
+                  showLink: true,
+                },
+                btnList: [submit],
+              } as drawerProps;
+              that.$modules
+                .getModuleApi()
+                ["userManage_openDrawerForm"](that, drawerProps);
+            },
+          }),
+          btnMaker("编辑", btnActionTemplate.Function, {
+            icon: "Edit",
+            elType: "success",
+            function: async (that, data) => {
+              let propsArr = [
+                "name",
+                "icon",
+                "urls",
+                "pageConfigId",
+                "meta",
+                "showLink",
+              ];
+              let drawerProps = {
+                title: `新增${typeToModule[data.type + 1]}`,
+                schema: { required: ["type", "name", "showLink"] },
+                queryItemTemplate: [
+                  pageConfigDataTableCellStorage.getByKey(
+                    "type",
+                    searchCell(formInputType.select, {
+                      inputOptions: typeToModule,
+                      propertiesOption: {
+                        "ui:options": {
+                          disabled: true,
+                        },
+                      },
+                    })
+                  ),
+                  ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
+                ],
+                data,
+                btnList: [submit],
+              } as drawerProps;
+              that.$modules
+                .getModuleApi()
+                ["userManage_openDrawerForm"](that, drawerProps);
+            },
+          }),
+        ],
+        {
+          fixed: "right",
+        }
+      )
+    )
+  );
 
   const SearchTemplate = pageConfigDataTableCellStorage.getByKeyArr([
     "name",
@@ -131,7 +251,6 @@ export const menuManage = async () => {
                     list = list.concat(getAllChildren(x));
                   });
                 }
-                console.log(list, "asdasd");
                 list.map((x) => {
                   back[x.id] = x.name;
                 });
@@ -149,23 +268,7 @@ export const menuManage = async () => {
             "meta",
           ]),
         ],
-        btnList: [
-          btnMaker("提交", btnActionTemplate.Function, {
-            function: async (that) => {
-              const { formData } = that;
-              console.log(formData, "asdasda");
-              let res = await post("/web/usc/menu/insert", formData);
-              if (res["message"] == "成功") {
-                that.$message.success(res["message"]);
-                setTimeout(()=>{
-                  close
-                },1000)
-              } else {
-                that.$message.danger(res["message"]);
-              }
-            },
-          }),
-        ],
+        btnList: [submit],
         data: {
           showLink: true,
         },

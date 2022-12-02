@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-01 10:51:40
+ * @LastEditTime: 2022-12-02 14:45:07
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -94,7 +94,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, shallowRef } from "vue";
+import { getModuleFromView } from "@/router/util";
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import cardEditModal from "@/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue";
 import { testData } from "./module/testData";
@@ -122,6 +123,12 @@ export default defineComponent({
     GridItem: VueGridLayout.GridItem,
     cardEditModal,
     componentsListModal,
+  },
+  setup() {
+    const PlugInComponents = shallowRef(getModuleFromView()["getAllPluginComponent"]());
+    return {
+      PlugInComponents,
+    };
   },
   props: {
     // 自定样式
@@ -188,7 +195,7 @@ export default defineComponent({
       updateTimes: 0,
 
       // 插入式能力组件列表
-      PlugInComponents: {},
+      // PlugInComponents: {},
       // 插入式组件数据使用列表
       plugInData: {},
 
@@ -419,7 +426,7 @@ export default defineComponent({
   },
 
   async created() {
-    this.PlugInComponents = this.$modules.getAllPluginComponent();
+    // this.PlugInComponents = this.$modules.getAllPluginComponent();
   },
 
   async mounted() {

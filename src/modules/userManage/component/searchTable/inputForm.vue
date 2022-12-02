@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 16:06:07
+ * @LastEditTime: 2022-12-02 16:14:33
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -36,18 +36,31 @@
           slot-scope="{ formData }"
           :style="{ textAlign: 'right' }"
         >
-          <el-button
-            v-for="item in btnList"
-            @click="btnClick(item)"
-            :type="item.elType"
-            :icon="item.icon"
+          <el-button class="btn" v-if="!autoSearch" @click="refreshData(-1)"
+            >重置</el-button
           >
-            {{ item.label }}
-          </el-button>
-          <el-button v-if="!autoSearch" @click="refreshData(-1)">重置</el-button>
-          <el-button v-if="!autoSearch" type="primary" @click="handleSubmit(formData)"
+          <el-button
+            class="btn"
+            v-if="!autoSearch"
+            type="primary"
+            @click="handleSubmit(formData)"
             >搜索</el-button
           >
+          <div
+            v-for="item in btnList.filter((btn) =>
+              btn && btn.isShow ? btn.isShow({}) : true
+            )"
+            class="btn"
+          >
+            <el-button
+              :loading="item.isLoading"
+              @click="btnClick(item)"
+              :type="item.elType"
+              :icon="item.icon"
+            >
+              {{ item.label }}
+            </el-button>
+          </div>
         </div>
       </VueForm>
       <div class="TopRight" v-if="isNeedClose">
@@ -72,10 +85,15 @@
 <script lang="ts">
 import { defineComponent, h } from "vue";
 import VueForm from "@lljj/vue3-form-element";
-import { stringAnyObj, tableCellTemplate, propertiesMaker } from "./searchTable";
-import { btnCellTemplate } from "./drawerForm";
+import { propertiesMaker } from "./searchTable";
 import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+import { ElButton, ElDivider, formProps } from "element-plus";
+import {
+  tableCellTemplate,
+  stringAnyObj,
+  btnCellTemplate,
+} from "@/modules/userManage/types";
 let interval = null;
 export default defineComponent({
   name: "表单组件",
@@ -229,5 +247,9 @@ export default defineComponent({
   top: 0px;
   right: 0px;
   margin: 18px;
+}
+.btn {
+  float: right;
+  margin-left: 6px;
 }
 </style>

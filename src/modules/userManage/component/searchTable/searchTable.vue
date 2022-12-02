@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 18:20:07
+ * @LastEditTime: 2022-12-02 15:27:35
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -37,6 +37,7 @@
         marginTop: '6px',
         float: 'right',
       }"
+      v-if="PageData.pageNum && PageData.total"
       v-model:current-page="PageData.pageNum"
       v-model:page-size="PageData.pageSize"
       :page-sizes="[100, 200, 300, 400]"
@@ -63,11 +64,17 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import inputForm from "./inputForm.vue";
 import infoTable from "./infoTable.vue";
-import { stringAnyObj } from "./searchTable";
-import { btnActionTemplate, btnCellTemplate } from "./drawerForm";
 import { Console } from "console";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
-import { tableCellTemplateMaker, PageDataTemplate } from "./searchTable";
+import { tableCellTemplateMaker } from "./searchTable";
+import search from "@iconify-icons/ep/search";
+import { ElPagination } from "element-plus";
+import {
+  PageDataTemplate,
+  stringAnyObj,
+  btnCellTemplate,
+  btnActionTemplate,
+} from "@/modules/userManage/types";
 let interval = null;
 
 export default defineComponent({
@@ -199,15 +206,18 @@ export default defineComponent({
      * @Date: 2022-11-21 19:04:03
      * @param {*} btn
      */
-    async btnClick(btn: btnCellTemplate) {
+    async btnClick(btn: btnCellTemplate, data?: stringAnyObj) {
+      btn["isLoading"] = true;
       if (btn.type == btnActionTemplate.OpenDrawer) {
         this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
-        await btn.function(that);
-      } else if (btn.type == btnActionTemplate.Url && btn.url) {
+        await btn.function(that, data);
+        this.$emit("onSearch");
+      } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
+      btn["isLoading"] = false;
     },
 
     async selectedChange(selectedList: any[]) {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 20:03:50
+ * @LastEditTime: 2022-12-02 17:24:23
  * @FilePath: /configforpagedemo/src/modules/userManage/Index.vue
 -->
 
@@ -47,7 +47,42 @@ export default defineComponent({
           this.$route.path.split("/")[this.$route.path.split("/").length - 1]
         );
         if (Object.keys(PageConfig).indexOf(PageName) > -1) {
-          this.desktopData = PageConfig[PageName];
+          let res = PageConfig[PageName];
+          this.desktopData = res;
+          // this.desktopData = JSON.parse(
+          //   JSON.stringify(res, function (key, val) {
+          //     if (typeof val === "function") {
+          //       return val + "";
+          //     }
+          //     return val;
+          //   }),
+          //   function (key, val) {
+          //     if (val.indexOf && val.indexOf("function") > -1) {
+          //       return eval("(function(){return " + val + " })()");
+          //     }
+          //     return val;
+          //   }
+          // );
+          // console.log(
+          //   res,
+          //   JSON.parse(
+          //     JSON.stringify(res, function (key, val) {
+          //       if (typeof val === "function") {
+          //         console.log(val, "asd1");
+          //         return val + "";
+          //       }
+          //       return val;
+          //     }),
+          //     function (key, val) {
+          //       if (val.indexOf && val.indexOf("function") > -1) {
+          //         console.log(val, "asd2");
+          //         return eval("(function(){return " + val + " })()");
+          //       }
+          //       return val;
+          //     }
+          //   ),
+          //   "asd"
+          // );
           this.desktopDataList = await this.desktopData.desktopData();
         } else {
           this.$message("没找到对应的页面呢,已前往模块首页");

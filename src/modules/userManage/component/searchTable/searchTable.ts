@@ -1,11 +1,21 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-01 10:23:42
+ * @LastEditTime: 2022-12-02 16:02:25
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
-import { btnCellTemplate } from "./drawerForm";
+import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
+import {
+  btnCellTemplate,
+  stringAnyObj,
+  showType,
+  tableCellOptions,
+  tableCellOptionsTableTemplate,
+  tableCellOptionsInputPropertiesTemplate,
+  tableCellTemplate,
+  formInputType,
+} from "@/modules/userManage/types";
 
 /**
  * @name: searchCellStorage
@@ -51,6 +61,14 @@ export class SearchCellStorage {
     return back.filter(Boolean);
   }
 
+  /**
+   * @name: getByKey
+   * @description: 通过key获取
+   * @authors: CZH
+   * @Date: 2022-12-02 10:26:40
+   * @param {string} key
+   * @param {tableCellOptions} options
+   */
   getByKey(key: string, options?: tableCellOptions) {
     let back = {} as { [key: string]: any };
     this.storage.map((cell) => {
@@ -83,74 +101,10 @@ export class SearchCellStorage {
   getAll() {
     return this.storage;
   }
-}
 
-export interface PageDataTemplate extends stringAnyObj {
-  data: stringAnyObj[];
-  pageNum: number;
-  pageSize: number;
-  total: number;
-}
-
-// 主要是懒得重复写了
-export interface stringAnyObj {
-  [key: string]: any;
-}
-
-export interface tableCellOptionsInputPropertiesTemplate {
-  // 表单属性
-  propertiesOption?: stringAnyObj;
-  // 输入值属性，不同输入方式有不同的数据解构方案
-  inputOptions?: stringAnyObj;
-  // 动态数据输入属性，其他同上
-  funcInputOptionsLoader?: (obj: stringAnyObj) => stringAnyObj;
-  // 当这个值被修改的时候触发的函数
-  onChangeFunc?: (that: stringAnyObj) => void;
-  // 一些style
-  style?: stringAnyObj;
-  [key: string]: any;
-}
-export interface tableCellOptionsInputTemplate
-  extends tableCellOptionsInputPropertiesTemplate {
-  type: formInputType;
-}
-export interface tableCellOptionsTableTemplate {
-  showFunc?: (data: any, key: string) => any;
-  type: showType;
-  style?: stringAnyObj;
-  sortable?: boolean;
-  [key: string]: any;
-}
-
-/**
- * @name: 表格单元配置
- * @description: tableCellOptions
- * @authors: CZH
- * @Date: 2022-11-10 09:30:21
- */
-export interface tableCellOptions {
-  input?: tableCellOptionsInputTemplate;
-  table?: tableCellOptionsTableTemplate;
-  [key: string]: any;
-}
-
-export enum showType {
-  func,
-  funcComponent,
-  dataKey,
-  btnList,
-}
-
-/**
- * @name: tableCellTemplate
- * @description: 表格单元
- * @authors: CZH
- * @Date: 2022-11-10 09:52:01
- */
-export interface tableCellTemplate extends tableCellOptions {
-  label: string;
-  key: string;
-  [key: string]: any;
+  push(cell: tableCellTemplate) {
+    this.storage.push(cell);
+  }
 }
 
 /**
@@ -194,11 +148,15 @@ export const searchCell = (
 };
 
 // 构建表单内的数据操作实例
-export const actionCell = (btnList: btnCellTemplate[]) => {
+export const actionCell = (
+  btnList: btnCellTemplate[],
+  options?: tableCellOptionsTableTemplate | stringAnyObj
+) => {
   let tableCellOption = {} as tableCellOptions;
   tableCellOption.table = {
     type: showType.btnList,
     btnList: btnList,
+    ...options,
   };
   return tableCellOption;
 };
@@ -237,29 +195,6 @@ export const tableCellTemplateMaker = (
 };
 
 /**
- * @name: 表单输入类型
- * @description: formInputType
- * @authors: CZH
- * @Date: 2022-11-15 14:15:58
- */
-export enum formInputType {
-  select = "select",
-  selects = "selects",
-  inputList = "inputList",
-  input = "input",
-  areaCascader = "areaCascader",
-  datePicker = "datePicker",
-  timePicker = "timePicker",
-  datePickerRanger = "datePickerRanger",
-  timePickerRanger = "timePickerRanger",
-  radioGroup = "radioGroup",
-  radio = "radio",
-  upload = "upload",
-  mobile = "mobile",
-  idCard = "idCard",
-}
-
-/**
  * @name: propertiesMaker
  * @description: 使用tableCellTemplate 转换为 json schema 的properties 对象
  * @authors: CZH
@@ -296,6 +231,7 @@ export const propertiesMaker = async (
         ...base(cell),
         type: "number",
         format: "date",
+        "ui:options": {},
       };
     }
     if (input.type == formInputType.radio) {
@@ -380,13 +316,9 @@ export const propertiesMaker = async (
         };
       }
     }
-    if (input.propertiesOption) {
-      properties[cell.key] = {
-        ...properties[cell.key],
-        ...input.propertiesOption,
-      };
+    if(input.propertiesOption){
+      properties[cell.key] = deepMerge(properties[cell.key],input.propertiesOption)
     }
   }
-  console.log(properties, "asdasd");
   return properties;
 };

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 17:12:34
+ * @LastEditTime: 2022-12-02 15:46:09
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 

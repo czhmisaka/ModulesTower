@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 10:05:16
+ * @LastEditTime: 2022-12-02 15:10:22
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -11,6 +11,7 @@ import { getHeaders } from "./user/header";
 export const CancelToken: any = axios.CancelToken; // axios 的取消请求
 import { ElMessage } from "element-plus";
 import { useUserStoreHook } from "@/store/modules/user";
+import { stringAnyObj } from "@/modules/userManage/types";
 
 // development , production
 const Env = import.meta.env.VITE_MODE;
@@ -108,6 +109,7 @@ request.interceptors.response.use(
       });
       useUserStoreHook().logOut();
     } else {
+      ElMessage.error(res.message)
       return Promise.reject(res);
     }
   },
@@ -123,7 +125,7 @@ export const get = (url: string, params: any) => {
     method: "get",
     headers: getHeaders(),
     params,
-  });
+  })as stringAnyObj;
 };
 
 export function post(url: string, data: object) {
@@ -132,5 +134,5 @@ export function post(url: string, data: object) {
     headers: getHeaders(),
     method: "post",
     data,
-  });
+  }) as stringAnyObj;
 }

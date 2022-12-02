@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-01 16:41:21
+ * @LastEditTime: 2022-12-02 16:32:36
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -28,8 +28,23 @@
       </VueForm>
     </div>
     <div class="formBody" v-else>
-      <el-descriptions class="margin-top" :column="1" border>
+      <el-form ref="form" v-on:submit.prevent :label-position="'left'" size="small">
+        <el-form-item
+          :label-width="'120px'"
+          :label="item.label"
+          v-for="item in plugInData['queryItemTemplate'].filter(
+            (x) => x.table.type != showType.btnList
+          )"
+        >
+          {{ item.table.showFunc(plugInData["data"], item.key) }}
+        </el-form-item>
+      </el-form>
+
+      <!-- <el-descriptions class="margin-top" :column="1">
         <el-descriptions-item
+          min-width="100%"
+          :label-align="'right'"
+          :align="'left'"
           v-for="item in plugInData['queryItemTemplate'].filter(
             (x) => x.table.type != showType.btnList
           )"
@@ -39,18 +54,21 @@
             {{ item.table.showFunc(plugInData["data"], item.key) }}
           </span>
         </el-descriptions-item>
-      </el-descriptions>
+      </el-descriptions> -->
     </div>
     <div :style="{ textAlign: 'left' }">
       <el-divider></el-divider>
-      <el-button
-        v-for="item in plugInData.btnList"
-        @click="btnClick(item)"
-        :type="item.elType"
-        :icon="item.icon"
-      >
-        {{ item.label }}
-      </el-button>
+      <div v-for="item in plugInData.btnList" style="float: left; margin-right: 6px">
+        <el-button
+          v-if="item.isShow(formData)"
+          :loading="item.isLoading"
+          @click="btnClick(item)"
+          :type="item.elType"
+          :icon="item.icon"
+        >
+          {{ item.label }}
+        </el-button>
+      </div>
     </div>
     <drawerForm ref="drawer" :plugInData="drawerData"></drawerForm>
   </el-drawer>
@@ -59,65 +77,28 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import VueForm from "@lljj/vue3-form-element";
-import {
-  componentInfo,
-  inputType,
-  propInfo,
-  gridSizeMaker,
-} from "@/components/basicComponents/grid/module/dataTemplate";
-import { tableCellTemplate, propertiesMaker, showType } from "./searchTable";
+import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
+import { propertiesMaker } from "./searchTable";
 
-// windows 系统下有引入顺序问题，所以在组件内直接创建使用
-// 主要是懒得重复写了
-export interface stringAnyObj {
-  [key: string]: any;
-}
-
-/**
- * @name: btnCell
- * @description: 自定义事件按钮
- * @authors: CZH
- * @Date: 2022-11-21 17:11:45
- */
-export enum btnActionTemplate {
-  OpenDrawer = "OpenDrawer",
-  Function = "Function",
-  Url = "Url",
-}
-
-import { tableCellOptions } from "./searchTable";
-import { th } from "element-plus/es/locale";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
+import {
+  ElDrawer,
+  ElDescriptions,
+  ElDescriptionsItem,
+  ElDivider,
+  ElButton,
+  formProps,
+} from "element-plus";
+import drawer from "element-plus/es/components/drawer";
+import {
+  btnActionTemplate,
+  stringAnyObj,
+  btnCellTemplate,
+  showType,
+  tableCellTemplate,
+} from "@/modules/userManage/types";
+import drawerForm from "./drawerForm.vue";
 
-/**
- * @name: drawerProps
- * @description: 弹窗属性事件
- * @authors: CZH
- * @Date: 2022-11-23 22:49:56
- */
-export interface drawerProps {
-  title: string;
-  queryItemTemplate: tableCellOptions[];
-  btnList: btnCellTemplate[];
-  data?: stringAnyObj;
-  noEdit?: boolean;
-}
-
-/**
- * @name: btnCellTemplate
- * @description: 按钮对象
- * @authors: CZH
- * @Date: 2022-11-23 22:50:42
- */
-export interface btnCellTemplate extends stringAnyObj {
-  label: string;
-  type: btnActionTemplate;
-  icon?: "";
-  elType?: "";
-  drawerDetail?: drawerProps;
-  function?: (that: stringAnyObj) => void;
-  url?: string;
-}
 let formDataForCheck = {};
 export default defineComponent({
   name: "drawerForm",
@@ -184,19 +165,43 @@ export default defineComponent({
       this.schema = { ...this.schema, properties, ...(this.plugInData["schema"] || {}) };
     },
 
+    /**
+     * @name: btnClick
+     * @description: 按钮点击事件
+     * @authors: CZH
+     * @Date: 2022-12-02 09:27:05
+     * @param {*} btn
+     */
     async btnClick(btn: btnCellTemplate) {
       if (btn.type == btnActionTemplate.OpenDrawer) {
         this.drawerData = btn.drawerProps;
         this.$refs["drawer"].open();
-      } else if (btn.type == btnActionTemplate.Function) {
+      } else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
-        await btn.function(that);
+        await btn.function(that, this.formData);
       } else if (btn.type == btnActionTemplate.Url) {
+        window.open(btn.url);
       }
     },
 
-    async close() {},
+    /**
+     * @name: close
+     * @description: 关闭弹窗界面
+     * @authors: CZH
+     * @Date: 2022-12-02 09:27:52
+     */
+    async close() {
+      this.isOpen = false;
+      this.formData = {};
+      this.$emit("onChange", {}, { type: [cardOnChangeType.forceRefresh] });
+    },
 
+    /**
+     * @name: open
+     * @description: 打开弹窗见面
+     * @authors: CZH
+     * @Date: 2022-12-02 09:28:12
+     */
     async open() {
       await this.$nextTick();
       if (this.plugInData["queryItemTemplate"])

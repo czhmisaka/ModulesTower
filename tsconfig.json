@@ -26,7 +26,7 @@
 			"element-plus/global",
 			"@pureadmin/table/volar",
 			"unplugin-vue-define-options",
-			"@pureadmin/descriptions/volar"
+			"@pureadmin/descriptions/volar",
 		],
 		"paths": {
 			"@/*": ["src/*"],
@@ -39,7 +39,7 @@
 			"dom.iterable",
 			"scripthost"
 		],
-		"typeRoots": ["./node_modules/@types/", "./types"]
+		"typeRoots": ["./node_modules/@types/", "./types","./src/modules/"]
 	},
 	"include": [
 		"src/**/*.ts",

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-01 16:41:02
+ * @LastEditTime: 2022-12-02 16:11:25
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -11,62 +11,13 @@ import { checkContext } from "@/components/basicComponents/grid/module/cardApi";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
 import drawerFormVue from "@/modules/userManage/component/searchTable/drawerForm.vue";
-
-// 主要是懒得重复写了
-export interface stringAnyObj {
-  [key: string]: any;
-}
-
-/**
- * @name: btnCell
- * @description: 自定义事件按钮
- * @authors: CZH
- * @Date: 2022-11-21 17:11:45
- */
-export enum btnActionTemplate {
-  OpenDrawer = "OpenDrawer",
-  Function = "Function",
-  Url = "Url",
-}
-
-import { tableCellOptions } from "./searchTable";
-
-export enum closeType {
-  outLayerClickClose,
-  btnClose,
-}
-
-/**
- * @name: drawerProps
- * @description: 弹窗属性事件
- * @authors: CZH
- * @Date: 2022-11-23 22:49:56
- */
-export interface drawerProps {
-  title: string;
-  queryItemTemplate: tableCellOptions[];
-  schema?:stringAnyObj,
-  btnList?: btnCellTemplate[];
-  data?: stringAnyObj;
-  noEdit?: boolean;
-  afterFunction?: (closeType: closeType, that: stringAnyObj) => void;
-}
-
-/**
- * @name: btnCellTemplate
- * @description: 按钮对象
- * @authors: CZH
- * @Date: 2022-11-23 22:50:42
- */
-export interface btnCellTemplate extends stringAnyObj {
-  label: string;
-  type: btnActionTemplate;
-  icon?: "";
-  elType?: "";
-  drawerDetail?: drawerProps;
-  function?: (that: stringAnyObj) => void;
-  url?: string;
-}
+import {
+  stringAnyObj,
+  drawerProps,
+  closeType,
+  btnActionTemplate,
+  btnCellTemplate,
+} from "@/modules/userManage/types";
 
 /**
  * @name: btnMaker
@@ -78,17 +29,21 @@ export const btnMaker = (
   label: string,
   type: btnActionTemplate,
   options: {
+    isShow?: (data: stringAnyObj) => boolean;
+    isDisable?: (data: stringAnyObj) => boolean;
     drawerProps?: drawerProps;
-    function?: (that: stringAnyObj) => void;
+    function?: (that: stringAnyObj, data?: stringAnyObj) => void;
     url?: string;
     icon?: string;
-    elType?: string;
+    elType?: "success" | "danger" | "primary" | "warning";
     [key: string]: any;
   }
 ): btnCellTemplate => {
   return {
     label,
     type,
+    isShow: () => true,
+    isDisable: () => false,
     ...options,
   } as btnCellTemplate;
 };
