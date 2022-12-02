@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 15:10:22
+ * @LastEditTime: 2022-12-02 22:22:21
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -107,9 +107,9 @@ request.interceptors.response.use(
         message: "登录过期啦",
         type: "warning",
       });
-      useUserStoreHook().logOut();
+      // useUserStoreHook().logOut();
     } else {
-      ElMessage.error(res.message)
+      if (res.message) ElMessage.error(res.message);
       return Promise.reject(res);
     }
   },
@@ -125,7 +125,7 @@ export const get = (url: string, params: any) => {
     method: "get",
     headers: getHeaders(),
     params,
-  })as stringAnyObj;
+  }) as stringAnyObj;
 };
 
 export function post(url: string, data: object) {

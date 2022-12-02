@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 16:13:32
+ * @LastEditTime: 2022-12-02 21:33:06
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -121,7 +121,7 @@ export default ({
         output: {
           chunkFileNames: "static/js/[name]-[hash].js",
           entryFileNames: "static/js/[name]-[hash].js",
-          assetFileNames: "static/[ext]/[name]-[hash].[ext]"
+          assetFileNames: "static/[ext]/[name]-[hash].[ext]",
         }
       }
     },

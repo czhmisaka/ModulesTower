@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 19:10:27
+ * @LastEditTime: 2022-12-02 21:41:20
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -9,7 +9,6 @@ import { CardComponentTemplate } from "../components/basicComponents/grid/module
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
 import { RouteRecordRaw } from "vue-router";
-
 
 import { transformSync } from "@babel/core";
 
@@ -110,6 +109,7 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
 
   // 文档路径
   const pageConfigData = "PageConfigData/index.ts";
+  const pageConfigEnv = "PageConfigData";
   const component = "component/index.ts";
   const mainPage = "Index.vue";
   const output = "output.ts";
@@ -193,6 +193,16 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
         children: [],
         components: [] as CardComponentTemplate[],
       });
+    }
+  );
+
+  dealRequireList(
+    (dealName, len) =>
+      dealName.indexOf(pageConfigEnv) > -1 &&
+      len == 4 &&
+      dealName != pageConfigData,
+    (fileName: string) => {
+      console.log(fileName, requireModule(fileName), "zxc");
     }
   );
 

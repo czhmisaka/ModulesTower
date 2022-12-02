@@ -98,6 +98,7 @@
     "lint-staged": "11.1.2",
     "lodash-unified": "^1.0.2",
     "mockjs": "^1.1.0",
+    "parcel": "^2.8.0",
     "picocolors": "^1.0.0",
     "pinia": "^2.0.21",
     "postcss": "^8.4.17",
