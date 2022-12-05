@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 15:27:35
+ * @LastEditTime: 2022-12-05 21:34:45
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -15,6 +15,7 @@
       ref="inputBox"
       :query="query"
       @search="search"
+      @refresh="refresh"
       @btnClick="btnClick"
       :queryItemTemplate="searchItemTemplate"
       @inputChange="queryChange"
@@ -23,7 +24,7 @@
     />
     <infoTable
       :template="showItemTemplate"
-      :data-list="PageData.data"
+      :data-list="PageData.data || PageData.list"
       :loading="isLoading"
       :onSearch="search"
       :style="{
@@ -75,7 +76,10 @@ import {
   btnCellTemplate,
   btnActionTemplate,
 } from "@/modules/userManage/types";
+import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
 let interval = null;
+
+let baseData = {};
 
 export default defineComponent({
   componentInfo: {
@@ -134,7 +138,22 @@ export default defineComponent({
     btnList: [],
   },
 
-  watch: {},
+  watch: {
+    baseData: {
+      handler(val) {
+        this.searchKeyWithBaseData
+          ? this.searchKeyWithBaseData.map((key) => {
+              if (Object.keys(val).indexOf(key) > -1 && baseData[key] != val[key]) {
+                baseData[key] = val[key];
+                this.search();
+              }
+            })
+          : null;
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   props: [
     "defaultQuery",
     "baseData",
@@ -199,6 +218,21 @@ export default defineComponent({
       if (this.autoSearch) this.search();
     },
 
+    refresh() {
+      if (
+        this.autoSearch == false &&
+        this?.searchKeyWithBaseData &&
+        this?.searchKeyWithBaseData?.length > 0
+      ) {
+        let data = {};
+        this.searchKeyWithBaseData.map((x) => {
+          data[x] = {};
+        });
+        const that = this;
+        setData(that, data);
+      }
+    },
+
     /**
      * @name: btnClick
      * @description: 自定义按钮事件
@@ -239,8 +273,8 @@ export default defineComponent({
       if (this.searchFunc) {
         this.isLoading = true;
         try {
-          let result = await this.searchFunc(this.query);
-          if (result.total) this.PageData = result;
+          let result = await this.searchFunc(this.query, this);
+          if (result.total || result.total == 0) this.PageData = result;
           else this.PageData.data = result;
         } catch (e) {
           console.log("【searchTable】组件search事件报错", e);

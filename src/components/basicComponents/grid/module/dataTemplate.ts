@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 21:07:09
+ * @LastEditTime: 2022-12-05 09:35:41
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -294,3 +294,6 @@ export const gridCellMaker = (
   }
   return gridCell;
 };
+
+
+export default {}

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-21 18:41:18
+ * @LastEditTime: 2022-12-05 21:18:37
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from 'vue';
@@ -121,34 +121,34 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
             small: gridSizeMaker(4, 2),
         }
     }),
-    'GridDesktop': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/grid/gridDesktop.vue')), {
-        cusStyle: {
-            label: '自定义样式',
-            type: inputType.obj
-        },
-        editable: {
-            label: '编辑状态',
-            type: inputType.boolean
-        },
-        gridColNum: {
-            label: '渲染列数',
-            type: inputType.number
-        },
-        desktopData: {
-            label: '组件载入列表',
-            type: inputType.obj
-        }
-    }, {}, {
-        label: 'GridDesktop',
-        labelNameCN: '扩展桌面组件',
-        key: 'GridDesktop',
-        description: '一个扩展桌面，需要载入组件后，提供桌面内的数据交互',
-        gridInfo: {
-            small: gridSizeMaker(6, 4),
-            middle: gridSizeMaker(9, 6),
-            large: gridSizeMaker(12, 8)
-        }
-    }),
+    // 'GridDesktop': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/grid/gridDesktop.vue')), {
+    //     cusStyle: {
+    //         label: '自定义样式',
+    //         type: inputType.obj
+    //     },
+    //     editable: {
+    //         label: '编辑状态',
+    //         type: inputType.boolean
+    //     },
+    //     gridColNum: {
+    //         label: '渲染列数',
+    //         type: inputType.number
+    //     },
+    //     desktopData: {
+    //         label: '组件载入列表',
+    //         type: inputType.obj
+    //     }
+    // }, {}, {
+    //     label: 'GridDesktop',
+    //     labelNameCN: '扩展桌面组件',
+    //     key: 'GridDesktop',
+    //     description: '一个扩展桌面，需要载入组件后，提供桌面内的数据交互',
+    //     gridInfo: {
+    //         small: gridSizeMaker(6, 4),
+    //         middle: gridSizeMaker(9, 6),
+    //         large: gridSizeMaker(12, 8)
+    //     }
+    // }),
 
     'cardApiControler': cardComponentMaker(defineAsyncComponent(() => import('@/components/basicComponents/cell/action/cardApiControler.vue')), {}, {}, {
         label: 'cardApiControler',

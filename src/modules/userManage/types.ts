@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 16:11:09
+ * @LastEditTime: 2022-12-05 09:35:08
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -146,3 +146,6 @@ export enum formInputType {
   mobile = "mobile",
   idCard = "idCard",
 }
+
+
+export default {}

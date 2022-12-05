@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 18:29:12
+ * @LastEditTime: 2022-12-05 21:04:22
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/menuManage.ts
  */
 
@@ -30,7 +30,8 @@ import {
   btnActionTemplate,
   drawerProps,
 } from "@/modules/userManage/types";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 
 export const menuManage = async () => {
   const typeToModule = {
@@ -119,9 +120,22 @@ export const menuManage = async () => {
             function: async (that, data) => {
               if (data.children && data.children.length > 0)
                 return ElMessage.warning("【无法删除】：存在子节点");
-              let res = await post("/web/usc/menu/delete", { id: data.id });
-              if (res.message == "成功") ElMessage.success(res.message);
-              else ElMessage.error(res.message);
+              ElMessageBox({
+                title: "确认删除【" + data.name + "】吗？",
+                type: "warning",
+                callback: async (action) => {
+                  if (action == "confirm") {
+                    let res = await post("/web/usc/menu/delete", {
+                      id: data.id,
+                    });
+                    if (res.message == "成功") {
+                      ElMessage.success(res.message);
+                      if (that.close) that.close();
+                      else refreshDesktop(that);
+                    } else ElMessage.error(res.message);
+                  }
+                },
+              });
             },
           }),
 
@@ -299,7 +313,6 @@ export const menuManage = async () => {
               };
             });
           },
-          searchKeyWithBaseData: ["outputKey"],
           defaultQuery: {
             showLink: true,
           },

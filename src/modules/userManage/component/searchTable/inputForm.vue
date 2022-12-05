@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 16:14:33
+ * @LastEditTime: 2022-12-05 21:36:05
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -219,8 +219,9 @@ export default defineComponent({
     },
 
     refreshData(val: any) {
-      if (val == -1) {
+      if (val === -1) {
         this.$emit("inputChange", {});
+        this.$emit("refresh");
       } else if (val && Object.keys(val).length > 0) {
         for (let x in val) {
           if (this.formData[x] != val[x]) {
@@ -228,6 +229,9 @@ export default defineComponent({
           }
         }
       }
+      // else if (Object.keys(val).length == 0) {
+      //   this.formData = val;
+      // }
     },
   },
 });

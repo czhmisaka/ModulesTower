@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 12:57:18
+ * @LastEditTime: 2022-12-05 21:21:44
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/apiManage.ts
  */
 
@@ -69,10 +69,10 @@ export const apiManage = async () => {
           showItemTemplate: APITableCellStorage.getAll(),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};
+            if (!query.name) return [];
             let res = await post("/web/usc/url/list", { ...query });
             return res && res.data ? res.data : [];
           },
-          searchKeyWithBaseData: ["outputKey"],
           btnList,
         },
         isSettingTool: false,

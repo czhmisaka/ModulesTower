@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 16:02:25
+ * @LastEditTime: 2022-12-05 20:41:53
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -115,10 +115,14 @@ export class SearchCellStorage {
  * @param {stringAnyObj} options
  */
 export const DataCell = (options: stringAnyObj = {}): tableCellOptions => {
-  return showCell(showType.func, {
-    showFunc: (data: any, key: string) => new Date(data[key]).toLocaleString(),
-    ...options,
-  });
+  return {
+    ...showCell(showType.func, {
+      showFunc: (data: any, key: string) =>
+        new Date(data[key]).toLocaleString(),
+      ...options,
+    }),
+    ...searchCell(formInputType.datePicker)
+  };
 };
 
 export const showCell = (
@@ -217,8 +221,36 @@ export const propertiesMaker = async (
   for (let i = 0; i < cellList.length; i++) {
     const cell = cellList[i];
     const { input } = cell;
-    if (input && input.type)
+    if (input && input.type) {
       if (input.type == formInputType.input) {
+        properties[cell.key] = {
+          ...base(cell),
+          "ui:options": {
+            placeholder: "请输入" + cell.label,
+            style: {
+              width: "200px",
+            },
+          },
+        };
+      }
+      if (input.type == formInputType.datePicker) {
+        properties[cell.key] = {
+          ...base(cell),
+          type: "number",
+          format: "date",
+          "ui:options": {},
+        };
+      }
+      if (input.type == formInputType.radio) {
+        properties[cell.key] = {
+          ...base(cell),
+          type: "boolean",
+          "ui:options": {
+            placeholder: "请输入" + cell.label,
+          },
+        };
+      }
+      if (input.type == formInputType.idCard) {
         properties[cell.key] = {
           ...base(cell),
           "ui:options": {
@@ -226,98 +258,77 @@ export const propertiesMaker = async (
           },
         };
       }
-    if (input.type == formInputType.datePicker) {
-      properties[cell.key] = {
-        ...base(cell),
-        type: "number",
-        format: "date",
-        "ui:options": {},
-      };
-    }
-    if (input.type == formInputType.radio) {
-      properties[cell.key] = {
-        ...base(cell),
-        type: "boolean",
-        "ui:options": {
-          placeholder: "请输入" + cell.label,
-        },
-      };
-    }
-    if (input.type == formInputType.idCard) {
-      properties[cell.key] = {
-        ...base(cell),
-        "ui:options": {
-          placeholder: "请输入" + cell.label,
-        },
-      };
-    }
-    if (input.type == formInputType.select) {
-      properties[cell.key] = {
-        ...base(cell),
-        "ui:widget": "SelectWidget",
-        "ui:options": {
-          attrs: {
-            clearable: "true",
-          },
-        },
-      };
-      if (input.inputOptions) {
+      if (input.type == formInputType.select) {
         properties[cell.key] = {
-          ...properties[cell.key],
-          enum: Object.keys(input.inputOptions),
-          enumNames: Object.keys(input.inputOptions).map(
-            (x) => input.inputOptions[x]
-          ),
-        };
-      }
-      if (input.funcInputOptionsLoader) {
-        const inputOptions = await input.funcInputOptionsLoader(that);
-        properties[cell.key] = {
-          ...properties[cell.key],
-          enum: Object.keys(inputOptions),
-          enumNames: Object.keys(inputOptions).map((x) => inputOptions[x]),
-        };
-      }
-    }
-    if (input.type == formInputType.inputList) {
-      properties[cell.key] = {
-        ...base(cell),
-        "ui:widget": "SelectWidget",
-        type: "array",
-        uniqueItems: true,
-        items: {
-          type: "string",
-        },
-        "ui:options": {
-          attrs: {
-            clearable: true,
-            multiple: true,
-            "collapse-tags": true,
-            "allow-create": true,
-            filterable: true,
+          ...base(cell),
+          "ui:widget": "SelectWidget",
+          "ui:options": {
+            attrs: {
+              clearable: true,
+            },
           },
-        },
-      };
-      if (input.inputOptions) {
-        properties[cell.key].items = {
-          ...properties[cell.key].items,
-          enum: Object.keys(input.inputOptions),
-          enumNames: Object.keys(input.inputOptions).map(
-            (x) => input.inputOptions[x]
-          ),
         };
+        if (input.inputOptions) {
+          properties[cell.key] = {
+            ...properties[cell.key],
+            enum: Object.keys(input.inputOptions),
+            enumNames: Object.keys(input.inputOptions).map(
+              (x) => input.inputOptions[x]
+            ),
+          };
+        }
+        if (input.funcInputOptionsLoader) {
+          const inputOptions = await input.funcInputOptionsLoader(that);
+          properties[cell.key] = {
+            ...properties[cell.key],
+            enum: Object.keys(inputOptions),
+            enumNames: Object.keys(inputOptions).map((x) => inputOptions[x]),
+          };
+        }
       }
-      if (input.funcInputOptionsLoader) {
-        const inputOptions = await input.funcInputOptionsLoader(that);
-        properties[cell.key].items = {
-          ...properties[cell.key].items,
-          enum: Object.keys(inputOptions),
-          enumNames: Object.keys(inputOptions).map((x) => inputOptions[x]),
+      if (input.type == formInputType.inputList) {
+        properties[cell.key] = {
+          ...base(cell),
+          "ui:widget": "SelectWidget",
+          type: "array",
+          uniqueItems: true,
+          items: {
+            type: "string",
+          },
+          "ui:options": {
+            attrs: {
+              clearable: true,
+              multiple: true,
+              "collapse-tags": true,
+              "allow-create": true,
+              filterable: true,
+            },
+          },
         };
+        if (input.inputOptions) {
+          properties[cell.key].items = {
+            ...properties[cell.key].items,
+            enum: Object.keys(input.inputOptions),
+            enumNames: Object.keys(input.inputOptions).map(
+              (x) => input.inputOptions[x]
+            ),
+          };
+        }
+        if (input.funcInputOptionsLoader) {
+          const inputOptions = await input.funcInputOptionsLoader(that);
+          properties[cell.key].items = {
+            ...properties[cell.key].items,
+            enum: Object.keys(inputOptions),
+            enumNames: Object.keys(inputOptions).map((x) => inputOptions[x]),
+          };
+        }
       }
     }
-    if(input.propertiesOption){
-      properties[cell.key] = deepMerge(properties[cell.key],input.propertiesOption)
+    if (input && input.propertiesOption) {
+      properties[cell.key] = deepMerge(
+        properties[cell.key],
+        input.propertiesOption
+      );
     }
   }
   return properties;

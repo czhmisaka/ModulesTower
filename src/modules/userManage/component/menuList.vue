@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-18 17:32:18
+ * @LastEditTime: 2022-12-05 21:04:30
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -130,7 +130,7 @@ export default defineComponent({
     nodeClick(node) {
       let outputKey = this.outputKey || "menuList_output";
       let data = {};
-      data[outputKey] = node;
+      data[outputKey] = JSON.parse(JSON.stringify(node));
       setData(this, data);
     },
 
@@ -141,7 +141,6 @@ export default defineComponent({
      * @Date: 2022-11-18 17:04:57
      */
     async init() {
-      console.log(this.treeDataFunc, this.treeData, "pwd");
       if (this.treeDataFunc) {
         let that = this;
         that.treeData = await that.treeDataFunc(that);

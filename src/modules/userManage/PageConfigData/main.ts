@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 12:56:42
+ * @LastEditTime: 2022-12-05 20:32:03
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -20,8 +20,17 @@ import {
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { post, get } from "@/utils/api/requests";
 import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
-import { SearchCellStorage, tableCellTemplateMaker, DataCell } from "@/modules/userManage/component/searchTable/searchTable";
-import { btnActionTemplate, stringAnyObj } from "@/modules/userManage/types";
+import {
+  SearchCellStorage,
+  tableCellTemplateMaker,
+  DataCell,
+  searchCell,
+} from "@/modules/userManage/component/searchTable/searchTable";
+import {
+  btnActionTemplate,
+  stringAnyObj,
+  formInputType,
+} from "@/modules/userManage/types";
 
 export const mainDesktop = async () => {
   /**
@@ -43,105 +52,85 @@ export const mainDesktop = async () => {
   }
 
   const userTableCellStorage = new SearchCellStorage([
-    tableCellTemplateMaker("name", "name"),
-    tableCellTemplateMaker("gender", "gender"),
+    tableCellTemplateMaker("名字", "name"),
+    tableCellTemplateMaker("性别", "gender"),
     tableCellTemplateMaker("icon", "icon"),
-    tableCellTemplateMaker("description", "description"),
-    tableCellTemplateMaker("adminFlag", "adminFlag"),
-    tableCellTemplateMaker("mail", "mail"),
-    tableCellTemplateMaker("mobile", "mobile"),
+    tableCellTemplateMaker("简介", "description"),
+    tableCellTemplateMaker("管理员", "adminFlag"),
+    tableCellTemplateMaker("邮箱", "mail"),
+    tableCellTemplateMaker("手机号", "mobile"),
     tableCellTemplateMaker(
-      "birthday",
+      "生日",
       "birthday",
       DataCell({
         width: "200px",
       })
     ),
-    tableCellTemplateMaker("idCard", "idCard"),
-    tableCellTemplateMaker("zzdCode", "zzdCode"),
+    tableCellTemplateMaker("身份证信息", "idCard"),
+    tableCellTemplateMaker("浙政钉code", "zzdCode"),
     tableCellTemplateMaker("id", "id"),
-    tableCellTemplateMaker("createUserId", "createUserId"),
+    tableCellTemplateMaker("创建者id", "createUserId"),
     tableCellTemplateMaker(
-      "createTime",
+      "创建时间",
       "createTime",
       DataCell({
         width: "200px",
       })
     ),
-    tableCellTemplateMaker("updateUserId", "updateUserId"),
+    tableCellTemplateMaker("修改者id", "updateUserId"),
     tableCellTemplateMaker(
-      "updateTime",
+      "最近修改时间",
       "updateTime",
       DataCell({
         width: "200px",
       })
     ),
-    tableCellTemplateMaker("orderNumber", "orderNumber"),
+    tableCellTemplateMaker("部门", "unitIds", {
+      ...searchCell(formInputType.selects, {}),
+    }),
+    tableCellTemplateMaker("排序", "orderNumber"),
   ]);
 
   const searchTable = new SearchCellStorage([
-    tableCellTemplateMaker("用户名", "name"),
-    tableCellTemplateMaker("手机号", "mobile"),
-    tableCellTemplateMaker("组织", "unitId"),
-    tableCellTemplateMaker("角色", "roleId"),
+    ...userTableCellStorage.getByKeyArr(["name", "mobile", "roleId"]),
+    tableCellTemplateMaker(
+      "搜索子部门",
+      "searchChildrenFlag",
+      searchCell(formInputType.radio)
+    ),
   ]);
-
-  const userTableSearchTemplate = [];
 
   const btnList = [
     btnMaker("新增", btnActionTemplate.OpenDrawer, {
       drawerProps: {
         title: "新增用户",
-        queryItemTemplate: userTableCellStorage.getAll(),
+        queryItemTemplate: userTableCellStorage.getByLabelArr([
+          "name",
+          "gender",
+          "icon",
+          "description",
+          "mail",
+          "mobile",
+          "birthday",
+          "idCard",
+          "unitIds",
+        ]),
         btnList: [
           btnMaker("提交", btnActionTemplate.Function, {
             icon: "Position",
-            function: async (that) => {
-              console.log(that, "qwe");
+            function: async (that, data) => {
+              let res = await post("/web/usc/user/insert", data);
+              console.log("res", res);
             },
-          }),
-          btnMaker("新增", btnActionTemplate.OpenDrawer, {
-            drawerProps: {
-              title: "新增用户",
-              queryItemTemplate: userTableSearchTemplate,
-              btnList: [
-                btnMaker("提交", btnActionTemplate.Function, {
-                  icon: "Position",
-                  function: (that) => {
-                    return console.log(that, "qwe");
-                  },
-                }),
-                btnMaker("取消", btnActionTemplate.Function, {
-                  icon: "Delete",
-                  elType: "danger",
-                  function: (that) => {
-                    console.log(that, "qwe");
-                  },
-                }),
-              ],
-            },
-            icon: "Plus",
-            elType: "primary",
           }),
         ],
       },
-      premission:['admin'],
+      premission: ["admin"],
       icon: "Plus",
       elType: "primary",
     }),
-    btnMaker("删除", btnActionTemplate.OpenDrawer, {
-      drawerProps: {
-        title: "删除用户",
-        queryItemTemplate: userTableSearchTemplate,
-        btnList: [
-          btnMaker("提交", btnActionTemplate.Function, {
-            icon: "Position",
-            function: (that) => {
-              console.log(that, "qwe");
-            },
-          })
-        ],
-      },
+    btnMaker("删除", btnActionTemplate.Function, {
+      function: async (that, data) => {},
       icon: "Delete",
       elType: "danger",
     }),
@@ -170,7 +159,7 @@ export const mainDesktop = async () => {
               .filter(Boolean);
             return unitList;
           },
-          outputKey: "outputKey",
+          outputKey: "unit",
           defaultProps: {
             label: "name",
             children: "children",
@@ -180,7 +169,7 @@ export const mainDesktop = async () => {
       }
     )
       .setPosition(0, 0)
-      .setSize(3, 8),
+      .setSize(2, 8),
     gridCellMaker(
       "searchTable",
       "搜索结果列表",
@@ -191,33 +180,24 @@ export const mainDesktop = async () => {
       },
       {
         props: {
-          searchItemTemplate: userTableSearchTemplate,
+          searchItemTemplate: searchTable.getAll(),
           showItemTemplate: userTableCellStorage.getAll(),
-          searchFunc: async (query: stringAnyObj) => {
-            let res = await post("/web/usc/user/list", { ...query });
+          searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
+            let res = await post("/web/usc/user/page/unit", {
+              ...query,
+              unitId: that.baseData?.unit?.id,
+            });
+            if (!res.data["list"]) res.data["list"] = [];
+            if (!res.data["data"]) res.data["data"] = res.data["list"];
             return res.data;
           },
-          searchKeyWithBaseData: ["outputKey"],
+          searchKeyWithBaseData: ["unit"],
           btnList,
         },
         isSettingTool: false,
       }
     )
-      .setPosition(3, 0)
-      .setSize(9, 8),
-    // gridCellMaker(
-    //   "editable",
-    //   "编辑",
-    //   {},
-    //   {
-    //     name: "setting_editable",
-    //     type: cardComponentType.componentList,
-    //   },
-    //   {
-    //     isSettingTool: true,
-    //   }
-    // )
-    //   .setPosition(0, 7)
-    //   .setSize(1, 1),
+      .setPosition(2, 0)
+      .setSize(10, 8),
   ] as gridCellTemplate[];
 };

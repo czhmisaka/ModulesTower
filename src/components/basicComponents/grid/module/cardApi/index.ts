@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 15:46:09
+ * @LastEditTime: 2022-12-05 19:33:25
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -12,7 +12,6 @@ import {
   gridSizeCell,
 } from "../dataTemplate";
 import { deepClone } from "./deepClone";
-
 
 /**
  * @name: checkContext
@@ -213,6 +212,28 @@ export const changeCardProperties = (
 };
 
 /**
+ * @name: refreshDesktop
+ * @description: 刷新桌面
+ * @authors: CZH
+ * @Date: 2022-12-05 19:32:21
+ */
+export const refreshDesktop = (content: { [key: string]: any }) => {
+  if (!checkContext(content, { 1: 1 })) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    content[func](
+      "onChange",
+      {},
+      {
+        type: [cardOnChangeType.forceRefresh],
+      }
+    );
+  } catch (err) {
+    console.error("changeVisible 错误:", err, content, { 1: 1 });
+  }
+};
+
+/**
  * @todo @czh 开发中
  * @name: baseDataWatcher
  * @description: 快速生成baseData数据的监听器
@@ -225,10 +246,7 @@ export const baseDataWatcher = (model: { [key: string]: any } = {}) => {
   return watchMap;
 };
 
-
-export const moduleApi = (apiName:string)=>{
-
-}
+export const moduleApi = (apiName: string) => {};
 
 export default {
   setData,

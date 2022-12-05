@@ -53,7 +53,9 @@
               placement="top-start"
               trigger="hover"
               :show-after="500"
-              :content="item.table.showFunc(scope.row, item.key) + ''"
+              :content="
+                `【${item.label}】` + item.table.showFunc(scope.row, item.key) + ''
+              "
             >
               <template #reference>
                 {{ item.table.showFunc(scope.row, item.key) }}
@@ -88,10 +90,6 @@
 import { defineComponent, ref } from "vue";
 import { ElButton, ElPopover, ElTable, ElTableColumn } from "element-plus";
 import { useDark } from "@pureadmin/utils";
-import {
-  template,
-  sortBy,
-} from ".pnpm/registry.npmmirror.com+lodash-unified@1.0.3_3ib2ivapxullxkx3xftsimdk7u/node_modules/lodash-unified";
 import loading from "element-plus/es/components/loading";
 import tableHeader from "element-plus/es/components/table/src/table-header";
 import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../../types";

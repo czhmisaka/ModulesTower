@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 16:32:36
+ * @LastEditTime: 2022-12-05 11:14:21
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -14,18 +14,20 @@
     :append-to-body="'True'"
   >
     <div class="formBody" v-if="!plugInData['noEdit']">
-      <VueForm
-        v-if="isOpen"
-        v-model="formData"
-        :style="{
-          textAlign: 'top',
-        }"
-        :schema="schema"
-        :ui-schema="uiSchema"
-        :formProps="formProps"
-      >
-        <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
-      </VueForm>
+      <el-scrollbar>
+        <VueForm
+          v-if="isOpen"
+          v-model="formData"
+          :style="{
+            textAlign: 'top',
+          }"
+          :schema="schema"
+          :ui-schema="uiSchema"
+          :formProps="formProps"
+        >
+          <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
+        </VueForm>
+      </el-scrollbar>
     </div>
     <div class="formBody" v-else>
       <el-form ref="form" v-on:submit.prevent :label-position="'left'" size="small">
@@ -81,14 +83,7 @@ import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataT
 import { propertiesMaker } from "./searchTable";
 
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
-import {
-  ElDrawer,
-  ElDescriptions,
-  ElDescriptionsItem,
-  ElDivider,
-  ElButton,
-  formProps,
-} from "element-plus";
+import { ElDrawer, ElDivider, ElButton } from "element-plus";
 import drawer from "element-plus/es/components/drawer";
 import {
   btnActionTemplate,
@@ -162,7 +157,11 @@ export default defineComponent({
     ) {
       let properties = {} as stringAnyObj;
       properties = await propertiesMaker(queryItemTemplate, this);
-      this.schema = { ...this.schema, properties, ...(this.plugInData["schema"] || {}) };
+      this.schema = {
+        ...this.schema,
+        properties,
+        ...(this.plugInData["schema"] || {}),
+      };
     },
 
     /**
