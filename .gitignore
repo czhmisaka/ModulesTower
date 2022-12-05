@@ -15,6 +15,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# noCatch
+.cache
+.cache/*
+.parcel-cache
+.parcel-cache/*
+
 __pycache__
 __pycache__/*
 *.pyc

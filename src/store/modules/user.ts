@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 16:31:07
+ * @LastEditTime: 2022-12-04 11:57:12
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -52,7 +52,7 @@ export const useUserStore = defineStore({
     async loginByUsername(query) {
       return new Promise<UserResult>(async (resolve, reject) => {
         let res = await getLogin(query);
-        console.log(res);
+        console.log(res,'asd');
         if (res && res.data) {
           let data = {
             ...res.data,

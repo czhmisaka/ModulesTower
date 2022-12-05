@@ -1,5 +1,5 @@
 {
-  "name": "configForDesktopPage",
+  "name": "configfordesktoppage",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "rm -rf dist && vite build --mode production",
     "lint": "vue-cli-service lint",
-    "preview-vite": "vite preview"
+    "preview-vite": "vite preview",
+    "parcelTest": "parcel src/modules/userManage/PageConfigData/menuManage.ts"
   },
   "dependencies": {
     "@ctrl/tinycolor": "^3.4.1",
@@ -107,6 +108,7 @@
     "postcss-scss": "^4.0.5",
     "prettier": "^2.5.1",
     "pretty-quick": "3.1.1",
+    "parcel-bundler": "^1.7.0",
     "rimraf": "3.0.2",
     "rollup-plugin-visualizer": "^5.8.2",
     "sass": "^1.53.0",
@@ -150,5 +152,8 @@
         "webpack"
       ]
     }
+  },
+  "alias": {
+    "@/": "/src/"
   }
 }
