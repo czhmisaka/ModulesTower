@@ -47,7 +47,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    console.log(this.$router);
+    console.log(this.$router.getRoutes());
     this.$refs["lineSlideExchange"].start();
     this.$refs["lineSlideExchange"].finish();
   },

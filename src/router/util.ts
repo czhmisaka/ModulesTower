@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 21:41:20
+ * @LastEditTime: 2022-12-06 08:53:29
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -196,13 +196,14 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
     }
   );
 
+  // 整理模块包的引入关系
   dealRequireList(
     (dealName, len) =>
       dealName.indexOf(pageConfigEnv) > -1 &&
       len == 4 &&
       dealName != pageConfigData,
     (fileName: string) => {
-      console.log(fileName, requireModule(fileName), "zxc");
+      // console.log(fileName, requireModule(fileName), "zxc");
     }
   );
 
@@ -334,7 +335,6 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
     return back;
   };
 
-  console.log("asd", moduleList);
   return moduleList;
 };
 

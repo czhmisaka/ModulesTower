@@ -7,8 +7,6 @@
 
 import { gridCellMaker, gridSizeMaker, cardComponentType, cardOnChangeType, gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate"
 import { changeVisible, changeCardSize, changeCardPosition, changeCardProperties } from "@/components/basicComponents/grid/module/cardApi/index";
-import { setPosition, setSize } from '../../../components/basicComponents/grid/module/util';
-
 import { infoTemplate, infoType } from '@/components/basicComponents/cell/info/DynamicIsland'
 
 

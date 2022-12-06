@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-05 20:32:03
+ * @LastEditTime: 2022-12-06 09:15:39
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -169,7 +169,7 @@ export const mainDesktop = async () => {
       }
     )
       .setPosition(0, 0)
-      .setSize(2, 8),
+      .setSize(3, 8),
     gridCellMaker(
       "searchTable",
       "搜索结果列表",
@@ -197,7 +197,7 @@ export const mainDesktop = async () => {
         isSettingTool: false,
       }
     )
-      .setPosition(2, 0)
-      .setSize(10, 8),
+      .setPosition(3, 0)
+      .setSize(9, 8),
   ] as gridCellTemplate[];
 };

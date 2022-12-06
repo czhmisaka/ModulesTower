@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 10:49:59
+ * @LastEditTime: 2022-12-06 10:31:50
  * @FilePath: /configforpagedemo/src/modules/userManage/output.ts
  */
 export const moduleInfo = {
@@ -10,6 +10,7 @@ export const moduleInfo = {
   icon: "EL_Setting",
   info: "部门 人员 角色 权限管理",
   author: "czh & ljh",
+  
 };
 
 import drawerForm from "@/modules/userManage/component/searchTable/drawerForm";

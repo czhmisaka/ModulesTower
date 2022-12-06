@@ -2,11 +2,11 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-23 17:03:11
+ * @LastEditTime: 2022-12-06 10:36:15
  * @FilePath: /configforpagedemo/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from './main';
-import { mobileDesktop } from './mobile';
+import { mobileDesktop } from './mobile/mobile';
 import { ChenYi } from './ChenYi'
 import { gridCellTemplate } from '@/components/basicComponents/grid/module/dataTemplate';
 import { isValidKey } from '@/utils/index';

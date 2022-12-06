@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-29 14:19:36
+ * @LastEditTime: 2022-12-06 14:21:14
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -13,6 +13,7 @@ import { apiManage } from "./apiManage";
 import { department } from "./departmenet";
 import { pageConfigManage } from "./pageConfigManage";
 import { menuManage } from "./menuManage";
+import { roleManage } from "./roleManage";
 
 export interface desktopDataTemplate {
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -37,16 +38,6 @@ const pageConfig = {
     permission: [],
     dataPermission: [],
   },
-  apiManage: {
-    name: "API管理",
-    desktopData: apiManage,
-    gridColNum: 12,
-    cusStyle: {
-      wholeScreen: true,
-      maxRows: 8,
-      margin: 12,
-    },
-  },
   department: {
     name: "部门管理",
     desktopData: department,
@@ -57,9 +48,19 @@ const pageConfig = {
       margin: 12,
     },
   },
-  pageConfigManage: {
-    name: "页面配置管理",
-    desktopData: pageConfigManage,
+  // pageConfigManage: {
+  //   name: "页面配置管理",
+  //   desktopData: pageConfigManage,
+  //   gridColNum: 12,
+  //   cusStyle: {
+  //     wholeScreen: true,
+  //     maxRows: 8,
+  //     margin: 12,
+  //   },
+  // },
+  menuManage: {
+    name: "菜单管理",
+    desktopData: menuManage,
     gridColNum: 12,
     cusStyle: {
       wholeScreen: true,
@@ -67,9 +68,19 @@ const pageConfig = {
       margin: 12,
     },
   },
-  menuManage: {
-    name: "菜单管理",
-    desktopData: menuManage,
+  roleManage: {
+    name: "角色管理",
+    desktopData: roleManage,
+    gridColNum: 12,
+    cusStyle: {
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 12,
+    },
+  },
+  apiManage: {
+    name: "API管理",
+    desktopData: apiManage,
     gridColNum: 12,
     cusStyle: {
       wholeScreen: true,
