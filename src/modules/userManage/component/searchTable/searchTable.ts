@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-05 20:41:53
+ * @LastEditTime: 2022-12-06 15:50:46
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -96,12 +96,30 @@ export class SearchCellStorage {
       back.push(this.getByKey(keyArr[key]));
     }
     return back.filter(Boolean);
+  }见
+
+  /**
+   * @name: getAll
+   * @description: 获取全部标签，可以使用keyarr字段做排除法
+   * @authors: CZH
+   * @Date: 2022-12-06 15:48:39
+   * @param {string} keyArr
+   */
+  getAll(expectKeyArr: string[] = []) {
+    if (expectKeyArr && expectKeyArr.length > 0)
+      return this.storage.filter((cell) => {
+        return expectKeyArr.indexOf(cell.key) == -1;
+      });
+    else return this.storage;
   }
 
-  getAll() {
-    return this.storage;
-  }
-
+  /**
+   * @name: push
+   * @description: 添加一个元素
+   * @authors: CZH
+   * @Date: 2022-12-06 15:50:51
+   * @param {tableCellTemplate} cell
+   */
   push(cell: tableCellTemplate) {
     this.storage.push(cell);
   }
@@ -121,10 +139,16 @@ export const DataCell = (options: stringAnyObj = {}): tableCellOptions => {
         new Date(data[key]).toLocaleString(),
       ...options,
     }),
-    ...searchCell(formInputType.datePicker)
+    ...searchCell(formInputType.datePicker),
   };
 };
 
+/**
+ * @name: showCell
+ * @description: 创建输入单元，表单展示用
+ * @authors: CZH
+ * @Date: 2022-12-06 14:54:25
+ */
 export const showCell = (
   showType: showType,
   options?: tableCellOptionsTableTemplate | stringAnyObj
@@ -139,6 +163,12 @@ export const showCell = (
   return tableCellOption;
 };
 
+/**
+ * @name: searchCell
+ * @description: 创建搜索单元，表单输入用
+ * @authors: CZH
+ * @Date: 2022-12-06 14:54:07
+ */
 export const searchCell = (
   formInputType: formInputType,
   options?: tableCellOptionsInputPropertiesTemplate
@@ -151,7 +181,26 @@ export const searchCell = (
   return tableCellOption;
 };
 
+/**
+ * @name: staticSelectCell
+ * @description: 静态资源选择 展示&输入组合
+ * @authors: CZH
+ * @Date: 2022-12-06 15:10:13
+ * @param {stringAnyObj} inputOptions
+ */
+export const staticSelectCell = (inputOptions: stringAnyObj) => {
+  return {
+    ...searchCell(formInputType.select, {
+      inputOptions,
+    }),
+    ...showCell(showType.func, {
+      showFunc: (data, key) => inputOptions[data[key]],
+    }),
+  };
+};
+
 // 构建表单内的数据操作实例
+// 也就是操作按钮列表
 export const actionCell = (
   btnList: btnCellTemplate[],
   options?: tableCellOptionsTableTemplate | stringAnyObj

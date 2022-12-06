@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 22:22:21
+ * @LastEditTime: 2022-12-06 15:40:14
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -107,7 +107,7 @@ request.interceptors.response.use(
         message: "登录过期啦",
         type: "warning",
       });
-      // useUserStoreHook().logOut();
+      useUserStoreHook().logOut();
     } else {
       if (res.message) ElMessage.error(res.message);
       return Promise.reject(res);

@@ -1,8 +1,17 @@
+<!--
+ * @Date: 2022-11-21 16:13:14
+ * @LastEditors: CZH
+ * @LastEditTime: 2022-12-06 17:38:18
+ * @FilePath: /configforpagedemo/src/layout/components/sidebar/logo.vue
+-->
 <script setup lang="ts">
 import { useNav } from "@/layout/hooks/useNav";
 
+import logo_color from "@/assets/logo/logo_color.png";
+import logo from "@/assets/logo/logo.png";
+
 const props = defineProps({
-  collapse: Boolean
+  collapse: Boolean,
 });
 
 const { title } = useNav();
@@ -18,17 +27,13 @@ const { title } = useNav();
         class="sidebar-logo-link"
         to="/"
       >
-        <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
+        <img :src="logo" style="width: 35px; height: 35px" />
+        <!-- <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" /> -->
         <span class="sidebar-title">{{ title }}</span>
       </router-link>
-      <router-link
-        v-else
-        key="expand"
-        :title="title"
-        class="sidebar-logo-link"
-        to="/"
-      >
-        <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
+      <router-link v-else key="expand" :title="title" class="sidebar-logo-link" to="/">
+        <!-- <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" /> -->
+        <img :src="logo" style="width: 35px; height: 35px" />
         <span class="sidebar-title">{{ title }}</span>
       </router-link>
     </transition>

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 14:50:51
+ * @LastEditTime: 2022-12-06 17:28:08
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -25,6 +25,8 @@ import {
   searchCell,
   DataCell,
   showCell,
+  staticSelectCell,
+  actionCell,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import {
   btnActionTemplate,
@@ -43,15 +45,6 @@ export const roleManage = async () => {
     3: "自定义部门",
   };
 
-  // 提交按钮 / 新增&编辑
-  const submitBtn = btnMaker("提交", btnActionTemplate.Function, {});
-
-  // 删除按钮
-  const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {});
-
-  // 打开弹窗 / 支持新增&编辑
-  const addModelBtn = btnMaker("新增", btnActionTemplate.OpenDrawer, {});
-
   // table 标签库
   const roleTableSearchStorage = new SearchCellStorage([
     tableCellTemplateMaker("id", "id"),
@@ -69,13 +62,54 @@ export const roleManage = async () => {
     tableCellTemplateMaker(
       "数据访问类型",
       "dataScopeType",
-      searchCell(formInputType.select, {
-        inputOptions: dataScopeType,
-      })
+      staticSelectCell(dataScopeType)
     ),
-    tableCellTemplateMaker("数据访问范围", "dataScope"),
+    tableCellTemplateMaker("数据访问范围", "dataScopes"),
+    tableCellTemplateMaker("菜单权限范围", "systemMenuIds"),
   ]);
-  const btnList = [] as btnCellTemplate[];
+
+  /**
+   * @name: addNewForm
+   * @description: 新增和编辑功能使用的表单
+   * @authors: CZH
+   * @Date: 2022-12-06 16:38:01
+   */
+  const addNewForm = [
+    ...roleTableSearchStorage.getByKeyArr([
+      "name",
+      "description",
+      "orderNumber",
+      "parentId",
+      "systemMenuIds",
+      "dataScopeType",
+      "dataScopes",
+    ]),
+  ];
+
+  // 提交按钮 / 新增&编辑
+  const submitBtn = btnMaker("提交", btnActionTemplate.Function, {});
+
+  // 删除按钮
+  const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {});
+
+  // 打开弹窗 / 支持新增&编辑
+  const addModelBtn = btnMaker("新增", btnActionTemplate.Function, {
+    
+  });
+
+  // 搜索表单同级别按钮
+  const btnList = [addModelBtn] as btnCellTemplate[];
+
+  // 表单单行数据操作按钮
+  roleTableSearchStorage.push(
+    tableCellTemplateMaker(
+      "操作",
+      "actionBtnList",
+      actionCell([addModelBtn, deleteBtn], {
+        fixed: "right",
+      })
+    )
+  );
 
   return [
     gridCellMaker(
@@ -89,14 +123,14 @@ export const roleManage = async () => {
       {
         props: {
           defaultQuery: {},
-          searchItemTemplate: roleTableSearchStorage.getByKeyArr([
-            "dataScopeType",
+          searchItemTemplate: roleTableSearchStorage.getByKeyArr(["name"]),
+          showItemTemplate: roleTableSearchStorage.getAll([
+            "systemMenuIds",
+            "dataScopes",
           ]),
-          showItemTemplate: roleTableSearchStorage.getAll(),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};
-            if (!query.name) return [];
-            let res = await post("/web/usc/url/list", { ...query });
+            let res = await post("/web/usc/role/list", { ...query });
             return res && res.data ? res.data : [];
           },
           btnList,
