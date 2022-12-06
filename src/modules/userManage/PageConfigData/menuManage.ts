@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-05 21:04:22
+ * @LastEditTime: 2022-12-06 19:56:23
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/menuManage.ts
  */
 
@@ -62,7 +62,12 @@ export const menuManage = async () => {
   const pageConfigDataTableCellStorage = new SearchCellStorage([
     tableCellTemplateMaker("id", "id", showCell(showType.dataKey)),
     tableCellTemplateMaker("父级ID", "parentId"),
-    tableCellTemplateMaker("名称", "name", searchCell(formInputType.input)),
+    tableCellTemplateMaker("名称", "name", {
+      ...searchCell(formInputType.input),
+      ...showCell(showType.dataKey, {
+        width: "300px",
+      }),
+    }),
     tableCellTemplateMaker("图标", "icon"),
     tableCellTemplateMaker("类型", "type", {
       ...showCell(showType.func, {
@@ -300,7 +305,10 @@ export const menuManage = async () => {
       {
         props: {
           searchItemTemplate: SearchTemplate,
-          showItemTemplate: pageConfigDataTableCellStorage.getAll(),
+          showItemTemplate: pageConfigDataTableCellStorage.getAll([
+            "id",
+            "parentId",
+          ]),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};
             let res = await post("/web/usc/menu/list", { ...query });

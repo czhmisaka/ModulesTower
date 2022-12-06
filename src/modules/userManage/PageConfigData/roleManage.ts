@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 17:28:08
+ * @LastEditTime: 2022-12-06 19:44:16
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -87,7 +87,13 @@ export const roleManage = async () => {
   ];
 
   // 提交按钮 / 新增&编辑
-  const submitBtn = btnMaker("提交", btnActionTemplate.Function, {});
+  const submitBtn = btnMaker("提交", btnActionTemplate.Function, {
+    icon:'Plus',
+    elType:'primary',
+    function:async (that,data)=>{
+       
+    }
+  });
 
   // 删除按钮
   const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {});

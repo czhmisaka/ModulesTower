@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 21:33:06
+ * @LastEditTime: 2022-12-06 18:55:14
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -129,12 +129,12 @@ export default ({
       strictPort: false,
       port: 9050,
       proxy: {
-        '/web/': {
+        '/api/': {
           name: 'dev',
-          target: VITE_PROXY_DOMAIN_REAL,
+          target: VITE_PROXY_DOMAIN,
           changeOrigin: true,
           ws: true,
-          // rewrite: (path) => path.replace(/^\/api/, '/')
+          rewrite: (path) => path.replace(/^\/api/, '/')
         },
 
       }

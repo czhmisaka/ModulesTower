@@ -77,6 +77,7 @@ import {
   btnActionTemplate,
 } from "@/modules/userManage/types";
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
+import { thisTypeAnnotation } from "@babel/types";
 let interval = null;
 
 let baseData = {};
@@ -231,6 +232,7 @@ export default defineComponent({
         const that = this;
         setData(that, data);
       }
+      this.initData();
     },
 
     /**

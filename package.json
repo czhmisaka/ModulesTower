@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "cd pythonServer/server && python3 main.py",
-    "dev": "vite",
+    "dev": "vite --mode development",
     "build": "rm -rf dist && vite build --mode production",
     "lint": "vue-cli-service lint",
     "preview-vite": "vite preview",

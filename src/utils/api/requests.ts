@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 15:40:14
+ * @LastEditTime: 2022-12-06 18:52:15
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -16,6 +16,9 @@ import { stringAnyObj } from "@/modules/userManage/types";
 // development , production
 const Env = import.meta.env.VITE_MODE;
 const isDev = () => Env == "development";
+import { loadEnv } from "@build/index";
+const { VITE_PROXY_DOMAIN_REAL } = loadEnv();
+console.log(loadEnv())
 
 export function isMobile() {
   if (
@@ -121,7 +124,7 @@ request.interceptors.response.use(
 
 export const get = (url: string, params: any) => {
   return request({
-    url,
+    url: VITE_PROXY_DOMAIN_REAL + url,
     method: "get",
     headers: getHeaders(),
     params,
@@ -130,7 +133,7 @@ export const get = (url: string, params: any) => {
 
 export function post(url: string, data: object) {
   return request({
-    url,
+    url: VITE_PROXY_DOMAIN_REAL + url,
     headers: getHeaders(),
     method: "post",
     data,

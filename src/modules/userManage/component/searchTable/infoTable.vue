@@ -219,7 +219,7 @@ export default defineComponent({
 .flexBox {
   text-align: left;
   user-select: text;
-  font-weight: 300;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

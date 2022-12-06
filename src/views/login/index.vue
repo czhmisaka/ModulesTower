@@ -41,25 +41,30 @@ const ruleForm = reactive({
 const onLogin = async (formEl: FormInstance | undefined) => {
   loading.value = true;
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
-    if (valid) {
-      useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: ruleForm.password })
-        .then((res) => {
-          console.log(res);
-          if (res && res["token"]) {
-            // 获取后端路由
-            initRouter().then(() => {
-              message.success("登录成功");
-              router.push("/");
-            });
-          }
-        });
-    } else {
-      loading.value = false;
-      return fields;
-    }
-  });
+  try {
+    await formEl.validate((valid, fields) => {
+      if (valid) {
+        useUserStoreHook()
+          .loginByUsername({ username: ruleForm.username, password: ruleForm.password })
+          .then((res) => {
+            console.log(res);
+            if (res && res["token"]) {
+              // 获取后端路由
+              initRouter().then(() => {
+                message.success("登录成功");
+                router.push("/");
+              });
+            }
+          });
+      } else {
+        loading.value = false;
+        return fields;
+      }
+    });
+  } catch (e) {
+  } finally {
+    loading.value = false;
+  }
 };
 
 /** 使用公共函数，避免`removeEventListener`失效 */

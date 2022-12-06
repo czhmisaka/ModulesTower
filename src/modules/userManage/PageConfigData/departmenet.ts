@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-05 21:33:23
+ * @LastEditTime: 2022-12-06 19:32:27
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -123,7 +123,7 @@ export const department = async () => {
   const btnList = [
     btnMaker("新增部门", btnActionTemplate.Function, {
       icon: "Plus",
-      elType: "success",
+      elType: "primary",
       function: async (that, data) => {
         let drawerProps = {
           title: "新增部门",
@@ -154,7 +154,7 @@ export const department = async () => {
         [
           btnMaker("新增部门", btnActionTemplate.Function, {
             icon: "Plus",
-            elType: "success",
+            elType: "primary",
             function: async (that, data) => {
               let drawerProps = {
                 title: "新增部门",

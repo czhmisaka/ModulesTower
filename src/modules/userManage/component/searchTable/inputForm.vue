@@ -36,7 +36,11 @@
           slot-scope="{ formData }"
           :style="{ textAlign: 'right' }"
         >
-          <el-button class="btn" v-if="!autoSearch" @click="refreshData(-1)"
+          <el-button
+            class="btn"
+            v-if="!autoSearch"
+            @click="refreshData(-1)"
+            icon="RefreshRight"
             >重置</el-button
           >
           <el-button
@@ -44,6 +48,7 @@
             v-if="!autoSearch"
             type="primary"
             @click="handleSubmit(formData)"
+            icon="Position"
             >搜索</el-button
           >
           <div
@@ -228,10 +233,9 @@ export default defineComponent({
             this.formData[x] = val[x];
           }
         }
+      } else {
+        this.formData = val;
       }
-      // else if (Object.keys(val).length == 0) {
-      //   this.formData = val;
-      // }
     },
   },
 });
