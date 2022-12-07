@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-07 19:37:29
+ * @LastEditTime: 2022-12-07 20:00:07
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -53,7 +53,7 @@ export interface btnCellTemplate extends stringAnyObj {
   isDisable: (data: stringAnyObj) => boolean;
   label: string;
   type: btnActionTemplate;
-  icon?: "";
+  icon?: string;
   elType?: "success" | "danger" | "primary" | "warning";
   drawerDetail?: drawerProps;
   function?: (that: stringAnyObj, data?: stringAnyObj) => void;

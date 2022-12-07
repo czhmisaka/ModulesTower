@@ -8,13 +8,13 @@
   <el-config-provider :locale="currentLocale">
     <router-view />
   </el-config-provider>
-  <lineSlideExchange
+  <!-- <lineSlideExchange
     ref="lineSlideExchange"
     :linesNumber="linesNumber"
     :rotate="rotate"
     :start-color="sColor"
     :end-color="eColor"
-    :speed="1.3"
+    :speed="1.3" -->
   />
 </template>
 
@@ -47,9 +47,8 @@ export default defineComponent({
     },
   },
   mounted() {
-    console.log(this.$router.getRoutes());
-    this.$refs["lineSlideExchange"].start();
-    this.$refs["lineSlideExchange"].finish();
+    // this.$refs["lineSlideExchange"].start();
+    // this.$refs["lineSlideExchange"].finish();
   },
   methods: {},
 });

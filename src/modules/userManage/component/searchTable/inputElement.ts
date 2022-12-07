@@ -1,3 +1,5 @@
+import { ElTreeSelect } from "element-plus";
+import { defineComponent, h, ref } from "vue";
 import { inputElementTemplate, formInputType, stringAnyObj } from "../../types";
 
 function base(cell) {
@@ -139,8 +141,49 @@ inputElement[formInputType.inputList] = {
 
 inputElement[formInputType.treeSelectRemote] = {
   properties: (that, cell) => {
-    let properties = base(cell);
+    let properties = {
+      ...base(cell),
+      "ui:widget": ElTreeSelect,
+    };
     const { input } = cell;
+
+    return properties;
+  },
+};
+
+inputElement[formInputType.treeSelect] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      "ui:widget": "elTreeSelect",
+    } as stringAnyObj;
+    if (input.inputOptions)
+      properties = {
+        ...properties,
+        attrs: {
+          ...input.inputOptions,
+        },
+      };
+    let attrs = {
+      showCheckbox: true,
+      multiple: true,
+      collapseTags: true,
+      props: {
+        label: "name",
+        children: "children",
+      },
+    } as stringAnyObj;
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    if (input.propertiesOption)
+      properties = { ...properties, ...input.propertiesOption };
+    console.log(properties, "asd");
     return properties;
   },
 };

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-07 18:29:54
+ * @LastEditTime: 2022-12-07 21:39:46
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -80,8 +80,34 @@ export const roleManage = async () => {
         },
       })
     ),
-    tableCellTemplateMaker("数据访问范围", "dataScopes"),
-    tableCellTemplateMaker("菜单权限范围", "systemMenuIds"),
+    tableCellTemplateMaker(
+      "数据访问范围",
+      "dataScopes",
+      searchCell(formInputType.treeSelectRemote, {})
+    ),
+    tableCellTemplateMaker(
+      "菜单权限范围",
+      "systemMenuIds",
+      searchCell(formInputType.treeSelect, {
+        funcInputOptionsLoader: async (that) => {
+          let res = await post("/web/usc/menu/list", {});
+          function mapp(res) {
+            res["value"] = res.id;
+            if (res.children && res.children.length > 0)
+              res.children.map((x) => {
+                return mapp(x);
+              });
+            return res;
+          }
+          let resData = res.data.map((x) => {
+            return mapp(x);
+          });
+          return {
+            data: resData,
+          };
+        },
+      })
+    ),
   ]);
 
   // 提交按钮 / 新增&编辑
@@ -130,6 +156,7 @@ export const roleManage = async () => {
     elType: "primary",
     function: async (that, data) => {
       const isNew = Object.keys(data).length < 2;
+
       let drawerProps = {
         title: (isNew ? "新增" : "编辑") + "角色",
         schema: {
@@ -145,10 +172,14 @@ export const roleManage = async () => {
         data: {
           ...data,
           orderNumber: 100,
-          dataScopeType: data.dataScopeType + "",
+          dataScopeType:
+            data.dataScopeType == 0 || data.dataScopeType
+              ? data.dataScopeType + ""
+              : "",
         },
         btnList: [submitBtn],
       };
+      console.log(data, "asddata");
       that.$modules
         .getModuleApi()
         ["userManage_openDrawerForm"](that, drawerProps);

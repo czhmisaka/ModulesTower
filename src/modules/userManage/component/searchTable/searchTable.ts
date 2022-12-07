@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-07 19:36:21
+ * @LastEditTime: 2022-12-07 21:22:06
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -276,8 +276,12 @@ export const propertiesMaker = async (
     const { input } = cell;
     if (input && input.type) {
       const inputElementDeal = inputElement[cell.input.type];
-      if (inputElementDeal.properties)
+      if (inputElementDeal && inputElementDeal.properties)
         properties[cell.key] = await inputElementDeal.properties(that, cell);
+      else
+        console.error(
+          `propertiesMaker: inputElement 中没有【${cell.input.type}】组件的定义`
+        );
     }
     if (input && input.propertiesOption) {
       properties[cell.key] = deepMerge(
@@ -305,7 +309,7 @@ export const uiSchemaMaker = async (
     const { input } = cell;
     if (input && input.type) {
       const inputElementDeal = inputElement[cell.input.type];
-      if (inputElementDeal.uiSchema)
+      if (inputElementDeal && inputElementDeal.uiSchema)
         uiSchema[cell.key] = inputElementDeal.uiSchema(that, cell);
     }
   }
