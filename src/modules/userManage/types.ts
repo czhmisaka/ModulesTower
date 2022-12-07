@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-05 09:35:08
+ * @LastEditTime: 2022-12-07 19:37:29
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -75,7 +75,10 @@ export interface tableCellOptionsInputPropertiesTemplate {
   // 动态数据输入属性，其他同上
   funcInputOptionsLoader?: (obj: stringAnyObj) => stringAnyObj;
   // 当这个值被修改的时候触发的函数
-  onChangeFunc?: (that: stringAnyObj) => void;
+  onChangeFunc?: (
+    that: stringAnyObj,
+    data: stringAnyObj
+  ) => void | Promise<tableCellOptions[]> | tableCellOptions[];
   // 一些style
   style?: stringAnyObj;
   [key: string]: any;
@@ -133,6 +136,7 @@ export interface tableCellTemplate extends tableCellOptions {
 export enum formInputType {
   select = "select",
   selects = "selects",
+  numbe = "number",
   inputList = "inputList",
   input = "input",
   areaCascader = "areaCascader",
@@ -145,7 +149,25 @@ export enum formInputType {
   upload = "upload",
   mobile = "mobile",
   idCard = "idCard",
+  treeSelect = "treeSelect",
+  treeSelectRemote = "treeSelectRemote",
 }
 
+/**
+ * @name:  搭配formInputType规范组件注册函数的使用方案
+ * @description: waitForWriting
+ * @authors: CZH
+ * @Date: 2022-12-07 19:15:01
+ */
+export interface inputElementTemplate {
+  properties: (
+    that: stringAnyObj,
+    cell: tableCellTemplate
+  ) => stringAnyObj | Promise<stringAnyObj>;
+  uiSchema?: (
+    that: stringAnyObj,
+    cell: tableCellTemplate
+  ) => stringAnyObj | Promise<stringAnyObj>;
+}
 
-export default {}
+export default {};

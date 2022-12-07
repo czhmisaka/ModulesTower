@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 19:44:16
+ * @LastEditTime: 2022-12-07 18:29:54
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -17,6 +17,7 @@ import {
   changeCardSize,
   changeCardPosition,
   changeCardProperties,
+  refreshDesktop,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { post, get } from "@/utils/api/requests";
 import {
@@ -36,6 +37,7 @@ import {
   stringAnyObj,
 } from "@/modules/userManage/types";
 import { btnMaker } from "../component/searchTable/drawerForm";
+import { collapseItemProps, ElMessage, ElMessageBox } from "element-plus";
 
 export const roleManage = async () => {
   // 数据访问类型预定义
@@ -62,46 +64,110 @@ export const roleManage = async () => {
     tableCellTemplateMaker(
       "数据访问类型",
       "dataScopeType",
-      staticSelectCell(dataScopeType)
+      staticSelectCell(dataScopeType, {
+        onChangeFunc: (that, data) => {
+          const { dataScopeType } = data;
+          const str = [
+            "name",
+            "description",
+            "orderNumber",
+            "systemMenuIds",
+            "dataScopeType",
+          ];
+          if (dataScopeType == 3)
+            return roleTableSearchStorage.getByKeyArr([...str, "dataScopes"]);
+          else return roleTableSearchStorage.getByKeyArr(str);
+        },
+      })
     ),
     tableCellTemplateMaker("数据访问范围", "dataScopes"),
     tableCellTemplateMaker("菜单权限范围", "systemMenuIds"),
   ]);
 
-  /**
-   * @name: addNewForm
-   * @description: 新增和编辑功能使用的表单
-   * @authors: CZH
-   * @Date: 2022-12-06 16:38:01
-   */
-  const addNewForm = [
-    ...roleTableSearchStorage.getByKeyArr([
-      "name",
-      "description",
-      "orderNumber",
-      "parentId",
-      "systemMenuIds",
-      "dataScopeType",
-      "dataScopes",
-    ]),
-  ];
-
   // 提交按钮 / 新增&编辑
   const submitBtn = btnMaker("提交", btnActionTemplate.Function, {
-    icon:'Plus',
-    elType:'primary',
-    function:async (that,data)=>{
-       
-    }
+    icon: "Plus",
+    elType: "primary",
+    function: async (that, data) => {
+      let res = await post(
+        "/web/usc/role/" + (data.id ? "update" : "insert"),
+        data
+      );
+      if (res["message"] == "成功") {
+        that.$message.success(res["message"]);
+        setTimeout(() => {
+          that.close();
+        }, 500);
+      } else {
+        that.$message.danger(res["message"]);
+      }
+    },
   });
 
   // 删除按钮
-  const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {});
+  const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
+    icon: "Delete",
+    elType: "danger",
+    function: async (that, data) => {
+      ElMessageBox({
+        title: "确认删除【" + data.name + "】吗？",
+        type: "warning",
+        callback: async (action) => {
+          if (action == "confirm") {
+            let res = await post("/web/usc/role/delete", { id: data.id });
+            if (res.message && res.message == "成功") ElMessage.success("成功");
+            if (that.close) that.close();
+            else refreshDesktop(that);
+          }
+        },
+      });
+    },
+  });
 
   // 打开弹窗 / 支持新增&编辑
-  const addModelBtn = btnMaker("新增", btnActionTemplate.Function, {
-    
+  const editModelBtn = btnMaker("编辑", btnActionTemplate.Function, {
+    icon: "Setting",
+    elType: "primary",
+    function: async (that, data) => {
+      const isNew = Object.keys(data).length < 2;
+      let drawerProps = {
+        title: (isNew ? "新增" : "编辑") + "角色",
+        schema: {
+          required: ["name", "orderNumber", "systemMenuIds", "dataScopeType"],
+        },
+        queryItemTemplate: roleTableSearchStorage.getByKeyArr([
+          "name",
+          "description",
+          "orderNumber",
+          "systemMenuIds",
+          "dataScopeType",
+        ]),
+        data: {
+          ...data,
+          orderNumber: 100,
+          dataScopeType: data.dataScopeType + "",
+        },
+        btnList: [submitBtn],
+      };
+      that.$modules
+        .getModuleApi()
+        ["userManage_openDrawerForm"](that, drawerProps);
+    },
   });
+  const addModelBtn = {
+    ...editModelBtn,
+    label: "新增",
+    icon: "Plus",
+    function: (that, data) => {
+      return editModelBtn.function(
+        that,
+        data && data.id ? { parentId: data.id } : {}
+      );
+    },
+  };
+
+  // 为角色添加用户
+  const addUser = btnMaker("添加用户", btnActionTemplate.Function, {});
 
   // 搜索表单同级别按钮
   const btnList = [addModelBtn] as btnCellTemplate[];
@@ -111,7 +177,7 @@ export const roleManage = async () => {
     tableCellTemplateMaker(
       "操作",
       "actionBtnList",
-      actionCell([addModelBtn, deleteBtn], {
+      actionCell([addModelBtn, deleteBtn, addUser, editModelBtn], {
         fixed: "right",
       })
     )

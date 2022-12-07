@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-05 11:14:21
+ * @LastEditTime: 2022-12-07 15:26:05
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -15,18 +15,20 @@
   >
     <div class="formBody" v-if="!plugInData['noEdit']">
       <el-scrollbar>
-        <VueForm
-          v-if="isOpen"
-          v-model="formData"
-          :style="{
-            textAlign: 'top',
-          }"
-          :schema="schema"
-          :ui-schema="uiSchema"
-          :formProps="formProps"
-        >
-          <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
-        </VueForm>
+        <el-card>
+          <VueForm
+            v-if="isOpen"
+            v-model="formData"
+            :style="{
+              textAlign: 'top',
+            }"
+            :schema="schema"
+            :ui-schema="uiSchema"
+            :formProps="formProps"
+          >
+            <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
+          </VueForm>
+        </el-card>
       </el-scrollbar>
     </div>
     <div class="formBody" v-else>
@@ -41,7 +43,6 @@
           {{ item.table.showFunc(plugInData["data"], item.key) }}
         </el-form-item>
       </el-form>
-
       <!-- <el-descriptions class="margin-top" :column="1">
         <el-descriptions-item
           min-width="100%"
@@ -80,7 +81,7 @@
 import { defineComponent } from "vue";
 import VueForm from "@lljj/vue3-form-element";
 import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
-import { propertiesMaker } from "./searchTable";
+import { propertiesMaker, uiSchemaMaker } from "./searchTable";
 
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { ElDrawer, ElDivider, ElButton } from "element-plus";
@@ -91,6 +92,7 @@ import {
   btnCellTemplate,
   showType,
   tableCellTemplate,
+  tableCellOptions,
 } from "@/modules/userManage/types";
 import drawerForm from "./drawerForm.vue";
 
@@ -104,10 +106,11 @@ export default defineComponent({
       handler(val) {
         Object.keys(val).map((key) => {
           if (val[key] != formDataForCheck[key]) {
-            const queryItemTemplate = this.plugInData["queryItemTemplate"];
-            queryItemTemplate.map((cell) => {
-              if (cell.key == key && cell.input && cell.input.onChangeFunc)
-                cell.input.onChangeFunc(this);
+            this.queryItemTemplate.map((cell) => {
+              if (cell.key == key && cell.input && cell.input.onChangeFunc) {
+                const queryItemTemplate = cell.input.onChangeFunc(this, this.formData);
+                if (queryItemTemplate) this.initForm(queryItemTemplate);
+              }
             });
             formDataForCheck[key] = val[key];
           }
@@ -123,10 +126,13 @@ export default defineComponent({
       isOpen: false,
       formData: {},
       uiSchema: {},
+
       showType,
+
       formFooter: {
         show: false,
       },
+
       formProps: {
         layoutColumn: 1,
         inlineFooter: false,
@@ -136,6 +142,9 @@ export default defineComponent({
         defaultSelectFirstOption: true,
         labelWidth: "120px",
       },
+
+      queryItemTemplate: [] as tableCellTemplate[],
+
       schema: {
         type: "object",
         properties: {},
@@ -152,9 +161,7 @@ export default defineComponent({
      * @authors: CZH
      * @Date: 2022-11-14 10:17:28
      */
-    async initForm(
-      queryItemTemplate: tableCellTemplate[] = this.plugInData.queryItemTemplate
-    ) {
+    async initForm(queryItemTemplate: tableCellTemplate[] = this.queryItemTemplate) {
       let properties = {} as stringAnyObj;
       properties = await propertiesMaker(queryItemTemplate, this);
       this.schema = {
@@ -162,6 +169,7 @@ export default defineComponent({
         properties,
         ...(this.plugInData["schema"] || {}),
       };
+      this.uiSchema = uiSchemaMaker(queryItemTemplate, this);
     },
 
     /**
@@ -203,8 +211,10 @@ export default defineComponent({
      */
     async open() {
       await this.$nextTick();
-      if (this.plugInData["queryItemTemplate"])
-        await this.initForm(this.plugInData.queryItemTemplate);
+      this.queryItemTemplate = this.plugInData["queryItemTemplate"]
+        ? this.plugInData.queryItemTemplate
+        : [];
+      await this.initForm(this.queryItemTemplate);
       if (this.plugInData["data"]) this.formData = this.plugInData["data"];
       else this.formData = {};
       formDataForCheck = deepClone(this.formData);

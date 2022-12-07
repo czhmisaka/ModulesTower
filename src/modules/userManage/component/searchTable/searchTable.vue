@@ -190,14 +190,18 @@ export default defineComponent({
     interval = setInterval(() => {
       if (that.$refs["mainBox"] && that.$refs["inputBox"]) {
         let baseHeight = 0;
+        let offsetHeight = -6;
         if (that.PageData.total) baseHeight = 32;
         if (that.$refs["inputBox"].$el.offsetHeight)
           that.TableHeight =
             that.$refs["mainBox"].$el.offsetHeight -
             that.$refs["inputBox"].$el.offsetHeight -
             34 -
-            baseHeight;
-        else that.TableHeight = that.$refs["mainBox"].$el.offsetHeight - 24 - baseHeight;
+            baseHeight -
+            offsetHeight;
+        else
+          that.TableHeight =
+            that.$refs["mainBox"].$el.offsetHeight - 24 - baseHeight - offsetHeight;
       }
     }, 500);
   },

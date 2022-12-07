@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 19:32:27
+ * @LastEditTime: 2022-12-06 20:06:05
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -271,7 +271,7 @@ export const department = async () => {
       {
         props: {
           searchItemTemplate: userTableSearchTemplate,
-          showItemTemplate: UnitTableCellStorage.getAll(),
+          showItemTemplate: UnitTableCellStorage.getAll(['id','createUserId','updateUserId','parentIds','parentId','regionId','deleted']),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             if (!query) query = {};
             let res = await post("/web/usc/unit/list", {

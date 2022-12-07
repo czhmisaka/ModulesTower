@@ -1,11 +1,12 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 15:50:46
+ * @LastEditTime: 2022-12-07 19:36:21
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
+import inputElement from "./inputElement";
 import {
   btnCellTemplate,
   stringAnyObj,
@@ -96,7 +97,8 @@ export class SearchCellStorage {
       back.push(this.getByKey(keyArr[key]));
     }
     return back.filter(Boolean);
-  }见
+  }
+  见;
 
   /**
    * @name: getAll
@@ -187,14 +189,22 @@ export const searchCell = (
  * @authors: CZH
  * @Date: 2022-12-06 15:10:13
  * @param {stringAnyObj} inputOptions
+ * @param {tableCellOptionsInputPropertiesTemplate} inputProperties
+ * @param {tableCellOptionsTableTemplate} showOptions
  */
-export const staticSelectCell = (inputOptions: stringAnyObj) => {
+export const staticSelectCell = (
+  inputOptions: stringAnyObj,
+  inputProperties?: tableCellOptionsInputPropertiesTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
   return {
     ...searchCell(formInputType.select, {
       inputOptions,
+      ...inputProperties,
     }),
     ...showCell(showType.func, {
       showFunc: (data, key) => inputOptions[data[key]],
+      ...showOptions,
     }),
   };
 };
@@ -260,118 +270,14 @@ export const propertiesMaker = async (
   cellList: tableCellTemplate[],
   that: stringAnyObj
 ) => {
-  function base(cell) {
-    return {
-      title: cell.label,
-      type: "string",
-    };
-  }
   let properties = {} as stringAnyObj;
   for (let i = 0; i < cellList.length; i++) {
     const cell = cellList[i];
     const { input } = cell;
     if (input && input.type) {
-      if (input.type == formInputType.input) {
-        properties[cell.key] = {
-          ...base(cell),
-          "ui:options": {
-            placeholder: "请输入" + cell.label,
-            style: {
-              width: "200px",
-            },
-          },
-        };
-      }
-      if (input.type == formInputType.datePicker) {
-        properties[cell.key] = {
-          ...base(cell),
-          type: "number",
-          format: "date",
-          "ui:options": {},
-        };
-      }
-      if (input.type == formInputType.radio) {
-        properties[cell.key] = {
-          ...base(cell),
-          type: "boolean",
-          "ui:options": {
-            placeholder: "请输入" + cell.label,
-          },
-        };
-      }
-      if (input.type == formInputType.idCard) {
-        properties[cell.key] = {
-          ...base(cell),
-          "ui:options": {
-            placeholder: "请输入" + cell.label,
-          },
-        };
-      }
-      if (input.type == formInputType.select) {
-        properties[cell.key] = {
-          ...base(cell),
-          "ui:widget": "SelectWidget",
-          "ui:options": {
-            attrs: {
-              clearable: true,
-            },
-          },
-        };
-        if (input.inputOptions) {
-          properties[cell.key] = {
-            ...properties[cell.key],
-            enum: Object.keys(input.inputOptions),
-            enumNames: Object.keys(input.inputOptions).map(
-              (x) => input.inputOptions[x]
-            ),
-          };
-        }
-        if (input.funcInputOptionsLoader) {
-          const inputOptions = await input.funcInputOptionsLoader(that);
-          properties[cell.key] = {
-            ...properties[cell.key],
-            enum: Object.keys(inputOptions),
-            enumNames: Object.keys(inputOptions).map((x) => inputOptions[x]),
-          };
-        }
-      }
-      if (input.type == formInputType.inputList) {
-        properties[cell.key] = {
-          ...base(cell),
-          "ui:widget": "SelectWidget",
-          type: "array",
-          uniqueItems: true,
-          items: {
-            type: "string",
-          },
-          "ui:options": {
-            attrs: {
-              clearable: true,
-              multiple: true,
-              "collapse-tags": true,
-              "allow-create": true,
-              filterable: true,
-            },
-          },
-        };
-        if (input.inputOptions) {
-          properties[cell.key].items = {
-            ...properties[cell.key].items,
-            enum: Object.keys(input.inputOptions),
-            enumNames: Object.keys(input.inputOptions).map(
-              (x) => input.inputOptions[x]
-            ),
-          };
-        }
-        if (input.funcInputOptionsLoader) {
-          const inputOptions = await input.funcInputOptionsLoader(that);
-          properties[cell.key].items = {
-            ...properties[cell.key].items,
-            enum: Object.keys(inputOptions),
-            enumNames: Object.keys(inputOptions).map((x) => inputOptions[x]),
-          };
-        }
-      }
+      const inputElementDeal = inputElement[cell.input.type];
+      if (inputElementDeal.properties)
+        properties[cell.key] = await inputElementDeal.properties(that, cell);
     }
     if (input && input.propertiesOption) {
       properties[cell.key] = deepMerge(
@@ -381,4 +287,27 @@ export const propertiesMaker = async (
     }
   }
   return properties;
+};
+
+/**
+ * @name: uiSchemaMaker
+ * @description: 用于配置uiSchema 的自定义表单组件 具体文档 可以参考 https://vue-json-schema-form.lljj.me/zh/guide/adv-config.html#%E8%87%AA%E5%AE%9A%E4%B9%89widget
+ * @authors: CZH
+ * @Date: 2022-12-07 19:36:12
+ */
+export const uiSchemaMaker = async (
+  cellList: tableCellTemplate[],
+  that: stringAnyObj
+) => {
+  let uiSchema = {} as stringAnyObj;
+  for (let i = 0; i < cellList.length; i++) {
+    const cell = cellList[i];
+    const { input } = cell;
+    if (input && input.type) {
+      const inputElementDeal = inputElement[cell.input.type];
+      if (inputElementDeal.uiSchema)
+        uiSchema[cell.key] = inputElementDeal.uiSchema(that, cell);
+    }
+  }
+  return uiSchema;
 };

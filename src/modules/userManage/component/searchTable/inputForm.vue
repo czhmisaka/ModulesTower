@@ -80,8 +80,9 @@
     </cardBg>
     <el-divider
       :style="{
+        opacity: 0,
         width: 'calc(100% - 24px)',
-        margin: '12px',
+        margin: '6px',
       }"
     />
   </div>
