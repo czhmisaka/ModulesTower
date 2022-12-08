@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 16:07:11
+ * @LastEditTime: 2022-12-08 11:17:57
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
@@ -14,8 +14,8 @@
     :rotate="rotate"
     :start-color="sColor"
     :end-color="eColor"
-    :speed="1.3" -->
-  />
+    :speed="1.3" 
+  />-->
 </template>
 
 <script lang="ts">

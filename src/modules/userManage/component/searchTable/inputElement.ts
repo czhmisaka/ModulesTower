@@ -140,13 +140,38 @@ inputElement[formInputType.inputList] = {
 };
 
 inputElement[formInputType.treeSelectRemote] = {
-  properties: (that, cell) => {
+  properties: async (that, cell) => {
     let properties = {
       ...base(cell),
-      "ui:widget": ElTreeSelect,
-    };
+      "ui:widget": "elTreeSelect",
+    } as stringAnyObj;
     const { input } = cell;
+    if (input.inputOptions)
+      properties = {
+        ...properties,
+        attrs: {
+          ...input.inputOptions,
+        },
+      };
+    let attrs = {
+      showCheckbox: true,
+      multiple: true,
+      checkStrictly: true,
+      collapseTags: true,
+      lazy: true,
+      props: {
+        label: "name",
+        children: "children",
+      },
+    } as stringAnyObj;
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
 
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    if (input.propertiesOption)
+      properties = { ...properties, ...input.propertiesOption };
     return properties;
   },
 };
@@ -156,6 +181,7 @@ inputElement[formInputType.treeSelect] = {
     const { input } = cell;
     let properties = {
       ...base(cell),
+      type: "string",
       "ui:widget": "elTreeSelect",
     } as stringAnyObj;
     if (input.inputOptions)
@@ -166,6 +192,7 @@ inputElement[formInputType.treeSelect] = {
         },
       };
     let attrs = {
+      checkStrictly: true,
       showCheckbox: true,
       multiple: true,
       collapseTags: true,
@@ -183,7 +210,6 @@ inputElement[formInputType.treeSelect] = {
     });
     if (input.propertiesOption)
       properties = { ...properties, ...input.propertiesOption };
-    console.log(properties, "asd");
     return properties;
   },
 };

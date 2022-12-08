@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-07 20:00:07
+ * @LastEditTime: 2022-12-08 14:39:04
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -73,7 +73,9 @@ export interface tableCellOptionsInputPropertiesTemplate {
   // 输入值属性，不同输入方式有不同的数据解构方案
   inputOptions?: stringAnyObj;
   // 动态数据输入属性，其他同上
-  funcInputOptionsLoader?: (obj: stringAnyObj) => stringAnyObj;
+  funcInputOptionsLoader?: (
+    obj: stringAnyObj
+  ) => stringAnyObj | Promise<stringAnyObj>;
   // 当这个值被修改的时候触发的函数
   onChangeFunc?: (
     that: stringAnyObj,

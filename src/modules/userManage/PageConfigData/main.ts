@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 09:15:39
+ * @LastEditTime: 2022-12-08 16:52:33
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -141,7 +141,7 @@ export const mainDesktop = async () => {
       "菜单列表",
       {},
       {
-        name: "userManage_menuList",
+        name: "userManage_menuListRemote",
         type: cardComponentType.componentList,
       },
       {

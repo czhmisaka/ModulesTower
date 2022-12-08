@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-07 21:39:46
+ * @LastEditTime: 2022-12-08 15:44:50
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -83,7 +83,32 @@ export const roleManage = async () => {
     tableCellTemplateMaker(
       "数据访问范围",
       "dataScopes",
-      searchCell(formInputType.treeSelectRemote, {})
+      searchCell(formInputType.treeSelectRemote, {
+        funcInputOptionsLoader: async (that) => {
+          let attr = {
+            props: {
+              label: "name",
+              isLeaf: "isLeaf",
+            },
+            nodeKey: "id",
+          };
+          attr["load"] = async (node, resolve) => {
+            let res = await post("/web/usc/unit/list", {
+              parentId: node.data.id,
+            });
+            return resolve(
+              res.data.map((x) => {
+                return {
+                  ...x,
+                  isLeaf: !x.hasLeaf,
+                  value: x.id,
+                };
+              })
+            );
+          };
+          return attr;
+        },
+      })
     ),
     tableCellTemplateMaker(
       "菜单权限范围",
@@ -228,8 +253,9 @@ export const roleManage = async () => {
           defaultQuery: {},
           searchItemTemplate: roleTableSearchStorage.getByKeyArr(["name"]),
           showItemTemplate: roleTableSearchStorage.getAll([
-            "systemMenuIds",
-            "dataScopes",
+            "id",
+            "createUserId",
+            "updateUserId",
           ]),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};

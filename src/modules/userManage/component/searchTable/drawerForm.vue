@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-07 15:26:05
+ * @LastEditTime: 2022-12-08 15:27:06
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -15,6 +15,7 @@
   >
     <div class="formBody" v-if="!plugInData['noEdit']">
       <el-scrollbar>
+        {{ formData }}
         <el-card>
           <VueForm
             v-if="isOpen"
@@ -104,17 +105,7 @@ export default defineComponent({
   watch: {
     formData: {
       handler(val) {
-        Object.keys(val).map((key) => {
-          if (val[key] != formDataForCheck[key]) {
-            this.queryItemTemplate.map((cell) => {
-              if (cell.key == key && cell.input && cell.input.onChangeFunc) {
-                const queryItemTemplate = cell.input.onChangeFunc(this, this.formData);
-                if (queryItemTemplate) this.initForm(queryItemTemplate);
-              }
-            });
-            formDataForCheck[key] = val[key];
-          }
-        });
+        this.checkOnChange(val);
       },
       immediate: true,
       deep: true,
@@ -172,6 +163,20 @@ export default defineComponent({
       this.uiSchema = uiSchemaMaker(queryItemTemplate, this);
     },
 
+    async checkOnChange(val = this.formData, force = false) {
+      Object.keys(val).map((key) => {
+        if (val[key] != formDataForCheck[key] || force) {
+          this.queryItemTemplate.map((cell) => {
+            if (cell.key == key && cell.input && cell.input.onChangeFunc) {
+              const queryItemTemplate = cell.input.onChangeFunc(this, this.formData);
+              if (queryItemTemplate) this.initForm(queryItemTemplate);
+            }
+          });
+          formDataForCheck[key] = val[key];
+        }
+      });
+    },
+
     /**
      * @name: btnClick
      * @description: 按钮点击事件
@@ -218,6 +223,7 @@ export default defineComponent({
       if (this.plugInData["data"]) this.formData = this.plugInData["data"];
       else this.formData = {};
       formDataForCheck = deepClone(this.formData);
+      if (!this.plugInData["noEdit"]) this.checkOnChange(this.formData, true);
       this.isOpen = true;
     },
   },

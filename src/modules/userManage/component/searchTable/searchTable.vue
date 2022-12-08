@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-05 21:34:45
+ * @LastEditTime: 2022-12-08 16:08:28
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -38,7 +38,7 @@
         marginTop: '6px',
         float: 'right',
       }"
-      v-if="PageData.pageNum && PageData.total"
+      v-if="PageData.total"
       v-model:current-page="PageData.pageNum"
       v-model:page-size="PageData.pageSize"
       :page-sizes="[100, 200, 300, 400]"
@@ -203,7 +203,7 @@ export default defineComponent({
           that.TableHeight =
             that.$refs["mainBox"].$el.offsetHeight - 24 - baseHeight - offsetHeight;
       }
-    }, 500);
+    }, 200);
   },
   methods: {
     async initData() {

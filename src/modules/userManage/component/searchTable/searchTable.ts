@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-07 21:22:06
+ * @LastEditTime: 2022-12-08 15:49:05
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -263,6 +263,7 @@ export const tableCellTemplateMaker = (
  * @authors: CZH
  * @Date: 2022-11-14 10:39:07
  * @param {tableCellTemplate[]} cellList
+ * 
  * @param {stringAnyObj} queryItemConfig
  */
 
