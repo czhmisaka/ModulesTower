@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-08 16:44:08
+ * @LastEditTime: 2022-12-09 08:50:59
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
@@ -20,7 +20,7 @@
         filterable
         remote
         reserve-keyword
-        remote-method="fillter"
+        :remote-method="fillter"
         placeholder="搜索"
       >
         <el-option

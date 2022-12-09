@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-08 15:27:06
+ * @LastEditTime: 2022-12-09 08:52:13
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -15,7 +15,6 @@
   >
     <div class="formBody" v-if="!plugInData['noEdit']">
       <el-scrollbar>
-        {{ formData }}
         <el-card>
           <VueForm
             v-if="isOpen"
