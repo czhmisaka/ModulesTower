@@ -1,5 +1,5 @@
-import { ElTreeSelect } from "element-plus";
-import { defineComponent, h, ref } from "vue";
+import { ElOption, ElSelect, ElTreeSelect } from "element-plus";
+import { defineComponent, h, ref, watchEffect } from "vue";
 import { inputElementTemplate, formInputType, stringAnyObj } from "../../types";
 
 function base(cell) {
@@ -214,14 +214,51 @@ inputElement[formInputType.treeSelect] = {
   },
 };
 
-// 搜索用inputlist
+// 搜索用searchList
 inputElement[formInputType.searchList] = {
   properties: async (that, cell) => {
     const { input } = cell;
     let properties = {
       ...base(cell),
       type: "string",
-      "ui:widget": "elSelect",
+      "ui:widget": defineComponent({
+        props: [
+          "style",
+          "class",
+          "readonly",
+          "multiple",
+          "filterable",
+          "remote",
+          "reserveKeyword",
+          "remote-method",
+          "modelValue",
+        ],
+        setup(props, context) {
+          let options = ref([]);
+          return () => [
+            h(
+              ElSelect,
+              {
+                ...props,
+                remoteMethod: async (query) => {
+                  let res = await props["remoteMethod"](query);
+                  options.value = res;
+                },
+                "onUpdate:modelValue":(e)=>{
+                  context.emit("update:modelValue", e);
+                }
+              },
+              () =>
+                options.value.map((x) => {
+                  return h(ElOption, {
+                    value: x.value,
+                    label: x.label,
+                  });
+                })
+            ),
+          ];
+        },
+      }),
     } as stringAnyObj;
     let attrs = {
       multiple: true,

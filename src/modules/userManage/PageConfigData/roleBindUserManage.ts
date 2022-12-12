@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 17:30:06
+ * @LastEditTime: 2022-12-12 11:27:51
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -69,11 +69,41 @@ export const roleBindUserManage = async () => {
     tableCellTemplateMaker(
       "绑定用户",
       "uids",
-      searchCell(formInputType.searchList, {})
+      searchCell(formInputType.searchList, {
+        funcInputOptionsLoader: async (that) => {
+          const remoteMethod = async (query: string) => {
+            let res = await post("/web/usc/user/page/org", {
+              name: query,
+            });
+            let data = [];
+            if (res?.data?.list)
+              data = res.data.list.map((x) => {
+                return {
+                  value: x.id,
+                  label: x.name,
+                };
+              });
+            return data;
+          };
+          return {
+            "remote-method": remoteMethod,
+          };
+        },
+      })
     ),
   ]);
 
-  const 提交绑定关系 = btnMaker;
+  const submit = btnMaker("提交", btnActionTemplate.Function, {
+    icon: "Position",
+    function: async (that, data) => {
+      let res = await post("/web/usc/role/authUser", data);
+      if (res.message == "成功") {
+        ElMessage.success(res.message);
+        if (that.close) that.close();
+        else refreshDesktop(that);
+      } else ElMessage.error(res.message);
+    },
+  });
 
   // 新增角色绑定关系
   const addUser = btnMaker("绑定用户", btnActionTemplate.Function, {
@@ -90,9 +120,9 @@ export const roleBindUserManage = async () => {
           required: ["uids"],
         },
         queryItemTemplate: userBindRole.getAll(),
-        btnList: [],
+        btnList: [submit],
         data: {
-          parentId: data.id,
+          roleId: role.id,
         },
       } as drawerProps;
 

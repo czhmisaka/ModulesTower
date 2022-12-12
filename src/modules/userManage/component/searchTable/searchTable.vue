@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-08 16:08:28
+ * @LastEditTime: 2022-12-12 09:38:39
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -280,6 +280,7 @@ export default defineComponent({
         this.isLoading = true;
         try {
           let result = await this.searchFunc(this.query, this);
+          this.PageData = {};
           if (result.total || result.total == 0) this.PageData = result;
           else this.PageData.data = result;
         } catch (e) {
