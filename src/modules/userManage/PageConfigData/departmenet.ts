@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 20:06:05
+ * @LastEditTime: 2022-12-09 17:32:53
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -38,23 +38,6 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 
 export const department = async () => {
-  /**
-   * @name: buildDataToTree
-   * @description: 从 listdata 生成 treeData
-   * @authors: CZH
-   * @Date: 2022-11-11 10:28:41
-   * @param {*} data
-   * @param {*} cell
-   * @param {*} id
-   * @param {*} pid
-   */
-  function buildDataToTree(data, cell, id = "id", pid = "parentId") {
-    const result = [];
-    data.map((x) => x[pid] == cell[id] && cell[id] != x[id] && result.push(x));
-    result.map((x) => buildDataToTree(data, x));
-    cell["children"] = result;
-    return cell;
-  }
   const submit = btnMaker("提交", btnActionTemplate.Function, {
     icon: "Position",
     elType: "primary",
@@ -136,7 +119,7 @@ export const department = async () => {
           ]),
           btnList: [submit],
           data: {
-            parentId: that.baseData?.unit?.id || '',
+            parentId: that.baseData?.unit?.id || "",
           },
         };
         that.$modules
@@ -228,31 +211,32 @@ export const department = async () => {
   return [
     gridCellMaker(
       "MenuList",
-      "菜单列表",
+      "菜单列表分层获取",
       {},
       {
-        name: "userManage_menuList",
+        name: "userManage_menuListRemote",
         type: cardComponentType.componentList,
       },
       {
         props: {
-          treeDataFunc: async (context) => {
-            let res = await post("/web/usc/unit/list", {});
-            let data = res.data;
-            const inKeyList = data.map((c) => c.id);
-            let unitList = data
-              .map((x) => {
-                if (inKeyList.indexOf(x.parentId) == -1)
-                  return buildDataToTree(data, x);
-                else return null;
-              })
-              .filter(Boolean);
-            return unitList;
+          treeDataFuncByLevel: async (node, resolve) => {
+            let res = await post("/web/usc/unit/list", {
+              parentId: node.data.id,
+            });
+            let data = res.data.map((x) => {
+              return {
+                ...x,
+                isLeaf: !x.hasLeaf,
+                value: x.id,
+              };
+            });
+            resolve(data);
           },
           outputKey: "unit",
           defaultProps: {
             label: "name",
             children: "children",
+            isLeaf: "isLeaf",
           },
         },
         isSettingTool: false,
@@ -271,7 +255,15 @@ export const department = async () => {
       {
         props: {
           searchItemTemplate: userTableSearchTemplate,
-          showItemTemplate: UnitTableCellStorage.getAll(['id','createUserId','updateUserId','parentIds','parentId','regionId','deleted']),
+          showItemTemplate: UnitTableCellStorage.getAll([
+            "id",
+            "createUserId",
+            "updateUserId",
+            "parentIds",
+            "parentId",
+            "regionId",
+            "deleted",
+          ]),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             if (!query) query = {};
             let res = await post("/web/usc/unit/list", {

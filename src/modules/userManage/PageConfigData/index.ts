@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 14:21:14
+ * @LastEditTime: 2022-12-09 10:50:30
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -14,6 +14,7 @@ import { department } from "./departmenet";
 import { pageConfigManage } from "./pageConfigManage";
 import { menuManage } from "./menuManage";
 import { roleManage } from "./roleManage";
+import { roleBindUserManage } from "./roleBindUserManage";
 
 export interface desktopDataTemplate {
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -83,6 +84,17 @@ const pageConfig = {
     desktopData: apiManage,
     gridColNum: 12,
     cusStyle: {
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 12,
+    },
+  },
+  roleBindUserManage: {
+    name: "用户角色管理",
+    desktopData: roleBindUserManage,
+    gridColNum: 12,
+    cusStyle: {
+      showLink: false,
       wholeScreen: true,
       maxRows: 8,
       margin: 12,

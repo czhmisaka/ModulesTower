@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-08 14:39:04
+ * @LastEditTime: 2022-12-09 15:49:24
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -153,6 +153,7 @@ export enum formInputType {
   idCard = "idCard",
   treeSelect = "treeSelect",
   treeSelectRemote = "treeSelectRemote",
+  searchList = "searchList",
 }
 
 /**

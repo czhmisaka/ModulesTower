@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 16:41:51
+ * @LastEditTime: 2022-12-09 18:31:20
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -76,7 +76,12 @@
               :icon="btnList(item, scope.row)[0].icon"
             >
             </el-button>
-            <el-button size="small" type="default" @click="cellDblclick(scope.row)">
+            <el-button
+              v-if="!item.table.noDetail"
+              size="small"
+              type="default"
+              @click="cellDblclick(scope.row)"
+            >
               详情
             </el-button>
           </div>

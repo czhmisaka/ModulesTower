@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 08:51:02
+ * @LastEditTime: 2022-12-09 11:08:58
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -62,11 +62,6 @@ export default defineComponent({
       description: "一次性获取所有数据",
       type: inputType.functionEditor,
     },
-    treeDataFuncByLevel: {
-      label: "树状列表数据（按照对象获取）",
-      description: "展开节点时才会加载子节点列表，用于应对大数据展示的情况，避免带宽消耗",
-      type: inputType.functionEditor,
-    },
     outputKey: {
       label: "baseData输出key",
       type: inputType.text,
@@ -98,14 +93,7 @@ export default defineComponent({
     },
   },
 
-  props: [
-    "baseData",
-    "sizeUnit",
-    "treeDataFunc",
-    "outputKey",
-    "defaultProps",
-    "treeDataFuncByLevel",
-  ],
+  props: ["baseData", "sizeUnit", "outputKey", "defaultProps", "treeDataFunc"],
   components: { cardBg },
   watch: {},
   data: () => {

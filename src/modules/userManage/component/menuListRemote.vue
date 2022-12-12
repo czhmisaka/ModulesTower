@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 08:50:59
+ * @LastEditTime: 2022-12-09 08:58:51
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
@@ -30,7 +30,12 @@
           :value="item.value"
         />
       </el-select>
-      <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick" />
+      <el-tree
+        :props="defaultProps"
+        :lazy="true"
+        :load="treeDataFuncByLevel"
+        @node-click="nodeClick"
+      />
     </div>
   </cardBg>
 </template>
@@ -57,11 +62,6 @@ export default defineComponent({
   } as componentInfo,
 
   propsDetail: {
-    treeDataFunc: {
-      label: "树状列表数据（一次性获取）",
-      description: "一次性获取所有数据",
-      type: inputType.functionEditor,
-    },
     treeDataFuncByLevel: {
       label: "树状列表数据（按照对象获取）",
       description: "展开节点时才会加载子节点列表，用于应对大数据展示的情况，避免带宽消耗",
@@ -140,12 +140,7 @@ export default defineComponent({
      * @authors: CZH
      * @Date: 2022-11-18 17:04:57
      */
-    async init() {
-      if (this.treeDataFunc) {
-        let that = this;
-        that.treeData = await that.treeDataFunc(that);
-      }
-    },
+    async init() {},
 
     async fillter() {},
   },

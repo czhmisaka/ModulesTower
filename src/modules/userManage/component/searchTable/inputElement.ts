@@ -214,4 +214,31 @@ inputElement[formInputType.treeSelect] = {
   },
 };
 
+// 搜索用inputlist
+inputElement[formInputType.searchList] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": "elSelect",
+    } as stringAnyObj;
+    let attrs = {
+      multiple: true,
+      filterable: true,
+      remote: true,
+      reserveKeyword: true,
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    if (input.propertiesOption)
+      properties = { ...properties, ...input.propertiesOption };
+    return properties;
+  },
+};
+
 export default inputElement;

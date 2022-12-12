@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 19:56:23
+ * @LastEditTime: 2022-12-09 09:43:58
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/menuManage.ts
  */
 
@@ -325,7 +325,7 @@ export const menuManage = async () => {
             showLink: true,
           },
           btnList,
-          autoSearch: false,
+          autoSearch: true,
         },
         isSettingTool: false,
       }

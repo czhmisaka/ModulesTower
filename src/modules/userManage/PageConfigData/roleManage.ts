@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-08 15:44:50
+ * @LastEditTime: 2022-12-09 11:19:27
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -181,7 +181,6 @@ export const roleManage = async () => {
     elType: "primary",
     function: async (that, data) => {
       const isNew = Object.keys(data).length < 2;
-
       let drawerProps = {
         title: (isNew ? "新增" : "编辑") + "角色",
         schema: {
@@ -204,12 +203,13 @@ export const roleManage = async () => {
         },
         btnList: [submitBtn],
       };
-      console.log(data, "asddata");
       that.$modules
         .getModuleApi()
         ["userManage_openDrawerForm"](that, drawerProps);
     },
   });
+
+  // 打开新增弹窗
   const addModelBtn = {
     ...editModelBtn,
     label: "新增",
@@ -222,8 +222,18 @@ export const roleManage = async () => {
     },
   };
 
-  // 为角色添加用户
-  const addUser = btnMaker("添加用户", btnActionTemplate.Function, {});
+  // 绑定用户到某个角色
+  const authUserToRole = btnMaker("绑定用户", btnActionTemplate.Function, {
+    icon: "Connection",
+    function: async (that, data) => {
+      that.$router.push({
+        path: "/userManage/ROLEBINDUSERMANAGE",
+        query: {
+          roleId: data.id,
+        },
+      });
+    },
+  });
 
   // 搜索表单同级别按钮
   const btnList = [addModelBtn] as btnCellTemplate[];
@@ -233,7 +243,7 @@ export const roleManage = async () => {
     tableCellTemplateMaker(
       "操作",
       "actionBtnList",
-      actionCell([addModelBtn, deleteBtn, addUser, editModelBtn], {
+      actionCell([addModelBtn, deleteBtn, authUserToRole, editModelBtn], {
         fixed: "right",
       })
     )

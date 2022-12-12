@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 08:52:13
+ * @LastEditTime: 2022-12-09 08:54:23
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -11,7 +11,7 @@
     :title="plugInData.title"
     :size="`${plugInData.size || 50}%`"
     :with-header="plugInData.title ? true : false"
-    :append-to-body="'True'"
+    :append-to-body="true"
   >
     <div class="formBody" v-if="!plugInData['noEdit']">
       <el-scrollbar>

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-08 16:52:33
+ * @LastEditTime: 2022-12-09 18:13:58
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -25,35 +25,25 @@ import {
   tableCellTemplateMaker,
   DataCell,
   searchCell,
+  staticSelectCell,
+  actionCell,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import {
   btnActionTemplate,
   stringAnyObj,
   formInputType,
 } from "@/modules/userManage/types";
-
+import { ElMessage } from "element-plus";
 export const mainDesktop = async () => {
-  /**
-   * @name: buildDataToTree
-   * @description: 从 listdata 生成 treeData
-   * @authors: CZH
-   * @Date: 2022-11-11 10:28:41
-   * @param {*} data
-   * @param {*} cell
-   * @param {*} id
-   * @param {*} pid
-   */
-  function buildDataToTree(data, cell, id = "id", pid = "parentId") {
-    const result = [];
-    data.map((x) => x[pid] == cell[id] && cell[id] != x[id] && result.push(x));
-    result.map((x) => buildDataToTree(data, x));
-    cell["children"] = result;
-    return cell;
-  }
+  // 性别
+  const gender = {
+    1: "男",
+    2: "女",
+  };
 
   const userTableCellStorage = new SearchCellStorage([
     tableCellTemplateMaker("名字", "name"),
-    tableCellTemplateMaker("性别", "gender"),
+    tableCellTemplateMaker("性别", "gender", staticSelectCell(gender)),
     tableCellTemplateMaker("icon", "icon"),
     tableCellTemplateMaker("简介", "description"),
     tableCellTemplateMaker("管理员", "adminFlag"),
@@ -85,9 +75,36 @@ export const mainDesktop = async () => {
         width: "200px",
       })
     ),
-    tableCellTemplateMaker("部门", "unitIds", {
-      ...searchCell(formInputType.selects, {}),
-    }),
+    tableCellTemplateMaker(
+      "部门",
+      "unitIds",
+      searchCell(formInputType.treeSelectRemote, {
+        funcInputOptionsLoader: async (that) => {
+          let attr = {
+            props: {
+              label: "name",
+              isLeaf: "isLeaf",
+            },
+            nodeKey: "id",
+          };
+          attr["load"] = async (node, resolve) => {
+            let res = await post("/web/usc/unit/list", {
+              parentId: node.data.id,
+            });
+            return resolve(
+              res.data.map((x) => {
+                return {
+                  ...x,
+                  isLeaf: !x.hasLeaf,
+                  value: x.id,
+                };
+              })
+            );
+          };
+          return attr;
+        },
+      })
+    ),
     tableCellTemplateMaker("排序", "orderNumber"),
   ]);
 
@@ -100,9 +117,22 @@ export const mainDesktop = async () => {
     ),
   ]);
 
-  const btnList = [
-    btnMaker("新增", btnActionTemplate.OpenDrawer, {
-      drawerProps: {
+  // 批量删除按钮
+  const selectedDeleteBtn = btnMaker("删除", btnActionTemplate.Function, {
+    function: async (that, data) => {},
+    icon: "Delete",
+    elType: "danger",
+  });
+
+  /**
+   * @name: 打开新增弹窗
+   * @description: waitForWriting
+   * @authors: CZH
+   * @Date: 2022-12-09 17:50:58
+   */
+  const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
+    function: async (that, data) => {
+      let drawerProps = {
         title: "新增用户",
         queryItemTemplate: userTableCellStorage.getByLabelArr([
           "name",
@@ -119,26 +149,41 @@ export const mainDesktop = async () => {
           btnMaker("提交", btnActionTemplate.Function, {
             icon: "Position",
             function: async (that, data) => {
-              let res = await post("/web/usc/user/insert", data);
-              console.log("res", res);
+              let res = await post(
+                "/web/usc/user/" + (data.id ? "update" : "insert"),
+                data
+              );
+              ElMessage[res.message == "成功" ? "success" : "error"](
+                res.message
+              );
+              if (res.message == "成功" && that.close) that.close();
             },
           }),
         ],
-      },
-      premission: ["admin"],
-      icon: "Plus",
-      elType: "primary",
-    }),
-    btnMaker("删除", btnActionTemplate.Function, {
-      function: async (that, data) => {},
-      icon: "Delete",
-      elType: "danger",
-    }),
-  ];
+      };
+    },
+    premission: ["admin"],
+    icon: "Plus",
+    elType: "primary",
+  });
+
+  const btnList = [addNewModel, selectedDeleteBtn];
+
+  userTableCellStorage.push(
+    tableCellTemplateMaker(
+      "操作",
+      "actionBtnList",
+      actionCell([{ ...addNewModel }], {
+        fixed: "right",
+        noDetail: true,
+      })
+    )
+  );
+
   return [
     gridCellMaker(
       "MenuList",
-      "菜单列表",
+      "菜单列表分层获取",
       {},
       {
         name: "userManage_menuListRemote",
@@ -146,23 +191,24 @@ export const mainDesktop = async () => {
       },
       {
         props: {
-          treeDataFunc: async (context) => {
-            let res = await post("/web/usc/unit/list", {});
-            let data = res.data;
-            const inKeyList = data.map((c) => c.id);
-            let unitList = data
-              .map((x) => {
-                if (inKeyList.indexOf(x.parentId) == -1)
-                  return buildDataToTree(data, x);
-                else return null;
-              })
-              .filter(Boolean);
-            return unitList;
+          treeDataFuncByLevel: async (node, resolve) => {
+            let res = await post("/web/usc/unit/list", {
+              parentId: node.data.id,
+            });
+            let data = res.data.map((x) => {
+              return {
+                ...x,
+                isLeaf: !x.hasLeaf,
+                value: x.id,
+              };
+            });
+            resolve(data);
           },
           outputKey: "unit",
           defaultProps: {
             label: "name",
             children: "children",
+            isLeaf: "isLeaf",
           },
         },
         isSettingTool: false,
@@ -191,6 +237,7 @@ export const mainDesktop = async () => {
             if (!res.data["data"]) res.data["data"] = res.data["list"];
             return res.data;
           },
+          autoSearch: true,
           searchKeyWithBaseData: ["unit"],
           btnList,
         },
