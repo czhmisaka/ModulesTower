@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-12 09:38:39
+ * @LastEditTime: 2022-12-12 11:36:18
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -30,6 +30,7 @@
       :style="{
         height: TableHeight + 'px',
       }"
+      :baseData="baseData"
       @selectedChange="selectedChange"
       @onChange="(value, options) => $emit('onChange', value, options)"
     />

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 18:31:20
+ * @LastEditTime: 2022-12-12 11:35:54
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -100,7 +100,7 @@ import tableHeader from "element-plus/es/components/table/src/table-header";
 import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../../types";
 export default defineComponent({
   components: { ElTable, ElTableColumn },
-  props: ["template", "loading", "dataList"],
+  props: ["template", "loading", "dataList", "baseData"],
 
   data() {
     return {

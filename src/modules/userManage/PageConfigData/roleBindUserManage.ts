@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-12 11:27:51
+ * @LastEditTime: 2022-12-12 11:37:39
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -110,10 +110,11 @@ export const roleBindUserManage = async () => {
     icon: "Connection",
     elType: "primary",
     function: (that, data) => {
-      let { roleList } = that.baseData;
-      let role = roleList.filter(
+      let { roleList, role } = that.baseData;
+      let cell = roleList.filter(
         (x) => x.id == (that.$route?.query?.roleId || that?.baseData?.role?.id)
       )[0];
+      if (role) cell = role;
       let drawerProps = {
         title: `绑定用户【${role.name}】`,
         schema: {
@@ -122,7 +123,7 @@ export const roleBindUserManage = async () => {
         queryItemTemplate: userBindRole.getAll(),
         btnList: [submit],
         data: {
-          roleId: role.id,
+          roleId: cell.id,
         },
       } as drawerProps;
 
@@ -136,17 +137,20 @@ export const roleBindUserManage = async () => {
     icon: "Connection",
     elType: "danger",
     function: async (that, data) => {
-      let routeQuery = that.$route.query;
-      let query = { ...routeQuery, ...that.query };
-      if (that.baseData?.role?.id)
-        query = {
-          ...query,
-          roleId: that.baseData?.role?.id,
-        };
+      let { roleList, role } = that.baseData;
+      let cell = roleList.filter(
+        (x) => x.id == (that.$route?.query?.roleId || that?.baseData?.role?.id)
+      )[0];
+      if (role) cell = role;
       let res = await post("/web/usc/role/cancelUser", {
         uid: data.id,
-        roleId: query.id,
+        roleId: cell.id,
       });
+      if (res.message == "成功") {
+        ElMessage.success(res.message);
+        if (that.close) that.close();
+        else refreshDesktop(that);
+      } else ElMessage.error(res.message);
     },
   });
 
