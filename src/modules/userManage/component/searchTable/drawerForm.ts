@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 16:11:25
+ * @LastEditTime: 2022-12-13 09:50:29
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -44,6 +44,7 @@ export const btnMaker = (
     type,
     isShow: () => true,
     isDisable: () => false,
+    isLoading: false,
     ...options,
   } as btnCellTemplate;
 };
