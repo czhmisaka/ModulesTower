@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 18:13:58
+ * @LastEditTime: 2022-12-13 09:33:37
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.ts
  */
 
@@ -119,7 +119,10 @@ export const mainDesktop = async () => {
 
   // 批量删除按钮
   const selectedDeleteBtn = btnMaker("删除", btnActionTemplate.Function, {
-    function: async (that, data) => {},
+    function: async (that, data) => {
+      if (!that.selectedList || that.selectedList.length == 0)
+        return ElMessage.warning("未选中需要删除的用户");
+    },
     icon: "Delete",
     elType: "danger",
   });
@@ -161,6 +164,9 @@ export const mainDesktop = async () => {
           }),
         ],
       };
+      that.$modules
+        .getModuleApi()
+        ["userManage_openDrawerForm"](that, drawerProps);
     },
     premission: ["admin"],
     icon: "Plus",
@@ -173,9 +179,8 @@ export const mainDesktop = async () => {
     tableCellTemplateMaker(
       "操作",
       "actionBtnList",
-      actionCell([{ ...addNewModel }], {
+      actionCell([], {
         fixed: "right",
-        noDetail: true,
       })
     )
   );

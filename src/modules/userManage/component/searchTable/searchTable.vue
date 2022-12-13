@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-12 11:36:18
+ * @LastEditTime: 2022-12-13 09:31:28
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -42,7 +42,7 @@
       v-if="PageData.total"
       v-model:current-page="PageData.pageNum"
       v-model:page-size="PageData.pageSize"
-      :page-sizes="[100, 200, 300, 400]"
+      :page-sizes="[10, 20, 30, 40, 100]"
       :small="true"
       :background="true"
       layout="total, sizes, prev, pager, next, jumper"
@@ -66,7 +66,6 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import inputForm from "./inputForm.vue";
 import infoTable from "./infoTable.vue";
-import { Console } from "console";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { tableCellTemplateMaker } from "./searchTable";
 import search from "@iconify-icons/ep/search";
@@ -78,7 +77,6 @@ import {
   btnActionTemplate,
 } from "@/modules/userManage/types";
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
-import { thisTypeAnnotation } from "@babel/types";
 let interval = null;
 
 let baseData = {};
