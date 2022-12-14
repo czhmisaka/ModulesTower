@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-13 15:11:24
+ * @LastEditTime: 2022-12-14 14:56:15
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -51,6 +51,21 @@ export const btnMaker = (
     ...options,
   } as btnCellTemplate;
 };
+
+/**
+ * @name: dobuleCheckBtnMaker
+ * @description: 二次确认按钮
+ * @authors: CZH
+ * @Date: 2022-12-14 14:56:27
+ */
+export const dobuleCheckBtnMaker = (
+  label,
+  options: {
+    title: string;
+    context: (that: stringAnyObj, data?: stringAnyObj) => void | string;
+    function: (that: stringAnyObj, data?: stringAnyObj) => void;
+  }
+) => {};
 
 // 关闭按钮
 export const closeBtn = btnMaker("结束", btnActionTemplate.Function, {

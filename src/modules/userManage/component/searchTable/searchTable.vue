@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-13 15:52:14
+ * @LastEditTime: 2022-12-14 14:58:58
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -40,7 +40,7 @@
         float: 'right',
       }"
       v-if="PageData.total"
-      v-model:current-page="PageData.pageNum"
+      v-model:current-page="PageData.pageNumber"
       v-model:page-size="PageData.pageSize"
       :page-sizes="[10, 20, 30, 40, 100]"
       :small="true"
@@ -48,7 +48,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="PageData.total"
       @size-change="(e) => search({ pageSize: e })"
-      @current-change="(e) => search({ pageNum: e })"
+      @current-change="(e) => search({ pageNumber: e })"
       :hide-on-single-page="false"
     />
   </cardBg>

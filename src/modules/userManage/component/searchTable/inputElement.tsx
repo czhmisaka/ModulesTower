@@ -340,4 +340,59 @@ inputElement[formInputType.indexListForSwitch] = {
   },
 };
 
+
+
+/**
+ * @name: botton
+ * @description: 一个按钮,反复执行true false，并以此来触发一些事件
+ * @authors: CZH
+ * @Date: 2022-12-14 14:15:24
+ */
+inputElement[formInputType.botton] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": defineComponent({
+        props: [
+          'type',
+          'size',
+          'icon',
+          'buttonName',
+          'callBack'
+        ],
+        setup(props, context) {
+          return () => [
+            <el-button {...props} onClick={(event) => {
+              if (props.callBack)
+                props.callBack(that.formData)
+            }}>
+              {props.buttonName}
+            </el-button>
+          ]
+        },
+      }),
+      "ui:options": {
+        style: {
+          width: '100%',
+          fontWeight: '900'
+        },
+      }
+    } as stringAnyObj;
+    let attrs = {
+      maxHeight: '400px'
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    if (input.propertiesOption)
+      properties = { ...properties, ...input.propertiesOption };
+    return properties;
+  },
+};
+
 export default inputElement;

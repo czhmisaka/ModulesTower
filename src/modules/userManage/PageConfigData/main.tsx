@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-14 14:45:45
+ * @LastEditTime: 2022-12-14 16:29:08
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -144,7 +144,127 @@ const searchTable = new SearchCellStorage([
       },
     })
   ),
+  tableCellTemplateMaker('角色', 'roleId', searchCell(formInputType.searchList, {
+    funcInputOptionsLoader: async (that) => {
+      let attr = {
+        multiple: false,
+      };
+      attr["remoteMethod"] = async (query) => {
+        let res = await post("/web/usc/role/list", {
+          name: query,
+        });
+        return res.data.map((x) => {
+          return {
+            value: x.id + "",
+            label: x.name,
+          };
+        });
+      };
+      return attr;
+    },
+  }))
 ]);
+
+
+/**
+  * @name: 打开新增弹窗
+  * @description: waitForWriting
+  * @authors: CZH
+  * @Date: 2022-12-09 17:50:58
+  */
+const addNewModel = btnMaker("创建新用户", btnActionTemplate.Function, {
+  function: async (that, data) => {
+    let drawerProps = {
+      title: "创建新用户",
+      queryItemTemplate: userTableCellStorage.getByLabelArr([
+        "name",
+        "gender",
+        "icon",
+        "description",
+        "mail",
+        "mobile",
+        "birthday",
+        "idCard",
+        "unitIds",
+      ]),
+      btnList: [
+        btnMaker("提交", btnActionTemplate.Function, {
+          icon: "Position",
+          function: async (that, data) => {
+            let res = await post(
+              "/web/usc/user/" + (data.id ? "update" : "insert"),
+              data
+            );
+            ElMessage[res.message == "成功" ? "success" : "error"](
+              res.message
+            );
+            if (res.message == "成功" && that.close) that.close();
+          },
+          premission: [
+            '/web/usc/user/update',
+            '/web/usc/user/insert'
+          ],
+        }),
+      ],
+    };
+    that.$modules
+      .getModuleApi()
+    ["userManage_openDrawerForm"](that, drawerProps);
+  },
+  premission: ["admin"],
+  icon: "Plus",
+  elType: "primary",
+});
+
+/**
+  * @name: 打开编辑弹窗
+  * @description: waitForWriting
+  * @authors: CZH
+  * @Date: 2022-12-09 17:50:58
+  */
+const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
+  function: async (that, data) => {
+    data.gender = data.gender+''
+    let drawerProps = {
+      title: "用户编辑",
+      queryItemTemplate: userTableCellStorage.getByLabelArr([
+        "name",
+        "gender",
+        "icon",
+        "description",
+        "mail",
+        "mobile",
+        "birthday",
+        "idCard",
+      ]),
+      btnList: [
+        btnMaker("提交", btnActionTemplate.Function, {
+          icon: "Position",
+          function: async (that, data) => {
+            let res = await post(
+              "/web/usc/user/" + (data.id ? "update" : "insert"),
+              data
+            );
+            ElMessage[res.message == "成功" ? "success" : "error"](
+              res.message
+            );
+            if (res.message == "成功" && that.close) that.close();
+          },
+          premission: [
+            '/web/usc/user/update',
+            '/web/usc/user/insert'
+          ],
+        }),
+      ],
+      data
+    };
+    that.$modules
+      .getModuleApi()
+    ["userManage_openDrawerForm"](that, drawerProps);
+  },
+  premission: ["admin"],
+  icon: "Setting",
+});
 
 /**
  * @name: roleBindBtn
@@ -155,28 +275,58 @@ const searchTable = new SearchCellStorage([
 const roleBindBtn = btnMaker("用户角色管理", btnActionTemplate.Function, {
   icon: "Connection",
   elType: "primary",
-  function: async (that, data) => {
+  function: async (that, user) => {
+    let res = await post('/web/usc/user/select', { id: user.id })
     let drawerProps = {
       title: "用户角色管理",
-      schema: { required: ["roleId"] },
       queryItemTemplate: [
         tableCellTemplateMaker(
-          "搜索权限",
-          "searchRole",
-          searchCell(formInputType.searchList)
-        ),
-        tableCellTemplateMaker(
-          "用户权限",
-          "roleId",
-          searchCell(formInputType.searchList, {
+          "用户角色",
+          "roles",
+          searchCell(formInputType.indexListForSwitch, {
             funcInputOptionsLoader: async (that) => {
-              let attr = {};
+              let attr = {
+                customRender: (data, that) => {
+                  return <el-card style='margin-bottom:6px;box-shadow:1px 1px 2px rgba(0,0,0,0.01)' bodyStyle={{
+                    width: '100%',
+                    padding: '6px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}>
+                    <el-tag>{data.name}</el-tag>
+                    <el-button size='small' type='danger' onClick={async () => {
+                      let res1 = await post('/web/usc/role/cancelUser', { roleId: data.id, uids: [that.formData.id] })
+                      ElMessage[res1.message == '成功' ? 'success' : 'err'](res1.message)
+                      let user = await post('/web/usc/user/select', { id: res.data.id })
+                      that.formData = user.data
+                    }}>删除角色</el-button>
+                  </el-card>
+                }
+              };
               return attr;
             },
           })
         ),
+        searchTable.getByKey("roleId", {
+          label: '新增角色'
+        }),
+        tableCellTemplateMaker('', 'checkBtn', searchCell(formInputType.botton, {
+          funcInputOptionsLoader: async (that) => {
+            let attr = {
+              buttonName: '新增角色',
+              callBack: async (data) => {
+                console.log(data, 'asd')
+                let res = await post('/web/usc/role/authUser', { roleId: data.roleId, uids: [data.id] })
+                ElMessage[res.message == '成功' ? 'success' : 'err'](res.message)
+                let user = await post('/web/usc/user/select', { id: data.id })
+                that.formData = user.data
+              }
+            }
+            return attr
+          }
+        }))
       ],
-      data: {},
+      data: { ...res.data },
       btnList: [closeBtn],
     };
     that.$modules
@@ -206,15 +356,19 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
             funcInputOptionsLoader: async (that) => {
               let attr = {
                 customRender: (data, that) => {
-                  console.log(that, data, 'asd')
-                  return <el-card bodyStyle={{
+                  return <el-card style='margin-bottom:6px;box-shadow:1px 1px 2px rgba(0,0,0,0.01)' bodyStyle={{
                     width: '100%',
                     padding: '6px',
                     display: 'flex',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
                   }}>
                     <el-tag>{data.name}</el-tag>
-                    <el-button size='small' type='danger'>退出部门</el-button>
+                    <el-button size='small' type='danger' onClick={async () => {
+                      let res1 = await post('/web/usc/unit/deleteUser', { id: data.id, uids: [that.formData.id] })
+                      ElMessage[res1.message == '成功' ? 'success' : 'err'](res1.message)
+                      let user = await post('/web/usc/user/select', { id: res.data.id })
+                      that.formData = user.data
+                    }}>退出部门</el-button>
                   </el-card>
                 }
               };
@@ -225,6 +379,20 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
         searchTable.getByKey("unitId", {
           label: '新增部门'
         }),
+        tableCellTemplateMaker('', 'checkBtn', searchCell(formInputType.botton, {
+          funcInputOptionsLoader: async (that) => {
+            let attr = {
+              buttonName: '新增部门',
+              callBack: async (data) => {
+                let res = await post('/web/usc/unit/insertUser', { id: data.unitId, uids: [data.id] })
+                ElMessage[res.message == '成功' ? 'success' : 'err'](res.message)
+                let user = await post('/web/usc/user/select', { id: data.id })
+                that.formData = user.data
+              }
+            }
+            return attr
+          }
+        }))
       ],
       data: { ...res.data },
       btnList: [closeBtn],
@@ -243,7 +411,7 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
  */
 export const mainDesktop = async () => {
   // 批量删除按钮
-  const selectedDeleteBtn = btnMaker("删除", btnActionTemplate.Function, {
+  const selectedDeleteBtn = btnMaker("删除成员", btnActionTemplate.Function, {
     isShow: (data) => !data.searchChildrenFlag,
     function: async (that, data) => {
       if (!that.selectedList || that.selectedList.length == 0)
@@ -274,53 +442,7 @@ export const mainDesktop = async () => {
     elType: "danger",
   });
 
-  /**
-   * @name: 打开新增弹窗
-   * @description: waitForWriting
-   * @authors: CZH
-   * @Date: 2022-12-09 17:50:58
-   */
-  const addNewModel = btnMaker("创建新用户", btnActionTemplate.Function, {
-    function: async (that, data) => {
-      let drawerProps = {
-        title: "创建新用户",
-        queryItemTemplate: userTableCellStorage.getByLabelArr([
-          "name",
-          "gender",
-          "icon",
-          "description",
-          "mail",
-          "mobile",
-          "birthday",
-          "idCard",
-          "unitIds",
-        ]),
-        btnList: [
-          btnMaker("提交", btnActionTemplate.Function, {
-            icon: "Position",
-            function: async (that, data) => {
-              let res = await post(
-                "/web/usc/user/" + (data.id ? "update" : "insert"),
-                data
-              );
-              ElMessage[res.message == "成功" ? "success" : "error"](
-                res.message
-              );
-              if (res.message == "成功" && that.close) that.close();
-            },
-          }),
-        ],
-      };
-      that.$modules
-        .getModuleApi()
-      ["userManage_openDrawerForm"](that, drawerProps);
-    },
-    premission: ["admin"],
-    icon: "Plus",
-    elType: "primary",
-  });
-
-  const btnList = [addNewModel, selectedDeleteBtn];
+  const btnList = [selectedDeleteBtn];
 
   const tableAction = tableCellTemplateMaker(
     "操作",
@@ -409,7 +531,7 @@ export const userManage = async () => {
   const tableAction = tableCellTemplateMaker(
     "操作",
     "actionBtnList",
-    actionCell([unitBindBtn, roleBindBtn], {
+    actionCell([unitBindBtn, roleBindBtn, editUserModel], {
       fixed: "right",
     })
   );
@@ -424,7 +546,7 @@ export const userManage = async () => {
       },
       {
         props: {
-          searchItemTemplate: searchTable.getByKeyArr(["unitId"]),
+          searchItemTemplate: searchTable.getAll(['searchChildrenFlag']),
           showItemTemplate: [
             ...userTableCellStorage.getAll(["unitId"]),
             tableAction,
@@ -438,9 +560,9 @@ export const userManage = async () => {
             if (!res.data["data"]) res.data["data"] = res.data["list"];
             return res.data;
           },
-          autoSearch: true,
+          autoSearch: false,
           searchKeyWithBaseData: ["unit"],
-          btnList: [],
+          btnList: [addNewModel],
         },
         isSettingTool: false,
       }
