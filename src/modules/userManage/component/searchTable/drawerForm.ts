@@ -1,13 +1,16 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-13 09:50:29
+ * @LastEditTime: 2022-12-13 15:11:24
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
 export const OpenDrawerBtn = () => {};
 
-import { checkContext } from "@/components/basicComponents/grid/module/cardApi";
+import {
+  checkContext,
+  refreshDesktop,
+} from "@/components/basicComponents/grid/module/cardApi";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
 import drawerFormVue from "@/modules/userManage/component/searchTable/drawerForm.vue";
@@ -48,6 +51,15 @@ export const btnMaker = (
     ...options,
   } as btnCellTemplate;
 };
+
+// 关闭按钮
+export const closeBtn = btnMaker("结束", btnActionTemplate.Function, {
+  icon: "Close",
+  function: (that, data) => {
+    if (that.close) that.close();
+    else refreshDesktop(that);
+  },
+});
 
 /**
  * @name: openDrawerForm

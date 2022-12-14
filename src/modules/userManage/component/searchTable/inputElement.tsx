@@ -1,4 +1,4 @@
-import { ElOption, ElSelect, ElTreeSelect } from "element-plus";
+import { ElOption, ElScrollbar, ElSelect, ElTreeSelect } from "element-plus";
 import { defineComponent, h, ref, watchEffect } from "vue";
 import { inputElementTemplate, formInputType, stringAnyObj } from "../../types";
 
@@ -244,9 +244,9 @@ inputElement[formInputType.searchList] = {
                   let res = await props["remoteMethod"](query);
                   options.value = res;
                 },
-                "onUpdate:modelValue":(e)=>{
+                "onUpdate:modelValue": (e) => {
                   context.emit("update:modelValue", e);
-                }
+                },
               },
               () =>
                 options.value.map((x) => {
@@ -265,6 +265,68 @@ inputElement[formInputType.searchList] = {
       filterable: true,
       remote: true,
       reserveKeyword: true,
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    if (input.propertiesOption)
+      properties = { ...properties, ...input.propertiesOption };
+    return properties;
+  },
+};
+
+
+
+/**
+ * @name: indexListForSwitch
+ * @description: 使用elscrollbar控制外部样式，支持使用customRender渲染内部,建议使用之前详细阅读源码
+ * @authors: CZH
+ * @Date: 2022-12-14 14:15:24
+ */
+inputElement[formInputType.indexListForSwitch] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": defineComponent({
+        props: [
+          'height',
+          'maxHeight',
+          'native',
+          'always',
+          'minSize',
+          'noresize',
+          'scroll',
+          "style",
+          "class",
+          "modelValue",
+          "customRender"
+        ],
+        setup(props, context) {
+          return () => [
+            <ElScrollbar {...props}>
+              {
+                props.modelValue && props.modelValue.length > 0 ? props.modelValue.map(x => {
+                  return props.customRender(x, that);
+                }) : ''
+              }
+            </ElScrollbar>
+          ]
+        },
+      }),
+      "ui:options": {
+        style: {
+          width: '100%',
+          fontWeight: '900'
+        },
+      }
+    } as stringAnyObj;
+    let attrs = {
+      maxHeight: '400px'
     };
     if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
     if (input.funcInputOptionsLoader)

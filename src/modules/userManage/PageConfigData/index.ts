@@ -1,11 +1,10 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 10:50:30
+ * @LastEditTime: 2022-12-14 08:32:43
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
-import { mainDesktop } from "./main";
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { isValidKey } from "@/utils/index";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
@@ -15,6 +14,7 @@ import { pageConfigManage } from "./pageConfigManage";
 import { menuManage } from "./menuManage";
 import { roleManage } from "./roleManage";
 import { roleBindUserManage } from "./roleBindUserManage";
+import { mainDesktop, userManage } from "./main";
 
 export interface desktopDataTemplate {
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -28,7 +28,19 @@ export interface desktopDataTemplate {
 
 const pageConfig = {
   user: {
-    name: "用户管理(基于部门)",
+    name: "用户管理",
+    desktopData: userManage,
+    gridColNum: 12,
+    cusStyle: {
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 12,
+    },
+    permission: [],
+    dataPermission: [],
+  },
+  departmentUser: {
+    name: "部门成员管理",
     desktopData: mainDesktop,
     gridColNum: 12,
     cusStyle: {

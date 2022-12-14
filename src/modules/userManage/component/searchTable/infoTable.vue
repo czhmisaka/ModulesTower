@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-13 09:48:33
+ * @LastEditTime: 2022-12-13 14:55:05
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -77,6 +77,19 @@
             >
             </el-button>
             <el-button
+              v-if="
+                item.table.noDetail &&
+                btnList(item, scope.row) &&
+                btnList(item, scope.row).length > 1
+              "
+              :loading="btnList(item, scope.row)[1].isLoading"
+              size="small"
+              @click="btnClick(btnList(item, scope.row)[1], scope.row)"
+              :type="btnList(item, scope.row)[1].elType"
+              :icon="btnList(item, scope.row)[1].icon"
+            >
+            </el-button>
+            <el-button
               v-if="!item.table.noDetail"
               size="small"
               type="default"
@@ -129,7 +142,9 @@ export default defineComponent({
   methods: {
     btnList(item, data) {
       if (!item.table.btnList) return false;
-      return item.table.btnList.filter((x) => x.isShow(data));
+      const back = item.table.btnList.filter((x) => x.isShow(data));
+      if (back && back.length > 0) return back;
+      else return false;
     },
 
     /**
