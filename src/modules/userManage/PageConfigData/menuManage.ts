@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 09:43:58
+ * @LastEditTime: 2022-12-14 17:00:06
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/menuManage.ts
  */
 
@@ -90,6 +90,16 @@ export const menuManage = async () => {
       })
     ),
     tableCellTemplateMaker(
+      "路由",
+      "urls",
+      searchCell(formInputType.searchList, {
+        funcInputOptionsLoader: async (that) => {
+          let attr = {};
+          return attr;
+        },
+      })
+    ),
+    tableCellTemplateMaker(
       "作为菜单展示",
       "showLink",
       searchCell(formInputType.radio)
@@ -143,7 +153,6 @@ export const menuManage = async () => {
               });
             },
           }),
-
           btnMaker("新增", btnActionTemplate.Function, {
             icon: "Plus",
             elType: "primary",
@@ -211,7 +220,10 @@ export const menuManage = async () => {
                   ),
                   ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
                 ],
-                data,
+                data: {
+                  ...data,
+                  type: data.type + "",
+                },
                 btnList: [submit],
               } as drawerProps;
               that.$modules
