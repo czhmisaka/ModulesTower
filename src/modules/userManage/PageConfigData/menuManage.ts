@@ -1,7 +1,31 @@
 /*
+ *                                                     __----~~~~~~~~~~~------___
+ *                                    .  .   ~~//====......          __--~ ~~
+ *                    -.            \_|//     |||\\  ~~~~~~::::... /~
+ *                 ___-==_       _-~o~  \/    |||  \\            _/~~-
+ *         __---~~~.==~||\=_    -_--~/_-~|-   |\\   \\        _/~
+ *     _-~~     .=~    |  \\-_    '-~7  /-   /  ||    \      /
+ *   .~       .~       |   \\ -_    /  /-   /   ||      \   /
+ *  /  ____  /         |     \\ ~-_/  /|- _/   .||       \ /
+ *  |~~    ~~|--~~~~--_ \     ~==-/   | \~--===~~        .\
+ *           '         ~-|      /|    |-~\~~       __--~~
+ *                       |-~~-_/ |    |   ~\_   _-~            /\
+ *                            /  \     \__   \/~                \__
+ *                        _--~ _/ | .-~~____--~-/                  ~~==.
+ *                       ((->/~   '.|||' -_|    ~~-/ ,              . _||
+ *                                  -_     ~\      ~~---l__i__i__i--~~_/
+ *                                  _-~-__   ~)  \--______________--~~
+ *                                //.-~~~-~_--~- |-------~~~~~~~~
+ *                                       //.-~~~--\
+ *                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *
+ *                               神兽保佑            永无BUG
+ */
+
+/*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-14 17:00:06
+ * @LastEditTime: 2022-12-14 17:02:09
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/menuManage.ts
  */
 
@@ -13,6 +37,9 @@ import {
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { post, get } from "@/utils/api/requests";
+import * as Icons from '@element-plus/icons-vue'
+
+console.log(Icons,'asd')
 
 import { bounds } from "@ctrl/tinycolor";
 import { btnMaker } from "../component/searchTable/drawerForm";
@@ -55,6 +82,32 @@ export const menuManage = async () => {
       } else {
         that.$message.danger(res["message"]);
       }
+    },
+  });
+
+  const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
+    icon: "Delete",
+    elType: "danger",
+    isShow: (data) => !data.children || data.children.length == 0,
+    function: async (that, data) => {
+      if (data.children && data.children.length > 0)
+        return ElMessage.warning("【无法删除】：存在子节点");
+      ElMessageBox({
+        title: "确认删除【" + data.name + "】吗？",
+        type: "warning",
+        callback: async (action) => {
+          if (action == "confirm") {
+            let res = await post("/web/usc/menu/delete", {
+              id: data.id,
+            });
+            if (res.message == "成功") {
+              ElMessage.success(res.message);
+              if (that.close) that.close();
+              else refreshDesktop(that);
+            } else ElMessage.error(res.message);
+          }
+        },
+      });
     },
   });
 
@@ -122,37 +175,25 @@ export const menuManage = async () => {
     ),
   ]);
 
+  const disableType = pageConfigDataTableCellStorage.getByKey(
+    "type",
+    searchCell(formInputType.select, {
+      inputOptions: typeToModule,
+      propertiesOption: {
+        "ui:options": {
+          disabled: true,
+        },
+      },
+    })
+  );
+
   pageConfigDataTableCellStorage.push(
     tableCellTemplateMaker(
       "操作",
       "actionaction",
       actionCell(
         [
-          btnMaker("删除", btnActionTemplate.Function, {
-            icon: "Delete",
-            elType: "danger",
-            isShow: (data) => !data.children || data.children.length == 0,
-            function: async (that, data) => {
-              if (data.children && data.children.length > 0)
-                return ElMessage.warning("【无法删除】：存在子节点");
-              ElMessageBox({
-                title: "确认删除【" + data.name + "】吗？",
-                type: "warning",
-                callback: async (action) => {
-                  if (action == "confirm") {
-                    let res = await post("/web/usc/menu/delete", {
-                      id: data.id,
-                    });
-                    if (res.message == "成功") {
-                      ElMessage.success(res.message);
-                      if (that.close) that.close();
-                      else refreshDesktop(that);
-                    } else ElMessage.error(res.message);
-                  }
-                },
-              });
-            },
-          }),
+          deleteBtn,
           btnMaker("新增", btnActionTemplate.Function, {
             icon: "Plus",
             elType: "primary",
@@ -166,17 +207,7 @@ export const menuManage = async () => {
                 title: `新增${typeToModule[data.type + 1]}`,
                 schema: { required: ["type", "name", "showLink"] },
                 queryItemTemplate: [
-                  pageConfigDataTableCellStorage.getByKey(
-                    "type",
-                    searchCell(formInputType.select, {
-                      inputOptions: typeToModule,
-                      propertiesOption: {
-                        "ui:options": {
-                          disabled: true,
-                        },
-                      },
-                    })
-                  ),
+                  disableType,
                   ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
                 ],
                 data: {
@@ -207,17 +238,7 @@ export const menuManage = async () => {
                 title: `新增${typeToModule[data.type + 1]}`,
                 schema: { required: ["type", "name", "showLink"] },
                 queryItemTemplate: [
-                  pageConfigDataTableCellStorage.getByKey(
-                    "type",
-                    searchCell(formInputType.select, {
-                      inputOptions: typeToModule,
-                      propertiesOption: {
-                        "ui:options": {
-                          disabled: true,
-                        },
-                      },
-                    })
-                  ),
+                  disableType,
                   ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
                 ],
                 data: {
