@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 10:31:50
+ * @LastEditTime: 2022-12-15 14:22:21
  * @FilePath: /configforpagedemo/src/modules/userManage/output.ts
  */
 export const moduleInfo = {
@@ -9,8 +9,7 @@ export const moduleInfo = {
   title: "管理中心组件包",
   icon: "EL_Setting",
   info: "部门 人员 角色 权限管理",
-  author: "czh & ljh",
-  
+  author: "czh",
 };
 
 import drawerForm from "@/modules/userManage/component/searchTable/drawerForm";
@@ -22,6 +21,7 @@ export const output = {
   CardApiInjectComponent: {
     ...drawerForm.component,
   },
+  routerChecker: {},
 };
 
 // 模组打包配置

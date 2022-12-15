@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-14 14:58:58
+ * @LastEditTime: 2022-12-15 15:42:47
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -173,6 +173,8 @@ export default defineComponent({
       PageData: {} as PageDataTemplate,
       isLoading: false,
 
+      isReady: false,
+
       // 当前选择项
       selectedList: [],
 
@@ -181,8 +183,11 @@ export default defineComponent({
     };
   },
   async mounted() {
-    this.initData();
+    this.isReady = false;
+    await this.initData();
+    await this.$nextTick();
     this.$emit("ready");
+    this.isReady = true;
     await this.search();
     let that = this;
     if (interval) clearInterval(interval);
@@ -208,6 +213,7 @@ export default defineComponent({
     async initData() {
       if (this.defaultQuery && Object.keys(this.defaultQuery).length > 0) {
         this.query = deepClone(this.defaultQuery);
+        console.log("asd", 1, this.query);
       }
     },
 
@@ -275,9 +281,10 @@ export default defineComponent({
         ...this.query,
         ...query,
       };
-      if (this.searchFunc) {
+      if (this.searchFunc && this.isReady) {
         this.isLoading = true;
         try {
+          console.log("asd", 2, this.query);
           let result = await this.searchFunc(this.query, this);
           this.PageData = {};
           if (result.total || result.total == 0) this.PageData = result;

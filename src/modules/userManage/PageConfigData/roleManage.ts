@@ -36,7 +36,7 @@ import {
   showType,
   stringAnyObj,
 } from "@/modules/userManage/types";
-import { btnMaker } from "../component/searchTable/drawerForm";
+import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
 import { collapseItemProps, ElMessage, ElMessageBox } from "element-plus";
 
 export const roleManage = async () => {

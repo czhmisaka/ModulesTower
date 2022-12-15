@@ -33,7 +33,7 @@ import {
   showType,
   stringAnyObj,
 } from "@/modules/userManage/types";
-import { btnMaker } from "../component/searchTable/drawerForm";
+import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 

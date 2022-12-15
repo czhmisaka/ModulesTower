@@ -230,7 +230,7 @@ inputElement[formInputType.searchList] = {
           "filterable",
           "remote",
           "reserveKeyword",
-          "remote-method",
+          "remoteMethod",
           "modelValue",
         ],
         setup(props, context) {
