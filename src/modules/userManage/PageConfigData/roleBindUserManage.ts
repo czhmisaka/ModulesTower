@@ -23,7 +23,7 @@ import { post, get } from "@/utils/api/requests";
 import {
   SearchCellStorage,
   tableCellTemplateMaker,
-  DataCell,
+  DateCell,
   searchCell,
   actionCell,
   showCell,

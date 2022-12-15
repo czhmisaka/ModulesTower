@@ -1,7 +1,7 @@
 /*
 * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-14 15:19:09
+ * @LastEditTime: 2022-12-15 10:55:52
  * @FilePath: /configforpagedemo/src/router/index.ts
 */
 
@@ -192,8 +192,8 @@ router.afterEach(() => {
 // 路由守卫
 // 控制默认到index界面执行匹配
 router.beforeEach((to, from, next) => {
-  next()
-  
+  next();
+  // commonDealFunction()
 })
 
 

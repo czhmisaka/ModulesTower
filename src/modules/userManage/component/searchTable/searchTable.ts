@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-08 15:49:05
+ * @LastEditTime: 2022-12-15 14:10:24
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -128,13 +128,13 @@ export class SearchCellStorage {
 }
 
 /**
- * @name: DataCell
+ * @name: DateCell
  * @description: 创建表单日期显示
  * @authors: CZH
  * @Date: 2022-11-29 14:52:10
  * @param {stringAnyObj} options
  */
-export const DataCell = (options: stringAnyObj = {}): tableCellOptions => {
+export const DateCell = (options: stringAnyObj = {}): tableCellOptions => {
   return {
     ...showCell(showType.func, {
       showFunc: (data: any, key: string) =>
@@ -263,7 +263,7 @@ export const tableCellTemplateMaker = (
  * @authors: CZH
  * @Date: 2022-11-14 10:39:07
  * @param {tableCellTemplate[]} cellList
- * 
+ *
  * @param {stringAnyObj} queryItemConfig
  */
 

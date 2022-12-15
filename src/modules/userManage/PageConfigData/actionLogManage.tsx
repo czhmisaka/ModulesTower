@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-15 10:30:47
+ * @LastEditTime: 2022-12-15 14:10:00
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/actionLogManage.tsx
  */
 
@@ -24,6 +24,7 @@ import {
   tableCellTemplateMaker,
   searchCell,
   showCell,
+  DateCell
 } from "@/modules/userManage/component/searchTable/searchTable";
 import { formInputType, showType, stringAnyObj } from "@/modules/userManage/types";
 
@@ -33,15 +34,14 @@ export const actionLogManage = async () => {
     tableCellTemplateMaker("操作者", "operatorName"),
     tableCellTemplateMaker("部门", "operatorUnitName"),
     tableCellTemplateMaker("操作类型", "type"),
-    tableCellTemplateMaker("操作详情", "detail", showCell(showType.dataKey, {
-      width: '300px'
-    })
-    ),
+    tableCellTemplateMaker("操作详情", "detail", showCell(showType.dataKey, { width: '300px' })),
+    tableCellTemplateMaker("操作时间", "createTime", DateCell()),
     tableCellTemplateMaker("IP", "ip"),
     tableCellTemplateMaker("操作地址", "operationAddress"),
   ]);
 
   const userTableSearchTemplate = [];
+
 
   const btnList = [];
   return [

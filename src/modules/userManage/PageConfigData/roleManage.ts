@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 11:19:27
+ * @LastEditTime: 2022-12-15 14:11:00
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -24,7 +24,7 @@ import {
   SearchCellStorage,
   tableCellTemplateMaker,
   searchCell,
-  DataCell,
+  DateCell,
   showCell,
   staticSelectCell,
   actionCell,
@@ -51,9 +51,9 @@ export const roleManage = async () => {
   const roleTableSearchStorage = new SearchCellStorage([
     tableCellTemplateMaker("id", "id"),
     tableCellTemplateMaker("创建者ID", "createUserId"),
-    tableCellTemplateMaker("创建时间", "createTime", DataCell()),
+    tableCellTemplateMaker("创建时间", "createTime", DateCell()),
     tableCellTemplateMaker("更新者ID", "updateUserId"),
-    tableCellTemplateMaker("更新时间", "updateTime", DataCell()),
+    tableCellTemplateMaker("更新时间", "updateTime", DateCell()),
     tableCellTemplateMaker("排序顺序", "orderNumber"),
     tableCellTemplateMaker("置顶", "top"),
     tableCellTemplateMaker("角色名称", "name"),

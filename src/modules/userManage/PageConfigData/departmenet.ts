@@ -22,7 +22,7 @@ import { post, get } from "@/utils/api/requests";
 import {
   SearchCellStorage,
   tableCellTemplateMaker,
-  DataCell,
+  DateCell,
   searchCell,
   actionCell,
   showCell,
@@ -58,7 +58,7 @@ export const department = async () => {
     tableCellTemplateMaker(
       "创建时间",
       "createTime",
-      DataCell({
+      DateCell({
         width: "200px",
       })
     ),
@@ -66,7 +66,7 @@ export const department = async () => {
     tableCellTemplateMaker(
       "更新时间",
       "updateTime",
-      DataCell({
+      DateCell({
         width: "200px",
       })
     ),

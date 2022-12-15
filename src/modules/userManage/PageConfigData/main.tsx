@@ -28,7 +28,7 @@ import {
 import {
   SearchCellStorage,
   tableCellTemplateMaker,
-  DataCell,
+  DateCell,
   searchCell,
   staticSelectCell,
   actionCell,
@@ -57,7 +57,7 @@ const userTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker(
     "生日",
     "birthday",
-    DataCell({
+    DateCell({
       width: "200px",
     })
   ),
@@ -68,7 +68,7 @@ const userTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker(
     "创建时间",
     "createTime",
-    DataCell({
+    DateCell({
       width: "200px",
     })
   ),
@@ -76,7 +76,7 @@ const userTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker(
     "最近修改时间",
     "updateTime",
-    DataCell({
+    DateCell({
       width: "200px",
     })
   ),
