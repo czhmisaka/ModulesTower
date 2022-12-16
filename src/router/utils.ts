@@ -4,7 +4,7 @@ import {
   RouteComponent,
   createWebHistory,
   createWebHashHistory,
-  RouteRecordNormalized
+  RouteRecordNormalized,
 } from "vue-router";
 import { router } from "./index";
 import { isProxy, toRaw } from "vue";
@@ -15,7 +15,7 @@ import {
   isString,
   storageSession,
   buildHierarchyTree,
-  isIncludeAllChildren
+  isIncludeAllChildren,
 } from "@pureadmin/utils";
 import { cloneDeep, intersection } from "lodash-unified";
 import { sessionKey, type DataInfo } from "@/utils/auth";
@@ -26,10 +26,14 @@ const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 
 // 动态路由
 import { getAsyncRoutes } from "@/utils/api/admin/routes";
+import { useUserStoreHook } from "@/store/modules/user";
+import { getMenuList } from "@/utils/api/admin/user";
+
+let menuList = [];
 
 /** 按照路由中meta下的rank等级升序来排序路由 */
 function ascending(arr: any[]) {
-  arr.forEach(v => {
+  arr.forEach((v) => {
     if (v?.meta?.rank === null) v.meta.rank = undefined;
     if (v?.meta?.rank === 0) {
       if (v.name !== "Home" && v.path !== "/") {
@@ -80,24 +84,19 @@ function filterNoPermissionTree(data: RouteComponent[]) {
   const newTree = cloneDeep(data).filter((v: any) =>
     isOneOfArray(v.meta?.roles, currentRoles)
   );
-  newTree.forEach(
-    (v: any) => {
-      // if (v.children && v.children.length == 0) {
-      //   delete v.children
-      // }
-      return v.children && (v.children = filterNoPermissionTree(v.children))
-    }
-  );
-  const res = filterChildrenTree(newTree)
+  newTree.forEach((v: any) => {
+    return v.children && (v.children = filterNoPermissionTree(v.children));
+  });
+  const res = filterChildrenTree(newTree);
   return res;
 }
 
 /** 批量删除缓存路由(keepalive) */
 function delAliveRoutes(delAliveRouteList: Array<RouteConfigs>) {
-  delAliveRouteList.forEach(route => {
+  delAliveRouteList.forEach((route) => {
     usePermissionStoreHook().cacheOperate({
       mode: "delete",
-      name: route?.name
+      name: route?.name,
     });
   });
 }
@@ -152,14 +151,15 @@ function addPathMatch() {
     router.addRoute({
       path: "/:pathMatch(.*)",
       name: "pathMatch",
-      redirect: "/error/404"
+      redirect: "/error/404",
     });
   }
 }
 
 /** 初始化路由 */
 function initRouter() {
-  return new Promise(resolve => {
+  return new Promise(async (resolve) => {
+    menuList = await getMenuList();
     getAsyncRoutes().then(({ data }) => {
       if (data.length === 0) {
         usePermissionStoreHook().handleWholeMenus(data);
@@ -169,9 +169,9 @@ function initRouter() {
           (v: RouteRecordRaw) => {
             // 防止重复添加路由
             if (
-              router.options.routes[0]['children'] &&
+              router.options.routes[0]["children"] &&
               router.options.routes[0].children.findIndex(
-                value => value.path === v.path
+                (value) => value.path === v.path
               ) !== -1
             ) {
               return;
@@ -183,7 +183,7 @@ function initRouter() {
               if (!router.hasRoute(v?.name)) router.addRoute(v);
               const flattenRouters: any = router
                 .getRoutes()
-                .find(n => n.path === "/");
+                .find((n) => n.path === "/");
               router.addRoute(flattenRouters);
             }
             resolve(router);
@@ -230,11 +230,10 @@ function formatTwoStageRoutes(routesList: RouteRecordRaw[]) {
         path: v.path,
         redirect: v.redirect,
         meta: v.meta,
-        children: []
+        children: [],
       });
     } else {
-      if (newRoutesList[0])
-        newRoutesList[0].children.push({ ...v });
+      if (newRoutesList[0]) newRoutesList[0].children.push({ ...v });
     }
   });
   return newRoutesList;
@@ -244,23 +243,23 @@ function formatTwoStageRoutes(routesList: RouteRecordRaw[]) {
 function handleAliveRoute(matched: RouteRecordNormalized[], mode?: string) {
   switch (mode) {
     case "add":
-      matched.forEach(v => {
+      matched.forEach((v) => {
         usePermissionStoreHook().cacheOperate({ mode: "add", name: v.path });
       });
       break;
     case "delete":
       usePermissionStoreHook().cacheOperate({
         mode: "delete",
-        path: matched[matched.length - 1].path
+        path: matched[matched.length - 1].path,
       });
       break;
     default:
       usePermissionStoreHook().cacheOperate({
         mode: "delete",
-        path: matched[matched.length - 1].path
+        path: matched[matched.length - 1].path,
       });
       useTimeoutFn(() => {
-        matched.forEach(v => {
+        matched.forEach((v) => {
           usePermissionStoreHook().cacheOperate({ mode: "add", path: v.path });
         });
       }, 100);
@@ -285,8 +284,8 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
     } else {
       // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会跟path保持一致）
       const index = v?.component
-        ? modulesRoutesKeys.findIndex(ev => ev.includes(v.component as any))
-        : modulesRoutesKeys.findIndex(ev => ev.includes(v.path));
+        ? modulesRoutesKeys.findIndex((ev) => ev.includes(v.component as any))
+        : modulesRoutesKeys.findIndex((ev) => ev.includes(v.path));
       v.component = modulesRoutes[modulesRoutesKeys[index]];
     }
     if (v?.children && v.children.length) {
@@ -351,5 +350,5 @@ export {
   handleAliveRoute,
   formatTwoStageRoutes,
   formatFlatteningRoutes,
-  filterNoPermissionTree
+  filterNoPermissionTree,
 };

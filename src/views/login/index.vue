@@ -47,7 +47,6 @@ const onLogin = async (formEl: FormInstance | undefined) => {
         useUserStoreHook()
           .loginByUsername({ username: ruleForm.username, password: ruleForm.password })
           .then((res) => {
-            console.log(res);
             if (res && res["token"]) {
               // 获取后端路由
               initRouter().then(() => {

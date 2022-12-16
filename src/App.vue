@@ -1,21 +1,21 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 10:46:58
+ * @LastEditTime: 2022-12-16 16:47:05
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
   <el-config-provider :locale="currentLocale">
     <router-view />
   </el-config-provider>
-  <!-- <lineSlideExchange
+  <lineSlideExchange
     ref="lineSlideExchange"
     :linesNumber="linesNumber"
     :rotate="rotate"
     :start-color="sColor"
     :end-color="eColor"
-    :speed="1.3" 
-  />-->
+    :speed="1.5"
+  />
 </template>
 
 <script lang="ts">
@@ -23,7 +23,8 @@ import { defineComponent } from "vue";
 import { ElConfigProvider } from "element-plus";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import lineSlideExchange from "@/components/animate/lineSlideExchange.vue";
-
+import { useUserStoreHook } from "./store/modules/user";
+import { useLoading } from "@/store/modules/loading";
 function getRandomColor(): string {
   return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
 }
@@ -38,6 +39,7 @@ export default defineComponent({
       linesNumber: 60,
     };
   },
+  watch: {},
   computed: {
     meta() {
       return this.$route.meta;
@@ -46,11 +48,8 @@ export default defineComponent({
       return zhCn;
     },
   },
-  mounted() {
-    console.log(this.$router.getRoutes(), "qwe");
-    // this.$refs["lineSlideExchange"].start();
-    // this.$refs["lineSlideExchange"].finish();
-  },
+  async created() {},
+  mounted() {},
   methods: {},
 });
 </script>

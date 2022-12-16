@@ -1,15 +1,13 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 14:52:46
+ * @LastEditTime: 2022-12-16 15:28:01
  * @FilePath: /configforpagedemo/src/utils/api/user/header.ts
  */
 
 import { getCookie } from "./cookie";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
-
-
 
 /**
  * @name: getheaderTemplate
@@ -19,7 +17,7 @@ import { useUserStoreHook } from "@/store/modules/user";
  */
 const getheaderTemplate = () => {
   let DataInfo = getToken() || {};
-  const user = useUserStoreHook()
+  const { menuList } = useUserStoreHook();
   let back = {
     // menuId:
     route: window.location.href.split("#")[1],

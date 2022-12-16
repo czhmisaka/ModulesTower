@@ -1,13 +1,17 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 15:00:46
+ * @LastEditTime: 2022-12-16 16:55:56
  * @FilePath: /configforpagedemo/src/utils/api/admin/user.ts
  */
 import { http } from "../../http";
 import { post } from "../requests";
 import { deviceDetection } from "@pureadmin/utils";
-import { menuCellMaker,menuInfoTemplate,menuInfoType } from "@/components/menu/menuConfigTemplate";
+import {
+  menuCellMaker,
+  menuInfoTemplate,
+  menuInfoType,
+} from "@/components/menu/menuConfigTemplate";
 
 export type UserResult = {
   success: boolean;
@@ -37,9 +41,7 @@ export type RefreshTokenResult = {
   };
 };
 
-export interface menuCell{
-
-}
+export interface menuCell {}
 
 const terminalType = {
   1: "PC",
@@ -55,11 +57,12 @@ export const getLogin = async (data?: object) => {
   });
 };
 
-export const getMenuList = async()=>{
-  let menuList = [] as menuInfoTemplate[]
-  return menuList
-}
-
+export const getMenuList = async () => {
+  let menuList = [] as menuInfoTemplate[];
+  let res = await post("/web/usc/menu/list", {});
+  menuList = res.data;
+  return menuList;
+};
 
 /** 刷新token */
 export const refreshTokenApi = (data?: object) => {

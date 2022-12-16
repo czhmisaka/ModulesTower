@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 14:55:31
+ * @LastEditTime: 2022-12-16 16:56:56
  * @FilePath: /configforpagedemo/src/store/modules/types.ts
  */
 import { stringAnyObj } from "@/modules/userManage/types";
@@ -50,5 +50,10 @@ export type userType = {
   roles?: Array<string>;
   verifyCode?: string;
   currentPage?: number;
-  menuList: stringAnyObj[];
+  menuList?: stringAnyObj[];
+};
+
+export type loadingType = {
+  fullScreenLoading: boolean;
+  [key: string]: boolean;
 };

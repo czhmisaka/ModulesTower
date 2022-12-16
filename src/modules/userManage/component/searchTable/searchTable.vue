@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-15 15:42:47
+ * @LastEditTime: 2022-12-16 15:31:52
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -213,7 +213,6 @@ export default defineComponent({
     async initData() {
       if (this.defaultQuery && Object.keys(this.defaultQuery).length > 0) {
         this.query = deepClone(this.defaultQuery);
-        console.log("asd", 1, this.query);
       }
     },
 
@@ -284,7 +283,6 @@ export default defineComponent({
       if (this.searchFunc && this.isReady) {
         this.isLoading = true;
         try {
-          console.log("asd", 2, this.query);
           let result = await this.searchFunc(this.query, this);
           this.PageData = {};
           if (result.total || result.total == 0) this.PageData = result;

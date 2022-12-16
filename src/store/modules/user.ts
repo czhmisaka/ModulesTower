@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 15:15:59
+ * @LastEditTime: 2022-12-16 16:56:42
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -33,8 +33,6 @@ export const useUserStore = defineStore({
     verifyCode: "",
     // 判断登录页面显示哪个组件（0：登录（默认）、1：手机登录、2：二维码登录、3：注册、4：忘记密码）
     currentPage: 0,
-    // 访问权限 menuList
-    menuList: [] as menuInfoTemplate[],
   }),
   actions: {
     /** 存储用户名 */
@@ -53,10 +51,6 @@ export const useUserStore = defineStore({
     SET_CURRENTPAGE(value: number) {
       this.currentPage = value;
     },
-    /** 存储可以访问的访问权限 */
-    SET_MENULIST(value: menuInfoTemplate[]) {
-      this.menuList = value;
-    },
     /** 登入 */
     async loginByUsername(query) {
       return new Promise<UserResult>(async (resolve, reject) => {
@@ -70,7 +64,6 @@ export const useUserStore = defineStore({
             roles: ["admin"],
             expires: new Date(new Date().getTime() + 19999999).getTime(),
           };
-          this.menuList = getMenuList();
           setToken(data);
           resolve(data);
         }
@@ -86,6 +79,7 @@ export const useUserStore = defineStore({
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
     },
+
     /** 刷新`token` */
     async handRefreshToken(data) {
       return new Promise<RefreshTokenResult>((resolve, reject) => {
