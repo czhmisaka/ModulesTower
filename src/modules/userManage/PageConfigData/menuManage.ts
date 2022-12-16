@@ -68,7 +68,11 @@ const typeToModule = {
 };
 
 const submit = btnMaker("提交", btnActionTemplate.Function, {
-  function: async (that, data) => {
+  function: async (that, query) => {
+    let data = {
+      ...query,
+      urls: typeof query.urls == "string" ? [query.urls] : query.urls,
+    } as stringAnyObj;
     let res = await post(
       `/web/usc/menu/${data.id ? "update" : "insert"}`,
       data
@@ -127,34 +131,51 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
     }),
     ...searchCell(formInputType.select, {
       inputOptions: typeToModule,
+      // onChangeFunc: async (that, data) => {
+      //   const originQueryTemplate = [];
+      //   switch (data["type"]) {
+      //     case 1:
+      //       break;
+      //   }
+      // },
     }),
   }),
   tableCellTemplateMaker(
     "URL",
     "urls",
-    searchCell(formInputType.inputList, {
-      inputOptions: {},
-      propertiesOption: {
-        "ui:options": {
-          placeholder: "选择或者输入自定义URL",
-        },
-      },
-    })
-  ),
-  tableCellTemplateMaker(
-    "路由",
-    "urls",
     searchCell(formInputType.searchList, {
       funcInputOptionsLoader: async (that) => {
         const routes = that.$router.getRoutes();
         let attr = {
-          multiple:false,
+          multiple: false,
           remoteMethod: async (data) => {
             return routes.map((x) => {
               return {
                 ...x,
                 value: x.path,
                 label: x.name,
+              };
+            });
+          },
+        };
+        return attr;
+      },
+    })
+  ),
+  tableCellTemplateMaker(
+    "接口",
+    "urls",
+    searchCell(formInputType.searchList, {
+      funcInputOptionsLoader: async (that) => {
+        let attr = {
+          multiple: true,
+          remoteMethod: async (data) => {
+            let res = await post("/web/usc/url/listAll", {});
+            return res.data.map((x) => {
+              return {
+                ...x,
+                value: x.url,
+                label: `${x.tags}-${x.description}`,
               };
             });
           },
@@ -204,7 +225,6 @@ pageConfigDataTableCellStorage.push(
     "actionaction",
     actionCell(
       [
-        deleteBtn,
         btnMaker("新增", btnActionTemplate.Function, {
           icon: "Plus",
           elType: "primary",
@@ -212,15 +232,28 @@ pageConfigDataTableCellStorage.push(
             return data.type != 4;
           },
           function: async (that, data) => {
-            let propsArr = ["name", "icon", "urls", "pageConfigId", "meta"];
+            let propsArr = ["name", "icon", "meta"];
             if (data.type < 3) propsArr.push("showLink");
+            let queryItemTemplate = [
+              disableType,
+              ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
+            ];
+            if (data.type == 2) {
+              queryItemTemplate.push(
+                pageConfigDataTableCellStorage.getByLabel("URL")
+              );
+              queryItemTemplate.push(
+                pageConfigDataTableCellStorage.getByKey("pageConfigId")
+              );
+            }
+            if (data.type == 3)
+              queryItemTemplate.push(
+                pageConfigDataTableCellStorage.getByLabel("接口")
+              );
             let drawerProps = {
               title: `新增${typeToModule[data.type + 1]}`,
               schema: { required: ["type", "name", "showLink"] },
-              queryItemTemplate: [
-                disableType,
-                ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
-              ],
+              queryItemTemplate,
               data: {
                 parentId: data.id,
                 type: data.type + 1 + "",
@@ -237,21 +270,28 @@ pageConfigDataTableCellStorage.push(
           icon: "Edit",
           elType: "success",
           function: async (that, data) => {
-            let propsArr = [
-              "name",
-              "icon",
-              "urls",
-              "pageConfigId",
-              "meta",
-              "showLink",
+            let propsArr = ["name", "icon", "meta"];
+            if (data.type < 4) propsArr.push("showLink");
+            let queryItemTemplate = [
+              disableType,
+              ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
             ];
+            if (data.type == 3) {
+              queryItemTemplate.push(
+                pageConfigDataTableCellStorage.getByLabel("URL")
+              );
+              queryItemTemplate.push(
+                pageConfigDataTableCellStorage.getByKey("pageConfigId")
+              );
+            }
+            if (data.type == 4)
+              queryItemTemplate.push(
+                pageConfigDataTableCellStorage.getByLabel("接口")
+              );
             let drawerProps = {
               title: `新增${typeToModule[data.type + 1]}`,
               schema: { required: ["type", "name", "showLink"] },
-              queryItemTemplate: [
-                disableType,
-                ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
-              ],
+              queryItemTemplate,
               data: {
                 ...data,
                 type: data.type + "",
@@ -263,6 +303,7 @@ pageConfigDataTableCellStorage.push(
               ["userManage_openDrawerForm"](that, drawerProps);
           },
         }),
+        deleteBtn,
       ],
       {
         fixed: "right",
@@ -273,10 +314,11 @@ pageConfigDataTableCellStorage.push(
 
 const SearchTemplate = pageConfigDataTableCellStorage.getByKeyArr([
   "name",
-  "showLink",
+  // "showLink",
 ]);
+
 const btnList = [
-  btnMaker("新增菜单", btnActionTemplate.OpenDrawer, {
+  btnMaker("新增模块", btnActionTemplate.OpenDrawer, {
     icon: "plus",
     elType: "primary",
     drawerProps: {
@@ -285,52 +327,19 @@ const btnList = [
         required: ["type", "name", "showLink"],
       },
       queryItemTemplate: [
-        pageConfigDataTableCellStorage.getByKey(
-          "parentId",
-          searchCell(formInputType.select, {
-            funcInputOptionsLoader: async () => {
-              function getAllChildren(node) {
-                let list = [node];
-                if (node.children && node.children.length > 0)
-                  node.children.map((child) => {
-                    list = list.concat(getAllChildren(child));
-                  });
-                list
-                  .map((x) => {
-                    delete x.children;
-                    return x.type < 4 ? x : null;
-                  })
-                  .filter(Boolean);
-                return list;
-              }
-              let back = {};
-              let res = await post("/web/usc/menu/list", {});
-              let list = [];
-              if (res.data) {
-                res.data.map((x) => {
-                  list = list.concat(getAllChildren(x));
-                });
-              }
-              list.map((x) => {
-                back[x.id] = x.name;
-              });
-              return back;
-            },
-          })
-        ),
+        disableType,
         ...pageConfigDataTableCellStorage.getByKeyArr([
-          "type",
           "name",
           "icon",
-          "urls",
           "showLink",
-          "pageConfigId",
+          // "pageConfigId",
           "meta",
         ]),
       ],
       btnList: [submit],
       data: {
         showLink: true,
+        type: "1",
       },
     },
   }),
@@ -352,6 +361,7 @@ export const menuManage = async () => {
           showItemTemplate: pageConfigDataTableCellStorage.getAll([
             "id",
             "parentId",
+            "urls"
           ]),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};

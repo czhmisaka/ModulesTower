@@ -1,11 +1,13 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 16:20:27
+ * @LastEditTime: 2022-12-16 15:00:46
  * @FilePath: /configforpagedemo/src/utils/api/admin/user.ts
  */
 import { http } from "../../http";
 import { post } from "../requests";
+import { deviceDetection } from "@pureadmin/utils";
+import { menuCellMaker,menuInfoTemplate,menuInfoType } from "@/components/menu/menuConfigTemplate";
 
 export type UserResult = {
   success: boolean;
@@ -35,11 +37,29 @@ export type RefreshTokenResult = {
   };
 };
 
+export interface menuCell{
+
+}
+
+const terminalType = {
+  1: "PC",
+  2: "H5",
+};
+
 /** 登录 */
 export const getLogin = async (data?: object) => {
   // return http.request<UserResult>("post", "/login", { data });
-  return await post("/web/usc/login", { lcdp:data });
+  return await post("/web/usc/login", {
+    lcdp: data,
+    terminalType: deviceDetection() ? 2 : 1,
+  });
 };
+
+export const getMenuList = async()=>{
+  let menuList = [] as menuInfoTemplate[]
+  return menuList
+}
+
 
 /** 刷新token */
 export const refreshTokenApi = (data?: object) => {

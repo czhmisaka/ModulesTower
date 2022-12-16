@@ -1,15 +1,17 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 17:14:05
+ * @LastEditTime: 2022-12-16 14:55:31
  * @FilePath: /configforpagedemo/src/store/modules/types.ts
  */
+import { stringAnyObj } from "@/modules/userManage/types";
+import { extend } from "lodash";
 import { RouteRecordName } from "vue-router";
 
 export type cacheType = {
   mode: string;
   name?: RouteRecordName;
-  path?:string
+  path?: string;
 };
 
 export type positionType = {
@@ -48,4 +50,5 @@ export type userType = {
   roles?: Array<string>;
   verifyCode?: string;
   currentPage?: number;
+  menuList: stringAnyObj[];
 };

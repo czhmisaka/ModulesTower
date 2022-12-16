@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 18:52:15
+ * @LastEditTime: 2022-12-16 14:49:52
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -18,7 +18,6 @@ const Env = import.meta.env.VITE_MODE;
 const isDev = () => Env == "development";
 import { loadEnv } from "@build/index";
 const { VITE_PROXY_DOMAIN_REAL } = loadEnv();
-console.log(loadEnv())
 
 export function isMobile() {
   if (

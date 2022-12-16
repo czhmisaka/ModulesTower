@@ -1,12 +1,15 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-15 09:58:30
+ * @LastEditTime: 2022-12-16 14:52:46
  * @FilePath: /configforpagedemo/src/utils/api/user/header.ts
  */
 
 import { getCookie } from "./cookie";
 import { getToken } from "@/utils/auth";
+import { useUserStoreHook } from "@/store/modules/user";
+
+
 
 /**
  * @name: getheaderTemplate
@@ -16,7 +19,9 @@ import { getToken } from "@/utils/auth";
  */
 const getheaderTemplate = () => {
   let DataInfo = getToken() || {};
+  const user = useUserStoreHook()
   let back = {
+    // menuId:
     route: window.location.href.split("#")[1],
     token: DataInfo["accessToken"], // 向后台发送的token
     "Content-Type": "application/json;charset=utf-8",

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-12 11:23:36
+ * @LastEditTime: 2022-12-16 10:29:15
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -104,7 +104,7 @@ export default defineComponent({
   watch: {
     formData: {
       handler(val) {
-        this.checkOnChange(val);
+        if (this.isReady) this.checkOnChange(val);
       },
       immediate: true,
       deep: true,
@@ -116,6 +116,8 @@ export default defineComponent({
       isOpen: false,
       formData: {},
       uiSchema: {},
+
+      isReady: false,
 
       showType,
 
@@ -167,6 +169,7 @@ export default defineComponent({
         if (val[key] != formDataForCheck[key] || force) {
           this.queryItemTemplate.map((cell) => {
             if (cell.key == key && cell.input && cell.input.onChangeFunc) {
+              // 如有返回则可以重置表单的输入方案
               const queryItemTemplate = cell.input.onChangeFunc(this, this.formData);
               if (queryItemTemplate) this.initForm(queryItemTemplate);
             }
@@ -214,11 +217,13 @@ export default defineComponent({
      * @Date: 2022-12-02 09:28:12
      */
     async open() {
+      this.isReady = false;
       await this.$nextTick();
       this.queryItemTemplate = this.plugInData["queryItemTemplate"]
         ? this.plugInData.queryItemTemplate
         : [];
       await this.initForm(this.queryItemTemplate);
+      this.isReady = true;
       if (this.plugInData["data"]) this.formData = this.plugInData["data"];
       else this.formData = {};
       formDataForCheck = deepClone(this.formData);
