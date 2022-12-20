@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 17:22:52
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-08 16:43:28
+ * @LastEditTime: 2022-12-16 17:15:46
  * @FilePath: /configforpagedemo/src/store/modules/permission.ts
  */
 import { defineStore } from "pinia";
@@ -9,7 +9,9 @@ import { store } from "@/store";
 import { cacheType } from "./types";
 import { constantMenus } from "@/router";
 import { ascending, filterTree, filterNoPermissionTree } from "@/router/utils";
+import { getMenuList } from "@/utils/api/admin/user";
 
+let menuList = [];
 export const usePermissionStore = defineStore({
   id: "pure-permission",
   state: () => ({
@@ -18,12 +20,15 @@ export const usePermissionStore = defineStore({
     // 整体路由生成的菜单（静态、动态）
     wholeMenus: [],
     // 缓存页面keepAlive
-    cachePageList: []
+    cachePageList: [],
   }),
   actions: {
     /** 组装整体路由生成的菜单 */
-    handleWholeMenus(routes: any[]) {
-      this.wholeMenus = filterNoPermissionTree(filterTree(ascending(this.constantMenus.concat(routes))));
+    async handleWholeMenus(routes: any[]) {
+      if (menuList.length == 0) menuList = await getMenuList();
+      this.wholeMenus = filterNoPermissionTree(
+        filterTree(ascending(this.constantMenus.concat(routes)))
+      );
     },
     cacheOperate({ mode, name }: cacheType) {
       switch (mode) {
@@ -33,7 +38,7 @@ export const usePermissionStore = defineStore({
           break;
         case "delete":
           // eslint-disable-next-line no-case-declarations
-          const delIndex = this.cachePageList.findIndex(v => v === name);
+          const delIndex = this.cachePageList.findIndex((v) => v === name);
           delIndex !== -1 && this.cachePageList.splice(delIndex, 1);
           break;
       }
@@ -42,8 +47,8 @@ export const usePermissionStore = defineStore({
     clearAllCachePage() {
       this.wholeMenus = [];
       this.cachePageList = [];
-    }
-  }
+    },
+  },
 });
 
 export function usePermissionStoreHook() {

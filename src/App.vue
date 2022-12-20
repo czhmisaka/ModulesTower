@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 16:47:05
+ * @LastEditTime: 2022-12-19 14:32:27
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
@@ -49,7 +49,9 @@ export default defineComponent({
     },
   },
   async created() {},
-  mounted() {},
+  mounted() {
+    console.log("asd", this.$router.getRoutes());
+  },
   methods: {},
 });
 </script>

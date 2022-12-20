@@ -29,8 +29,6 @@ import { getAsyncRoutes } from "@/utils/api/admin/routes";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getMenuList } from "@/utils/api/admin/user";
 
-let menuList = [];
-
 /** 按照路由中meta下的rank等级升序来排序路由 */
 function ascending(arr: any[]) {
   arr.forEach((v) => {
@@ -159,10 +157,10 @@ function addPathMatch() {
 /** 初始化路由 */
 function initRouter() {
   return new Promise(async (resolve) => {
-    menuList = await getMenuList();
-    getAsyncRoutes().then(({ data }) => {
+    getAsyncRoutes().then(async ({ data }) => {
+      console.log("qwe", data);
       if (data.length === 0) {
-        usePermissionStoreHook().handleWholeMenus(data);
+        await usePermissionStoreHook().handleWholeMenus(data);
         resolve(router);
       } else {
         formatFlatteningRoutes(addAsyncRoutes(data)).map(
@@ -189,7 +187,7 @@ function initRouter() {
             resolve(router);
           }
         );
-        usePermissionStoreHook().handleWholeMenus(data);
+        await usePermissionStoreHook().handleWholeMenus(data);
       }
       addPathMatch();
     });

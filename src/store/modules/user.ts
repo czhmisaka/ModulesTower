@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 16:56:42
+ * @LastEditTime: 2022-12-19 09:20:10
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -69,6 +69,7 @@ export const useUserStore = defineStore({
         }
       });
     },
+    
     /** 前端登出（不调用接口） */
     logOut() {
       this.username = "";

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 08:53:29
+ * @LastEditTime: 2022-12-20 10:06:49
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -11,6 +11,7 @@ const Layout = () => import("@/layout/index.vue");
 import { RouteRecordRaw } from "vue-router";
 
 import { transformSync } from "@babel/core";
+import { stringAnyObj } from "@/modules/userManage/types";
 
 function transform(scriptText: string) {
   const transformed = transformSync(scriptText, {
@@ -256,8 +257,8 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
         if (module.name == moduleName) {
           const pageMap = requireModule(fileName)["PageConfig"];
           Object.keys(pageMap).map((pageName: string) => {
-            module.routers[0].children.push({
-              ...routerCellMaker(
+            module.routers[0].children.push(
+              routerCellMaker(
                 `/${moduleName}/${pageName}`,
                 pageMap[pageName]["name"]
                   ? moduleName + "_" + pageMap[pageName]["name"]
@@ -270,8 +271,8 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
                       pageMap[pageName]["name"] || moduleName + "_" + pageName,
                   },
                 }
-              ),
-            });
+              )
+            );
           });
         }
         return module;
@@ -295,6 +296,24 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
       });
     }
   );
+
+  // 获取所有的模块构建出来的路由记录
+  moduleList["getAllPageRouter"] = async () => {
+    let routes = [];
+    moduleList.map((x) => {
+      x.routers.map((cell) => {
+        if (cell.children && cell.children.length > 0) {
+          cell.children.map((route) => {
+            routes.push(route);
+          });
+        } else {
+          routes.push(cell);
+        }
+      });
+    });
+    console.log("qwe", routes);
+    return routes;
+  };
 
   // 获取所有模块包的组件
   moduleList["getAllComponents"] = () => {
@@ -336,6 +355,26 @@ export const getModuleFromView = (init = false, basePath = "desktop") => {
   };
 
   return moduleList;
+};
+
+// 可以被展开的数组
+interface needFlatChildrenArrCell {
+  children?: needFlatChildrenArrCell[];
+  [key: string]: any;
+}
+
+// 数组展开
+export const flatChildrenArr = (arr: needFlatChildrenArrCell[]) => {
+  let back = [...arr];
+  for (let i = 0; i < back.length; i++) {
+    let cell = back[i];
+    if (cell.children && cell.children.length > 0) {
+      cell.children.map(x=>{
+        back.push(x);
+      })
+    }
+  }
+  return back;
 };
 
 export const baseModuleRouter: RouteConfigsTable = {

@@ -145,7 +145,7 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
     "urls",
     searchCell(formInputType.searchList, {
       funcInputOptionsLoader: async (that) => {
-        const routes = that.$router.getRoutes();
+        const routes = await that.$modules.getAllPageRouter()
         let attr = {
           multiple: false,
           remoteMethod: async (data) => {
