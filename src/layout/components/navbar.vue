@@ -51,11 +51,9 @@ const {
           <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
+          <!-- 模块选择操作 -->
           <el-dropdown-menu class="logout">
-            <el-dropdown-item @click="logout">
-              <IconifyIconOffline icon="logout-circle-r-line" style="margin: 5px" />
-              退出系统
-            </el-dropdown-item>
+            <el-dropdown-item> 模块 </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

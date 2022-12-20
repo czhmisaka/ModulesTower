@@ -1,10 +1,10 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-20 10:07:11
+ * @LastEditTime: 2022-12-20 15:54:08
  * @FilePath: /configforpagedemo/src/utils/api/admin/routes.ts
  */
-import { flatChildrenArr } from "@/router/util";
+import { flatChildrenArr, getModuleFromView } from "@/router/util";
 import { http } from "../../http";
 import { get, post } from "../requests";
 
@@ -22,13 +22,6 @@ type Result = {
 function dealAsyncMenuList(cell) {
   // 排除按钮
   if (cell.type == 4) return false;
-
-  // 补充meta
-  if (!cell.meta || typeof cell.meta != "object")
-    cell.meta = {
-      title: cell.name,
-      icon: cell.icon,
-    };
 
   // 判断是否需要处理子节点
   if (cell.children && cell.children.length > 0)
@@ -53,7 +46,23 @@ function dealAsyncMenuList(cell) {
     );
     if (!flatIndexMenuArr || flatIndexMenuArr.length == 0) return false;
   }
-  
+
+  // 补充meta
+  if (!cell.meta || typeof cell.meta != "object")
+    cell.meta = {
+      title: cell.name,
+      icon: cell.icon,
+    };
+
+  // 补充path
+  if (cell.urls && cell.urls.length > 0) {
+    cell["path"] = cell.urls[0];
+  } else {
+    cell["path"] = "/" + cell.name;
+  }
+
+  // 补充基本组件信息
+  cell.component = () => import("@/views/mainPageForPageConfig/index.vue");
   return cell;
 }
 
@@ -64,7 +73,6 @@ export const getAsyncRoutes = async () => {
     data.push(dealAsyncMenuList(x));
   });
   data.filter(Boolean);
-  console.log(data, "q2eqwe");
   return {
     data: data,
   };

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-20 10:06:49
+ * @LastEditTime: 2022-12-20 15:26:14
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -61,6 +61,7 @@ export const routerCellMaker = (
       title: name,
       icon: "bxs:package",
       ...options["meta"],
+      showLink:false
     },
     ...options["router"],
   };
@@ -98,7 +99,7 @@ let moduleList = [] as modulesCellTemplate[];
  * @Date: 2022-10-23 21:51:34
  * @param {*} basePath
  */
-export const getModuleFromView = (init = false, basePath = "desktop") => {
+export const getModuleFromView = (init = false) => {
   if (!init) {
     return moduleList;
   }

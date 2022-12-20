@@ -158,7 +158,6 @@ function addPathMatch() {
 function initRouter() {
   return new Promise(async (resolve) => {
     getAsyncRoutes().then(async ({ data }) => {
-      console.log("qwe", data);
       if (data.length === 0) {
         await usePermissionStoreHook().handleWholeMenus(data);
         resolve(router);
