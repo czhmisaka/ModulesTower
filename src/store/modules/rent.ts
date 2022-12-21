@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-21 09:52:37
+ * @LastEditTime: 2022-12-21 14:25:52
  * @FilePath: /configforpagedemo/src/store/modules/rent.ts
  */
 import { defineStore } from "pinia";
@@ -23,17 +23,25 @@ import { stringAnyObj } from "@/modules/userManage/types";
 import { menuInfoTemplate } from "@/components/menu/menuConfigTemplate";
 import { ElLoading } from "element-plus";
 
-interface rentTemplate {}
+interface rentCellTemplate extends stringAnyObj {
+  name?: string;
+  id?: string;
+}
+
+interface rentTemplate {
+  nowRent: rentCellTemplate;
+  rentList: rentCellTemplate[];
+}
 
 export const rentStore = defineStore({
   id: "rent",
   state: (): rentTemplate => ({
-      nowRent:fase,
+    rentList: [], 
+    nowRent: {},
   }),
-  actions: {
-  }
+  actions: {},
 });
 
 export function useLoading() {
-    return rentStore()
+  return rentStore();
 }
