@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-20 15:54:08
+ * @LastEditTime: 2022-12-21 09:03:17
  * @FilePath: /configforpagedemo/src/utils/api/admin/routes.ts
  */
 import { flatChildrenArr, getModuleFromView } from "@/router/util";
@@ -73,7 +73,9 @@ export const getAsyncRoutes = async () => {
     data.push(dealAsyncMenuList(x));
   });
   data.filter(Boolean);
+  let realMenu = data[1].children
+  console.log(realMenu,'asdasd')
   return {
-    data: data,
+    data: realMenu,
   };
 };

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-20 15:26:14
+ * @LastEditTime: 2022-12-21 09:00:28
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -312,7 +312,6 @@ export const getModuleFromView = (init = false) => {
         }
       });
     });
-    console.log("qwe", routes);
     return routes;
   };
 
