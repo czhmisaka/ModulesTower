@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-13 16:44:23
+ * @LastEditTime: 2023-01-03 09:53:36
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -177,7 +177,7 @@ export default defineComponent({
           that.formProps.labelPosition = "left";
         }
       }
-    }, 500);
+    }, 30);
     await this.initForm(this.queryItemTemplate);
   },
 

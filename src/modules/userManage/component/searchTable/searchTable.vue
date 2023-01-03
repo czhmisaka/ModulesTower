@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 15:31:52
+ * @LastEditTime: 2023-01-03 09:53:41
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -207,7 +207,7 @@ export default defineComponent({
           that.TableHeight =
             that.$refs["mainBox"].$el.offsetHeight - 24 - baseHeight - offsetHeight;
       }
-    }, 200);
+    }, 30);
   },
   methods: {
     async initData() {

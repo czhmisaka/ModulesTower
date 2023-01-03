@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 10:29:15
+ * @LastEditTime: 2023-01-03 10:05:10
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -9,7 +9,7 @@
     v-if="plugInData"
     v-model="isOpen"
     :title="plugInData.title"
-    :size="`${plugInData.size || 50}%`"
+    :size="`${plugInData.size || (isMobile() ? 100 : 50)}%`"
     :with-header="plugInData.title ? true : false"
     :append-to-body="true"
   >
@@ -95,6 +95,7 @@ import {
   tableCellOptions,
 } from "@/modules/userManage/types";
 import drawerForm from "./drawerForm.vue";
+import { isMobile } from "@/utils/Env";
 
 let formDataForCheck = {};
 export default defineComponent({
@@ -116,6 +117,8 @@ export default defineComponent({
       isOpen: false,
       formData: {},
       uiSchema: {},
+
+      isMobile,
 
       isReady: false,
 
