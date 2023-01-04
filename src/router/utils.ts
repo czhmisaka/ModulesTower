@@ -27,7 +27,6 @@ const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 // 动态路由
 import { getAsyncRoutes } from "@/utils/api/admin/routes";
 import { useUserStoreHook } from "@/store/modules/user";
-import { getMenuList } from "@/utils/api/admin/user";
 
 /** 按照路由中meta下的rank等级升序来排序路由 */
 function ascending(arr: any[]) {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-19 09:20:10
+ * @LastEditTime: 2023-01-04 09:29:56
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -15,7 +15,6 @@ import {
   RefreshTokenResult,
   getLogin,
   refreshTokenApi,
-  getMenuList,
 } from "@/utils/api/admin/user";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
@@ -33,6 +32,7 @@ export const useUserStore = defineStore({
     verifyCode: "",
     // 判断登录页面显示哪个组件（0：登录（默认）、1：手机登录、2：二维码登录、3：注册、4：忘记密码）
     currentPage: 0,
+    options: {} as stringAnyObj,
   }),
   actions: {
     /** 存储用户名 */
@@ -64,12 +64,13 @@ export const useUserStore = defineStore({
             roles: ["admin"],
             expires: new Date(new Date().getTime() + 19999999).getTime(),
           };
+          this.options = data;
           setToken(data);
           resolve(data);
         }
       });
     },
-    
+
     /** 前端登出（不调用接口） */
     logOut() {
       this.username = "";
@@ -79,6 +80,11 @@ export const useUserStore = defineStore({
       router.push("/login");
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
+    },
+
+    /** 获取用户详情 */
+    getOptions() {
+      return this.options;
     },
 
     /** 刷新`token` */

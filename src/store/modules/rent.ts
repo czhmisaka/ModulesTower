@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-21 14:25:52
+ * @LastEditTime: 2023-01-04 09:29:51
  * @FilePath: /configforpagedemo/src/store/modules/rent.ts
  */
 import { defineStore } from "pinia";
@@ -15,7 +15,6 @@ import {
   RefreshTokenResult,
   getLogin,
   refreshTokenApi,
-  getMenuList,
 } from "@/utils/api/admin/user";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-29 17:08:41
+ * @LastEditTime: 2023-01-04 09:29:31
  * @FilePath: /configforpagedemo/src/store/modules/loading.ts
  */
 import { defineStore } from "pinia";
@@ -15,7 +15,6 @@ import {
   RefreshTokenResult,
   getLogin,
   refreshTokenApi,
-  getMenuList,
 } from "@/utils/api/admin/user";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
@@ -37,7 +36,7 @@ export const loadingStore = defineStore({
     },
     fullScreenloading(val) {
       console.log("asd", val);
-      this.SET_FULLSCREENLOADING(val);
+      this.SET_FULLCREENLOADING(val);
     },
   },
 });

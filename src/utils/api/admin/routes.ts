@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-21 09:38:02
+ * @LastEditTime: 2023-01-04 09:28:16
  * @FilePath: /configforpagedemo/src/utils/api/admin/routes.ts
  */
 import { flatChildrenArr, getModuleFromView } from "@/router/util";
@@ -45,6 +45,12 @@ function dealAsyncMenuList(cell) {
       (x) => x.type == 3
     );
     if (!flatIndexMenuArr || flatIndexMenuArr.length == 0) return false;
+  }
+
+  if (cell.type == 3) {
+    if (cell.children && cell.children.length == 0) {
+      delete cell.children
+    }
   }
 
   // 补充meta

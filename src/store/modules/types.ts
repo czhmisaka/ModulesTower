@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 16:56:56
+ * @LastEditTime: 2023-01-04 09:20:58
  * @FilePath: /configforpagedemo/src/store/modules/types.ts
  */
 import { stringAnyObj } from "@/modules/userManage/types";
@@ -51,6 +51,7 @@ export type userType = {
   verifyCode?: string;
   currentPage?: number;
   menuList?: stringAnyObj[];
+  options: stringAnyObj;
 };
 
 export type loadingType = {

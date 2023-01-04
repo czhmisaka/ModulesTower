@@ -1,17 +1,29 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-21 09:00:28
+ * @LastEditTime: 2023-01-04 09:22:58
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
 import { CardComponentTemplate } from "../components/basicComponents/grid/module/dataTemplate";
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
-import { RouteRecordRaw } from "vue-router";
-
 import { transformSync } from "@babel/core";
-import { stringAnyObj } from "@/modules/userManage/types";
+import { useUserStoreHook } from "@/store/modules/user";
+const user = useUserStoreHook();
+
+// 函数执行时间计算
+const timeChecker = class {
+  name: string;
+  startTime: number;
+  constructor(name) {
+    this.name = name;
+    this.startTime = new Date().getTime();
+  }
+  getTime = (word: string | number = " ") => {
+    console.log(this.name, word, new Date().getTime() - this.startTime + "ms");
+  };
+};
 
 function transform(scriptText: string) {
   const transformed = transformSync(scriptText, {
@@ -52,6 +64,7 @@ export const routerCellMaker = (
   } = {},
   children?: RouteConfigsTable[]
 ): RouteConfigsTable => {
+  console.log(user.getOptions(), "用户信息");
   let routerCell: RouteConfigsTable = {
     path,
     name,
@@ -61,7 +74,8 @@ export const routerCellMaker = (
       title: name,
       icon: "bxs:package",
       ...options["meta"],
-      showLink:false
+      // 这里的false可能需要根据用户的登录身份修改
+      showLink: true,
     },
     ...options["router"],
   };
@@ -100,7 +114,9 @@ let moduleList = [] as modulesCellTemplate[];
  * @param {*} basePath
  */
 export const getModuleFromView = (init = false) => {
+  const timec = new timeChecker("getModuleFromView");
   if (!init) {
+    timec.getTime(1);
     return moduleList;
   }
 
@@ -353,7 +369,7 @@ export const getModuleFromView = (init = false) => {
     });
     return back;
   };
-
+  timec.getTime(2);
   return moduleList;
 };
 
@@ -369,9 +385,9 @@ export const flatChildrenArr = (arr: needFlatChildrenArrCell[]) => {
   for (let i = 0; i < back.length; i++) {
     let cell = back[i];
     if (cell.children && cell.children.length > 0) {
-      cell.children.map(x=>{
+      cell.children.map((x) => {
         back.push(x);
-      })
+      });
     }
   }
   return back;
