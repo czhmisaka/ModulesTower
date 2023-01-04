@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 21:05:52
+ * @LastEditTime: 2023-01-04 09:46:55
  * @FilePath: /configforpagedemo/src/modules/userManage/Index.vue
 -->
 
@@ -81,8 +81,6 @@ export default defineComponent({
   },
   async mounted() {
     this.init();
-    let res = await GetAllUser();
-    console.log(res);
   },
 });
 </script>

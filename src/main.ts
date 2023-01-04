@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-07 20:24:55
+ * @LastEditTime: 2023-01-04 09:48:22
  * @FilePath: /configforpagedemo/src/main.ts
  */
 
@@ -22,7 +22,6 @@ import { setupStore } from "@/store";
 
 const app = createApp(App);
 
-import "animate.css";
 // 引入重置样式
 import "./style/reset.scss";
 // 导入公共样式
@@ -74,3 +73,5 @@ getServerConfig(app).then(async (config) => {
   app.use(MotionPlugin).use(ElementPlus, { zIndex: 100000 });
   app.mount("#app");
 });
+
+import "animate.css";
