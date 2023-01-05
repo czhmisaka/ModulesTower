@@ -177,7 +177,6 @@ function resolvePath(routePath) {
       </div>
       <template #title>
         <div :style="getDivStyle">
-          {{ onlyOneChild.meta.menuId }}
           <span v-if="layout === 'horizontal'">
             {{ onlyOneChild.meta.title }}
           </span>

@@ -1,13 +1,14 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-03 18:11:31
+ * @LastEditTime: 2023-01-05 14:13:52
  * @FilePath: /configforpagedemo/src/utils/api/user/header.ts
  */
 
 import { getCookie } from "./cookie";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
+import { de } from "element-plus/es/locale";
 
 /**
  * @name: getheaderTemplate
@@ -17,13 +18,13 @@ import { useUserStoreHook } from "@/store/modules/user";
  */
 const getheaderTemplate = () => {
   let DataInfo = getToken() || {};
-  const { menuList } = useUserStoreHook();
+  const menuId = localStorage.getItem("menuId");
   let back = {
-    // menuId:
     route: window.location.href.split("#")[1],
     token: DataInfo["accessToken"], // 向后台发送的token
     "Content-Type": "application/json;charset=utf-8",
     "ddm-parameter-encrypt": true,
+    menuId,
   };
   return back;
 };

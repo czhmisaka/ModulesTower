@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-05 13:50:19
+ * @LastEditTime: 2023-01-05 14:15:49
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -23,6 +23,7 @@ const router = useRouter();
 interface pageCellTemplate extends stringAnyObj {
   name?: string;
   id?: string;
+  meta?: routerMeta;
 }
 
 interface moduleTemplate {
@@ -66,11 +67,11 @@ function dealAsyncMenuList(cell, routerBackup) {
     if (!flatIndexMenuArr || flatIndexMenuArr.length == 0) return false;
   }
 
-  // if (cell.type == 3) {
-  //   if (cell.children && cell.children.length == 0) {
-  //     delete cell.children;
-  //   }
-  // }
+  if (cell.type == 3) {
+    if (cell.children && cell.children.length == 0) {
+      delete cell.children;
+    }
+  }
 
   // 补充meta
   if (!cell.meta || typeof cell.meta != "object")
@@ -94,14 +95,6 @@ function dealAsyncMenuList(cell, routerBackup) {
             ...cell.meta,
             showLink: cell.showLink,
           };
-          // cell = {
-          //   component:backup.component,
-          //   ...cell,
-          //   meta: {
-          //     ...backup.meta,
-          //     ...cell.meta,
-          //   },
-          // };
         }
       }
     }
@@ -167,6 +160,7 @@ export const moduleStore = defineStore({
     // 切换路由需要记录
     checkPage(pageMeta: routerMeta) {
       this.nowPage.meta = pageMeta;
+      localStorage.setItem("menuId", pageMeta.menuId);
     },
   },
 });
