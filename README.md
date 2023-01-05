@@ -1,19 +1,18 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 10:45:01
+ * @LastEditTime: 2023-01-05 17:41:19
  * @FilePath: /configforpagedemo/README.md
 -->
 
 # configForDesktopPage
 
-项目地址：[体验地址](http://42.192.134.238/workbench/#/)
-项目仓库：[configForDesktopPage](https://github.com/czhmisaka/ConfigForDesktopPage)
 这是一款针对web团队协作开发用的组件，可以有效的复用代码，开发的同时产出组件的使用说明和文档。
 通过引入GridDesktop组件，输入组件配置列表，即可使用组件构建出一个简单的界面。
 同时在桌面页面中也配置了一些基础配置动画和配置工具，方便开发调试。
+预期搭配python server 打造一个简单的开发模板。
 
-## 关键节点介绍
+## 关键节点介绍 - 前端
 
 ### 路由【router】
 页面访问路径类，配置后可注册到全局路由，更具路由配置决定页面加载方案
@@ -30,6 +29,11 @@
 ### 组件【component】
 基础组件，需要提供*componentInfo*,*propsDetail*,*baseProps*等属性，作为组件注册的凭据
 
+
+
+
+## 关键节点介绍 - 后端
+开发中
 ## 桌面
 
 桌面本身也是一个组件，可以在项目中按需引用。
@@ -256,7 +260,7 @@ export const changeCardProperties = (content: { [key: string]: any }, value: { [
             type: [
                 cardOnChangeType.cardConfigChange
             ]
-        })
+        })ji
     } catch (err) {
         console.error('changeVisible 错误:', err, content, value);
     }
@@ -405,6 +409,10 @@ export interface cardComponent {
 
 
 
+
+
+## 路由管理
+1. 提供了一套路由管理的方案，可以基于 模块 - 目录 - 菜单 的方式构建路由归属，目前还不支持多层路由
 # 组件包
 
 ## 简述

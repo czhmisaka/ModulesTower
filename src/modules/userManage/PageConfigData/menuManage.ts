@@ -39,7 +39,6 @@ import {
 import { post, get } from "@/utils/api/requests";
 import * as Icons from "@element-plus/icons-vue";
 
-console.log(Icons, "asd");
 
 import { bounds } from "@ctrl/tinycolor";
 import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
@@ -87,6 +86,9 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
     }
   },
 });
+
+console.log(Icons, "asd");
+
 
 const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
   icon: "Delete",
