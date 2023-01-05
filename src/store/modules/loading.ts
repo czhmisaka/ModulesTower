@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 09:29:31
+ * @LastEditTime: 2023-01-04 09:55:06
  * @FilePath: /configforpagedemo/src/store/modules/loading.ts
  */
 import { defineStore } from "pinia";
@@ -35,7 +35,6 @@ export const loadingStore = defineStore({
       else loadingInstance1 = ElLoading.service({ fullscreen: true });
     },
     fullScreenloading(val) {
-      console.log("asd", val);
       this.SET_FULLCREENLOADING(val);
     },
   },

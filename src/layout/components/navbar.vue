@@ -5,6 +5,7 @@ import mixNav from "./sidebar/mixNav.vue";
 import { useNav } from "@/layout/hooks/useNav";
 import Breadcrumb from "./sidebar/breadCrumb.vue";
 import topCollapse from "./sidebar/topCollapse.vue";
+import { useModuleHook } from "@/store/modules/module";
 
 const {
   layout,
@@ -16,6 +17,8 @@ const {
   avatarsStyle,
   toggleSideBar,
 } = useNav();
+
+const { moduleList, checkModule } = useModuleHook();
 </script>
 
 <template>
@@ -53,7 +56,12 @@ const {
         <template #dropdown>
           <!-- 模块选择操作 -->
           <el-dropdown-menu class="logout">
-            <el-dropdown-item> 模块 </el-dropdown-item>
+            <el-dropdown-item
+              v-for="(item, index) in moduleList"
+              @click="checkModule(index)"
+            >
+              {{ item.name }}
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

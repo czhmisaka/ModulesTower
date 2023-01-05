@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-15 10:16:47
+ * @LastEditTime: 2023-01-04 17:59:22
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -62,16 +62,6 @@ const pageConfig = {
       margin: 12,
     },
   },
-  // pageConfigManage: {
-  //   name: "页面配置管理",
-  //   desktopData: pageConfigManage,
-  //   gridColNum: 12,
-  //   cusStyle: {
-  //     wholeScreen: true,
-  //     maxRows: 8,
-  //     margin: 12,
-  //   },
-  // },
   menuManage: {
     name: "菜单管理",
     desktopData: menuManage,

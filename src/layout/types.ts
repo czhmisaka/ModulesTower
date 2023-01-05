@@ -1,12 +1,18 @@
+/*
+ * @Date: 2022-11-21 16:13:14
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-01-04 17:07:24
+ * @FilePath: /configforpagedemo/src/layout/types.ts
+ */
 export const routerArrays: Array<RouteConfigs> = [
   {
     path: "/welcome",
     parentPath: "/",
     meta: {
       title: "首页",
-      icon: "home-filled"
-    }
-  }
+      icon: "home-filled",
+    },
+  },
 ];
 
 export type routeMetaType = {
@@ -69,6 +75,8 @@ export type childrenType = {
       svg?: boolean;
       name?: string;
     };
+    menuId?: string | number;
+    [key: string]: any;
   };
   showTooltip?: boolean;
   parentId?: number;

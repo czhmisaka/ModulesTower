@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 09:22:58
+ * @LastEditTime: 2023-01-04 16:00:49
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -64,7 +64,6 @@ export const routerCellMaker = (
   } = {},
   children?: RouteConfigsTable[]
 ): RouteConfigsTable => {
-  console.log(user.getOptions(), "用户信息");
   let routerCell: RouteConfigsTable = {
     path,
     name,
@@ -75,7 +74,10 @@ export const routerCellMaker = (
       icon: "bxs:package",
       ...options["meta"],
       // 这里的false可能需要根据用户的登录身份修改
-      showLink: true,
+      showLink: false,
+
+      // 这个属性用于标注这个路由的来源 ，只有超级管理员能保持一直可见
+      moduleBackUpRouter: true,
     },
     ...options["router"],
   };

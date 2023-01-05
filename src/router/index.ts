@@ -1,9 +1,9 @@
 /*
-* @Date: 2021-12-30 11:00:24
+ * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-15 10:55:52
+ * @LastEditTime: 2023-01-04 19:02:15
  * @FilePath: /configforpagedemo/src/router/index.ts
-*/
+ */
 
 import {
   Router,
@@ -13,10 +13,14 @@ import {
   RouteComponent,
   createWebHistory,
   createWebHashHistory,
-  RouteRecordNormalized
+  RouteRecordNormalized,
 } from "vue-router";
-import { routerCellMaker, getModuleFromView, modulesCellTemplate } from './util';
-import { isMobile } from '../utils/Env';
+import {
+  routerCellMaker,
+  getModuleFromView,
+  modulesCellTemplate,
+} from "./util";
+import { isMobile } from "../utils/Env";
 import { getConfig } from "@/utils/config/appConfig";
 
 import { toRouteType } from "./types";
@@ -34,35 +38,24 @@ import {
   findRouteByPath,
   handleAliveRoute,
   formatTwoStageRoutes,
-  formatFlatteningRoutes
+  formatFlatteningRoutes,
 } from "./utils";
 import {
   buildHierarchyTree,
   openLink,
   isUrl,
-  storageSession
+  storageSession,
 } from "@pureadmin/utils";
 
 import homeRouter from "./modules/home";
 import errorRouter from "./modules/error";
 import remainingRouter from "./modules/remaining";
-import { RouteConfigsTable } from '../../types/index';
-import { baseModuleRouter } from './util';
-
-
-// 注入各个模块的展示界面
-const moduleList = getModuleFromView(true);
-let baseModuleRouterList = [] as RouteConfigsTable[]
-moduleList.map((module: modulesCellTemplate, index: number) => {
-  module.routers.map((route: RouteConfigsTable, i: number) => {
-    baseModuleRouterList.push(route)
-  })
-})
-
+import { RouteConfigsTable } from "../../types/index";
+import { baseModuleRouter } from "./util";
+import { useModuleHook } from "@/store/modules/module";
 
 // 路由存放
-const routes = [homeRouter, errorRouter, ...baseModuleRouterList]
-
+const routes = [homeRouter, errorRouter];
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
@@ -71,28 +64,23 @@ export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
 
 /** 用于渲染菜单，保持原始层级 */
 export const constantMenus: Array<RouteComponent> = ascending(routes).concat(
-  ...remainingRouter,
+  ...remainingRouter
 );
 
-
 /** 不参与菜单的路由 */
-export const remainingPaths = Object.keys(remainingRouter).map(v => {
+export const remainingPaths = Object.keys(remainingRouter).map((v) => {
   return remainingRouter[v].path;
 });
-
-
 
 // 建立路由
 export const router = createRouter({
   history: createWebHashHistory(),
-  routes: constantRoutes.concat(...(remainingRouter as any))
-})
-
-
+  routes: constantRoutes.concat(...(remainingRouter as any)),
+});
 
 /** 重置路由 */
 export function resetRouter() {
-  router.getRoutes().forEach(route => {
+  router.getRoutes().forEach((route) => {
     const { name, meta } = route;
     if (name && router.hasRoute(name) && meta?.backstage) {
       router.removeRoute(name);
@@ -103,7 +91,6 @@ export function resetRouter() {
   });
   usePermissionStoreHook().clearAllCachePage();
 }
-
 
 /** 路由白名单 */
 const whiteList = ["/login"];
@@ -121,7 +108,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
   NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {
-    to.matched.some(item => {
+    to.matched.some((item) => {
       if (!item.meta.title) return "";
       const Title = getConfig().Title;
       if (Title) document.title = `${item.meta.title} | ${Title}`;
@@ -150,7 +137,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
         initRouter().then((router: Router) => {
           if (!useMultiTagsStoreHook().getMultiTagsCache) {
             const { path } = to;
-            const index = findIndex(remainingRouter, v => {
+            const index = findIndex(remainingRouter, (v) => {
               return v.path == path;
             });
             const routes: any =
@@ -163,7 +150,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
               useMultiTagsStoreHook().handleTags("push", {
                 path: route.path,
                 name: route.name,
-                meta: route.meta
+                meta: route.meta,
               });
             }
           }
@@ -188,14 +175,15 @@ router.afterEach(() => {
   NProgress.done();
 });
 
+const module = useModuleHook();
 
 // 路由守卫
 // 控制默认到index界面执行匹配
 router.beforeEach((to, from, next) => {
+  console.log(to.matched, "匹配项目", to);
   next();
+  // next( module.routerBackup.filter((x) => x.path == to.matched[1].path)[0]);
   // commonDealFunction()
-})
+});
 
-
-
-export default router
+export default router;
