@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 19:02:15
+ * @LastEditTime: 2023-01-05 13:48:58
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -181,6 +181,7 @@ const module = useModuleHook();
 // 控制默认到index界面执行匹配
 router.beforeEach((to, from, next) => {
   console.log(to.matched, "匹配项目", to);
+  if (to.matched && to.matched.length > 1) module.checkPage(to.matched[1].meta);
   next();
   // next( module.routerBackup.filter((x) => x.path == to.matched[1].path)[0]);
   // commonDealFunction()

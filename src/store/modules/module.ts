@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 19:14:37
+ * @LastEditTime: 2023-01-05 13:50:19
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -15,7 +15,7 @@ import {
   getModuleFromView,
   modulesCellTemplate,
 } from "@/router/util";
-import { RouteConfigsTable } from "../../../types";
+import { RouteConfigsTable, routerMeta } from "../../../types";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 
 const router = useRouter();
@@ -92,7 +92,7 @@ function dealAsyncMenuList(cell, routerBackup) {
           cell.meta = {
             ...backup.meta,
             ...cell.meta,
-            showLink:cell.showLink
+            showLink: cell.showLink,
           };
           // cell = {
           //   component:backup.component,
@@ -165,7 +165,9 @@ export const moduleStore = defineStore({
     },
 
     // 切换路由需要记录
-    checkPage(pageId) {},
+    checkPage(pageMeta: routerMeta) {
+      this.nowPage.meta = pageMeta;
+    },
   },
 });
 
