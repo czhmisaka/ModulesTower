@@ -39,8 +39,6 @@ import {
 import { post, get } from "@/utils/api/requests";
 import * as Icons from "@element-plus/icons-vue";
 
-
-import { bounds } from "@ctrl/tinycolor";
 import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
 import {
   SearchCellStorage,
@@ -89,7 +87,6 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
 
 console.log(Icons, "asd");
 
-
 const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
   icon: "Delete",
   elType: "danger",
@@ -116,6 +113,11 @@ const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
   },
 });
 
+let iconMap = {};
+console.log(Icons, "asda");
+for (let x in Icons) {
+}
+
 // 页面配置数据
 const pageConfigDataTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("id", "id", showCell(showType.dataKey)),
@@ -126,7 +128,14 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       width: "300px",
     }),
   }),
-  tableCellTemplateMaker("图标", "icon"),
+  tableCellTemplateMaker("图标", "icon", {
+    ...searchCell(formInputType.select, {
+      inputOptions: {},
+    }),
+    ...showCell(showType.func, {
+      showFunc: (data, key) => data[key],
+    }),
+  }),
   tableCellTemplateMaker("类型", "type", {
     ...showCell(showType.func, {
       showFunc: (data, key) => typeToModule[data[key]],
@@ -147,7 +156,7 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
     "urls",
     searchCell(formInputType.searchList, {
       funcInputOptionsLoader: async (that) => {
-        const routes = await that.$modules.getAllPageRouter()
+        const routes = await that.$modules.getAllPageRouter();
         let attr = {
           multiple: false,
           remoteMethod: async (data) => {
@@ -363,7 +372,7 @@ export const menuManage = async () => {
           showItemTemplate: pageConfigDataTableCellStorage.getAll([
             "id",
             "parentId",
-            "urls"
+            "urls",
           ]),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};

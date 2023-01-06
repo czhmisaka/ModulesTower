@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 13:11:51
+ * @LastEditTime: 2023-01-06 09:47:13
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -136,6 +136,7 @@ export interface tableCellTemplate extends tableCellOptions {
  * @Date: 2022-11-15 14:15:58
  */
 export enum formInputType {
+  customSelect = "customSelect",
   select = "select",
   selects = "selects",
   numbe = "number",

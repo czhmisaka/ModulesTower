@@ -96,6 +96,12 @@ inputElement[formInputType.select] = {
   },
 };
 
+// inputElement[formInputType.customSelect] = {
+//   properties: async (that, cell) => {
+
+//   }
+// }
+
 inputElement[formInputType.inputList] = {
   properties: async (that, cell) => {
     let properties = base(cell);
