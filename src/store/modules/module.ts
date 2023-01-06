@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-05 14:15:49
+ * @LastEditTime: 2023-01-06 16:32:56
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -101,8 +101,6 @@ function dealAsyncMenuList(cell, routerBackup) {
   } else {
     cell["path"] = "/" + cell.name;
   }
-
-  console.log(cell, "qwe-cell");
   return cell;
 }
 
@@ -125,11 +123,8 @@ export const moduleStore = defineStore({
       resData.map((x) => {
         moduleList.push(dealAsyncMenuList(x, this.routerBackup));
       });
-      console.log(moduleList, "qwe");
-
       this.moduleList = moduleList.filter(Boolean);
       this.nowModule = this.moduleList[0];
-      console.log(this.moduleList, "qwe");
     },
 
     initRouterBackup() {

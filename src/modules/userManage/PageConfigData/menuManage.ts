@@ -114,8 +114,8 @@ const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
 });
 
 let iconMap = {};
-console.log(Icons, "asda");
 for (let x in Icons) {
+  iconMap["EL_" + x] = x;
 }
 
 // 页面配置数据
@@ -130,7 +130,7 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
   }),
   tableCellTemplateMaker("图标", "icon", {
     ...searchCell(formInputType.select, {
-      inputOptions: {},
+      inputOptions: iconMap,
     }),
     ...showCell(showType.func, {
       showFunc: (data, key) => data[key],

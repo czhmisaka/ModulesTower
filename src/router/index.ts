@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-05 13:48:58
+ * @LastEditTime: 2023-01-06 16:38:13
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -182,8 +182,11 @@ const module = useModuleHook();
 router.beforeEach((to, from, next) => {
   console.log(to.matched, "匹配项目", to);
   if (to.matched && to.matched.length > 1) module.checkPage(to.matched[1].meta);
+  else if (to.matched.length == 0) {
+    next("/welcome");
+  }
   next();
-  // next( module.routerBackup.filter((x) => x.path == to.matched[1].path)[0]);
+  // next( module.routerBackup.filter((x) => x.path== to.matched[1].path)[0]);
   // commonDealFunction()
 });
 
