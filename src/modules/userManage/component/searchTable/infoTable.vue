@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-13 14:55:05
+ * @LastEditTime: 2023-01-09 12:38:06
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -50,6 +50,7 @@
             v-if="item.table.type == showType.func"
           >
             <el-popover
+              v-if="typeof item.table.showFunc != 'function'"
               placement="top-start"
               trigger="hover"
               :show-after="500"
@@ -61,6 +62,9 @@
                 {{ item.table.showFunc(scope.row, item.key) }}
               </template>
             </el-popover>
+            <div v-else>
+              {{ item.table.showFunc(scope.row, item.key) }}
+            </div>
           </div>
           <div
             class="flexBox"

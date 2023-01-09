@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-05 14:13:52
+ * @LastEditTime: 2023-01-09 09:45:44
  * @FilePath: /configforpagedemo/src/utils/api/user/header.ts
  */
 
@@ -25,6 +25,7 @@ const getheaderTemplate = () => {
     "Content-Type": "application/json;charset=utf-8",
     "ddm-parameter-encrypt": true,
     menuId,
+    equipment: window.navigator.userAgent,
   };
   return back;
 };

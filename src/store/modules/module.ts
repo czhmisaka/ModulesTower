@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-06 16:32:56
+ * @LastEditTime: 2023-01-09 09:31:14
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -40,6 +40,7 @@ interface moduleTemplate {
  * @Date: 2022-12-19 09:35:30
  */
 function dealAsyncMenuList(cell, routerBackup) {
+  // cell.type：1-模块，2-目录，3-菜单，4-按钮
   // 排除按钮
   if (cell.type == 4) return false;
 

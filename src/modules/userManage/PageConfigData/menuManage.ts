@@ -38,6 +38,7 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { post, get } from "@/utils/api/requests";
 import * as Icons from "@element-plus/icons-vue";
+import { ElIcon } from "element-plus";
 
 import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
 import {
@@ -56,6 +57,9 @@ import {
 } from "@/modules/userManage/types";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { h, toRaw } from "vue";
+import { getIcon } from "@/utils";
 
 const typeToModule = {
   1: "模块",
@@ -133,7 +137,9 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       inputOptions: iconMap,
     }),
     ...showCell(showType.func, {
-      showFunc: (data, key) => data[key],
+      showFunc: (data, key) => {
+        //
+      },
     }),
   }),
   tableCellTemplateMaker("类型", "type", {
