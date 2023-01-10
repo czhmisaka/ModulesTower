@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-09 09:31:14
+ * @LastEditTime: 2023-01-10 17:24:31
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -16,7 +16,6 @@ import {
   modulesCellTemplate,
 } from "@/router/util";
 import { RouteConfigsTable, routerMeta } from "../../../types";
-import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 
 const router = useRouter();
 
@@ -48,7 +47,8 @@ function dealAsyncMenuList(cell, routerBackup) {
   if (cell.children && cell.children.length > 0)
     cell.children = cell.children
       .map((x) => dealAsyncMenuList(x, routerBackup))
-      .filter(Boolean);
+      .filter(Boolean)
+      .sort((a, b) => a.orderNumber - b.orderNumber);
 
   // 检查目录下是否存在菜单,如果一个目录下没有菜单则移除
   if (cell.type == 2) {
@@ -124,7 +124,9 @@ export const moduleStore = defineStore({
       resData.map((x) => {
         moduleList.push(dealAsyncMenuList(x, this.routerBackup));
       });
-      this.moduleList = moduleList.filter(Boolean);
+      this.moduleList = moduleList
+        .filter(Boolean)
+        .sort((a, b) => a.orderNumber - b.orderNumber);
       this.nowModule = this.moduleList[0];
     },
 

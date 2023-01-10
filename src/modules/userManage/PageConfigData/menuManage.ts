@@ -58,7 +58,7 @@ import {
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { h, toRaw } from "vue";
+import { h } from "vue";
 import { getIcon } from "@/utils";
 
 const typeToModule = {
@@ -88,8 +88,6 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
     }
   },
 });
-
-console.log(Icons, "asd");
 
 const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
   icon: "Delete",
@@ -136,12 +134,25 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
     ...searchCell(formInputType.select, {
       inputOptions: iconMap,
     }),
-    ...showCell(showType.func, {
+    ...showCell(showType.funcComponent, {
+      style: {
+        paddingLeft: "4px",
+      },
       showFunc: (data, key) => {
-        //
+        if (data[key] && data[key].indexOf("EL_") == 0)
+          return useRenderIcon(data[key]);
       },
     }),
   }),
+  tableCellTemplateMaker(
+    "排序",
+    "orderNumber",
+    searchCell(formInputType.number, {
+      propertiesOption: {
+        min: 0,
+      },
+    })
+  ),
   tableCellTemplateMaker("类型", "type", {
     ...showCell(showType.func, {
       showFunc: (data, key) => typeToModule[data[key]],
@@ -243,7 +254,10 @@ pageConfigDataTableCellStorage.push(
           },
           function: async (that, data) => {
             let propsArr = ["name", "icon", "meta"];
-            if (data.type < 3) propsArr.push("showLink");
+            if (data.type < 3) {
+              propsArr.push("showLink");
+              propsArr.push("orderNumber");
+            }
             let queryItemTemplate = [
               disableType,
               ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
@@ -281,7 +295,10 @@ pageConfigDataTableCellStorage.push(
           elType: "success",
           function: async (that, data) => {
             let propsArr = ["name", "icon", "meta"];
-            if (data.type < 4) propsArr.push("showLink");
+            if (data.type < 4) {
+              propsArr.push("showLink");
+              propsArr.push("orderNumber");
+            }
             let queryItemTemplate = [
               disableType,
               ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),

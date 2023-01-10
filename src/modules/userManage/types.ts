@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-06 09:47:13
+ * @LastEditTime: 2023-01-10 10:42:54
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -139,7 +139,7 @@ export enum formInputType {
   customSelect = "customSelect",
   select = "select",
   selects = "selects",
-  numbe = "number",
+  number = "number",
   inputList = "inputList",
   input = "input",
   areaCascader = "areaCascader",

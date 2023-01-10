@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-09 12:38:06
+ * @LastEditTime: 2023-01-10 10:08:53
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -47,10 +47,17 @@
           <div
             class="flexBox"
             :style="item.table?.style"
+            v-if="item.table.type == showType.funcComponent"
+          >
+            <component :is="item.table.showFunc(scope.row, item.key)"></component>
+          </div>
+          <div
+            class="flexBox"
+            :style="item.table?.style"
             v-if="item.table.type == showType.func"
           >
             <el-popover
-              v-if="typeof item.table.showFunc != 'function'"
+              v-if="typeof item.table.showFunc(scope.row, item.key) == 'string'"
               placement="top-start"
               trigger="hover"
               :show-after="500"
@@ -62,9 +69,6 @@
                 {{ item.table.showFunc(scope.row, item.key) }}
               </template>
             </el-popover>
-            <div v-else>
-              {{ item.table.showFunc(scope.row, item.key) }}
-            </div>
           </div>
           <div
             class="flexBox"

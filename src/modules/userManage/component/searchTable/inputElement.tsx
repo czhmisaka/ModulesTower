@@ -23,6 +23,23 @@ inputElement[formInputType.input] = {
         style: {
           width: "200px",
         },
+        ...cell.input.propertiesOption,
+      },
+    };
+  },
+};
+
+inputElement[formInputType.number] = {
+  properties: (that, cell) => {
+    return {
+      title: cell.label,
+      type: "number",
+      "ui:options": {
+        placeholder: "请输入" + cell.label,
+        style: {
+          width: "200px",
+        },
+        ...cell.input.propertiesOption,
       },
     };
   },

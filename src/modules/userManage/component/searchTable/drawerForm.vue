@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-03 10:05:10
+ * @LastEditTime: 2023-01-10 10:10:52
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -40,7 +40,14 @@
             (x) => x.table.type != showType.btnList
           )"
         >
-          {{ item.table.showFunc(plugInData["data"], item.key) }}
+          <span v-if="item.table.type == showType.funcComponent">
+            <component
+              :is="item.table.showFunc(plugInData['data'], item.key)"
+            ></component>
+          </span>
+          <span v-else-if="item.table.type == showType.func">
+            {{ item.table.showFunc(plugInData["data"], item.key) }}
+          </span>
         </el-form-item>
       </el-form>
       <!-- <el-descriptions class="margin-top" :column="1">
