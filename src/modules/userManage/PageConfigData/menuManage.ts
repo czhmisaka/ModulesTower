@@ -148,13 +148,6 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
     }),
     ...searchCell(formInputType.select, {
       inputOptions: typeToModule,
-      // onChangeFunc: async (that, data) => {
-      //   const originQueryTemplate = [];
-      //   switch (data["type"]) {
-      //     case 1:
-      //       break;
-      //   }
-      // },
     }),
   }),
   tableCellTemplateMaker(

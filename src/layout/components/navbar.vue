@@ -51,7 +51,9 @@ const { moduleList, checkModule } = useModuleHook();
             src="https://avatars.githubusercontent.com/u/22533472?v=4"
             :style="avatarsStyle"
           />
-          <p v-if="username" class="dark:text-white">{{ username }}</p>
+          <p v-if="username" class="dark:text-white">
+            {{ username }}
+          </p>
         </span>
         <template #dropdown>
           <!-- 模块选择操作 -->
