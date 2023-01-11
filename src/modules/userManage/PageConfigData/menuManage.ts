@@ -227,8 +227,8 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       },
     })
   ),
-  tableCellTemplateMaker("页面配置", "pageConfigId"),
-  tableCellTemplateMaker("配置参数", "meta"),
+  // tableCellTemplateMaker("页面配置", "pageConfigId"),
+  // tableCellTemplateMaker("配置参数", "meta"),
   tableCellTemplateMaker(
     "子节点",
     "children",
@@ -312,7 +312,7 @@ pageConfigDataTableCellStorage.push(
           icon: "Edit",
           elType: "success",
           function: async (that, data) => {
-            let propsArr = ["name", "icon", "meta"];
+            let propsArr = ["name", "icon"];
             if (data.type < 4) {
               propsArr.push("showLink");
               propsArr.push("orderNumber");
@@ -325,9 +325,6 @@ pageConfigDataTableCellStorage.push(
               queryItemTemplate.push(
                 pageConfigDataTableCellStorage.getByLabel("URL")
               );
-              queryItemTemplate.push(
-                pageConfigDataTableCellStorage.getByKey("pageConfigId")
-              );
             }
             if (data.type == 4)
               queryItemTemplate.push(
@@ -339,6 +336,7 @@ pageConfigDataTableCellStorage.push(
               queryItemTemplate,
               data: {
                 ...data,
+                showLink: data.showLink == true ? "true" : "false",
                 type: data.type + "",
               },
               btnList: [submit],
