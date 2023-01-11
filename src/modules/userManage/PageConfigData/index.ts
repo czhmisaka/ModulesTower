@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 17:59:22
+ * @LastEditTime: 2023-01-11 15:46:46
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -16,6 +16,7 @@ import { roleManage } from "./roleManage";
 import { roleBindUserManage } from "./roleBindUserManage";
 import { mainDesktop, userManage } from "./main";
 import { actionLogManage } from "./actionLogManage";
+import { adminManage } from "./adminManage";
 
 export interface desktopDataTemplate {
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -106,6 +107,17 @@ const pageConfig = {
   actionLogManage: {
     name: "用户行为日志",
     desktopData: actionLogManage,
+    gridColNum: 12,
+    cusStyle: {
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 12,
+    },
+  },
+  adminManage: {
+    name: "管理员权限编辑",
+    desktopData: adminManage,
     gridColNum: 12,
     cusStyle: {
       showLink: true,

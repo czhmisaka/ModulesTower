@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-10 10:08:53
+ * @LastEditTime: 2023-01-11 17:59:41
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -119,6 +119,7 @@ import { useDark } from "@pureadmin/utils";
 import loading from "element-plus/es/components/loading";
 import tableHeader from "element-plus/es/components/table/src/table-header";
 import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../../types";
+import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
 export default defineComponent({
   components: { ElTable, ElTableColumn },
   props: ["template", "loading", "dataList", "baseData"],
@@ -180,6 +181,10 @@ export default defineComponent({
       });
     },
 
+    close() {
+      this.$emit("search");
+    },
+
     /**
      * @name: selectPosition
      * @description: 选择行变化
@@ -216,7 +221,7 @@ export default defineComponent({
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
         await btn.function(that, data);
-        this.$emit("onSearch");
+        this.$emit("search");
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }

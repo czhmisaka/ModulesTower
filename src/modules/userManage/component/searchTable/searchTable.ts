@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-11 15:03:48
+ * @LastEditTime: 2023-01-11 17:49:36
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -271,6 +271,7 @@ export const propertiesMaker = async (
   that: stringAnyObj
 ) => {
   let properties = {} as stringAnyObj;
+  if (!cellList || cellList.length == 0) return properties;
   for (let i = 0; i < cellList.length; i++) {
     const cell = cellList[i];
     const { input } = cell;

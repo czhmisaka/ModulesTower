@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-03 09:53:41
+ * @LastEditTime: 2023-01-11 17:57:13
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -26,7 +26,8 @@
       :template="showItemTemplate"
       :data-list="PageData.data || PageData.list"
       :loading="isLoading"
-      :onSearch="search"
+      @search="search"
+      @refresh="refresh"
       :style="{
         height: TableHeight + 'px',
       }"
@@ -276,6 +277,7 @@ export default defineComponent({
      * @param {*} query
      */
     async search(query: { [key: string]: any } = this.query) {
+      console.log("qwe");
       this.query = {
         ...this.query,
         ...query,
