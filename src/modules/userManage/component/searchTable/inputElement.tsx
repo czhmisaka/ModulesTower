@@ -23,7 +23,6 @@ inputElement[formInputType.input] = {
         style: {
           width: "200px",
         },
-        ...cell.input.propertiesOption,
       },
     };
   },
@@ -39,7 +38,6 @@ inputElement[formInputType.number] = {
         style: {
           width: "200px",
         },
-        ...cell.input.propertiesOption,
       },
     };
   },

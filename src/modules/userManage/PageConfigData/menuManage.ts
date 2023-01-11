@@ -123,7 +123,17 @@ for (let x in Icons) {
 // 页面配置数据
 const pageConfigDataTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("id", "id", showCell(showType.dataKey)),
-  tableCellTemplateMaker("父级ID", "parentId"),
+  tableCellTemplateMaker(
+    "上级",
+    "parentName",
+    searchCell(formInputType.input, {
+      propertiesOption: {
+        "ui:options": {
+          disabled: true,
+        },
+      },
+    })
+  ),
   tableCellTemplateMaker("名称", "name", {
     ...searchCell(formInputType.input),
     ...showCell(showType.dataKey, {
@@ -149,7 +159,9 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
     "orderNumber",
     searchCell(formInputType.number, {
       propertiesOption: {
-        min: 0,
+        "ui:options": {
+          min: 0,
+        },
       },
     })
   ),
@@ -208,7 +220,12 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker(
     "作为菜单展示",
     "showLink",
-    searchCell(formInputType.radio)
+    searchCell(formInputType.select, {
+      inputOptions: {
+        true: "开",
+        false: "关",
+      },
+    })
   ),
   tableCellTemplateMaker("页面配置", "pageConfigId"),
   tableCellTemplateMaker("配置参数", "meta"),
@@ -253,7 +270,7 @@ pageConfigDataTableCellStorage.push(
             return data.type != 4;
           },
           function: async (that, data) => {
-            let propsArr = ["name", "icon", "meta"];
+            let propsArr = ["parentName", "name", "icon", "meta"];
             if (data.type < 3) {
               propsArr.push("showLink");
               propsArr.push("orderNumber");
@@ -279,9 +296,10 @@ pageConfigDataTableCellStorage.push(
               schema: { required: ["type", "name", "showLink"] },
               queryItemTemplate,
               data: {
+                parentName: data.name,
                 parentId: data.id,
                 type: data.type + 1 + "",
-                showLink: true,
+                showLink: "true",
               },
               btnList: [submit],
             } as drawerProps;
@@ -339,10 +357,7 @@ pageConfigDataTableCellStorage.push(
   )
 );
 
-const SearchTemplate = pageConfigDataTableCellStorage.getByKeyArr([
-  "name",
-  // "showLink",
-]);
+const SearchTemplate = pageConfigDataTableCellStorage.getByKeyArr(["name"]);
 
 const btnList = [
   btnMaker("新增模块", btnActionTemplate.OpenDrawer, {
@@ -359,13 +374,11 @@ const btnList = [
           "name",
           "icon",
           "showLink",
-          // "pageConfigId",
-          "meta",
         ]),
       ],
       btnList: [submit],
       data: {
-        showLink: true,
+        showLink: "true",
         type: "1",
       },
     },
