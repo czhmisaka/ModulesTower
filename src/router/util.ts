@@ -2,19 +2,13 @@
 
 /*
  * @Date: 2022-04-29 14:11:20
-<<<<<<< HEAD
- * @LastEditors: CZH
- * @LastEditTime: 2022-11-21 15:40:17
- * @FilePath: /configforpagedemo/src/router/util.ts
-=======
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-11-07 23:13:39
+ * @LastEditTime: 2023-01-14 00:32:38
  * @FilePath: \ConfigForDesktopPage\src\router\util.ts
->>>>>>> 9743a3d1e083061cfbbc13f3739374b9e734aca8
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
 import { CardComponentTemplate } from '../components/basicComponents/grid/module/dataTemplate'
-const Layout = () => import("@/layout/index.vue");
+const Layout = () => import("@/components/basicComponents/layout/index.vue");
 import { RouteRecordRaw } from 'vue-router';
 
 /**
@@ -100,7 +94,7 @@ let moduleList = [] as modulesCellTemplate[]
  * @Date: 2022-10-23 21:51:34
  * @param {*} basePath
  */
-export const getModuleFromView = (init = false, basePath = 'desktop') => {
+export const getModuleFromView = (init = false, basePath = '') => {
     if (!init) {
         return moduleList;
     }
