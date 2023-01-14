@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-06 16:38:13
+ * @LastEditTime: 2023-01-14 03:30:58
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -51,11 +51,14 @@ import homeRouter from "./modules/home";
 import errorRouter from "./modules/error";
 import remainingRouter from "./modules/remaining";
 import { RouteConfigsTable } from "../../types/index";
-import { baseModuleRouter } from "./util";
 import { useModuleHook } from "@/store/modules/module";
 
+let baseModuleRoutes = await getModuleFromView(true)["getAllPageRouter"]();
+
+homeRouter.children = homeRouter.children.concat(baseModuleRoutes);
 // 路由存放
 const routes = [homeRouter, errorRouter];
+console.log(baseModuleRoutes, "asdasd", routes);
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(

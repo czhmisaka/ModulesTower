@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-10 17:24:31
+ * @LastEditTime: 2023-01-14 03:19:47
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -128,6 +128,7 @@ export const moduleStore = defineStore({
         .filter(Boolean)
         .sort((a, b) => a.orderNumber - b.orderNumber);
       this.nowModule = this.moduleList[0];
+      // this.nowModule = this.routerBackup;
     },
 
     initRouterBackup() {

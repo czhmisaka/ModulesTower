@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-30 16:24:19
+ * @LastEditTime: 2023-01-14 02:56:55
  * @FilePath: /configforpagedemo/src/utils/auth.ts
  */
 import Cookies from "js-cookie";
@@ -46,7 +46,7 @@ export function setToken(data: DataInfo<Date>) {
 
   expires > 0
     ? Cookies.set(TokenKey, cookieString, {
-        expires: (expires - Date.now()) / 86400000
+        expires: (expires - Date.now()) / 86400000,
       })
     : Cookies.set(TokenKey, cookieString);
 
@@ -57,7 +57,7 @@ export function setToken(data: DataInfo<Date>) {
       refreshToken,
       expires,
       username,
-      roles
+      roles,
     });
   }
 

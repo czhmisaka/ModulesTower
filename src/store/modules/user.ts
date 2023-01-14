@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 09:29:56
+ * @LastEditTime: 2023-01-14 03:00:32
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -54,7 +54,14 @@ export const useUserStore = defineStore({
     /** 登入 */
     async loginByUsername(query) {
       return new Promise<UserResult>(async (resolve, reject) => {
-        let res = await getLogin(query);
+        // let res = await getLogin(query);
+        let res = {
+          success: true,
+          data: {
+            token: "asd",
+            username: "fun",
+          },
+        };
         if (res && res.data) {
           let data = {
             ...res.data,
@@ -62,7 +69,7 @@ export const useUserStore = defineStore({
             refreshToken: res.data.token,
             username: query.username,
             roles: ["admin"],
-            expires: new Date(new Date().getTime() + 19999999).getTime(),
+            expires: new Date(new Date().getTime() + 19999999),
           };
           this.options = data;
           setToken(data);

@@ -29,9 +29,7 @@ initStorage();
 const { dataTheme, dataThemeChange } = useDataThemeChange();
 dataThemeChange();
 // 使用全局项目名称
-// const { title } = useNav();
-
-const title = "综合集智低代码平台";
+const { title } = useNav();
 
 const ruleForm = reactive({
   username: "15700197842",

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-05 13:47:53
+ * @LastEditTime: 2023-01-14 03:29:35
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -74,7 +74,7 @@ export const routerCellMaker = (
       icon: "bxs:package",
       ...options["meta"],
       // 这里的false可能需要根据用户的登录身份修改
-      showLink: false,
+      showLink: true,
 
       // 这个属性用于标注这个路由的来源 ，只有超级管理员能保持一直可见
       moduleBackUpRouter: true,
@@ -323,6 +323,7 @@ export const getModuleFromView = (init = false) => {
       x.routers.map((cell) => {
         if (cell.children && cell.children.length > 0) {
           cell.children.map((route) => {
+            delete route.children;
             routes.push(route);
           });
         } else {
