@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-03 18:10:53
+ * @LastEditTime: 2023-01-15 22:05:27
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -34,7 +34,7 @@ export function isMobile() {
 let baseURL = isDev ? "/" : "/";
 const request = axios.create({
   baseURL: baseURL, // 可以不需要
-  timeout: 10000, // 超时时间
+  timeout: 100000000, // 超时时间
   withCredentials: true,
   validateStatus() {
     return true;

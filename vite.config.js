@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 18:55:14
+ * @LastEditTime: 2023-01-15 20:36:54
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -15,6 +15,9 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import ViteRequireContext from '@originjs/vite-plugin-require-context';
 import envCompatible from 'vite-plugin-env-compatible';
 
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 import {
   warpperEnv
@@ -104,6 +107,12 @@ export default ({
         }
       }),
       ...getPluginsList(command, VITE_LEGACY, VITE_CDN, VITE_COMPRESSION),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
     ],
     optimizeDeps: {
       include: ["pinia", "lodash-es", "@vueuse/core", "dayjs"],
