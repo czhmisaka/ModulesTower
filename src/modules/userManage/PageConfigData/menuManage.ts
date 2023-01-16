@@ -89,6 +89,11 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
   },
 });
 
+const showLinkOptions = {
+  true: "开",
+  false: "关",
+};
+
 const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
   icon: "Delete",
   elType: "danger",
@@ -217,16 +222,16 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       },
     })
   ),
-  tableCellTemplateMaker(
-    "作为菜单展示",
-    "showLink",
-    searchCell(formInputType.select, {
-      inputOptions: {
-        true: "开",
-        false: "关",
+  tableCellTemplateMaker("作为菜单展示", "showLink", {
+    ...searchCell(formInputType.select, {
+      inputOptions: showLinkOptions,
+    }),
+    ...showCell(showType.func, {
+      showFunc: (data, key) => {
+        return showLinkOptions[data[key] + ""];
       },
-    })
-  ),
+    }),
+  }),
   // tableCellTemplateMaker("页面配置", "pageConfigId"),
   // tableCellTemplateMaker("配置参数", "meta"),
   tableCellTemplateMaker(
@@ -414,7 +419,7 @@ export const menuManage = async () => {
             });
           },
           defaultQuery: {
-            showLink: true,
+            showLink: null,
           },
           btnList,
           autoSearch: true,

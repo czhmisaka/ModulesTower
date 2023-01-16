@@ -1,12 +1,12 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-11 17:49:36
+ * @LastEditTime: 2023-01-16 15:15:28
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
-import inputElement from "./inputElement";
+import inputElement, { globalBaseCellDeal } from "./inputElement";
 import {
   btnCellTemplate,
   stringAnyObj,
@@ -57,7 +57,7 @@ export class SearchCellStorage {
   getByLabelArr(labelArr: string[]) {
     let back = [];
     for (let key in labelArr) {
-      back.push(this.getByKey(labelArr[key]));
+      back.push(this.getByLabel(labelArr[key]));
     }
     return back.filter(Boolean);
   }
@@ -141,6 +141,35 @@ export const DateCell = (options: stringAnyObj = {}): tableCellOptions => {
       ...options,
     }),
     ...searchCell(formInputType.datePicker),
+  };
+};
+
+/**
+ * @name: DateRangeCell画
+ * @description: 创建日期区间
+ * @authors: CZH
+ * @Date: 2023-01-16 14:11:53
+ * @param {stringAnyObj} options
+ */
+export const DateRangeCell = (
+  placeholder: string,
+  options: stringAnyObj = {}
+): tableCellOptions => {
+  return {
+    ...showCell(showType.func, {
+      showFunc: (data: any, key: string) =>
+        new Date(data[key]).toLocaleString(),
+      ...options,
+    }),
+    ...searchCell(formInputType.datePickerRanger, {
+      inputOptions: {},
+      propertiesOption: {
+        "ui:options": {
+          "start-placeholder": placeholder + "开始时间",
+          "end-placeholder": placeholder + "结束时间",
+        },
+      },
+    }),
   };
 };
 
@@ -274,6 +303,7 @@ export const propertiesMaker = async (
   if (!cellList || cellList.length == 0) return properties;
   for (let i = 0; i < cellList.length; i++) {
     const cell = cellList[i];
+    if (!cell) continue;
     const { input } = cell;
     if (input && input.type) {
       const inputElementDeal = inputElement[cell.input.type];
@@ -290,6 +320,7 @@ export const propertiesMaker = async (
         input.propertiesOption
       );
     }
+    properties[cell.key] = globalBaseCellDeal(cell, properties[cell.key]);
   }
   return properties;
 };
@@ -307,6 +338,7 @@ export const uiSchemaMaker = async (
   let uiSchema = {} as stringAnyObj;
   for (let i = 0; i < cellList.length; i++) {
     const cell = cellList[i];
+    if (!cell) continue;
     const { input } = cell;
     if (input && input.type) {
       const inputElementDeal = inputElement[cell.input.type];

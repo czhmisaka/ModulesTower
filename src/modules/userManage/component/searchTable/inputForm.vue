@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-03 09:53:36
+ * @LastEditTime: 2023-01-16 15:39:13
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -123,7 +123,8 @@ export default defineComponent({
 
   computed: {
     isNeedClose() {
-      return Object.keys(this.schema.properties).length >= 3;
+      // return Object.keys(this.schema.properties).length >= 3;
+      return false;
     },
   },
 
@@ -160,24 +161,16 @@ export default defineComponent({
     interval = setInterval(() => {
       if (that.$refs["formBox"] && that.$refs["formBox"]["$el"]) {
         let width = that.$refs["formBox"]["$el"].offsetWidth;
-        if (width / 4 > 300) {
+        console.log(width, that.formProps.layoutColumn, "asd");
+        if (width > 600) {
           that.formProps.layoutColumn = 3;
-          that.formProps.labelPosition = "left";
-        } else if (width / 4 > 250) {
-          that.formProps.layoutColumn = 3;
-          that.formProps.labelPosition = "top";
-        } else if (width / 3 > 300) {
+        } else if (width > 400) {
           that.formProps.layoutColumn = 2;
-          that.formProps.labelPosition = "left";
-        } else if (width / 3 > 200) {
-          that.formProps.layoutColumn = 2;
-          that.formProps.labelPosition = "top";
         } else {
           that.formProps.layoutColumn = 1;
-          that.formProps.labelPosition = "left";
         }
       }
-    }, 30);
+    }, 100);
     await this.initForm(this.queryItemTemplate);
   },
 

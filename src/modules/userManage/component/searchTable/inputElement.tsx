@@ -1,12 +1,30 @@
+import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import { ElOption, ElScrollbar, ElSelect, ElTreeSelect } from "element-plus";
 import { defineComponent, h, ref, watchEffect } from "vue";
 import { inputElementTemplate, formInputType, stringAnyObj } from "../../types";
 
+
 function base(cell) {
   return {
-    title: cell.label,
+    // title: cell.label,
     type: "string",
+    "ui:options": {
+      placeholder: "请输入" + cell.label,
+      style: {},
+    },
   } as stringAnyObj;
+}
+
+export const globalBaseCellDeal = (cell, cellProperties: stringAnyObj | Promise<stringAnyObj>): stringAnyObj | Promise<stringAnyObj> => {
+  const globalBaseCell = {
+    "ui:options": {
+      placeholder: "请输入" + cell.label,
+      style: {
+        width: '100%'
+      }
+    },
+  }
+  return deepMerge(globalBaseCell, cellProperties)
 }
 
 let inputElement = {} as {
@@ -16,14 +34,7 @@ let inputElement = {} as {
 inputElement[formInputType.input] = {
   properties: (that, cell) => {
     return {
-      title: cell.label,
       type: "string",
-      "ui:options": {
-        placeholder: "请输入" + cell.label,
-        style: {
-          width: "200px",
-        },
-      },
     };
   },
 };
@@ -33,12 +44,6 @@ inputElement[formInputType.number] = {
     return {
       title: cell.label,
       type: "number",
-      "ui:options": {
-        placeholder: "请输入" + cell.label,
-        style: {
-          width: "200px",
-        },
-      },
     };
   },
 };
@@ -46,22 +51,28 @@ inputElement[formInputType.number] = {
 inputElement[formInputType.datePicker] = {
   properties: (that, cell) => {
     return {
-      title: cell.label,
       type: "number",
       format: "date",
-      "ui:options": {},
     };
   },
 };
 
+inputElement[formInputType.datePickerRanger] = {
+  properties: (that, cell) => {
+    return {
+      "type": "array",
+      "format": "date",
+      "items": {
+        "type": "number"
+      }
+    }
+  }
+}
+
 inputElement[formInputType.radio] = {
   properties: (that, cell) => {
     return {
-      title: cell.label,
       type: "boolean",
-      "ui:options": {
-        placeholder: "请输入" + cell.label,
-      },
     };
   },
 };
@@ -70,9 +81,6 @@ inputElement[formInputType.idCard] = {
   properties: (that, cell) => {
     return {
       ...base(cell),
-      "ui:options": {
-        placeholder: "请输入" + cell.label,
-      },
     };
   },
 };
@@ -191,8 +199,6 @@ inputElement[formInputType.treeSelectRemote] = {
     Object.keys(attrs).map((x) => {
       properties["ui:" + x] = attrs[x];
     });
-    if (input.propertiesOption)
-      properties = { ...properties, ...input.propertiesOption };
     return properties;
   },
 };
@@ -228,9 +234,7 @@ inputElement[formInputType.treeSelect] = {
 
     Object.keys(attrs).map((x) => {
       properties["ui:" + x] = attrs[x];
-    });
-    if (input.propertiesOption)
-      properties = { ...properties, ...input.propertiesOption };
+    })
     return properties;
   },
 };
@@ -293,8 +297,6 @@ inputElement[formInputType.searchList] = {
     Object.keys(attrs).map((x) => {
       properties["ui:" + x] = attrs[x];
     });
-    if (input.propertiesOption)
-      properties = { ...properties, ...input.propertiesOption };
     return properties;
   },
 };
@@ -355,8 +357,6 @@ inputElement[formInputType.indexListForSwitch] = {
     Object.keys(attrs).map((x) => {
       properties["ui:" + x] = attrs[x];
     });
-    if (input.propertiesOption)
-      properties = { ...properties, ...input.propertiesOption };
     return properties;
   },
 };
@@ -410,8 +410,6 @@ inputElement[formInputType.botton] = {
     Object.keys(attrs).map((x) => {
       properties["ui:" + x] = attrs[x];
     });
-    if (input.propertiesOption)
-      properties = { ...properties, ...input.propertiesOption };
     return properties;
   },
 };
