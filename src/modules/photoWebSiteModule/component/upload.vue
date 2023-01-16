@@ -7,7 +7,7 @@
 <template>
   <cardBg>
     <div :style="{}">
-      <el-upload v-model:file-list="fileList" action="/api/upload" multiple>
+      <el-upload v-model:file-list="fileList" action="/api/upload/" multiple>
         <ElButton> 上传图片 </ElButton>
       </el-upload>
     </div>
