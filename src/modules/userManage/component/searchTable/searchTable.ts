@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 15:15:28
+ * @LastEditTime: 2023-01-16 17:36:12
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -297,7 +297,8 @@ export const tableCellTemplateMaker = (
 
 export const propertiesMaker = async (
   cellList: tableCellTemplate[],
-  that: stringAnyObj
+  that: stringAnyObj,
+  needTitle: boolean = false
 ) => {
   let properties = {} as stringAnyObj;
   if (!cellList || cellList.length == 0) return properties;
@@ -320,7 +321,12 @@ export const propertiesMaker = async (
         input.propertiesOption
       );
     }
-    properties[cell.key] = globalBaseCellDeal(cell, properties[cell.key]);
+    if (properties[cell.key])
+      properties[cell.key] = globalBaseCellDeal(
+        cell,
+        properties[cell.key],
+        needTitle
+      );
   }
   return properties;
 };

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 16:37:09
+ * @LastEditTime: 2023-01-16 16:47:31
  * @FilePath: /configforpagedemo/src/utils/api/user/header.ts
  */
 
@@ -16,9 +16,9 @@ export function isMobile() {
       /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
     )
   ) {
-    return "移动端"; // 移动端
+    return window.navigator.userAgent; // 移动端
   } else {
-    return "PC端"; // PC端
+    return "PC"; // PC端
   }
 }
 
@@ -31,13 +31,14 @@ export function isMobile() {
 const getheaderTemplate = () => {
   let DataInfo = getToken() || {};
   const menuId = localStorage.getItem("menuId");
+  const equipment = isMobile();
   let back = {
     route: window.location.href.split("#")[1],
     token: DataInfo["accessToken"], // 向后台发送的token
     "Content-Type": "application/json;charset=utf-8",
     "ddm-parameter-encrypt": true,
     menuId,
-    equipment: isMobile(),
+    equipment,
   };
   return back;
 };

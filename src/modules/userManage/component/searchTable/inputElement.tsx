@@ -15,12 +15,13 @@ function base(cell) {
   } as stringAnyObj;
 }
 
-export const globalBaseCellDeal = (cell, cellProperties: stringAnyObj | Promise<stringAnyObj>): stringAnyObj | Promise<stringAnyObj> => {
+export const globalBaseCellDeal = (cell, cellProperties: stringAnyObj | Promise<stringAnyObj>, needTitle: boolean = false): stringAnyObj | Promise<stringAnyObj> => {
   const globalBaseCell = {
     "ui:options": {
+      title: needTitle ? cell.label : '',
       placeholder: "请输入" + cell.label,
       style: {
-        width: '100%'
+        width: needTitle ? '360px' : '100%'
       }
     },
   }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-14 16:29:08
+ * @LastEditTime: 2023-01-16 17:34:42
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -206,6 +206,7 @@ const addNewModel = btnMaker("创建新用户", btnActionTemplate.Function, {
           ],
         }),
       ],
+      data: {}
     };
     that.$modules
       .getModuleApi()
@@ -224,7 +225,7 @@ const addNewModel = btnMaker("创建新用户", btnActionTemplate.Function, {
   */
 const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
   function: async (that, data) => {
-    data.gender = data.gender+''
+    data.gender = data.gender + ''
     let drawerProps = {
       title: "用户编辑",
       queryItemTemplate: userTableCellStorage.getByLabelArr([
@@ -315,7 +316,6 @@ const roleBindBtn = btnMaker("用户角色管理", btnActionTemplate.Function, {
             let attr = {
               buttonName: '新增角色',
               callBack: async (data) => {
-                console.log(data, 'asd')
                 let res = await post('/web/usc/role/authUser', { roleId: data.roleId, uids: [data.id] })
                 ElMessage[res.message == '成功' ? 'success' : 'err'](res.message)
                 let user = await post('/web/usc/user/select', { id: data.id })
@@ -552,7 +552,6 @@ export const userManage = async () => {
             tableAction,
           ],
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            console.log(query, "asd");
             let res = await post("/web/usc/user/page/org", {
               ...query,
             });

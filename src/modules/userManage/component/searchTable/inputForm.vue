@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 15:39:13
+ * @LastEditTime: 2023-01-16 17:20:02
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -161,7 +161,6 @@ export default defineComponent({
     interval = setInterval(() => {
       if (that.$refs["formBox"] && that.$refs["formBox"]["$el"]) {
         let width = that.$refs["formBox"]["$el"].offsetWidth;
-        console.log(width, that.formProps.layoutColumn, "asd");
         if (width > 600) {
           that.formProps.layoutColumn = 3;
         } else if (width > 400) {

@@ -278,7 +278,7 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
     if (v.meta?.frameSrc) {
       v.component = IFrame;
     } else if (v.component) {
-      console.log('我被执行了')
+      // console.log('我被执行了')
     } else {
       // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会跟path保持一致）
       const index = v?.component
