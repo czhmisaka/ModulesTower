@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-09 09:45:44
+ * @LastEditTime: 2023-01-16 16:37:09
  * @FilePath: /configforpagedemo/src/utils/api/user/header.ts
  */
 
@@ -9,6 +9,18 @@ import { getCookie } from "./cookie";
 import { getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import { de } from "element-plus/es/locale";
+
+export function isMobile() {
+  if (
+    window.navigator.userAgent.match(
+      /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+    )
+  ) {
+    return "移动端"; // 移动端
+  } else {
+    return "PC端"; // PC端
+  }
+}
 
 /**
  * @name: getheaderTemplate
@@ -25,7 +37,7 @@ const getheaderTemplate = () => {
     "Content-Type": "application/json;charset=utf-8",
     "ddm-parameter-encrypt": true,
     menuId,
-    equipment: window.navigator.userAgent,
+    equipment: isMobile(),
   };
   return back;
 };

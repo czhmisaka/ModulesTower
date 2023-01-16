@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 15:30:59
+ * @LastEditTime: 2023-01-16 15:54:28
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/actionLogManage.tsx
  */
 
@@ -30,24 +30,27 @@ export const actionLogManage = async () => {
 
   // 部门数据
   const InfoTableCellStorage = new SearchCellStorage([
-    tableCellTemplateMaker("操作者", "operatorName"),
-    tableCellTemplateMaker("部门", "operatorUnitName"),
+    tableCellTemplateMaker("操作人", "operatorName"),
+    tableCellTemplateMaker('被操作对象', 'operatedObject'),
     tableCellTemplateMaker("操作类型", "type", {
       ...searchCell(formInputType.select, {
         inputOptions: actionLogType
       })
     }),
-    tableCellTemplateMaker('操作对象', 'operatedObject'),
     tableCellTemplateMaker("操作详情", "detail", showCell(showType.dataKey, { width: '300px' })),
-    tableCellTemplateMaker("操作时间", "createTime", DateCell()),
     tableCellTemplateMaker("IP", "ip"),
+
+    // tableCellTemplateMaker("部门", "operatorUnitName"),
+
+    tableCellTemplateMaker("操作时间", "createTime", DateCell()),
     tableCellTemplateMaker("操作地址", "operationAddress"),
+    tableCellTemplateMaker('操作设备', 'operationEquipment')
   ]);
 
 
 
   const searchTableTemplate = [
-    ...InfoTableCellStorage.getByLabelArr(['操作者', '操作对象', '操作类型']),
+    ...InfoTableCellStorage.getByLabelArr(['操作人', '被操作对象', '操作类型']),
     tableCellTemplateMaker('操作时间', 'timeRange', DateRangeCell('日志'),)
   ]
 

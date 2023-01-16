@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 09:35:37
+ * @LastEditTime: 2023-01-16 15:55:33
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -136,7 +136,6 @@ export default ({
           ws: true,
           rewrite: (path) => path.replace(/^\/api/, '/')
         },
-
       }
     },
     define: {
