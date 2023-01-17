@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-15 12:49:20
+ * @LastEditTime: 2023-01-17 23:43:22
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -335,16 +335,16 @@ export const getModuleFromView = (init = false) => {
   };
 
   // 获取所有模块包的组件
-  moduleList["getAllComponents"] = () => {
-    let back = {};
-    moduleList.map((module: modulesCellTemplate) => {
-      back = {
-        ...back,
-        ...module.components,
-      };
-    });
-    return back;
-  };
+  // moduleList["getAllComponents"] = () => {
+  //   let back = {};
+  //   moduleList.map((module: modulesCellTemplate) => {
+  //     back = {
+  //       ...back,
+  //       ...module.components,
+  //     };
+  //   });
+  //   return back;
+  // };
 
   // 获取所有模块包的 插入式能力组件
   moduleList["getAllPluginComponent"] = () => {

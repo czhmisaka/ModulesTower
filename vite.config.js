@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-15 20:36:54
+ * @LastEditTime: 2023-01-17 22:35:34
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import {
@@ -120,8 +120,9 @@ export default ({
     },
     build: {
       sourcemap: false,
+      target: 'esnext',
       // 消除打包大小超过500kb警告
-      chunkSizeWarningLimit: 4000,
+      chunkSizeWarningLimit: 10000,
       rollupOptions: {
         input: {
           index: pathResolve("index.html")

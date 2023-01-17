@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-14 16:29:08
+ * @LastEditTime: 2023-01-17 22:24:33
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -224,7 +224,7 @@ const addNewModel = btnMaker("创建新用户", btnActionTemplate.Function, {
   */
 const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
   function: async (that, data) => {
-    data.gender = data.gender+''
+    data.gender = data.gender + ''
     let drawerProps = {
       title: "用户编辑",
       queryItemTemplate: userTableCellStorage.getByLabelArr([
