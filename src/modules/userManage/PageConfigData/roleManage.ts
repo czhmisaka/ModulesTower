@@ -273,7 +273,7 @@ export const roleManage = async () => {
             return res && res.data ? res.data : [];
           },
           btnList,
-          autoSearch: true,
+          autoSearch: false,
         },
         isSettingTool: false,
       }

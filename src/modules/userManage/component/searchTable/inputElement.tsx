@@ -73,10 +73,19 @@ inputElement[formInputType.datePickerRanger] = {
 inputElement[formInputType.radio] = {
   properties: (that, cell) => {
     return {
-      type: "boolean",
+      ...base(cell),
+      "ui:widget": "SelectWidget",
+      "ui:options": {
+        placeholder: cell.label + "开关",
+        enum: ['true', 'false'],
+        enumNames: ['开', '关']
+      },
     };
   },
 };
+
+
+
 
 inputElement[formInputType.idCard] = {
   properties: (that, cell) => {

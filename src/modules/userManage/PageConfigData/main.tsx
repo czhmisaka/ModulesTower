@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-17 11:25:36
+ * @LastEditTime: 2023-01-17 17:13:31
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -172,7 +172,7 @@ const searchTable = new SearchCellStorage([
   * @authors: CZH
   * @Date: 2022-12-09 17:50:58
   */
-const addNewModel = btnMaker("创建新用户", btnActionTemplate.Function, {
+const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
   function: async (that, data) => {
     let drawerProps = {
       title: "创建新用户",
@@ -228,7 +228,7 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
     data.gender = data.gender + ''
     let drawerProps = {
       title: "用户编辑",
-      queryItemTemplate: userTableCellStorage.getByLabelArr([
+      queryItemTemplate: userTableCellStorage.getByKeyArr([
         "name",
         "gender",
         "icon",
@@ -403,6 +403,8 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
   },
 });
 
+
+
 /**
  * @name: mainDesktop
  * @description: 基于部门的用户管理
@@ -442,12 +444,12 @@ export const mainDesktop = async () => {
     elType: "danger",
   });
 
-  const btnList = [selectedDeleteBtn];
+  const btnList = [addNewModel, selectedDeleteBtn];
 
   const tableAction = tableCellTemplateMaker(
     "操作",
     "actionBtnList",
-    actionCell([unitBindBtn], {
+    actionCell([unitBindBtn, roleBindBtn, editUserModel], {
       fixed: "right",
     })
   );
@@ -509,7 +511,7 @@ export const mainDesktop = async () => {
             if (!res.data["data"]) res.data["data"] = res.data["list"];
             return res.data;
           },
-          autoSearch: true,
+          autoSearch: false,
           searchKeyWithBaseData: ["unit"],
           btnList,
         },
@@ -546,7 +548,7 @@ export const userManage = async () => {
       },
       {
         props: {
-          searchItemTemplate: searchTable.getAll(['searchChildrenFlag']),
+          searchItemTemplate: searchTable.getAll(),
           showItemTemplate: [
             ...userTableCellStorage.getAll(["unitId"]),
             tableAction,

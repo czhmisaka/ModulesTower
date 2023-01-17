@@ -19,7 +19,10 @@ import {
   changeCardProperties,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { post, get } from "@/utils/api/requests";
-import { SearchCellStorage, tableCellTemplateMaker } from "@/modules/userManage/component/searchTable/searchTable";
+import {
+  SearchCellStorage,
+  tableCellTemplateMaker,
+} from "@/modules/userManage/component/searchTable/searchTable";
 import { stringAnyObj } from "@/modules/userManage/types";
 
 export const pageConfigManage = async () => {
@@ -34,7 +37,6 @@ export const pageConfigManage = async () => {
     tableCellTemplateMaker("配置", "config"),
     tableCellTemplateMaker("pageConfigId", "pageConfigId"),
   ]);
-
 
   const SearchTemplate = [];
 
@@ -54,15 +56,15 @@ export const pageConfigManage = async () => {
           showItemTemplate: pageConfigDataTableCellStorage.getAll(),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};
-            console.log(query)
+            console.log(query);
 
             let res = await post("/web/usc/page/config/page", { ...query });
-            return res.data 
+            return res.data;
           },
           searchKeyWithBaseData: ["outputKey"],
           btnList,
         },
-        autoSearch: true,
+        autoSearch: false,
         isSettingTool: false,
       }
     )

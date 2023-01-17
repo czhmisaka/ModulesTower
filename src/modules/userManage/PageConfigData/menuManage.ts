@@ -90,8 +90,8 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
 });
 
 const showLinkOptions = {
-  true: "开",
-  false: "关",
+  true: "是",
+  false: "否",
 };
 
 const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
@@ -159,17 +159,16 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       },
     }),
   }),
-  tableCellTemplateMaker(
-    "排序",
-    "orderNumber",
-    searchCell(formInputType.number, {
+  tableCellTemplateMaker("排序", "orderNumber", {
+    ...searchCell(formInputType.number, {
       propertiesOption: {
         "ui:options": {
           min: 0,
         },
       },
-    })
-  ),
+    }),
+    ...showCell(showType.dataKey),
+  }),
   tableCellTemplateMaker("类型", "type", {
     ...showCell(showType.func, {
       showFunc: (data, key) => typeToModule[data[key]],
@@ -403,6 +402,7 @@ export const menuManage = async () => {
           searchItemTemplate: SearchTemplate,
           showItemTemplate: pageConfigDataTableCellStorage.getAll([
             "id",
+            "parentName",
             "parentId",
             "urls",
           ]),
@@ -422,7 +422,7 @@ export const menuManage = async () => {
             showLink: null,
           },
           btnList,
-          autoSearch: true,
+          autoSearch: false,
         },
         isSettingTool: false,
       }

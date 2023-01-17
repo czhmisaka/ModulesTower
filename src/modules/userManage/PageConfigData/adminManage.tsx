@@ -130,7 +130,7 @@ export const adminManage = async () => {
       {
         props: {
           defaultQuery: {},
-          autoSearch: true,
+          autoSearch: false,
           btnList: 搜索区域操作栏,
           showItemTemplate: 管理员列表.getAll(),
           searchFunc: async (query: stringAnyObj) => {

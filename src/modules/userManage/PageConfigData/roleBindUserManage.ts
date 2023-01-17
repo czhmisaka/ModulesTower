@@ -79,7 +79,7 @@ export const roleBindUserManage = async () => {
             if (res?.data?.list)
               data = res.data.list.map((x) => {
                 return {
-                  value: x.id+'',
+                  value: x.id + "",
                   label: x.name,
                 };
               });
@@ -111,9 +111,7 @@ export const roleBindUserManage = async () => {
     elType: "primary",
     function: (that, data) => {
       let { roleList, role } = that.baseData;
-      let cell = roleList.filter(
-        (x) => x.id == (that.$route?.query?.roleId)
-      )[0];
+      let cell = roleList.filter((x) => x.id == that.$route?.query?.roleId)[0];
       if (role) cell = role;
       let drawerProps = {
         title: `绑定用户【${cell.name}】`,
@@ -229,7 +227,7 @@ export const roleBindUserManage = async () => {
           },
           searchKeyWithBaseData: ["role"],
           btnList,
-          autoSearch: true,
+          autoSearch: false,
         },
         isSettingTool: false,
       }

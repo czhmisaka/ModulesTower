@@ -64,7 +64,7 @@ export const apiManage = async () => {
       {
         props: {
           defaultQuery: { name: apiGroup.data[apiGroup.data.length - 1] },
-          autoSearch: true,
+          autoSearch: false,
           searchItemTemplate: userTableSearchTemplate,
           showItemTemplate: APITableCellStorage.getAll(),
           searchFunc: async (query: stringAnyObj) => {

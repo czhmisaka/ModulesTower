@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 17:36:12
+ * @LastEditTime: 2023-01-17 16:41:52
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -187,7 +187,10 @@ export const showCell = (
   tableCellOption.table = {
     type: showType,
     sortable: true,
-    showFunc: (data: any, key: string) => data[key],
+    showFunc: (data: any, key: string) => {
+      // console.log(data[key], key, "qwe");
+      return data[key];
+    },
     ...options,
   };
   return tableCellOption;
@@ -327,6 +330,7 @@ export const propertiesMaker = async (
         properties[cell.key],
         needTitle
       );
+    console.log(properties, cell.label);
   }
   return properties;
 };
