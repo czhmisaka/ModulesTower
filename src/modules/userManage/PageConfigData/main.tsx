@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 17:34:42
+ * @LastEditTime: 2023-01-17 11:25:36
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -176,7 +176,7 @@ const addNewModel = btnMaker("创建新用户", btnActionTemplate.Function, {
   function: async (that, data) => {
     let drawerProps = {
       title: "创建新用户",
-      queryItemTemplate: userTableCellStorage.getByLabelArr([
+      queryItemTemplate: userTableCellStorage.getByKeyArr([
         "name",
         "gender",
         "icon",
