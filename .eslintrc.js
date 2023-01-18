@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-03 09:20:12
+ * @LastEditTime: 2023-01-18 15:43:46
  * @FilePath: /configforpagedemo/.eslintrc.js
  */
 module.exports = {
@@ -51,26 +51,26 @@ module.exports = {
   },
 
   overrides: [{
-      files: ["*.ts", "*.vue", "*.js", "*.config.js"],
-      rules: {
-        "no-undef": "off"
+    files: ["*.ts", "*.vue", "*.js", "*.config.js"],
+    rules: {
+      "no-undef": "off"
+    }
+  },
+  {
+    files: ["*.vue"],
+    parser: "vue-eslint-parser",
+    parserOptions: {
+      parser: "@typescript-eslint/parser",
+      extraFileExtensions: [".vue"],
+      ecmaVersion: "latest",
+      ecmaFeatures: {
+        jsx: true
       }
     },
-    {
-      files: ["*.vue"],
-      parser: "vue-eslint-parser",
-      parserOptions: {
-        parser: "@typescript-eslint/parser",
-        extraFileExtensions: [".vue"],
-        ecmaVersion: "latest",
-        ecmaFeatures: {
-          jsx: true
-        }
-      },
-      rules: {
-        "no-undef": "off"
-      }
+    rules: {
+      "no-undef": "off"
     }
+  }
   ],
 
   rules: {
@@ -84,6 +84,7 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-this-alias': 'off',
+    '@typescript-eslint/ban-ts-ignore': 'off',
     "vue/no-v-html": "off",
     "vue/require-default-prop": "off",
     "vue/require-explicit-emits": "off",
