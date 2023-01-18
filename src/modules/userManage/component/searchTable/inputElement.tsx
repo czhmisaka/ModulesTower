@@ -267,14 +267,19 @@ inputElement[formInputType.searchList] = {
           "reserveKeyword",
           "remoteMethod",
           "modelValue",
+          "placeholder"
         ],
         setup(props, context) {
           let options = ref([]);
+          props["remoteMethod"]('').then(res => {
+            options.value = res;
+          })
           return () => [
             h(
               ElSelect,
               {
                 ...props,
+                placeholder: props.placeholder.replace('输入', '选择'),
                 remoteMethod: async (query) => {
                   let res = await props["remoteMethod"](query);
                   options.value = res;

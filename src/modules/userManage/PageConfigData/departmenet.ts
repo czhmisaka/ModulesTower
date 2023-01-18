@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 17:32:53
+ * @LastEditTime: 2023-01-18 12:58:34
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -70,7 +70,18 @@ export const department = async () => {
         width: "200px",
       })
     ),
-    tableCellTemplateMaker("排序", "orderNumber"),
+    tableCellTemplateMaker(
+      "部门排序",
+      "orderNumber",
+      searchCell(formInputType.number, {
+        propertiesOption: {
+          "ui:options": {
+            min: 0,
+          },
+        },
+      })
+    ),
+    tableCellTemplateMaker("部门人数", "memberNumber"),
     tableCellTemplateMaker("是否置顶", "top"),
     tableCellTemplateMaker("删除", "deleted"),
     tableCellTemplateMaker(
@@ -95,7 +106,8 @@ export const department = async () => {
     ),
     tableCellTemplateMaker("所有上级部门ID", "parentIds"),
     tableCellTemplateMaker("上级部门", "parentNames"),
-    tableCellTemplateMaker("所属行政区划ID", "regionId"),
+    tableCellTemplateMaker("行政区划ID", "regionId"),
+    tableCellTemplateMaker("行政区划", "regionName"),
     tableCellTemplateMaker("浙政钉Code", "zzdCode"),
   ]);
 
@@ -116,6 +128,7 @@ export const department = async () => {
           queryItemTemplate: UnitTableCellStorage.getByKeyArr([
             "name",
             "description",
+            "orderNumber",
           ]),
           btnList: [submit],
           data: {
@@ -147,6 +160,7 @@ export const department = async () => {
                 queryItemTemplate: UnitTableCellStorage.getByKeyArr([
                   "name",
                   "description",
+                  "orderNumber",
                 ]),
                 btnList: [submit],
                 data: {
@@ -192,6 +206,7 @@ export const department = async () => {
                 queryItemTemplate: UnitTableCellStorage.getByKeyArr([
                   "name",
                   "description",
+                  "orderNumber",
                 ]),
                 data,
                 btnList: [submit],
@@ -208,6 +223,7 @@ export const department = async () => {
       )
     )
   );
+
   return [
     gridCellMaker(
       "MenuList",
@@ -255,14 +271,12 @@ export const department = async () => {
       {
         props: {
           searchItemTemplate: userTableSearchTemplate,
-          showItemTemplate: UnitTableCellStorage.getAll([
-            "id",
-            "createUserId",
-            "updateUserId",
-            "parentIds",
-            "parentId",
-            "regionId",
-            "deleted",
+          showItemTemplate: UnitTableCellStorage.getByLabelArr([
+            "部门名称",
+            "部门人数",
+            "行政区划",
+            "部门排序",
+            "操作",
           ]),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             if (!query) query = {};

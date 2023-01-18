@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-17 17:13:31
+ * @LastEditTime: 2023-01-18 10:54:41
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -47,7 +47,7 @@ const gender = {
 };
 
 const userTableCellStorage = new SearchCellStorage([
-  tableCellTemplateMaker("名字", "name"),
+  tableCellTemplateMaker("姓名", "name"),
   tableCellTemplateMaker("性别", "gender", staticSelectCell(gender)),
   tableCellTemplateMaker("icon", "icon"),
   tableCellTemplateMaker("简介", "description"),
@@ -110,7 +110,8 @@ const userTableCellStorage = new SearchCellStorage([
       },
     })
   ),
-
+  tableCellTemplateMaker('部门信息', 'unitNames'),
+  tableCellTemplateMaker('职务', 'jobName'),
   tableCellTemplateMaker("排序", "orderNumber"),
 ]);
 
@@ -119,7 +120,12 @@ const searchTable = new SearchCellStorage([
   tableCellTemplateMaker(
     "搜索子部门",
     "searchChildrenFlag",
-    searchCell(formInputType.radio)
+    searchCell(formInputType.select, {
+      inputOptions: {
+        "true": "搜索下级部门",
+        "false": "搜索本部门"
+      }
+    })
   ),
   tableCellTemplateMaker(
     "部门",
@@ -501,7 +507,9 @@ export const mainDesktop = async () => {
       {
         props: {
           searchItemTemplate: searchTable.getAll(["unitId"]),
-          showItemTemplate: [...userTableCellStorage.getAll(), tableAction],
+          showItemTemplate: [...userTableCellStorage.getByLabelArr([
+            '姓名', '手机号', '部门信息', '职务'
+          ]), tableAction],
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await post("/web/usc/user/page/unit", {
               ...query,
@@ -513,6 +521,9 @@ export const mainDesktop = async () => {
           },
           autoSearch: false,
           searchKeyWithBaseData: ["unit"],
+          defaultQuery: {
+            searchChildrenFlag: 'false'
+          },
           btnList,
         },
         isSettingTool: false,

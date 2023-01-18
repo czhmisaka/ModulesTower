@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-17 16:41:52
+ * @LastEditTime: 2023-01-18 10:44:18
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -17,6 +17,11 @@ import {
   tableCellTemplate,
   formInputType,
 } from "@/modules/userManage/types";
+
+const baseShowFunc = (data, key) => {
+  if (data[key] != undefined) return data[key] + "";
+  else return "无数据";
+};
 
 /**
  * @name: searchCellStorage
@@ -34,11 +39,7 @@ export class SearchCellStorage {
     this.storage.map((cell) => {
       if (label && label == cell.label) back = cell;
     });
-    if (!back.label)
-      return {
-        label: `-${label}-`,
-        prop: `no_label_${Math.random()}`,
-      };
+    if (!back.label) return false;
     if (options) return { ...back, ...options };
     else
       return {
@@ -59,6 +60,7 @@ export class SearchCellStorage {
     for (let key in labelArr) {
       back.push(this.getByLabel(labelArr[key]));
     }
+    console.log(back.filter(Boolean));
     return back.filter(Boolean);
   }
 
@@ -75,7 +77,7 @@ export class SearchCellStorage {
     this.storage.map((cell) => {
       if (key && key == cell.key) back = cell;
     });
-    if (!back.key) return null;
+    if (!back.key) return false;
     if (options) return { ...back, ...options };
     else
       return {
@@ -187,10 +189,7 @@ export const showCell = (
   tableCellOption.table = {
     type: showType,
     sortable: true,
-    showFunc: (data: any, key: string) => {
-      // console.log(data[key], key, "qwe");
-      return data[key];
-    },
+    showFunc: baseShowFunc,
     ...options,
   };
   return tableCellOption;
@@ -273,7 +272,7 @@ export const tableCellTemplateMaker = (
     label,
     key,
     table: {
-      showFunc: (data, key) => data[key],
+      showFunc: baseShowFunc,
       type: showType.func,
       sortable: true,
       width: "auto",

@@ -58,8 +58,6 @@ import {
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { h } from "vue";
-import { getIcon } from "@/utils";
 
 const typeToModule = {
   1: "模块",
@@ -400,11 +398,13 @@ export const menuManage = async () => {
       {
         props: {
           searchItemTemplate: SearchTemplate,
-          showItemTemplate: pageConfigDataTableCellStorage.getAll([
-            "id",
-            "parentName",
-            "parentId",
-            "urls",
+          showItemTemplate: pageConfigDataTableCellStorage.getByLabelArr([
+            "名称",
+            "类型",
+            "图标",
+            "接口",
+            "作为菜单展示",
+            "操作",
           ]),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};

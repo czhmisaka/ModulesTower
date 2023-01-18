@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-15 14:11:00
+ * @LastEditTime: 2023-01-18 13:20:32
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -262,10 +262,12 @@ export const roleManage = async () => {
         props: {
           defaultQuery: {},
           searchItemTemplate: roleTableSearchStorage.getByKeyArr(["name"]),
-          showItemTemplate: roleTableSearchStorage.getAll([
-            "id",
-            "createUserId",
-            "updateUserId",
+          showItemTemplate: roleTableSearchStorage.getByLabelArr([
+            "角色名称",
+            "详情",
+            "排序顺序",
+            "更新时间",
+            "操作",
           ]),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};
