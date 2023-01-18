@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-14 03:30:58
+ * @LastEditTime: 2023-01-18 00:28:15
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -15,11 +15,7 @@ import {
   createWebHashHistory,
   RouteRecordNormalized,
 } from "vue-router";
-import {
-  routerCellMaker,
-  getModuleFromView,
-  modulesCellTemplate,
-} from "./util";
+import { routerCellMaker, getAction, modulesCellTemplate } from "./util";
 import { isMobile } from "../utils/Env";
 import { getConfig } from "@/utils/config/appConfig";
 
@@ -53,7 +49,7 @@ import remainingRouter from "./modules/remaining";
 import { RouteConfigsTable } from "../../types/index";
 import { useModuleHook } from "@/store/modules/module";
 
-let baseModuleRoutes = await getModuleFromView(true)["getAllPageRouter"]();
+let baseModuleRoutes = await getAction()["getAllPageRouter"]();
 
 homeRouter.children = homeRouter.children.concat(baseModuleRoutes);
 // 路由存放

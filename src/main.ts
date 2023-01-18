@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 17:45:50
+ * @LastEditTime: 2023-01-18 00:24:25
  * @FilePath: /configforpagedemo/src/main.ts
  */
 
@@ -12,7 +12,7 @@ import router from "./router";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import { MotionPlugin } from "@vueuse/motion";
-import { getModuleFromView } from "@/router/util";
+import { getAction } from "@/router/util";
 import * as Icons from "@element-plus/icons-vue";
 import utils from "./utils";
 import Vue3DraggableResizable from "vue3-draggable-resizable";
@@ -68,7 +68,7 @@ getServerConfig(app).then(async (config) => {
   await router.isReady();
   injectResponsiveStorage(app, config);
   setupStore(app);
-  app.config.globalProperties.$modules = getModuleFromView(true);
+  app.config.globalProperties.$modules = getAction();
   app.config.globalProperties.$utils = utils;
   app.use(MotionPlugin).use(ElementPlus, { zIndex: 100000 });
   app.mount("#app");

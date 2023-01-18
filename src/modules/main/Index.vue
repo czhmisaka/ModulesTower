@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 16:20:28
+ * @LastEditTime: 2023-01-18 00:23:05
  * @FilePath: /configforpagedemo/src/modules/main/Index.vue
 -->
 
@@ -17,7 +17,6 @@
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopData.desktopData"
-      :component-lists="component"
       :cus-style="desktopData?.cusStyle"
     />
   </div>
@@ -27,16 +26,11 @@
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
-
 export default defineComponent({
   components: {
     gridDesktop,
   },
-  computed: {
-    component() {
-      return this.$modules.getAllComponents();
-    },
-  },
+  computed: {},
   methods: {
     async init() {
       if (this.$route) {

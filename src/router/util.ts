@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-17 23:43:22
+ * @LastEditTime: 2023-01-18 00:26:56
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -10,6 +10,7 @@ import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
 import { transformSync } from "@babel/core";
 import { useUserStoreHook } from "@/store/modules/user";
+import { stringAnyObj } from "@/modules/userManage/types";
 const user = useUserStoreHook();
 
 // 函数执行时间计算
@@ -107,6 +108,7 @@ export interface modulesCellTemplate {
 }
 
 let moduleList = [] as modulesCellTemplate[];
+let action = {} as stringAnyObj;
 
 /**
  * @name: getModuleFromView
@@ -116,7 +118,7 @@ let moduleList = [] as modulesCellTemplate[];
  * @param {*} basePath
  */
 export const getModuleFromView = (init = false) => {
-  const timec = new timeChecker("getModuleFromView");
+  const timec = new timeChecker("getModuleFromViewFuck");
   if (!init) {
     timec.getTime(1);
     return moduleList;
@@ -260,6 +262,7 @@ export const getModuleFromView = (init = false) => {
       const moduleName = getModuleName(fileName);
       moduleList.map((module: modulesCellTemplate) => {
         if (module.name == moduleName) {
+          console.log(fileName, "asd");
           module.components = requireModule(fileName).default;
         }
         return module;
@@ -316,8 +319,15 @@ export const getModuleFromView = (init = false) => {
     }
   );
 
+  timec.getTime(2);
+  return moduleList;
+};
+
+export const getAction = () => {
+  if (Object.keys(action).length == 0) getModuleFromView(true);
+
   // 获取所有的模块构建出来的路由记录
-  moduleList["getAllPageRouter"] = async () => {
+  action["getAllPageRouter"] = async () => {
     let routes = [];
     moduleList.map((x) => {
       x.routers.map((cell) => {
@@ -335,19 +345,19 @@ export const getModuleFromView = (init = false) => {
   };
 
   // 获取所有模块包的组件
-  // moduleList["getAllComponents"] = () => {
-  //   let back = {};
-  //   moduleList.map((module: modulesCellTemplate) => {
-  //     back = {
-  //       ...back,
-  //       ...module.components,
-  //     };
-  //   });
-  //   return back;
-  // };
+  action["getAllComponents"] = () => {
+    let back = {};
+    moduleList.map((module: modulesCellTemplate) => {
+      back = {
+        ...back,
+        ...module.components,
+      };
+    });
+    return back;
+  };
 
   // 获取所有模块包的 插入式能力组件
-  moduleList["getAllPluginComponent"] = () => {
+  action["getAllPluginComponent"] = () => {
     let back = {};
     moduleList.map((module) => {
       if (module.output.CardApiInjectComponent) {
@@ -361,7 +371,7 @@ export const getModuleFromView = (init = false) => {
   };
 
   // 获取所有模块包的 插入式 onChange能力
-  moduleList["getModuleApi"] = () => {
+  action["getModuleApi"] = () => {
     let back = {};
     moduleList.map((module) => {
       if (module.output.moduleApi) {
@@ -372,8 +382,8 @@ export const getModuleFromView = (init = false) => {
     });
     return back;
   };
-  timec.getTime(2);
-  return moduleList;
+
+  return action;
 };
 
 // 可以被展开的数组

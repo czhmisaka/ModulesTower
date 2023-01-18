@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 14:45:07
+ * @LastEditTime: 2023-01-18 00:27:49
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -99,7 +99,7 @@
 
 <script lang="ts">
 import { defineComponent, shallowRef } from "vue";
-import { getModuleFromView } from "@/router/util";
+import { getAction } from "@/router/util";
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import cardEditModal from "@/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue";
 import { testData } from "./module/testData";
@@ -129,7 +129,7 @@ export default defineComponent({
     componentsListModal,
   },
   setup() {
-    const PlugInComponents = shallowRef(getModuleFromView()["getAllPluginComponent"]());
+    const PlugInComponents = shallowRef(getAction()["getAllPluginComponent"]());
     return {
       PlugInComponents,
     };

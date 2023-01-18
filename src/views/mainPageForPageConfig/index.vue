@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-19 15:04:51
+ * @LastEditTime: 2023-01-18 00:20:24
  * @FilePath: /configforpagedemo/src/views/mainPageForPageConfig/index.vue
 -->
 
@@ -29,6 +29,7 @@ import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { isValidKey } from "@/utils/index";
 import { GetAllUser } from "@/utils/api/user/user";
+import { getAction } from "@/router/util";
 
 const PageConfig = {};
 
@@ -39,7 +40,7 @@ export default defineComponent({
 
   computed: {
     component() {
-      return this.$modules.getAllComponents();
+      return getAction().getAllComponents();
     },
   },
   methods: {
