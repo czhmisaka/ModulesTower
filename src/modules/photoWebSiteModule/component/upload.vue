@@ -1,14 +1,23 @@
 <!--
  * @Date: 2022-10-20 21:59:36
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 09:39:16
- * @FilePath: /configforpagedemo/src/modules/minio/component/upload.vue
+ * @LastEditTime: 2023-01-18 17:33:23
+ * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/upload.vue
 -->
 <template>
   <cardBg>
-    <div :style="{}">
-      <el-upload v-model:file-list="fileList" action="/api/upload/" multiple>
-        <ElButton> 上传图片 </ElButton>
+    <div class="box">
+      <el-upload
+        style="width:100%;height;100%"
+        v-model:file-list="fileList"
+        :action="action ? action : '/api/upload/'"
+        multiple
+      >
+        <div class="box">
+          <el-icon :fontSize="sizeUnit.blockSize + 'px'">
+            <Upload></Upload>
+          </el-icon>
+        </div>
       </el-upload>
     </div>
   </cardBg>
@@ -46,6 +55,7 @@ export default defineComponent({
   baseProps: {},
 
   components: { cardBg },
+  props: ["action", "sizeUnit", "onClickFunc", "tips", "detail"],
   data() {
     return {
       fileList: [],
@@ -58,3 +68,12 @@ export default defineComponent({
   methods: {},
 });
 </script>
+
+<style lang="scss" scoped>
+.box {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 100%;
+}
+</style>
