@@ -1,4 +1,10 @@
 <!--
+ * @Date: 2023-01-20 23:35:00
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-01-21 15:37:05
+ * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/categoriesList.vue
+-->
+<!--
  * @Date: 2022-10-20 21:59:36
  * @LastEditors: CZH
  * @LastEditTime: 2023-01-19 23:05:52
@@ -32,13 +38,14 @@ import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import { ElMessage } from "element-plus";
 
 export default defineComponent({
-  name: "upload",
+  name: "categories",
   componentInfo: {
-    labelNameCn: "上传组件",
-    key: "upload",
-    description: "用于对接某个piwigo - pythonserver 的服务器",
+    labelNameCn: "相册列表组件",
+    key: "categories",
+    description:
+      "用于对接某个piwigo - pythonserver 的服务器，展示当前的所有相册列表，并提供部相册的增删功能",
     gridInfo: {
-      middle: gridSizeMaker(3, 2),
+      middle: gridSizeMaker(4, 8),
     },
   } as componentInfo,
 

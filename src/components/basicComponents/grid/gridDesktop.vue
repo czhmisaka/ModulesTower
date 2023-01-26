@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-18 00:27:49
+ * @LastEditTime: 2023-01-21 23:09:11
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -181,7 +181,7 @@ export default defineComponent({
 
     fastMode: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   computed: {},

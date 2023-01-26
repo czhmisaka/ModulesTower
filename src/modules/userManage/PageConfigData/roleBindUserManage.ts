@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-14 11:29:43
+ * @LastEditTime: 2023-01-21 20:55:02
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -79,7 +79,7 @@ export const roleBindUserManage = async () => {
             if (res?.data?.list)
               data = res.data.list.map((x) => {
                 return {
-                  value: x.id+'',
+                  value: x.id + "",
                   label: x.name,
                 };
               });
@@ -111,9 +111,7 @@ export const roleBindUserManage = async () => {
     elType: "primary",
     function: (that, data) => {
       let { roleList, role } = that.baseData;
-      let cell = roleList.filter(
-        (x) => x.id == (that.$route?.query?.roleId)
-      )[0];
+      let cell = roleList.filter((x) => x.id == that.$route?.query?.roleId)[0];
       if (role) cell = role;
       let drawerProps = {
         title: `绑定用户【${cell.name}】`,

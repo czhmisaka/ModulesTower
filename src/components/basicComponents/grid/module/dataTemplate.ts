@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-05 09:35:41
+ * @LastEditTime: 2023-01-25 21:11:38
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -177,6 +177,7 @@ export interface propInfo {
   [key: string]: {
     label: string;
     type: inputType;
+    description?: string;
     localData?: {
       [key: string]: any;
     };
@@ -295,5 +296,4 @@ export const gridCellMaker = (
   return gridCell;
 };
 
-
-export default {}
+export default {};

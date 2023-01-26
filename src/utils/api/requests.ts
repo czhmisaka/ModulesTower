@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-15 22:05:27
+ * @LastEditTime: 2023-01-21 20:52:36
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -101,7 +101,11 @@ request.interceptors.response.use(
   (response) => {
     removeQueue(response.config);
     const res = response.data;
-    if ((res.code === 200 && res.type != "error") || res.type == "success") {
+    if (
+      (res.code === 200 && res.type != "error") ||
+      res.type == "success" ||
+      res.code == 0
+    ) {
       return Promise.resolve(res);
     } else if (res.code === 401) {
       // 未登录状态
