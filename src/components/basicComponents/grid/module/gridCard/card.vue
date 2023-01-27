@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 12:53:50
+ * @LastEditTime: 2023-01-27 00:01:54
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
@@ -15,6 +15,8 @@ import {
 } from "./../dataTemplate";
 import { ElIcon } from "element-plus";
 import { componentLists } from "./module/componentLists";
+import { deviceDetection, useDark, useGlobal } from "@pureadmin/utils";
+
 export default defineComponent({
   name: "gridCardBox",
   emits: ["onChange", "openComponentsList"],
@@ -56,6 +58,7 @@ export default defineComponent({
     let isLoading = ref(true);
     const { sizeUnit, detail } = toRefs(props);
 
+    const { isDark } = useDark();
     // 判断动画尺寸
     const editShakeName = (size: { width: number; height: number }): string => {
       const { width, height } = size;
@@ -105,7 +108,7 @@ export default defineComponent({
                     height: "100%",
                     top: 0,
                     left: 0,
-                    background: "rgba(255,255,255,1)",
+                    background: isDark.value ? "rgba(33,33,33,1)" : "rgba(255,255,255,1)",
                     borderRadius: "12px",
                     zIndex: isLoading.value ? 100000 : -1,
                     display: "flex",

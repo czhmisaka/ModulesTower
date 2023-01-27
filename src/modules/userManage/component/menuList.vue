@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-21 22:54:11
+ * @LastEditTime: 2023-01-26 13:50:49
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -15,6 +15,7 @@
         :style="{
           width: '100%',
         }"
+        v-if="!noSearch"
         v-model="selectedKey"
         multiple
         filterable
@@ -71,6 +72,10 @@ export default defineComponent({
       description: "参考文档：https://element-plus.org/zh-CN/component/tree.html#props",
       type: inputType.obj,
     },
+    noSearch: {
+      label: "不展示搜索框",
+      type: inputType.boolean,
+    },
   } as propInfo,
 
   baseProps: {
@@ -93,7 +98,14 @@ export default defineComponent({
     },
   },
 
-  props: ["baseData", "sizeUnit", "outputKey", "defaultProps", "treeDataFunc"],
+  props: [
+    "baseData",
+    "sizeUnit",
+    "outputKey",
+    "defaultProps",
+    "treeDataFunc",
+    "noSearch",
+  ],
   components: { cardBg },
   watch: {},
   data: () => {

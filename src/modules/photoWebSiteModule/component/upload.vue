@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-10-20 21:59:36
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-19 23:05:52
+ * @LastEditTime: 2023-01-27 00:11:49
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/upload.vue
 -->
 <template>
@@ -9,7 +9,11 @@
     <div class="box">
       <el-upload
         style="width:100%;height;100%"
-        :action="action ? action : '/api/upload/'"
+        :action="
+          action
+            ? action
+            : '/api/upload/?category_id=' + (baseData?.category?.id || 3) + '&user_id=1'
+        "
         :on-success="success"
         multiple
       >
@@ -53,7 +57,7 @@ export default defineComponent({
   baseProps: {},
 
   components: { cardBg },
-  props: ["action", "sizeUnit", "onClickFunc", "tips", "detail"],
+  props: ["action", "sizeUnit", "onClickFunc", "tips", "detail", "baseData"],
   data() {
     return {
       Upload,

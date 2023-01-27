@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-26 10:31:28
+ * @LastEditTime: 2023-01-27 18:07:37
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -19,6 +19,7 @@ import {
   changeCardProperties,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { get, post } from "@/utils/api/requests";
+import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
 export const mainDesktop = async () =>
   [
     gridCellMaker(
@@ -32,7 +33,7 @@ export const mainDesktop = async () =>
       {}
     )
       .setPosition(0, 9)
-      .setSize(3, 3),
+      .setSize(2, 3),
 
     gridCellMaker(
       "userManage_menuListRemote",
@@ -44,6 +45,7 @@ export const mainDesktop = async () =>
       },
       {
         props: {
+          noSearch: true,
           treeDataFunc: async (that) => {
             let res = await get("/categories", {});
             return res.data;
@@ -57,7 +59,7 @@ export const mainDesktop = async () =>
       }
     )
       .setPosition(0, 0)
-      .setSize(3, 9),
+      .setSize(2, 9),
 
     gridCellMaker(
       "waterFall",
@@ -78,17 +80,20 @@ export const mainDesktop = async () =>
             );
             return res.data.list.map((x) => {
               let path = x.path.replace("./", "/");
-              return (
-                `http://42.192.134.238:1200/i.php?` + path.replace(".", "-sm.")
-                // i.php?/upload/2023/01/04/20230104223508-af744305-sm.jpg
-              );
+              return {
+                ...x,
+                url:
+                  `http://42.192.134.238:1200/i.php?` +
+                  path.replace(".", "-sm.") +
+                  "",
+              };
             });
           },
         },
       }
     )
-      .setPosition(3, 0)
-      .setSize(9, 12),
+      .setPosition(2, 0)
+      .setSize(8, 12),
 
     gridCellMaker(
       "editable",
@@ -102,7 +107,7 @@ export const mainDesktop = async () =>
         isSettingTool: true,
       }
     )
-      .setPosition(11, 0)
+      .setPosition(0, 11)
       .setSize(1, 1),
     gridCellMaker(
       "openComponents",
@@ -129,6 +134,6 @@ export const mainDesktop = async () =>
         },
       }
     )
-      .setPosition(11, 1)
+      .setPosition(0, 10)
       .setSize(1, 1),
   ] as gridCellTemplate[];
