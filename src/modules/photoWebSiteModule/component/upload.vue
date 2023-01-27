@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-10-20 21:59:36
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-27 00:11:49
+ * @LastEditTime: 2023-01-28 00:18:52
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/upload.vue
 -->
 <template>
@@ -9,6 +9,8 @@
     <div class="box">
       <el-upload
         style="width:100%;height;100%"
+        v-model:file-list="fileList"
+        :on-change="handleChange"
         :action="
           action
             ? action
@@ -71,6 +73,10 @@ export default defineComponent({
   methods: {
     success(e) {
       ElMessage.success("上传成功");
+    },
+
+    handleChange(e) {
+      console.log(this.fileList);
     },
   },
 });

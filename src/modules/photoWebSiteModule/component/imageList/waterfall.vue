@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-27 18:50:07
+ * @LastEditTime: 2023-01-28 00:56:34
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -18,6 +18,8 @@
             :cusStyle="{
               margin: row.margin + 'px',
             }"
+            :class="selectedId == item.id ? ' normal selectedIn' : 'normal'"
+            @mouseenter="selectedId = item.id"
           ></waterFallItem>
         </div>
       </div>
@@ -99,10 +101,10 @@ export default defineComponent({
         offset: 0,
       } as { [key: string]: number },
       open: false,
-
+      selectedId: -1,
       row: {
         height: "140",
-        rowIndexSize: 20,
+        rowIndexSize: 1,
         rowIndexNumber: 0,
         lastOffset: 0,
         margin: 3,
@@ -114,19 +116,23 @@ export default defineComponent({
       const that = this;
       const elw = that.$refs["waterfall"];
       let a = false;
-
+      const offsetForScrollBar = 12 + 17;
       setTimeout(() => {
         that.row.rowIndexNumber = Math.floor(
-          (elw.offsetWidth + 300) / that.row.rowIndexSize
+          (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
         );
-        that.row.lastOffset = (elw.offsetWidth + 300) % that.row.rowIndexSize;
+        that.row.lastOffset =
+          (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
       }, 300);
       window.addEventListener("resize", () => {
+        const elw = that.$refs["waterfall"];
         that.row.rowIndexNumber = Math.floor(
-          (elw.offsetWidth + 300) / that.row.rowIndexSize
+          (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
         );
-        that.row.lastOffset = (elw.offsetWidth + 300) % that.row.rowIndexSize;
+        that.row.lastOffset =
+          (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
       });
+
       elw.addEventListener("scroll", (e) => {
         const scroll = that.$refs["scroll"];
         const box = scroll.parentElement;
@@ -153,6 +159,7 @@ export default defineComponent({
       list = list.map((x) => {
         return {
           ...x,
+          origin: x,
           url: x.url,
           path: x.path,
           height: that.row.height,
@@ -182,7 +189,7 @@ export default defineComponent({
       let number = 0;
       while (list.length > 0) {
         number++;
-        if (number > 500) break;
+        if (number > list.length) break;
         for (let i = 0; i < list.length; i++) {
           let x = list[i];
           if (getRowIndex() >= x.rowIndex) {
@@ -190,7 +197,7 @@ export default defineComponent({
             list[i] = false;
           }
         }
-        list.filter(Boolean);
+        list = list.filter(Boolean);
         for (let i = list.length - 1; i >= 0; i--) {
           let x = list[i];
           if (getRowIndex() >= x.rowIndex) {
@@ -200,19 +207,21 @@ export default defineComponent({
             break;
           }
         }
-        list.filter(Boolean);
+        list = list.filter(Boolean);
         if (getRowIndex() > 0) {
           let row = that.rowList[that.rowList.length - 1];
           let cell = row[row.length - 1];
+          const { rowIndexSize, lastOffset } = that.row;
           if (cell) {
             cell = {
               ...cell,
-              width: cell.width + getRowIndex() * that.row.rowIndexSize + this.row.offset,
+              width: cell.width + Math.floor(getRowIndex() * rowIndexSize + lastOffset),
             };
+            that.rowList[that.rowList.length - 1][row.length - 1] = cell;
             that.rowList.push([]);
           }
         }
-        list.filter(Boolean);
+        list = list.filter(Boolean);
         if (list.length > 0 && getRowIndex() == 0) that.rowList.push([]);
       }
       that.data = { limit, offset: list.length + offset };
@@ -237,5 +246,16 @@ export default defineComponent({
   height: calc(140px + 40px);
   display: flex;
   justify-content: flex-start;
+}
+.selectedIn {
+  box-shadow: 0px 0px 2.5px rgba(9, 13, 255, 0.812), 0px 0px 2.7px rgba(9, 13, 255, 0.922),
+    0px 0px 2.6px rgba(9, 13, 255, 0.934), 0px 0px 2.3px rgba(9, 13, 255, 0.906),
+    0px 0px 2px rgba(9, 13, 255, 0.863), 0px 0px 1.7px rgba(9, 13, 255, 0.821),
+    0px 0px 1.4px rgba(9, 13, 255, 0.794), 0px 0px 1.3px rgba(9, 13, 255, 0.797),
+    0px 0px 1.5px rgba(9, 13, 255, 0.852), 0px 0px 4px rgba(9, 13, 255, 1);
+}
+.normal {
+  transition: all 0.1s;
+  border-radius: 2px;
 }
 </style>

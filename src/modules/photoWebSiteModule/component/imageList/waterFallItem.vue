@@ -1,18 +1,21 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-27 20:57:46
+ * @LastEditTime: 2023-01-28 00:58:13
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterFallItem.vue
 -->
 
 <script lang="ts">
 import { defineComponent, h } from "vue";
+import { useDark } from "@pureadmin/utils";
+import { ElImage } from "element-plus";
 
 export default defineComponent({
   name: "waterFallItem",
   props: ["url", "width", "height", "cusStyle", "item"],
   setup(props, context) {
-    console.log(props.item);
+    // console.log(props.item);
+    const { isDark } = useDark();
     return () =>
       h(
         "div",
@@ -21,14 +24,19 @@ export default defineComponent({
             float: "left",
             width: props.width + "px",
             height: props.height + "px",
-            backgroundSize: "cover",
-            backgroundImage: `url(${props.url})`,
-            backgroundPosition: "center",
+            // backgroundSize: "cover",
+            // backgroundImage: `url(${props.url})`,
+            // backgroundPosition: "center",
             ...props.cusStyle,
             display: "inline-block",
           },
         },
         [
+          h(ElImage, {
+            style: { width: "100%", height: "100%" },
+            src: props.url,
+            previewSrcList: [`http://42.192.134.238:1200/` + props.item.origin.path],
+          }),
           h(
             "div",
             {
@@ -36,8 +44,8 @@ export default defineComponent({
                 height: "40px",
                 width: "calc(100% - 12px)",
                 position: "relative",
-                marginTop: "140px",
-                color: "white",
+                marginTop: "-8px",
+                color: isDark.value ? "white" : "#333",
                 padding: "0px 6px ",
               },
             },
@@ -65,7 +73,7 @@ export default defineComponent({
                     whiteSpace: "nowrap",
                   },
                 },
-                props.item.date_available.replace("T", " ")
+                [`${props.item.origin.width} x ${props.item.origin.height}`]
               ),
             ]
           ),
