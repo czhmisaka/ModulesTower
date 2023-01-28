@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 14:45:07
+ * @LastEditTime: 2023-01-28 11:14:46
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -182,6 +182,11 @@ export default defineComponent({
     fastMode: {
       type: Boolean,
       default: false,
+    },
+
+    preBaseData: {
+      type: Object,
+      default: {},
     },
   },
   computed: {},
@@ -435,7 +440,10 @@ export default defineComponent({
   },
 
   async created() {
-    // this.PlugInComponents = this.$modules.getAllPluginComponent();
+    if (this.preBaseData && Object.keys(this.preBaseData).length > 0)
+      Object.keys(this.preBaseData).map((key) => {
+        this.baseData[key] = this.preBaseData[key];
+      });
   },
 
   async mounted() {

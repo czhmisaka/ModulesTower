@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-18 10:54:41
+ * @LastEditTime: 2023-01-28 15:40:23
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -122,8 +122,8 @@ const searchTable = new SearchCellStorage([
     "searchChildrenFlag",
     searchCell(formInputType.select, {
       inputOptions: {
-        "true": "搜索下级部门",
-        "false": "搜索本部门"
+        "true": "包含下级部门",
+        "false": "仅搜索本部门"
       }
     })
   ),
