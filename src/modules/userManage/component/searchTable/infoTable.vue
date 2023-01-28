@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-18 10:36:20
+ * @LastEditTime: 2023-01-28 17:36:39
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -79,10 +79,11 @@
               v-if="btnList(item, scope.row)"
               :loading="btnList(item, scope.row)[0].isLoading"
               size="small"
+              text
               @click="btnClick(btnList(item, scope.row)[0], scope.row)"
-              :type="btnList(item, scope.row)[0].elType"
-              :icon="btnList(item, scope.row)[0].icon"
             >
+              <!-- :type="btnList(item, scope.row)[0].elType" -->
+              {{ btnList(item, scope.row)[1]?.label }}
             </el-button>
             <el-button
               v-if="
@@ -92,18 +93,19 @@
               "
               :loading="btnList(item, scope.row)[1].isLoading"
               size="small"
+              text
               @click="btnClick(btnList(item, scope.row)[1], scope.row)"
               :type="btnList(item, scope.row)[1].elType"
-              :icon="btnList(item, scope.row)[1].icon"
             >
+              {{ btnList(item, scope.row)[1]?.label }}
             </el-button>
             <el-button
               v-if="!item.table.noDetail"
               size="small"
               type="default"
               @click="cellDblclick(scope.row)"
+              icon="More"
             >
-              详情
             </el-button>
           </div>
         </template>
