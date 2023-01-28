@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-09 08:58:51
+ * @LastEditTime: 2023-01-28 17:24:58
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
@@ -10,7 +10,7 @@
       padding: '12px',
     }"
   >
-    <div class="menuBox">
+    <div :class="`menuBox box_${random}`">
       <el-select
         :style="{
           width: '100%',
@@ -31,11 +31,24 @@
         />
       </el-select>
       <el-tree
+        v-model="treeData"
         :props="defaultProps"
         :lazy="true"
         :load="treeDataFuncByLevel"
         @node-click="nodeClick"
-      />
+      >
+        <template #default="{ node, data }">
+          <div class="custom-tree-node">
+            <div class="text">{{ node.label }}</div>
+            <el-button
+              text
+              size="small"
+              icon="More"
+              @click.stop="clickItemDetail(data)"
+            ></el-button>
+          </div>
+        </template>
+      </el-tree>
     </div>
   </cardBg>
 </template>
@@ -51,6 +64,7 @@ import {
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 
+const random = Math.floor(Math.random() * 10000000);
 export default defineComponent({
   componentInfo: {
     labelNameCn: "菜单列表组件(远程数据)",
@@ -76,21 +90,14 @@ export default defineComponent({
       description: "参考文档：https://element-plus.org/zh-CN/component/tree.html#props",
       type: inputType.obj,
     },
+    clickItemDetailFunc: {
+      label: "点击元素详情事件",
+      description: "一般用于展示元素弹窗等",
+      type: inputType.functionEditor,
+    },
   } as propInfo,
 
   baseProps: {
-    treeDataFunc: () => {
-      let num = 0;
-      let testData = () => {
-        return { label: "Hello World _ " + num, value: "测试数据" + num++ };
-      };
-      return [
-        {
-          ...testData(),
-          children: [testData(), testData()],
-        },
-      ];
-    },
     outputKey: "menuSelectCell",
     defaultProps: {
       children: "children",
@@ -101,10 +108,10 @@ export default defineComponent({
   props: [
     "baseData",
     "sizeUnit",
-    "treeDataFunc",
     "outputKey",
     "defaultProps",
     "treeDataFuncByLevel",
+    "clickItemDetailFunc",
   ],
   components: { cardBg },
   watch: {},
@@ -113,6 +120,7 @@ export default defineComponent({
       treeData: [],
       searchList: [],
       selectedKey: "",
+      random,
     };
   },
   async mounted() {
@@ -140,9 +148,27 @@ export default defineComponent({
      * @authors: CZH
      * @Date: 2022-11-18 17:04:57
      */
-    async init() {},
+    async init() {
+      const that = this;
+      setTimeout(() => {
+        const el = document.querySelector(`.box_${that.random} .custom-tree-node`);
+        if ("click" in el) el["click"]();
+      }, 500);
+    },
 
     async fillter() {},
+
+    /**
+     * @name: clickItemDetail
+     * @description: 点击元素详情按钮事件
+     * @authors: CZH
+     * @Date: 2023-01-28 15:08:50
+     * @param {*} data
+     */
+    async clickItemDetail(data) {
+      const that = this;
+      if (this.clickItemDetailFunc) this.clickItemDetailFunc(that, data);
+    },
   },
 });
 </script>
@@ -151,5 +177,34 @@ export default defineComponent({
 .menuBox {
   width: 100%;
   height: 100%;
+  ::v-deep .el-tree-node__label {
+    width: calc(100% - 24px);
+  }
+}
+
+.treeNode {
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  line-height: 30px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
+  .text {
+    width: calc(100% - 40px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+  }
 }
 </style>

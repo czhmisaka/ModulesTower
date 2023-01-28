@@ -183,6 +183,11 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+
+    preBaseData: {
+      type: Object,
+      default: {},
+    },
   },
   computed: {},
 
@@ -435,7 +440,10 @@ export default defineComponent({
   },
 
   async created() {
-    // this.PlugInComponents = this.$modules.getAllPluginComponent();
+    if (this.preBaseData && Object.keys(this.preBaseData).length > 0)
+      Object.keys(this.preBaseData).map((key) => {
+        this.baseData[key] = this.preBaseData[key];
+      });
   },
 
   async mounted() {

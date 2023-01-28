@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-10 10:10:52
+ * @LastEditTime: 2023-01-17 14:18:19
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -138,7 +138,7 @@ export default defineComponent({
       formProps: {
         layoutColumn: 1,
         inlineFooter: false,
-        labelSuffix: "：",
+        labelSuffix: "",
         labelPosition: "left",
         isMiniDes: false,
         defaultSelectFirstOption: true,
@@ -165,7 +165,7 @@ export default defineComponent({
      */
     async initForm(queryItemTemplate: tableCellTemplate[] = this.queryItemTemplate) {
       let properties = {} as stringAnyObj;
-      properties = await propertiesMaker(queryItemTemplate, this);
+      properties = await propertiesMaker(queryItemTemplate, this, true);
       this.schema = {
         ...this.schema,
         properties,

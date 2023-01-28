@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-21 20:55:02
+ * @LastEditTime: 2023-01-28 21:56:58
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -40,6 +40,7 @@ import {
 import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
+import { roleDetailModel } from "@/modules/userManage/PageConfigData/roleManage";
 
 export const roleBindUserManage = async () => {
   // 性别
@@ -180,13 +181,47 @@ export const roleBindUserManage = async () => {
                 value: x.id,
               };
             });
+
+            function getSon(id) {
+              let back = [];
+              back = data
+                .map((x) => {
+                  return x.parentId == id
+                    ? {
+                        ...x,
+                        children: getSon(x.id),
+                      }
+                    : false;
+                })
+                .filter(Boolean);
+              return back;
+            }
+
+            let back = data
+              .map((x) => {
+                if (x.parentId == 0) {
+                  return x;
+                } else {
+                  return false;
+                }
+              })
+              .filter(Boolean)
+              .map((x) => {
+                return { ...x, children: getSon(x.id) };
+              });
             setData(that, { roleList: data });
-            return data;
+            return back;
           },
           outputKey: "role",
           defaultProps: {
             label: "name",
             children: "children",
+          },
+          clickItemDetailFunc: (that, data) => {
+            that.$modules.getModuleApi()["userManage_openDrawerForm"](that, {
+              ...roleDetailModel,
+              data,
+            });
           },
         },
         isSettingTool: false,
@@ -227,7 +262,7 @@ export const roleBindUserManage = async () => {
           },
           searchKeyWithBaseData: ["role"],
           btnList,
-          autoSearch: true,
+          autoSearch: false,
         },
         isSettingTool: false,
       }

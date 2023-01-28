@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-17 22:24:33
+ * @LastEditTime: 2023-01-28 21:56:09
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -47,7 +47,7 @@ const gender = {
 };
 
 const userTableCellStorage = new SearchCellStorage([
-  tableCellTemplateMaker("名字", "name"),
+  tableCellTemplateMaker("姓名", "name"),
   tableCellTemplateMaker("性别", "gender", staticSelectCell(gender)),
   tableCellTemplateMaker("icon", "icon"),
   tableCellTemplateMaker("简介", "description"),
@@ -110,7 +110,8 @@ const userTableCellStorage = new SearchCellStorage([
       },
     })
   ),
-
+  tableCellTemplateMaker('部门信息', 'unitNames'),
+  tableCellTemplateMaker('职务', 'jobName'),
   tableCellTemplateMaker("排序", "orderNumber"),
 ]);
 
@@ -119,7 +120,12 @@ const searchTable = new SearchCellStorage([
   tableCellTemplateMaker(
     "搜索子部门",
     "searchChildrenFlag",
-    searchCell(formInputType.radio)
+    searchCell(formInputType.select, {
+      inputOptions: {
+        "true": "包含下级部门",
+        "false": "仅搜索本部门"
+      }
+    })
   ),
   tableCellTemplateMaker(
     "部门",
@@ -172,11 +178,11 @@ const searchTable = new SearchCellStorage([
   * @authors: CZH
   * @Date: 2022-12-09 17:50:58
   */
-const addNewModel = btnMaker("创建新用户", btnActionTemplate.Function, {
+const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
   function: async (that, data) => {
     let drawerProps = {
       title: "创建新用户",
-      queryItemTemplate: userTableCellStorage.getByLabelArr([
+      queryItemTemplate: userTableCellStorage.getByKeyArr([
         "name",
         "gender",
         "icon",
@@ -206,6 +212,7 @@ const addNewModel = btnMaker("创建新用户", btnActionTemplate.Function, {
           ],
         }),
       ],
+      data: {}
     };
     that.$modules
       .getModuleApi()
@@ -227,7 +234,7 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
     data.gender = data.gender + ''
     let drawerProps = {
       title: "用户编辑",
-      queryItemTemplate: userTableCellStorage.getByLabelArr([
+      queryItemTemplate: userTableCellStorage.getByKeyArr([
         "name",
         "gender",
         "icon",
@@ -315,7 +322,6 @@ const roleBindBtn = btnMaker("用户角色管理", btnActionTemplate.Function, {
             let attr = {
               buttonName: '新增角色',
               callBack: async (data) => {
-                console.log(data, 'asd')
                 let res = await post('/web/usc/role/authUser', { roleId: data.roleId, uids: [data.id] })
                 ElMessage[res.message == '成功' ? 'success' : 'err'](res.message)
                 let user = await post('/web/usc/user/select', { id: data.id })
@@ -403,6 +409,8 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
   },
 });
 
+
+
 /**
  * @name: mainDesktop
  * @description: 基于部门的用户管理
@@ -442,12 +450,12 @@ export const mainDesktop = async () => {
     elType: "danger",
   });
 
-  const btnList = [selectedDeleteBtn];
+  const btnList = [addNewModel, selectedDeleteBtn];
 
   const tableAction = tableCellTemplateMaker(
     "操作",
     "actionBtnList",
-    actionCell([unitBindBtn], {
+    actionCell([unitBindBtn, roleBindBtn, editUserModel], {
       fixed: "right",
     })
   );
@@ -499,7 +507,9 @@ export const mainDesktop = async () => {
       {
         props: {
           searchItemTemplate: searchTable.getAll(["unitId"]),
-          showItemTemplate: [...userTableCellStorage.getAll(), tableAction],
+          showItemTemplate: [...userTableCellStorage.getByLabelArr([
+            '姓名', '手机号', '部门信息', '职务'
+          ]), tableAction],
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await post("/web/usc/user/page/unit", {
               ...query,
@@ -509,8 +519,11 @@ export const mainDesktop = async () => {
             if (!res.data["data"]) res.data["data"] = res.data["list"];
             return res.data;
           },
-          autoSearch: true,
+          autoSearch: false,
           searchKeyWithBaseData: ["unit"],
+          defaultQuery: {
+            searchChildrenFlag: 'false'
+          },
           btnList,
         },
         isSettingTool: false,
@@ -546,13 +559,12 @@ export const userManage = async () => {
       },
       {
         props: {
-          searchItemTemplate: searchTable.getAll(['searchChildrenFlag']),
+          searchItemTemplate: searchTable.getAll(),
           showItemTemplate: [
             ...userTableCellStorage.getAll(["unitId"]),
             tableAction,
           ],
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            console.log(query, "asd");
             let res = await post("/web/usc/user/page/org", {
               ...query,
             });

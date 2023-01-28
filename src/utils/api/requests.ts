@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-21 20:52:36
+ * @LastEditTime: 2023-01-28 21:57:18
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -43,7 +43,7 @@ const request = axios.create({
 
 // 防止重复提交 利用axios的cancelToken
 // 这里保存了部分拒绝进入重复请求中断功能的请求
-let pendingList: string[] = []; // 声明一个数组用于存储每个ajax请求的取消函数和ajax标识
+let pendingList: string[] = []; // 声明一个数组用于存储每个ajax请的取消函数和ajax标识
 
 /**
  * 取消重复请求

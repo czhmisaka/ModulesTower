@@ -1,12 +1,12 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-11 17:49:36
+ * @LastEditTime: 2023-01-18 10:44:18
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
-import inputElement from "./inputElement";
+import inputElement, { globalBaseCellDeal } from "./inputElement";
 import {
   btnCellTemplate,
   stringAnyObj,
@@ -17,6 +17,11 @@ import {
   tableCellTemplate,
   formInputType,
 } from "@/modules/userManage/types";
+
+const baseShowFunc = (data, key) => {
+  if (data[key] != undefined) return data[key] + "";
+  else return "无数据";
+};
 
 /**
  * @name: searchCellStorage
@@ -34,11 +39,7 @@ export class SearchCellStorage {
     this.storage.map((cell) => {
       if (label && label == cell.label) back = cell;
     });
-    if (!back.label)
-      return {
-        label: `-${label}-`,
-        prop: `no_label_${Math.random()}`,
-      };
+    if (!back.label) return false;
     if (options) return { ...back, ...options };
     else
       return {
@@ -57,8 +58,9 @@ export class SearchCellStorage {
   getByLabelArr(labelArr: string[]) {
     let back = [];
     for (let key in labelArr) {
-      back.push(this.getByKey(labelArr[key]));
+      back.push(this.getByLabel(labelArr[key]));
     }
+    console.log(back.filter(Boolean));
     return back.filter(Boolean);
   }
 
@@ -75,7 +77,7 @@ export class SearchCellStorage {
     this.storage.map((cell) => {
       if (key && key == cell.key) back = cell;
     });
-    if (!back.key) return null;
+    if (!back.key) return false;
     if (options) return { ...back, ...options };
     else
       return {
@@ -145,6 +147,35 @@ export const DateCell = (options: stringAnyObj = {}): tableCellOptions => {
 };
 
 /**
+ * @name: DateRangeCell画
+ * @description: 创建日期区间
+ * @authors: CZH
+ * @Date: 2023-01-16 14:11:53
+ * @param {stringAnyObj} options
+ */
+export const DateRangeCell = (
+  placeholder: string,
+  options: stringAnyObj = {}
+): tableCellOptions => {
+  return {
+    ...showCell(showType.func, {
+      showFunc: (data: any, key: string) =>
+        new Date(data[key]).toLocaleString(),
+      ...options,
+    }),
+    ...searchCell(formInputType.datePickerRanger, {
+      inputOptions: {},
+      propertiesOption: {
+        "ui:options": {
+          "start-placeholder": placeholder + "开始时间",
+          "end-placeholder": placeholder + "结束时间",
+        },
+      },
+    }),
+  };
+};
+
+/**
  * @name: showCell
  * @description: 创建输入单元，表单展示用
  * @authors: CZH
@@ -158,7 +189,7 @@ export const showCell = (
   tableCellOption.table = {
     type: showType,
     sortable: true,
-    showFunc: (data: any, key: string) => data[key],
+    showFunc: baseShowFunc,
     ...options,
   };
   return tableCellOption;
@@ -241,7 +272,7 @@ export const tableCellTemplateMaker = (
     label,
     key,
     table: {
-      showFunc: (data, key) => data[key],
+      showFunc: baseShowFunc,
       type: showType.func,
       sortable: true,
       width: "auto",
@@ -268,12 +299,14 @@ export const tableCellTemplateMaker = (
 
 export const propertiesMaker = async (
   cellList: tableCellTemplate[],
-  that: stringAnyObj
+  that: stringAnyObj,
+  needTitle: boolean = false
 ) => {
   let properties = {} as stringAnyObj;
   if (!cellList || cellList.length == 0) return properties;
   for (let i = 0; i < cellList.length; i++) {
     const cell = cellList[i];
+    if (!cell) continue;
     const { input } = cell;
     if (input && input.type) {
       const inputElementDeal = inputElement[cell.input.type];
@@ -290,6 +323,13 @@ export const propertiesMaker = async (
         input.propertiesOption
       );
     }
+    if (properties[cell.key])
+      properties[cell.key] = globalBaseCellDeal(
+        cell,
+        properties[cell.key],
+        needTitle
+      );
+    console.log(properties, cell.label);
   }
   return properties;
 };
@@ -307,6 +347,7 @@ export const uiSchemaMaker = async (
   let uiSchema = {} as stringAnyObj;
   for (let i = 0; i < cellList.length; i++) {
     const cell = cellList[i];
+    if (!cell) continue;
     const { input } = cell;
     if (input && input.type) {
       const inputElementDeal = inputElement[cell.input.type];

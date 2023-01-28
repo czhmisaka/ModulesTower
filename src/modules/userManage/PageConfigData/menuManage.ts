@@ -58,8 +58,6 @@ import {
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { h } from "vue";
-import { getIcon } from "@/utils";
 
 const typeToModule = {
   1: "模块",
@@ -88,6 +86,11 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
     }
   },
 });
+
+const showLinkOptions = {
+  true: "是",
+  false: "否",
+};
 
 const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
   icon: "Delete",
@@ -154,17 +157,16 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       },
     }),
   }),
-  tableCellTemplateMaker(
-    "排序",
-    "orderNumber",
-    searchCell(formInputType.number, {
+  tableCellTemplateMaker("排序", "orderNumber", {
+    ...searchCell(formInputType.number, {
       propertiesOption: {
         "ui:options": {
           min: 0,
         },
       },
-    })
-  ),
+    }),
+    ...showCell(showType.dataKey),
+  }),
   tableCellTemplateMaker("类型", "type", {
     ...showCell(showType.func, {
       showFunc: (data, key) => typeToModule[data[key]],
@@ -217,16 +219,16 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       },
     })
   ),
-  tableCellTemplateMaker(
-    "作为菜单展示",
-    "showLink",
-    searchCell(formInputType.select, {
-      inputOptions: {
-        true: "开",
-        false: "关",
+  tableCellTemplateMaker("作为菜单展示", "showLink", {
+    ...searchCell(formInputType.select, {
+      inputOptions: showLinkOptions,
+    }),
+    ...showCell(showType.func, {
+      showFunc: (data, key) => {
+        return showLinkOptions[data[key] + ""];
       },
-    })
-  ),
+    }),
+  }),
   // tableCellTemplateMaker("页面配置", "pageConfigId"),
   // tableCellTemplateMaker("配置参数", "meta"),
   tableCellTemplateMaker(
@@ -396,10 +398,13 @@ export const menuManage = async () => {
       {
         props: {
           searchItemTemplate: SearchTemplate,
-          showItemTemplate: pageConfigDataTableCellStorage.getAll([
-            "id",
-            "parentId",
-            "urls",
+          showItemTemplate: pageConfigDataTableCellStorage.getByLabelArr([
+            "名称",
+            "类型",
+            "图标",
+            "接口",
+            "作为菜单展示",
+            "操作",
           ]),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};
@@ -414,10 +419,10 @@ export const menuManage = async () => {
             });
           },
           defaultQuery: {
-            showLink: true,
+            showLink: null,
           },
           btnList,
-          autoSearch: true,
+          autoSearch: false,
         },
         isSettingTool: false,
       }
