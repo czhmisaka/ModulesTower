@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 15:55:43
+ * @LastEditTime: 2023-01-28 17:24:58
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
@@ -49,7 +49,6 @@
           </div>
         </template>
       </el-tree>
-      {{ treeData }}
     </div>
   </cardBg>
 </template>
@@ -167,7 +166,8 @@ export default defineComponent({
      * @param {*} data
      */
     async clickItemDetail(data) {
-      console.log(data, "asd");
+      const that = this;
+      if (this.clickItemDetailFunc) this.clickItemDetailFunc(that, data);
     },
   },
 });
