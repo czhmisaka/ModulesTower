@@ -17,7 +17,7 @@
     "@pureadmin/components": "^1.1.0",
     "@pureadmin/descriptions": "^1.1.0",
     "@pureadmin/table": "^1.2.0",
-    "@pureadmin/utils": "^1.1.5",
+    "@pureadmin/utils": "1.7.1",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-dynamic-import-vars": "^1.4.1",
     "@rollup/plugin-node-resolve": "^13.1.1",
