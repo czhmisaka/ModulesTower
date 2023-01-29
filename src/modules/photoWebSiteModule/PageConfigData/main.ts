@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 00:33:30
+ * @LastEditTime: 2023-01-29 11:17:54
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -82,10 +82,7 @@ export const mainDesktop = async () =>
               let path = x.path.replace("./", "/");
               return {
                 ...x,
-                url:
-                  `http://42.192.134.238:1200/i.php?` +
-                  path.replace(".", "-sm.") +
-                  "",
+                url: `/imageserver/i.php?` + path.replace(".", "-sm.") + "",
               };
             });
           },

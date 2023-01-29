@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 21:55:06
+ * @LastEditTime: 2023-01-29 11:33:32
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import { loadEnv } from "vite";
@@ -109,13 +109,20 @@ export default ({ mode, command }) => {
       strictPort: false,
       port: 9050,
       proxy: {
-        "/api/": {
+        "/api": {
           name: "dev",
           target: VITE_PROXY_DOMAIN,
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(/^\/api/, "/"),
         },
+        "/imageserver/": {
+          name: 'dev',
+          target: 'http://42.192.134.238:1200/',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace((/^\/imageserver/, "/"))
+        }
       },
     },
     define: {
