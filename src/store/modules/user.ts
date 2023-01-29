@@ -20,6 +20,8 @@ import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
 import { stringAnyObj } from "@/modules/userManage/types";
 import { menuInfoTemplate } from "@/components/menu/menuConfigTemplate";
+
+sessionStorage;
 export const useUserStore = defineStore({
   id: "pure-user",
   state: (): userType => ({
