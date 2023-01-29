@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 00:58:13
+ * @LastEditTime: 2023-01-29 00:57:40
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterFallItem.vue
 -->
 
@@ -12,7 +12,7 @@ import { ElImage } from "element-plus";
 
 export default defineComponent({
   name: "waterFallItem",
-  props: ["url", "width", "height", "cusStyle", "item"],
+  props: ["url", "width", "height", "cusStyle", "item", "noPreview"],
   setup(props, context) {
     // console.log(props.item);
     const { isDark } = useDark();
@@ -22,8 +22,8 @@ export default defineComponent({
         {
           style: {
             float: "left",
-            width: props.width + "px",
-            height: props.height + "px",
+            width: props.width ? props.width + "px" : "100%",
+            height: props.height ? props.height + "px" : "",
             // backgroundSize: "cover",
             // backgroundImage: `url(${props.url})`,
             // backgroundPosition: "center",
@@ -33,9 +33,13 @@ export default defineComponent({
         },
         [
           h(ElImage, {
-            style: { width: "100%", height: "100%" },
+            style: { width: "100%", height: "100%", borderRadius: "3px" },
             src: props.url,
-            previewSrcList: [`http://42.192.134.238:1200/` + props.item.origin.path],
+            teleported: true,
+            fit: "cover",
+            previewSrcList: props.noPreview
+              ? []
+              : [`http://42.192.134.238:1200/` + props.item.origin.path],
           }),
           h(
             "div",

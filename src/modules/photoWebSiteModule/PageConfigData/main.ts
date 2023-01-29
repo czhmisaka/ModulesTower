@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-27 18:07:37
+ * @LastEditTime: 2023-01-29 00:33:30
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -136,4 +136,18 @@ export const mainDesktop = async () =>
     )
       .setPosition(0, 10)
       .setSize(1, 1),
+    gridCellMaker(
+      "InfoCard",
+      "图片信息",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_infoCard",
+      },
+      {
+        props: {},
+      }
+    )
+      .setPosition(10, 0)
+      .setSize(2, 12),
   ] as gridCellTemplate[];

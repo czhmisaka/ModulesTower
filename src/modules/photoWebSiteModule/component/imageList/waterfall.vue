@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 00:56:34
+ * @LastEditTime: 2023-01-29 01:18:03
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -20,6 +20,7 @@
             }"
             :class="selectedId == item.id ? ' normal selectedIn' : 'normal'"
             @mouseenter="selectedId = item.id"
+            @click="setImage(item)"
           ></waterFallItem>
         </div>
       </div>
@@ -30,6 +31,8 @@
 <script lang="ts">
 import { defineComponent, watch } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
+
 import {
   componentInfo,
   inputType,
@@ -38,6 +41,7 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import waterFallItem from "@/modules/photoWebSiteModule/component/imageList/waterFallItem.vue";
 
+let Index = {};
 export default defineComponent({
   componentInfo: {
     labelNameCn: "瀑布流",
@@ -70,7 +74,11 @@ export default defineComponent({
   watch: {
     baseData: {
       handler: async function (val) {
-        if (Object.keys(val).indexOf(this.watchKeyForCategory) > -1) {
+        if (
+          Object.keys(val).indexOf(this.watchKeyForCategory) > -1 &&
+          Index != val[this.watchKeyForCategory]
+        ) {
+          Index = val[this.watchKeyForCategory];
           this.$nextTick();
           this.data.offset = 0;
           this.rowList = [[]];
@@ -97,13 +105,13 @@ export default defineComponent({
         [key: string]: any;
       }[][],
       data: {
-        limit: 100,
+        limit: 50,
         offset: 0,
       } as { [key: string]: number },
       open: false,
       selectedId: -1,
       row: {
-        height: "140",
+        height: "100",
         rowIndexSize: 1,
         rowIndexNumber: 0,
         lastOffset: 0,
@@ -147,6 +155,10 @@ export default defineComponent({
       });
     },
 
+    setImage(data) {
+      setData(this, { image: data });
+    },
+
     async getImgList(val = this.baseData[this.watchKeyForCategory], isInit = false) {
       const that = this;
       if (!val) return null;
@@ -156,6 +168,7 @@ export default defineComponent({
         limit,
         offset,
       });
+      that.data = { limit, offset: list.length + offset };
       list = list.map((x) => {
         return {
           ...x,
@@ -224,7 +237,6 @@ export default defineComponent({
         list = list.filter(Boolean);
         if (list.length > 0 && getRowIndex() == 0) that.rowList.push([]);
       }
-      that.data = { limit, offset: list.length + offset };
     },
   },
 });
@@ -243,7 +255,7 @@ export default defineComponent({
 }
 .row {
   width: 100%;
-  height: calc(140px + 40px);
+  height: calc(100px + 40px);
   display: flex;
   justify-content: flex-start;
 }
