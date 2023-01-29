@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 00:57:40
+ * @LastEditTime: 2023-01-29 11:51:46
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterFallItem.vue
 -->
 
@@ -39,7 +39,7 @@ export default defineComponent({
             fit: "cover",
             previewSrcList: props.noPreview
               ? []
-              : [`http://42.192.134.238:1200/` + props.item.origin.path],
+              : [`/imageserver/` + props.item.origin.path],
           }),
           h(
             "div",
