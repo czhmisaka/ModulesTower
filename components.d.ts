@@ -61,7 +61,6 @@ declare module 'vue' {
     Icon: typeof import('./src/components/basicComponents/cell/icon/icon.vue')['default']
     IconCell: typeof import('./src/components/basicComponents/cell/icon/iconCell.vue')['default']
     Iframe: typeof import('./src/components/basicComponents/cell/info/iframe.vue')['default']
-    InfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
     InfoCard: typeof import('./src/components/basicComponents/cell/info/infoCard.vue')['default']
     InfoCell: typeof import('./src/components/basicComponents/cell/info/infoCell.vue')['default']
     InfoFile: typeof import('./src/components/basicComponents/cell/info/infoFile/infoFile.vue')['default']
