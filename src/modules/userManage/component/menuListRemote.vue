@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 17:24:58
+ * @LastEditTime: 2023-01-29 16:51:47
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
@@ -41,6 +41,7 @@
           <div class="custom-tree-node">
             <div class="text">{{ node.label }}</div>
             <el-button
+              v-if="clickItemDetailFunc"
               text
               size="small"
               icon="More"

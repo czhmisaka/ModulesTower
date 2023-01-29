@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 17:25:29
+ * @LastEditTime: 2023-01-29 16:01:19
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -213,7 +213,7 @@ const editModelBtn = btnMaker("编辑", btnActionTemplate.Function, {
 });
 
 // 打开新增弹窗
-const addModelBtn = {
+export const addModelBtn = {
   ...editModelBtn,
   label: "新增",
   icon: "Plus",
@@ -261,7 +261,7 @@ export const roleDetailModel = {
     "更新时间",
     "操作",
   ]),
-  btnList: [addModelBtn, deleteBtn, editModelBtn],
+  btnList: [{ ...addModelBtn, label: "新增子角色" }, deleteBtn, editModelBtn],
   noEdit: true,
 };
 

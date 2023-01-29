@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 17:24:14
+ * @LastEditTime: 2023-01-29 15:55:25
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -141,15 +141,28 @@ export const roleBindUserManage = async () => {
         (x) => x.id == (that.$route?.query?.roleId || that?.baseData?.role?.id)
       )[0];
       if (role) cell = role;
-      let res = await post("/web/usc/role/cancelUser", {
-        uid: data.id,
-        roleId: cell.id,
+      ElMessageBox({
+        title:
+          "确认删除【" +
+          data.name +
+          "】和 角色【" +
+          cell.name +
+          "】的绑定关系吗吗？",
+        type: "warning",
+        callback: async (action) => {
+          if (action == "confirm") {
+            let res = await post("/web/usc/role/cancelUser", {
+              uids: [data.id],
+              roleId: cell.id,
+            });
+            if (res.message == "成功") {
+              ElMessage.success(res.message);
+              if (that.close) that.close();
+              else refreshDesktop(that);
+            } else ElMessage.error(res.message);
+          }
+        },
       });
-      if (res.message == "成功") {
-        ElMessage.success(res.message);
-        if (that.close) that.close();
-        else refreshDesktop(that);
-      } else ElMessage.error(res.message);
     },
   });
 

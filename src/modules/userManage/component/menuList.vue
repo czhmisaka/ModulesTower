@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 16:57:04
+ * @LastEditTime: 2023-01-29 16:55:46
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -11,30 +11,42 @@
     }"
   >
     <div :class="`menuBox box_${random}`">
-      <el-select
-        :style="{
-          width: '100%',
-        }"
-        v-model="selectedKey"
-        multiple
-        filterable
-        remote
-        reserve-keyword
-        :remote-method="fillter"
-        placeholder="搜索"
-      >
-        <el-option
-          v-for="item in searchList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+      <div class="searchBar">
+        <el-select
+          :style="{
+            width: '100%',
+          }"
+          v-model="selectedKey"
+          multiple
+          filterable
+          remote
+          reserve-keyword
+          :remote-method="fillter"
+          placeholder="搜索"
+        >
+          <el-option
+            v-for="item in searchList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <el-button
+          v-if="searcBtn"
+          :loading="searcBtn.isLoading"
+          size="small"
+          text
+          @click="btnClick(searcBtn)"
+        >
+          {{ searcBtn.label }}
+        </el-button>
+      </div>
       <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick">
         <template #default="{ node, data }">
           <div class="custom-tree-node">
             <div class="text">{{ node.label }}</div>
             <el-button
+              v-if="clickItemDetailFunc"
               text
               size="small"
               icon="More"
@@ -57,6 +69,7 @@ import {
   propInfo,
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
+import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../types";
 
 const random = Math.floor(Math.random() * 10000000);
 
@@ -90,9 +103,14 @@ export default defineComponent({
       description: "一般用于展示元素弹窗等",
       type: inputType.functionEditor,
     },
+    searcBtn: {
+      label: "定制按钮1",
+      type: inputType.obj,
+    },
   } as propInfo,
 
   baseProps: {
+    clickItemDetailFunc: false,
     treeDataFunc: () => {
       let num = 0;
       let testData = () => {
@@ -119,6 +137,7 @@ export default defineComponent({
     "defaultProps",
     "treeDataFunc",
     "clickItemDetailFunc",
+    "searcBtn",
   ],
   components: { cardBg },
   watch: {},
@@ -180,6 +199,27 @@ export default defineComponent({
       const that = this;
       if (this.clickItemDetailFunc) this.clickItemDetailFunc(that, data);
     },
+
+    /**
+     * @name: btnClick
+     * @description: 按钮点击事件
+     * @authors: CZH
+     * @Date: 2022-12-02 09:27:05
+     * @param {*} btn
+     */
+    async btnClick(btn: btnCellTemplate, data?: stringAnyObj) {
+      btn["isLoading"] = true;
+      if (btn.type == btnActionTemplate.OpenDrawer) {
+        this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
+      } else if (btn.type == btnActionTemplate.Function && btn.function) {
+        let that = this;
+        await btn.function(that, data);
+        this.$emit("search");
+      } else if (btn.type == btnActionTemplate.Url) {
+        window.open(btn.url);
+      }
+      btn["isLoading"] = false;
+    },
   },
 });
 </script>
@@ -190,6 +230,9 @@ export default defineComponent({
   height: 100%;
   ::v-deep .el-tree-node__label {
     width: calc(100% - 24px);
+  }
+  .searchBar {
+    display: flex;
   }
 }
 

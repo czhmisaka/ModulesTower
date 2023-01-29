@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 17:36:39
+ * @LastEditTime: 2023-01-29 15:46:22
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -25,7 +25,9 @@
         :sortable="item.table.sortable"
         :sort-by="(row, index) => sortBy(row, index, item.key)"
         :label="item.label"
-        :width="item.table.type == showType.btnList ? 140 : item.table?.width || 'auto'"
+        :width="
+          item.table.type == showType.btnList ? 'auto' : item.table?.width || 'auto'
+        "
         :prop="item.key"
         :fixed="item.table.fixed"
       >
@@ -71,7 +73,7 @@
             </el-popover>
           </div>
           <div
-            class="flexBox"
+            class="flexBox noOverflow"
             :style="item.table?.style"
             v-if="item.table.type == showType.btnList"
           >
@@ -82,8 +84,7 @@
               text
               @click="btnClick(btnList(item, scope.row)[0], scope.row)"
             >
-              <!-- :type="btnList(item, scope.row)[0].elType" -->
-              {{ btnList(item, scope.row)[1]?.label }}
+              {{ btnList(item, scope.row)[0]?.label }}
             </el-button>
             <el-button
               v-if="
@@ -95,7 +96,6 @@
               size="small"
               text
               @click="btnClick(btnList(item, scope.row)[1], scope.row)"
-              :type="btnList(item, scope.row)[1].elType"
             >
               {{ btnList(item, scope.row)[1]?.label }}
             </el-button>
@@ -258,6 +258,10 @@ export default defineComponent({
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.noOverflow {
+  overflow: hidden;
+  text-overflow: unset;
 }
 .ColumnHeader {
   float: left;
