@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 11:33:32
+ * @LastEditTime: 2023-01-30 13:42:56
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import { loadEnv } from "vite";
@@ -117,11 +117,13 @@ export default ({ mode, command }) => {
           rewrite: (path) => path.replace(/^\/api/, "/"),
         },
         "/imageserver/": {
-          name: 'dev',
+          name: 'dev1',
+          // target: 'http://42.192.134.238:1200',
           target: 'http://42.192.134.238:1200/',
+          // target: 'http://127.0.0.1',
           changeOrigin: true,
           ws: true,
-          rewrite: (path) => path.replace((/^\/imageserver/, "/"))
+          rewrite: (path) => path.replace(/^\/imageserver/, "/")
         }
       },
     },

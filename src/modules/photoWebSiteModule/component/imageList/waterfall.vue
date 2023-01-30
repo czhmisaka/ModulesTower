@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 01:18:03
+ * @LastEditTime: 2023-01-30 13:58:19
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -221,7 +221,7 @@ export default defineComponent({
           }
         }
         list = list.filter(Boolean);
-        if (getRowIndex() > 0) {
+        if (getRowIndex() > 0 && list.length > 0) {
           let row = that.rowList[that.rowList.length - 1];
           let cell = row[row.length - 1];
           const { rowIndexSize, lastOffset } = that.row;
