@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 15:55:25
+ * @LastEditTime: 2023-01-30 09:46:03
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -40,7 +40,10 @@ import {
 import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
-import { roleDetailModel } from "@/modules/userManage/PageConfigData/roleManage";
+import {
+  roleDetailModel,
+  addModelBtn,
+} from "@/modules/userManage/PageConfigData/roleManage";
 
 export const roleBindUserManage = async () => {
   // 性别
@@ -230,6 +233,7 @@ export const roleBindUserManage = async () => {
             label: "name",
             children: "children",
           },
+          searchBtn: addModelBtn,
           clickItemDetailFunc: (that, data) => {
             that.$modules.getModuleApi()["userManage_openDrawerForm"](that, {
               ...roleDetailModel,

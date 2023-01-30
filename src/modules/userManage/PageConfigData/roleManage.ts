@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 16:01:19
+ * @LastEditTime: 2023-01-30 11:20:36
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -32,9 +32,9 @@ import {
 import {
   btnActionTemplate,
   btnCellTemplate,
-  formInputType,
   showType,
   stringAnyObj,
+  formInputType,
 } from "@/modules/userManage/types";
 import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
 import { collapseItemProps, ElMessage, ElMessageBox } from "element-plus";
@@ -61,7 +61,8 @@ const roleTableSearchStorage = new SearchCellStorage([
   tableCellTemplateMaker("置顶", "top"),
   tableCellTemplateMaker("角色名称", "name"),
   tableCellTemplateMaker("详情", "description"),
-  tableCellTemplateMaker("父级角色", "parentId"),
+  tableCellTemplateMaker("上级角色", "parentId"),
+  tableCellTemplateMaker("上级角色", "parentName"),
   tableCellTemplateMaker("创建部门", "unitId"),
   tableCellTemplateMaker("页面访问权限", "permission"),
   tableCellTemplateMaker(
@@ -189,13 +190,19 @@ const editModelBtn = btnMaker("编辑", btnActionTemplate.Function, {
       schema: {
         required: ["name", "orderNumber", "systemMenuIds", "dataScopeType"],
       },
-      queryItemTemplate: roleTableSearchStorage.getByKeyArr([
-        "name",
-        "description",
-        "orderNumber",
-        "systemMenuIds",
-        "dataScopeType",
-      ]),
+      queryItemTemplate: [
+        ...roleTableSearchStorage.getByKeyArr([
+          "name",
+          "description",
+          "orderNumber",
+          "systemMenuIds",
+          "dataScopeType",
+        ]),
+        roleTableSearchStorage.getByKey(
+          "parentName",
+          searchCell(formInputType.input, {})
+        ),
+      ],
       data: {
         ...data,
         orderNumber: 100,

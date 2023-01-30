@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 16:55:46
+ * @LastEditTime: 2023-01-30 10:59:07
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -15,11 +15,13 @@
         <el-select
           :style="{
             width: '100%',
+            marginRight: searchBtn ? '6px' : '',
           }"
           v-model="selectedKey"
           multiple
           filterable
           remote
+          :size="size"
           reserve-keyword
           :remote-method="fillter"
           placeholder="搜索"
@@ -32,13 +34,13 @@
           />
         </el-select>
         <el-button
-          v-if="searcBtn"
-          :loading="searcBtn.isLoading"
-          size="small"
-          text
-          @click="btnClick(searcBtn)"
+          :size="size"
+          v-if="searchBtn"
+          :loading="searchBtn.isLoading"
+          :type="searchBtn.type"
+          @click="btnClick(searchBtn)"
         >
-          {{ searcBtn.label }}
+          {{ searchBtn.label }}
         </el-button>
       </div>
       <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick">
@@ -103,7 +105,7 @@ export default defineComponent({
       description: "一般用于展示元素弹窗等",
       type: inputType.functionEditor,
     },
-    searcBtn: {
+    searchBtn: {
       label: "定制按钮1",
       type: inputType.obj,
     },
@@ -137,7 +139,7 @@ export default defineComponent({
     "defaultProps",
     "treeDataFunc",
     "clickItemDetailFunc",
-    "searcBtn",
+    "searchBtn",
   ],
   components: { cardBg },
   watch: {},
@@ -147,6 +149,7 @@ export default defineComponent({
       searchList: [],
       selectedKey: "",
       random,
+      size: "small",
     };
   },
   async mounted() {
