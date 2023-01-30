@@ -39,7 +39,7 @@
 			"dom.iterable",
 			"scripthost"
 		],
-		"typeRoots": ["./node_modules/@types/", "./types","./src/modules/"]
+		"typeRoots": ["./node_modules/@types/", "./types","./src/modules/","*/types.ts"]
 	},
 	"include": [
 		"src/**/*.ts",

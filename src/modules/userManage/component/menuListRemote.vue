@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 17:24:58
+ * @LastEditTime: 2023-01-30 10:30:03
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
@@ -11,25 +11,36 @@
     }"
   >
     <div :class="`menuBox box_${random}`">
-      <el-select
-        :style="{
-          width: '100%',
-        }"
-        v-model="selectedKey"
-        multiple
-        filterable
-        remote
-        reserve-keyword
-        :remote-method="fillter"
-        placeholder="搜索"
-      >
-        <el-option
-          v-for="item in searchList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+      <div class="searchBar">
+        <el-select
+          :style="{
+            width: '100%',
+            marginRight: searchBtn ? '6px' : '',
+          }"
+          v-model="selectedKey"
+          multiple
+          filterable
+          remote
+          reserve-keyword
+          :remote-method="fillter"
+          placeholder="搜索"
+        >
+          <el-option
+            v-for="item in searchList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <el-button
+          v-if="searchBtn"
+          :loading="searchBtn.isLoading"
+          :type="searchBtn.type"
+          @click="btnClick(searchBtn)"
+        >
+          {{ searchBtn.label }}
+        </el-button>
+      </div>
       <el-tree
         v-model="treeData"
         :props="defaultProps"
@@ -41,6 +52,7 @@
           <div class="custom-tree-node">
             <div class="text">{{ node.label }}</div>
             <el-button
+              v-if="clickItemDetailFunc"
               text
               size="small"
               icon="More"
@@ -95,6 +107,10 @@ export default defineComponent({
       description: "一般用于展示元素弹窗等",
       type: inputType.functionEditor,
     },
+    searchBtn: {
+      label: "定制按钮1",
+      type: inputType.obj,
+    },
   } as propInfo,
 
   baseProps: {
@@ -112,6 +128,7 @@ export default defineComponent({
     "defaultProps",
     "treeDataFuncByLevel",
     "clickItemDetailFunc",
+    "searchBtn",
   ],
   components: { cardBg },
   watch: {},
@@ -179,6 +196,9 @@ export default defineComponent({
   height: 100%;
   ::v-deep .el-tree-node__label {
     width: calc(100% - 24px);
+  }
+  .searchBar {
+    display: flex;
   }
 }
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 21:56:58
+ * @LastEditTime: 2023-01-30 12:56:16
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -40,7 +40,10 @@ import {
 import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
-import { roleDetailModel } from "@/modules/userManage/PageConfigData/roleManage";
+import {
+  roleDetailModel,
+  addModelBtn,
+} from "@/modules/userManage/PageConfigData/roleManage";
 
 export const roleBindUserManage = async () => {
   // 性别
@@ -141,15 +144,28 @@ export const roleBindUserManage = async () => {
         (x) => x.id == (that.$route?.query?.roleId || that?.baseData?.role?.id)
       )[0];
       if (role) cell = role;
-      let res = await post("/web/usc/role/cancelUser", {
-        uid: data.id,
-        roleId: cell.id,
+      ElMessageBox({
+        title:
+          "确认删除【" +
+          data.name +
+          "】和 角色【" +
+          cell.name +
+          "】的绑定关系吗吗？",
+        type: "warning",
+        callback: async (action) => {
+          if (action == "confirm") {
+            let res = await post("/web/usc/role/cancelUser", {
+              uids: [data.id],
+              roleId: cell.id,
+            });
+            if (res.message == "成功") {
+              ElMessage.success(res.message);
+              if (that.close) that.close();
+              else refreshDesktop(that);
+            } else ElMessage.error(res.message);
+          }
+        },
       });
-      if (res.message == "成功") {
-        ElMessage.success(res.message);
-        if (that.close) that.close();
-        else refreshDesktop(that);
-      } else ElMessage.error(res.message);
     },
   });
 
@@ -217,6 +233,7 @@ export const roleBindUserManage = async () => {
             label: "name",
             children: "children",
           },
+          searchBtn: addModelBtn,
           clickItemDetailFunc: (that, data) => {
             that.$modules.getModuleApi()["userManage_openDrawerForm"](that, {
               ...roleDetailModel,
