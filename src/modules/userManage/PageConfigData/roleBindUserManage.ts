@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 09:46:03
+ * @LastEditTime: 2023-01-30 16:55:35
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -188,8 +188,10 @@ export const roleBindUserManage = async () => {
       },
       {
         props: {
-          treeDataFunc: async (that) => {
-            let res = await post("/web/usc/role/list", {});
+          treeDataFunc: async (that, name = "") => {
+            let reqdata = {};
+            if (name != "") reqdata["name"] = name;
+            let res = await post("/web/usc/role/list", reqdata);
             let data = res.data.map((x) => {
               return {
                 ...x,
@@ -215,7 +217,10 @@ export const roleBindUserManage = async () => {
 
             let back = data
               .map((x) => {
-                if (x.parentId == 0) {
+                if (
+                  x.parentId == 0 ||
+                  data.map((c) => c.id).indexOf(x.parentId) == -1
+                ) {
                   return x;
                 } else {
                   return false;
