@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 03:16:24
+ * @LastEditTime: 2023-01-31 09:31:26
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -9,7 +9,7 @@
     <div class="wholeScreen" ref="waterfall" v-if="open">
       <div ref="scroll">
         <div class="row" v-for="imgList in rowList">
-          <!-- <div
+          <div
             style="
               position: absolute;
               z-index: 1283123;
@@ -25,7 +25,7 @@
             }}
             {{ row.rowIndexNumber }}
             {{ row.rowIndexNumber * row.rowIndexSize + row.lastOffset }}
-          </div> -->
+          </div>
           <waterFallItem
             v-for="item in imgList"
             :url="item.url"
@@ -132,8 +132,8 @@ export default defineComponent({
       open: false,
       selectedId: -1,
       row: {
-        height: "100",
-        rowIndexSize: 20,
+        height: "120",
+        rowIndexSize: 2,
         rowIndexNumber: 0,
         lastOffset: 0,
         margin: 3,
