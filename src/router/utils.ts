@@ -148,7 +148,8 @@ function addPathMatch() {
     router.addRoute({
       path: "/:pathMatch(.*)",
       name: "pathMatch",
-      redirect: "/error/404",
+      // redirect: "/error/404",
+      redirect: "/photoWebSiteModule/MAIN",
     });
   }
 }
