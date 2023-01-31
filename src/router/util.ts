@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 21:57:04
+ * @LastEditTime: 2023-01-31 21:10:00
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -284,7 +284,7 @@ export const getModuleFromView = (init = false) => {
               routerCellMaker(
                 `/${moduleName}/${pageName}`,
                 pageMap[pageName]["name"]
-                  ? moduleName + "_" + pageMap[pageName]["name"]
+                  ? pageMap[pageName]["name"]
                   : moduleName + "_" + pageName,
                 () => import(`../modules/${moduleName}/Index.vue`),
                 {

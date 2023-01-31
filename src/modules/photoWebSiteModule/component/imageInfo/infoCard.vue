@@ -11,6 +11,7 @@
     }"
   >
     <el-card
+      @click="rate"
       :style="{
         margin: '6px',
       }"
@@ -57,7 +58,7 @@
 <script lang="ts">
 import { defineComponent, watch } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
-import { get, post } from "@/utils/api/requests";
+import { get, post, piwigoPost } from "@/utils/api/requests";
 
 import {
   componentInfo,
@@ -109,6 +110,13 @@ export default defineComponent({
     };
   },
   methods: {
+    async rate() {
+      await piwigoPost("/piwigo/ws.php?format=json", {
+        method: "pwg.images.rate",
+        rate: "1",
+        image_id: this.baseData.image.id,
+      });
+    },
     async initImageInfo(image) {
       if (!image || !image.id) return;
       let res = await get("/image-info?id=" + image.id, {});

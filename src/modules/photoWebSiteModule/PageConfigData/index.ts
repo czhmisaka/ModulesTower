@@ -10,6 +10,7 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 
 export interface desktopDataTemplate {
+  name: string;
   desktopData?: () => Promise<gridCellTemplate[]>;
   gridColNum?: number;
   cusStyle?: {
@@ -21,6 +22,7 @@ export interface desktopDataTemplate {
 
 const pageConfig = {
   main: {
+    name: "图库",
     desktopData: mainDesktop,
     gridColNum: 12,
     cusStyle: {

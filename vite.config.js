@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 13:42:56
+ * @LastEditTime: 2023-01-31 23:56:36
  * @FilePath: /configforpagedemo/vite.config.js
  */
 import { loadEnv } from "vite";
@@ -109,6 +109,13 @@ export default ({ mode, command }) => {
       strictPort: false,
       port: 9050,
       proxy: {
+        "/api/piwigo": {
+          name: 'dev31',
+          target: 'http://42.192.134.238:1200/',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(/^\/api\/piwigo/, "/")
+        },
         "/api": {
           name: "dev",
           target: VITE_PROXY_DOMAIN,
@@ -124,7 +131,7 @@ export default ({ mode, command }) => {
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(/^\/imageserver/, "/")
-        }
+        },
       },
     },
     define: {

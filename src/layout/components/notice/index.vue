@@ -6,11 +6,11 @@ import { templateRef } from "@vueuse/core";
 import { Tabs, TabPane } from "@pureadmin/components";
 
 const dropdownDom = templateRef<ElRef | null>("dropdownDom", null);
-const activeName = ref(noticesData[0].name);
+const activeName = ref(noticesData[0] ? noticesData[0].name : "");
 const notices = ref(noticesData);
 
 let noticesNum = ref(0);
-notices.value.forEach(notice => {
+notices.value.forEach((notice) => {
   noticesNum.value += notice.list.length;
 });
 
