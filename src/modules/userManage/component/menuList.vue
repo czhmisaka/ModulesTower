@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 12:55:40
+ * @LastEditTime: 2023-01-31 01:15:15
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -191,7 +191,7 @@ export default defineComponent({
       setTimeout(() => {
         const el = document.querySelector(`.box_${that.random} .custom-tree-node`);
         if ("click" in el) el["click"]();
-      }, 400);
+      }, 500);
     },
 
     async fillter() {},

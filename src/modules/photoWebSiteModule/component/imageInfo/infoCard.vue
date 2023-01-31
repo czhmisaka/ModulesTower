@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 01:03:56
+ * @LastEditTime: 2023-01-31 00:52:06
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -10,39 +10,44 @@
       overflow: 'scroll',
     }"
   >
-    <waterFallItem
-      v-if="baseData['image']"
-      :url="baseData['image'].url"
-      :item="baseData['image']"
-      :cus-style="{
-        width: 'calc(100% - 12px)',
-        margin: '6px',
-        borderRadius: '6px',
-        height: '150px',
-      }"
-      :noPreview="true"
-    ></waterFallItem>
     <el-card
       :style="{
-        margin: '3px',
-
-        marginTop: '50px',
+        margin: '6px',
+      }"
+      :body-style="{
+        padding: '0px',
       }"
     >
-      <el-descriptions
-        title="Customized style list"
-        :column="1"
-        border
-        direction="vertical"
-        size="small"
+      <waterFallItem
         v-if="baseData['image']"
-      >
+        :url="baseData['image'].url"
+        :item="baseData['image']"
+        :cus-style="{
+          width: 'calc(100%)',
+          borderRadius: '6px',
+          height: '150px',
+        }"
+        :noPreview="true"
+      ></waterFallItem>
+    </el-card>
+    <el-card
+      title="基本信息"
+      :style="{
+        margin: '6px',
+        marginTop: '3px',
+      }"
+      :body-style="{
+        padding: '3px',
+      }"
+    >
+      <el-descriptions :column="1" size="small" v-if="baseData['image']" border>
         <el-descriptions-item
-          v-for="item in Object.keys(baseData['image'])"
+          v-for="item in Object.keys(imageInfo)"
+          :align="'left'"
           :label="item"
-          label-align="top"
+          label-align="left"
         >
-          {{ baseData["image"][item] }}
+          {{ imageInfo[item] }}
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
@@ -52,6 +57,8 @@
 <script lang="ts">
 import { defineComponent, watch } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+import { get, post } from "@/utils/api/requests";
+
 import {
   componentInfo,
   inputType,
@@ -59,6 +66,8 @@ import {
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import waterFallItem from "@/modules/photoWebSiteModule/component/imageList/waterFallItem.vue";
+
+import analyze from "rgbaster";
 
 export default defineComponent({
   componentInfo: {
@@ -81,14 +90,40 @@ export default defineComponent({
 
   props: ["baseData", "sizeUnit", "image"],
   components: { cardBg, waterFallItem },
-  watch: {},
+  watch: {
+    "baseData.image": {
+      handler(val) {
+        this.initImageInfo(val);
+        analyze(val.url).then((result) => {
+          console.log(result, "asd");
+        });
+      },
+    },
+  },
   async mounted() {
     this.$emit("ready");
   },
   data: () => {
-    return {};
+    return {
+      imageInfo: {},
+    };
   },
-  methods: {},
+  methods: {
+    async initImageInfo(image) {
+      if (!image || !image.id) return;
+      let res = await get("/image-info?id=" + image.id, {});
+      if (!res || !res.data) return;
+      const { tagList } = res.data;
+      const info = res.data.info[0];
+      this.imageInfo = {
+        尺寸: `${info.width}px × ${info.height}px`,
+        文件大小: `${info.filesize} Kb`,
+        格式: info.file.split(".")[1],
+        创建日期: new Date(info.date_available.replace("T", " ")).toLocaleString(),
+        修改日期: new Date(info.lastmodified.replace("T", " ")).toLocaleString(),
+      };
+    },
+  },
 });
 </script>
 

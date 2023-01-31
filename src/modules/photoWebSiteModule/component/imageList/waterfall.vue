@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 13:58:19
+ * @LastEditTime: 2023-01-31 03:16:24
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -9,10 +9,27 @@
     <div class="wholeScreen" ref="waterfall" v-if="open">
       <div ref="scroll">
         <div class="row" v-for="imgList in rowList">
+          <!-- <div
+            style="
+              position: absolute;
+              z-index: 1283123;
+              font-weight: 900;
+              text-shadow: 1px;
+              color: white;
+            "
+          >
+            {{
+              imgList.length > 1
+                ? imgList.map((x) => x.rowIndex).reduce((a, b) => a + b)
+                : 0
+            }}
+            {{ row.rowIndexNumber }}
+            {{ row.rowIndexNumber * row.rowIndexSize + row.lastOffset }}
+          </div> -->
           <waterFallItem
             v-for="item in imgList"
             :url="item.url"
-            :width="item.width"
+            :width="item.width - row.margin * 2"
             :height="row.height"
             :item="item"
             :cusStyle="{
@@ -41,7 +58,10 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import waterFallItem from "@/modules/photoWebSiteModule/component/imageList/waterFallItem.vue";
 
+let fuck = null;
 let Index = {};
+let isInit = false;
+let imageListForReSize = [];
 export default defineComponent({
   componentInfo: {
     labelNameCn: "瀑布流",
@@ -79,9 +99,10 @@ export default defineComponent({
           Index != val[this.watchKeyForCategory]
         ) {
           Index = val[this.watchKeyForCategory];
-          this.$nextTick();
+          console.log("asdasd");
           this.data.offset = 0;
           this.rowList = [[]];
+          imageListForReSize = [];
           await this.getImgList(val[this.watchKeyForCategory], true);
         }
       },
@@ -105,14 +126,14 @@ export default defineComponent({
         [key: string]: any;
       }[][],
       data: {
-        limit: 50,
+        limit: 70,
         offset: 0,
       } as { [key: string]: number },
       open: false,
       selectedId: -1,
       row: {
         height: "100",
-        rowIndexSize: 1,
+        rowIndexSize: 20,
         rowIndexNumber: 0,
         lastOffset: 0,
         margin: 3,
@@ -121,25 +142,36 @@ export default defineComponent({
   },
   methods: {
     async init() {
+      if (isInit) return;
+      isInit = true;
       const that = this;
+      if (fuck) clearInterval(fuck);
+      function fuckk(that) {
+        const elw = that.$refs["waterfall"];
+        const offsetForScrollBar = 0;
+        const rowIndexNumber = Math.floor(
+          (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
+        );
+        const lastOffset = (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
+        if (
+          that.row.rowIndexNumber != rowIndexNumber ||
+          that.row.lastOffset != lastOffset
+        ) {
+          that.row.rowIndexNumber = rowIndexNumber;
+          that.row.lastOffset = lastOffset;
+          if (that.rowList.length < 2) return;
+          that.rowList = [[]];
+          that.pkFunc(imageListForReSize);
+        }
+      }
+      fuck = setInterval(() => {
+        fuckk(that);
+      }, 200);
+
       const elw = that.$refs["waterfall"];
       let a = false;
-      const offsetForScrollBar = 12 + 17;
-      setTimeout(() => {
-        that.row.rowIndexNumber = Math.floor(
-          (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
-        );
-        that.row.lastOffset =
-          (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
-      }, 300);
-      window.addEventListener("resize", () => {
-        const elw = that.$refs["waterfall"];
-        that.row.rowIndexNumber = Math.floor(
-          (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
-        );
-        that.row.lastOffset =
-          (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
-      });
+
+      fuckk(that);
 
       elw.addEventListener("scroll", (e) => {
         const scroll = that.$refs["scroll"];
@@ -184,6 +216,13 @@ export default defineComponent({
           ),
         };
       });
+      imageListForReSize = imageListForReSize.concat(list);
+      this.pkFunc(list);
+    },
+
+    pkFunc(lists) {
+      let list = JSON.parse(JSON.stringify(lists));
+      const that = this;
       list.sort((a, b) => b.rowIndex - a.rowIndex);
       function getRow() {
         return that.rowList[that.rowList.length - 1];
@@ -192,20 +231,18 @@ export default defineComponent({
         let row = getRow();
         let rowIndex =
           row.length > 0
-            ? that.row.rowIndexNumber -
-              row
-                .map((x) => Math.floor(x.width / that.row.rowIndexSize))
-                .reduce((a, b) => a + b)
+            ? that.row.rowIndexNumber - row.map((x) => x.rowIndex).reduce((a, b) => a + b)
             : that.row.rowIndexNumber;
         return rowIndex;
       }
       let number = 0;
       while (list.length > 0) {
         number++;
+        list.sort((a, b) => b.rowIndex - a.rowIndex);
         if (number > list.length) break;
         for (let i = 0; i < list.length; i++) {
           let x = list[i];
-          if (getRowIndex() >= x.rowIndex) {
+          if (getRowIndex() > x.rowIndex) {
             that.rowList[that.rowList.length - 1].push(x);
             list[i] = false;
           }
@@ -221,21 +258,25 @@ export default defineComponent({
           }
         }
         list = list.filter(Boolean);
-        if (getRowIndex() > 0 && list.length > 0) {
+        const rowIndex = getRowIndex();
+        if (rowIndex > 0 && list.length > 0) {
           let row = that.rowList[that.rowList.length - 1];
           let cell = row[row.length - 1];
           const { rowIndexSize, lastOffset } = that.row;
+          console.log("qwe", lastOffset);
           if (cell) {
             cell = {
               ...cell,
-              width: cell.width + Math.floor(getRowIndex() * rowIndexSize + lastOffset),
+              rowIndex: cell.rowIndex + rowIndex,
+              width: (cell.rowIndex + rowIndex) * rowIndexSize + lastOffset,
             };
             that.rowList[that.rowList.length - 1][row.length - 1] = cell;
             that.rowList.push([]);
           }
         }
-        list = list.filter(Boolean);
-        if (list.length > 0 && getRowIndex() == 0) that.rowList.push([]);
+        if (list.length > 0 && rowIndex == 0) {
+          that.rowList.push([]);
+        }
       }
     },
   },

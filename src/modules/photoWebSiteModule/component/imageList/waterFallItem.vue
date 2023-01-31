@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 11:51:46
+ * @LastEditTime: 2023-01-31 03:09:48
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterFallItem.vue
 -->
 
@@ -77,7 +77,8 @@ export default defineComponent({
                     whiteSpace: "nowrap",
                   },
                 },
-                [`${props.item.origin.width} x ${props.item.origin.height}`]
+                // [`${props.item.origin.width} x ${props.item.origin.height}`]
+                [`${props.item.width} x ${props.item.rowIndex}`]
               ),
             ]
           ),
