@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 15:46:22
+ * @LastEditTime: 2023-01-31 15:10:03
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -26,10 +26,10 @@
         :sort-by="(row, index) => sortBy(row, index, item.key)"
         :label="item.label"
         :width="
-          item.table.type == showType.btnList ? 'auto' : item.table?.width || 'auto'
+          item.table.type == showType.btnList ? '200px' : item.table?.width || 'auto'
         "
         :prop="item.key"
-        :fixed="item.table.fixed"
+        :fixed="item.table.type == showType.btnList ? 'right' : item.table.fixed"
       >
         <template #header>
           <div class="ColumnHeader">
@@ -81,7 +81,8 @@
               v-if="btnList(item, scope.row)"
               :loading="btnList(item, scope.row)[0].isLoading"
               size="small"
-              text
+              link
+              type="primary"
               @click="btnClick(btnList(item, scope.row)[0], scope.row)"
             >
               {{ btnList(item, scope.row)[0]?.label }}
@@ -94,7 +95,8 @@
               "
               :loading="btnList(item, scope.row)[1].isLoading"
               size="small"
-              text
+              type="primary"
+              link
               @click="btnClick(btnList(item, scope.row)[1], scope.row)"
             >
               {{ btnList(item, scope.row)[1]?.label }}
@@ -254,7 +256,7 @@ export default defineComponent({
 .flexBox {
   text-align: left;
   user-select: text;
-  font-weight: 600;
+  font-weight: 200;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-18 10:44:18
+ * @LastEditTime: 2023-01-31 16:12:01
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -139,7 +139,7 @@ export const DateCell = (options: stringAnyObj = {}): tableCellOptions => {
   return {
     ...showCell(showType.func, {
       showFunc: (data: any, key: string) =>
-        new Date(data[key]).toLocaleString(),
+        data[key] ? new Date(data[key]).toLocaleString() : " ",
       ...options,
     }),
     ...searchCell(formInputType.datePicker),

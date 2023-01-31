@@ -295,7 +295,12 @@ pageConfigDataTableCellStorage.push(
               );
             let drawerProps = {
               title: `新增${typeToModule[data.type + 1]}`,
-              schema: { required: ["type", "name", "showLink"] },
+              schema: {
+                required:
+                  data.type == 2
+                    ? ["type", "name", "showLink", "url"]
+                    : ["type", "name", "showLink"],
+              },
               queryItemTemplate,
               data: {
                 parentName: data.name,
