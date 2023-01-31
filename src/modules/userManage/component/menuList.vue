@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 01:15:15
+ * @LastEditTime: 2023-01-31 09:37:12
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -12,30 +12,26 @@
   >
     <div :class="`menuBox box_${random}`">
       <div class="searchBar">
-        <el-select
+        <el-input
           :style="{
             width: '100%',
-            marginRight: searchBtn ? '6px' : '',
+            marginRight: searchBtn || selectedKey != '' ? '6px' : '',
           }"
           v-model="selectedKey"
-          multiple
-          filterable
-          remote
-          :size="'small'"
-          reserve-keyword
-          :remote-method="fillter"
-          placeholder="搜索"
-        >
-          <el-option
-            v-for="item in searchList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+          :size="size"
+          clearable
+        ></el-input>
         <el-button
-          :size="'small'"
-          v-if="searchBtn"
+          v-if="selectedKey && selectedKey.length > 0"
+          @click="search"
+          :size="size"
+          type="primary"
+        >
+          搜索
+        </el-button>
+        <el-button
+          :size="size"
+          v-if="searchBtn && selectedKey.length == 0"
           :loading="searchBtn.isLoading"
           :type="searchBtn.type"
           @click="btnClick(searchBtn)"
@@ -43,20 +39,42 @@
           {{ searchBtn.label }}
         </el-button>
       </div>
-      <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick">
-        <template #default="{ node, data }">
-          <div class="custom-tree-node">
-            <div class="text">{{ node.label }}</div>
-            <el-button
-              v-if="clickItemDetailFunc"
-              text
-              size="small"
-              icon="More"
-              @click.stop="clickItemDetail(data)"
-            ></el-button>
-          </div>
-        </template>
-      </el-tree>
+
+      <!-- 这里展示的是搜索结果 -->
+      <div class="content" v-if="searchResult.length != 0 && selectedKey">
+        <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick">
+          <template #default="{ node, data }">
+            <div class="custom-tree-node">
+              <div class="text">{{ data[defaultProps["label"]] }}</div>
+              <el-button
+                v-if="clickItemDetailFunc"
+                text
+                size="small"
+                icon="More"
+                @click.stop="clickItemDetail(data)"
+              ></el-button>
+            </div>
+          </template>
+        </el-tree>
+      </div>
+
+      <!-- 这里展示的是默认树形结构 -->
+      <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
+        <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick">
+          <template #default="{ node, data }">
+            <div class="custom-tree-node">
+              <div class="text">{{ data[defaultProps["label"]] }}</div>
+              <el-button
+                v-if="clickItemDetailFunc"
+                text
+                size="small"
+                icon="More"
+                @click.stop="clickItemDetail(data)"
+              ></el-button>
+            </div>
+          </template>
+        </el-tree>
+      </div>
     </div>
   </cardBg>
 </template>
@@ -74,6 +92,12 @@ import {
 import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../types";
 
 const random = Math.floor(Math.random() * 10000000);
+
+enum sizeTem {
+  small = "small",
+  large = "large",
+  default = "default",
+}
 
 export default defineComponent({
   componentInfo: {
@@ -117,17 +141,20 @@ export default defineComponent({
 
   baseProps: {
     clickItemDetailFunc: false,
-    treeDataFunc: () => {
+    treeDataFunc: (that, searchData) => {
       let num = 0;
-      let testData = () => {
-        return { label: "Hello World _ " + num, value: "测试数据" + num++ };
+      let testData = (str = "") => {
+        return { label: "Hello World _ " + str, value: "测试数据" + num++ };
       };
-      return [
-        {
-          ...testData(),
-          children: [testData(), testData()],
-        },
-      ];
+      if (searchData) {
+        return "1234567".split("").map((x) => testData(searchData));
+      } else
+        return [
+          {
+            ...testData(),
+            children: [testData(), testData()],
+          },
+        ];
     },
     outputKey: "menuSelectCell",
     defaultProps: {
@@ -147,14 +174,18 @@ export default defineComponent({
     "searchBtn",
   ],
   components: { cardBg },
-  watch: {},
+  watch: {
+    selectedKey(val) {
+      this.searchResult = [];
+    },
+  },
   data: () => {
     return {
       treeData: [],
-      searchList: [],
       selectedKey: "",
       random,
-      size: "small",
+      size: sizeTem.small,
+      searchResult: [],
     };
   },
   async mounted() {
@@ -190,11 +221,28 @@ export default defineComponent({
       const that = this;
       setTimeout(() => {
         const el = document.querySelector(`.box_${that.random} .custom-tree-node`);
-        if ("click" in el) el["click"]();
-      }, 500);
+        if (el && "click" in el) el["click"]();
+      }, 100);
     },
 
-    async fillter() {},
+    async search(e) {
+      const that = this;
+      let res = await this.treeDataFunc(that, this.selectedKey);
+      this.searchResult =
+        res.length > 1
+          ? res.reduce((pre, item) => {
+              let children = [];
+              if (item.children) {
+                children = item.children;
+                delete item.children;
+              }
+              if (!pre.length) return [pre].concat(item).concat(children);
+              else {
+                return pre.concat(item).concat(children);
+              }
+            })
+          : res;
+    },
 
     /**
      * @name: clickItemDetail
@@ -236,11 +284,23 @@ export default defineComponent({
 .menuBox {
   width: 100%;
   height: 100%;
+  transition: all 0.3s;
   ::v-deep .el-tree-node__label {
     width: calc(100% - 24px);
   }
   .searchBar {
     display: flex;
+  }
+  .content {
+    width: 100%;
+    height: auto;
+    max-height: calc(100% - 40px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    .searchItem {
+      margin: 4px 18px;
+      width: calc(100% - 16px);
+    }
   }
 }
 

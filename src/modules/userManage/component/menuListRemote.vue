@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 10:30:03
+ * @LastEditTime: 2023-01-30 17:17:24
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
@@ -12,28 +12,26 @@
   >
     <div :class="`menuBox box_${random}`">
       <div class="searchBar">
-        <el-select
+        <el-input
           :style="{
             width: '100%',
-            marginRight: searchBtn ? '6px' : '',
+            marginRight: searchBtn || selectedKey != '' ? '6px' : '',
           }"
           v-model="selectedKey"
-          multiple
-          filterable
-          remote
-          reserve-keyword
-          :remote-method="fillter"
-          placeholder="搜索"
-        >
-          <el-option
-            v-for="item in searchList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+          :size="size"
+          clearable
+        ></el-input>
         <el-button
-          v-if="searchBtn"
+          v-show="selectedKey && selectedKey.length > 0"
+          @click="search"
+          :size="size"
+          type="primary"
+        >
+          搜索
+        </el-button>
+        <el-button
+          :size="size"
+          v-if="searchBtn && selectedKey.length == 0"
           :loading="searchBtn.isLoading"
           :type="searchBtn.type"
           @click="btnClick(searchBtn)"
@@ -41,26 +39,48 @@
           {{ searchBtn.label }}
         </el-button>
       </div>
-      <el-tree
-        v-model="treeData"
-        :props="defaultProps"
-        :lazy="true"
-        :load="treeDataFuncByLevel"
-        @node-click="nodeClick"
-      >
-        <template #default="{ node, data }">
-          <div class="custom-tree-node">
-            <div class="text">{{ node.label }}</div>
-            <el-button
-              v-if="clickItemDetailFunc"
-              text
-              size="small"
-              icon="More"
-              @click.stop="clickItemDetail(data)"
-            ></el-button>
-          </div>
-        </template>
-      </el-tree>
+
+      <!-- 这里展示的是搜索结果 -->
+      <div class="content" v-if="searchResult.length != 0 && selectedKey">
+        <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick">
+          <template #default="{ node, data }">
+            <div class="custom-tree-node">
+              <div class="text">{{ data[defaultProps["label"]] }}</div>
+              <el-button
+                v-if="clickItemDetailFunc"
+                text
+                size="small"
+                icon="More"
+                @click.stop="clickItemDetail(data)"
+              ></el-button>
+            </div>
+          </template>
+        </el-tree>
+      </div>
+
+      <!-- 这里展示的是默认树形结构 -->
+      <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
+        <el-tree
+          v-model="treeData"
+          :props="defaultProps"
+          :lazy="true"
+          :load="treeDataFuncByLevel"
+          @node-click="nodeClick"
+        >
+          <template #default="{ node, data }">
+            <div class="custom-tree-node">
+              <div class="text">{{ node.label }}</div>
+              <el-button
+                v-if="clickItemDetailFunc"
+                text
+                size="small"
+                icon="More"
+                @click.stop="clickItemDetail(data)"
+              ></el-button>
+            </div>
+          </template>
+        </el-tree>
+      </div>
     </div>
   </cardBg>
 </template>
@@ -75,7 +95,13 @@ import {
   propInfo,
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
+import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../types";
 
+enum sizeTem {
+  small = "small",
+  large = "large",
+  default = "default",
+}
 const random = Math.floor(Math.random() * 10000000);
 export default defineComponent({
   componentInfo: {
@@ -131,13 +157,18 @@ export default defineComponent({
     "searchBtn",
   ],
   components: { cardBg },
-  watch: {},
+  watch: {
+    selectedKey(val) {
+      this.searchResult = [];
+    },
+  },
   data: () => {
     return {
       treeData: [],
-      searchList: [],
+      searchResult: [],
       selectedKey: "",
       random,
+      size: sizeTem.small,
     };
   },
   async mounted() {
@@ -173,7 +204,27 @@ export default defineComponent({
       }, 500);
     },
 
-    async fillter() {},
+    async search(e) {
+      const that = this;
+      const resolve = (res) => {
+        that.searchResult =
+          res.length > 1
+            ? res.reduce((pre, item) => {
+                let children = [];
+                if (item.children) {
+                  children = item.children;
+                  delete item.children;
+                }
+                if (!pre.length) return [pre].concat(item).concat(children);
+                else {
+                  return pre.concat(item).concat(children);
+                }
+              })
+            : res;
+      };
+
+      this.treeDataFuncByLevel({}, resolve, this.selectedKey);
+    },
 
     /**
      * @name: clickItemDetail
@@ -186,6 +237,27 @@ export default defineComponent({
       const that = this;
       if (this.clickItemDetailFunc) this.clickItemDetailFunc(that, data);
     },
+
+    /**
+     * @name: btnClick
+     * @description: 按钮点击事件
+     * @authors: CZH
+     * @Date: 2022-12-02 09:27:05
+     * @param {*} btn
+     */
+    async btnClick(btn: btnCellTemplate, data?: stringAnyObj) {
+      btn["isLoading"] = true;
+      if (btn.type == btnActionTemplate.OpenDrawer) {
+        this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
+      } else if (btn.type == btnActionTemplate.Function && btn.function) {
+        let that = this;
+        await btn.function(that, data);
+        this.$emit("search");
+      } else if (btn.type == btnActionTemplate.Url) {
+        window.open(btn.url);
+      }
+      btn["isLoading"] = false;
+    },
   },
 });
 </script>
@@ -194,11 +266,24 @@ export default defineComponent({
 .menuBox {
   width: 100%;
   height: 100%;
+  transition: all 0.3;
+
   ::v-deep .el-tree-node__label {
     width: calc(100% - 24px);
   }
   .searchBar {
     display: flex;
+  }
+  .content {
+    width: 100%;
+    height: auto;
+    max-height: calc(100% - 40px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    .searchItem {
+      margin: 4px 18px;
+      width: calc(100% - 16px);
+    }
   }
 }
 

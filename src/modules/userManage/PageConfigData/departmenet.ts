@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-18 12:58:34
+ * @LastEditTime: 2023-01-30 17:15:05
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -235,9 +235,10 @@ export const department = async () => {
       },
       {
         props: {
-          treeDataFuncByLevel: async (node, resolve) => {
+          treeDataFuncByLevel: async (node, resolve, key = "") => {
             let res = await post("/web/usc/unit/list", {
-              parentId: node.data.id,
+              parentId: node?.data?.id,
+              name: key,
             });
             let data = res.data.map((x) => {
               return {
