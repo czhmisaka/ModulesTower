@@ -265,94 +265,104 @@ pageConfigDataTableCellStorage.push(
     "actionaction",
     actionCell(
       [
-        btnMaker("新增", btnActionTemplate.Function, {
-          icon: "Plus",
-          elType: "primary",
-          isShow: (data) => {
-            return data.type != 4;
+        btnMaker(
+          "新增",
+          btnActionTemplate.Function,
+          {
+            icon: "Plus",
+            elType: "primary",
+            isShow: (data) => {
+              return data.type != 4;
+            },
+            function: async (that, data) => {
+              let propsArr = ["parentName", "name", "icon", "meta"];
+              if (data.type < 3) {
+                propsArr.push("showLink");
+                propsArr.push("orderNumber");
+              }
+              let queryItemTemplate = [
+                disableType,
+                ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
+              ];
+              if (data.type == 2) {
+                queryItemTemplate.push(
+                  pageConfigDataTableCellStorage.getByLabel("URL")
+                );
+                queryItemTemplate.push(
+                  pageConfigDataTableCellStorage.getByKey("pageConfigId")
+                );
+              }
+              if (data.type == 3)
+                queryItemTemplate.push(
+                  pageConfigDataTableCellStorage.getByLabel("接口")
+                );
+              let drawerProps = {
+                title: `新增${typeToModule[data.type + 1]}`,
+                schema: {
+                  required:
+                    data.type == 2
+                      ? ["type", "name", "showLink", "url"]
+                      : ["type", "name", "showLink"],
+                },
+                queryItemTemplate,
+                data: {
+                  parentName: data.name,
+                  parentId: data.id,
+                  type: data.type + 1 + "",
+                  showLink: "true",
+                },
+                btnList: [submit],
+              } as drawerProps;
+              that.$modules
+                .getModuleApi()
+                ["userManage_openDrawerForm"](that, drawerProps);
+            },
           },
-          function: async (that, data) => {
-            let propsArr = ["parentName", "name", "icon", "meta"];
-            if (data.type < 3) {
-              propsArr.push("showLink");
-              propsArr.push("orderNumber");
-            }
-            let queryItemTemplate = [
-              disableType,
-              ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
-            ];
-            if (data.type == 2) {
-              queryItemTemplate.push(
-                pageConfigDataTableCellStorage.getByLabel("URL")
-              );
-              queryItemTemplate.push(
-                pageConfigDataTableCellStorage.getByKey("pageConfigId")
-              );
-            }
-            if (data.type == 3)
-              queryItemTemplate.push(
-                pageConfigDataTableCellStorage.getByLabel("接口")
-              );
-            let drawerProps = {
-              title: `新增${typeToModule[data.type + 1]}`,
-              schema: {
-                required:
-                  data.type == 2
-                    ? ["type", "name", "showLink", "url"]
-                    : ["type", "name", "showLink"],
-              },
-              queryItemTemplate,
-              data: {
-                parentName: data.name,
-                parentId: data.id,
-                type: data.type + 1 + "",
-                showLink: "true",
-              },
-              btnList: [submit],
-            } as drawerProps;
-            that.$modules
-              .getModuleApi()
-              ["userManage_openDrawerForm"](that, drawerProps);
+          ["/web/usc/menu/insert"]
+        ),
+        btnMaker(
+          "编辑",
+          btnActionTemplate.Function,
+          {
+            icon: "Edit",
+            elType: "success",
+            function: async (that, data) => {
+              let propsArr = ["name", "icon"];
+              if (data.type < 4) {
+                propsArr.push("showLink");
+                propsArr.push("orderNumber");
+              }
+              let queryItemTemplate = [
+                disableType,
+                ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
+              ];
+              if (data.type == 3) {
+                queryItemTemplate.push(
+                  pageConfigDataTableCellStorage.getByLabel("URL")
+                );
+              }
+              if (data.type == 4)
+                queryItemTemplate.push(
+                  pageConfigDataTableCellStorage.getByLabel("接口")
+                );
+              let drawerProps = {
+                title: `新增${typeToModule[data.type + 1]}`,
+                schema: { required: ["type", "name", "showLink"] },
+                queryItemTemplate,
+                data: {
+                  ...data,
+                  showLink: data.showLink == true ? "true" : "false",
+                  type: data.type + "",
+                },
+                btnList: [submit],
+              } as drawerProps;
+              that.$modules
+                .getModuleApi()
+                ["userManage_openDrawerForm"](that, drawerProps);
+            },
           },
-        }),
-        btnMaker("编辑", btnActionTemplate.Function, {
-          icon: "Edit",
-          elType: "success",
-          function: async (that, data) => {
-            let propsArr = ["name", "icon"];
-            if (data.type < 4) {
-              propsArr.push("showLink");
-              propsArr.push("orderNumber");
-            }
-            let queryItemTemplate = [
-              disableType,
-              ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
-            ];
-            if (data.type == 3) {
-              queryItemTemplate.push(
-                pageConfigDataTableCellStorage.getByLabel("URL")
-              );
-            }
-            if (data.type == 4)
-              queryItemTemplate.push(
-                pageConfigDataTableCellStorage.getByLabel("接口")
-              );
-            let drawerProps = {
-              title: `新增${typeToModule[data.type + 1]}`,
-              schema: { required: ["type", "name", "showLink"] },
-              queryItemTemplate,
-              data: {
-                ...data,
-                showLink: data.showLink == true ? "true" : "false",
-                type: data.type + "",
-              },
-              btnList: [submit],
-            } as drawerProps;
-            that.$modules
-              .getModuleApi()
-              ["userManage_openDrawerForm"](that, drawerProps);
-          },
-        }),
+          ["/web/usc/menu/update"]
+        ),
         删除按钮,
       ],
       {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 11:29:09
+ * @LastEditTime: 2023-02-01 14:01:44
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -118,6 +118,7 @@ export const moduleStore = defineStore({
     nowModule: {},
     nowPage: {},
     routerBackup: [],
+    pageList: [],
   }),
   actions: {
     init(resData) {
