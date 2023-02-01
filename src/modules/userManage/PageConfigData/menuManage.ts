@@ -375,29 +375,34 @@ pageConfigDataTableCellStorage.push(
 const SearchTemplate = pageConfigDataTableCellStorage.getByKeyArr(["name"]);
 
 const btnList = [
-  btnMaker("新增模块", btnActionTemplate.OpenDrawer, {
-    icon: "plus",
-    elType: "primary",
-    drawerProps: {
-      title: "新增",
-      schema: {
-        required: ["type", "name", "showLink"],
-      },
-      queryItemTemplate: [
-        disableType,
-        ...pageConfigDataTableCellStorage.getByKeyArr([
-          "name",
-          "icon",
-          "showLink",
-        ]),
-      ],
-      btnList: [submit],
-      data: {
-        showLink: "true",
-        type: "1",
+  btnMaker(
+    "新增模块",
+    btnActionTemplate.OpenDrawer,
+    {
+      icon: "plus",
+      elType: "primary",
+      drawerProps: {
+        title: "新增",
+        schema: {
+          required: ["type", "name", "showLink"],
+        },
+        queryItemTemplate: [
+          disableType,
+          ...pageConfigDataTableCellStorage.getByKeyArr([
+            "name",
+            "icon",
+            "showLink",
+          ]),
+        ],
+        btnList: [submit],
+        data: {
+          showLink: "true",
+          type: "1",
+        },
       },
     },
-  }),
+    ["/web/usc/menu/insert"]
+  ),
 ];
 
 export const menuManage = async () => {

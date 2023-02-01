@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 14:01:44
+ * @LastEditTime: 2023-02-01 14:41:50
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -18,6 +18,7 @@ import {
 import { RouteConfigsTable, routerMeta } from "../../../types";
 
 const router = useRouter();
+let licenseMap = {};
 
 interface pageCellTemplate extends stringAnyObj {
   name?: string;
@@ -31,6 +32,7 @@ interface moduleTemplate {
   nowPage: pageCellTemplate;
   pageList: pageCellTemplate[];
   routerBackup: RouteConfigsTable[];
+  nowLicense: string[];
 }
 
 /**
@@ -44,8 +46,12 @@ function dealAsyncMenuList(cell, routerBackup) {
 
   // 排除按钮
   if (cell.type == 4) {
-    console.log(cell);
-
+    cell.urls.map((x) => {
+      const pageId = "page_" + cell.parentId;
+      licenseMap[pageId]
+        ? licenseMap[pageId].push(x)
+        : (licenseMap[pageId] = [x]);
+    });
     return false;
   }
 
@@ -115,10 +121,12 @@ export const moduleStore = defineStore({
   id: "module-info",
   state: (): moduleTemplate => ({
     moduleList: [],
+    pageList: [],
+    routerBackup: [],
+
     nowModule: {},
     nowPage: {},
-    routerBackup: [],
-    pageList: [],
+    nowLicense: [],
   }),
   actions: {
     init(resData) {
@@ -131,9 +139,11 @@ export const moduleStore = defineStore({
       resData.map((x) => {
         moduleList.push(dealAsyncMenuList(x, this.routerBackup));
       });
+
       this.moduleList = moduleList
         .filter(Boolean)
         .sort((a, b) => a.orderNumber - b.orderNumber);
+
       this.nowModule = this.moduleList[0];
     },
 
@@ -165,6 +175,7 @@ export const moduleStore = defineStore({
     // 切换路由需要记录
     checkPage(pageMeta: routerMeta) {
       this.nowPage.meta = pageMeta;
+      this.nowLicense = licenseMap["page_" + pageMeta.menuId];
       localStorage.setItem("menuId", pageMeta.menuId);
     },
   },

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-10 10:42:54
+ * @LastEditTime: 2023-02-01 14:37:02
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -58,6 +58,7 @@ export interface btnCellTemplate extends stringAnyObj {
   drawerDetail?: drawerProps;
   function?: (that: stringAnyObj, data?: stringAnyObj) => void;
   url?: string;
+  apiList: string[];
 }
 
 export interface PageDataTemplate extends stringAnyObj {
