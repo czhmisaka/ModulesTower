@@ -99,6 +99,7 @@ export default defineComponent({
   async mounted() {
     this.$emit("ready");
   },
+
   data: () => {
     return {
       imageInfo: {},
