@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 21:10:00
+ * @LastEditTime: 2023-02-02 02:00:49
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -11,7 +11,6 @@ const Layout = () => import("@/layout/index.vue");
 import { transformSync } from "@babel/core";
 import { useUserStoreHook } from "@/store/modules/user";
 import { stringAnyObj } from "@/modules/userManage/types";
-const user = useUserStoreHook();
 
 // 函数执行时间计算
 const timeChecker = class {
@@ -225,9 +224,7 @@ export const getModuleFromView = (init = false) => {
       dealName.indexOf(pageConfigEnv) > -1 &&
       len == 4 &&
       dealName != pageConfigData,
-    (fileName: string) => {
-      // console.log(fileName, requireModule(fileName), "zxc");
-    }
+    (fileName: string) => {}
   );
 
   // 处理outPut文件

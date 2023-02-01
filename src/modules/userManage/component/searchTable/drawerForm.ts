@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-14 14:56:15
+ * @LastEditTime: 2023-02-01 15:16:37
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -21,6 +21,7 @@ import {
   btnActionTemplate,
   btnCellTemplate,
 } from "@/modules/userManage/types";
+import { useModuleHook } from "@/store/modules/module";
 
 /**
  * @name: btnMaker
@@ -40,12 +41,39 @@ export const btnMaker = (
     icon?: string;
     elType?: "success" | "danger" | "primary" | "warning";
     [key: string]: any;
-  }
+  },
+  apiList: string[] = []
 ): btnCellTemplate => {
   return {
+    apiList,
     label,
     type,
-    isShow: () => true,
+    isShow: (data: stringAnyObj) => {
+      if (!apiList) return true;
+      const { nowLicense } = useModuleHook();
+      console.log(
+        nowLicense,
+        "asd",
+        apiList
+          .map((x) => {
+            return nowLicense.indexOf(x) == -1;
+          })
+          .filter(Boolean).length == 0
+          ? options.isShow
+            ? options.isShow(data)
+            : true
+          : false
+      );
+      return apiList
+        .map((x) => {
+          return nowLicense.indexOf(x) == -1;
+        })
+        .filter(Boolean).length == 0
+        ? options.isShow
+          ? options.isShow(data)
+          : true
+        : false;
+    },
     isDisable: () => false,
     isLoading: false,
     ...options,

@@ -1,13 +1,12 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-14 03:30:26
+ * @LastEditTime: 2023-02-02 02:01:44
  * @FilePath: /configforpagedemo/src/utils/api/admin/routes.ts
  */
 import { useModuleHook } from "@/store/modules/module";
 import { http } from "../../http";
 import { get, post } from "../requests";
-const module = useModuleHook();
 
 type Result = {
   success: boolean;
@@ -27,6 +26,7 @@ export const getAsyncRoutes = async (noRefresh: boolean = false) => {
     //   data.push(dealAsyncMenuList(x));
     // });
     // data.filter(Boolean);
+    const module = useModuleHook();
     module.init([]);
     return {
       // data: module.nowModule.children || [],

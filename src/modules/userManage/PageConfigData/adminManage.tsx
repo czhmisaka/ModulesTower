@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-11 18:03:39
+ * @LastEditTime: 2023-02-01 11:13:12
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/adminManage.tsx
  */
 
@@ -49,7 +49,6 @@ export const adminManage = async () => {
     icon: 'plus',
     elType: 'primary',
     function: async (that, data) => {
-      console.log(data)
       if (!data.id) ElMessage.error('请选择用户')
       let res = await post('/web/usc/user/edit/admin', { id: data.id, adminFlag: true })
       if (res["message"] == "成功") {

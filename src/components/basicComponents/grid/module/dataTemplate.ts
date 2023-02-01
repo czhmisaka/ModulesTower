@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-25 21:11:38
+ * @LastEditTime: 2023-02-02 01:55:36
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -235,8 +235,6 @@ export const componentGetter = (
       break;
     case cardComponentType.fromData:
       if (!component.data) return "";
-
-      console.log(eval("(()=>{return " + component.data + "})()"));
       return {
         // component:defineComponent(Function('"use strict";return (' + component.data + ')')().bind(ref))
         // component: defineComponent(eval('(()=>{return '+component.data+'})()')),

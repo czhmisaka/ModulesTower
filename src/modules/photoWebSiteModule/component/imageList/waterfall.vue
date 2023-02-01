@@ -7,25 +7,8 @@
 <template>
   <cardBg>
     <div class="wholeScreen" ref="waterfall" v-if="open">
-      <div ref="scroll">
+      <div ref="scroll" :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'">
         <div class="row" v-for="imgList in rowList">
-          <div
-            style="
-              position: absolute;
-              z-index: 1283123;
-              font-weight: 900;
-              text-shadow: 1px;
-              color: white;
-            "
-          >
-            {{
-              imgList.length > 1
-                ? imgList.map((x) => x.rowIndex).reduce((a, b) => a + b)
-                : 0
-            }}
-            {{ row.rowIndexNumber }}
-            {{ row.rowIndexNumber * row.rowIndexSize + row.lastOffset }}
-          </div>
           <waterFallItem
             v-for="item in imgList"
             :url="item.url"
@@ -38,8 +21,13 @@
             :class="selectedId == item.id ? ' normal selectedIn' : 'normal'"
             @mouseenter="selectedId = item.id"
             @click="setImage(item)"
+            @dblclick="nowShowType = showType.list"
+            :noPreview="true"
           ></waterFallItem>
         </div>
+      </div>
+      <div :class="nowShowType == showType.list ? 'active' : 'hideIn'">
+        <waterFallItem></waterFallItem>
       </div>
     </div>
   </cardBg>
@@ -62,6 +50,26 @@ let fuck = null;
 let Index = {};
 let isInit = false;
 let imageListForReSize = [];
+enum showType {
+  list,
+  waterFall,
+}
+function fuckk(that) {
+  if (that.nowShowType != showType.waterFall) return;
+  const elw = that.$refs["waterfall"];
+  const offsetForScrollBar = 0;
+  const rowIndexNumber = Math.floor(
+    (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
+  );
+  const lastOffset = (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
+  if (that.row.rowIndexNumber != rowIndexNumber || that.row.lastOffset != lastOffset) {
+    that.row.rowIndexNumber = rowIndexNumber;
+    that.row.lastOffset = lastOffset;
+    if (that.rowList.length < 2) return;
+    that.rowList = [[]];
+    that.pkFunc(imageListForReSize);
+  }
+}
 export default defineComponent({
   componentInfo: {
     labelNameCn: "瀑布流",
@@ -92,6 +100,9 @@ export default defineComponent({
   props: ["baseData", "sizeUnit", "watchKeyForCategory", "imageList", "getFunc"],
   components: { cardBg, waterFallItem },
   watch: {
+    nowShowType(val: showType) {
+      if (val == showType.waterFall) fuckk(this);
+    },
     baseData: {
       handler: async function (val) {
         if (
@@ -99,7 +110,6 @@ export default defineComponent({
           Index != val[this.watchKeyForCategory]
         ) {
           Index = val[this.watchKeyForCategory];
-          console.log("asdasd");
           this.data.offset = 0;
           this.rowList = [[]];
           imageListForReSize = [];
@@ -138,6 +148,9 @@ export default defineComponent({
         lastOffset: 0,
         margin: 3,
       },
+
+      nowShowType: showType.waterFall as showType,
+      showType,
     };
   },
   methods: {
@@ -146,24 +159,7 @@ export default defineComponent({
       isInit = true;
       const that = this;
       if (fuck) clearInterval(fuck);
-      function fuckk(that) {
-        const elw = that.$refs["waterfall"];
-        const offsetForScrollBar = 0;
-        const rowIndexNumber = Math.floor(
-          (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
-        );
-        const lastOffset = (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
-        if (
-          that.row.rowIndexNumber != rowIndexNumber ||
-          that.row.lastOffset != lastOffset
-        ) {
-          that.row.rowIndexNumber = rowIndexNumber;
-          that.row.lastOffset = lastOffset;
-          if (that.rowList.length < 2) return;
-          that.rowList = [[]];
-          that.pkFunc(imageListForReSize);
-        }
-      }
+
       fuck = setInterval(() => {
         fuckk(that);
       }, 200);
@@ -263,7 +259,6 @@ export default defineComponent({
           let row = that.rowList[that.rowList.length - 1];
           let cell = row[row.length - 1];
           const { rowIndexSize, lastOffset } = that.row;
-          console.log("qwe", lastOffset);
           if (cell) {
             cell = {
               ...cell,
@@ -310,5 +305,38 @@ export default defineComponent({
 .normal {
   transition: all 0.1s;
   border-radius: 2px;
+}
+
+@keyframes moveIn {
+  0% {
+    opacity: 0.3;
+    transform: translateX(-30px);
+    backdrop-filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+@keyframes moveOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(30px);
+    backdrop-filter: blur(10px);
+  }
+}
+.active {
+  animation: moveIn 0.3s ease-in-out;
+}
+.hideIn {
+  opacity: 0;
+  transform: translateX(30px);
+  backdrop-filter: blur(10px);
+  animation: moveOut 0.3s ease-in-out;
 }
 </style>

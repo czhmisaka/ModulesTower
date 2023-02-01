@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-18 10:44:18
+ * @LastEditTime: 2023-02-01 11:12:35
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -60,7 +60,6 @@ export class SearchCellStorage {
     for (let key in labelArr) {
       back.push(this.getByLabel(labelArr[key]));
     }
-    console.log(back.filter(Boolean));
     return back.filter(Boolean);
   }
 
@@ -139,7 +138,7 @@ export const DateCell = (options: stringAnyObj = {}): tableCellOptions => {
   return {
     ...showCell(showType.func, {
       showFunc: (data: any, key: string) =>
-        new Date(data[key]).toLocaleString(),
+        data[key] ? new Date(data[key]).toLocaleString() : " ",
       ...options,
     }),
     ...searchCell(formInputType.datePicker),
@@ -329,7 +328,6 @@ export const propertiesMaker = async (
         properties[cell.key],
         needTitle
       );
-    console.log(properties, cell.label);
   }
   return properties;
 };

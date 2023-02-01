@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-14 03:19:47
+ * @LastEditTime: 2023-02-02 01:55:46
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -18,6 +18,7 @@ import {
 import { RouteConfigsTable, routerMeta } from "../../../types";
 
 const router = useRouter();
+let licenseMap = {};
 
 interface pageCellTemplate extends stringAnyObj {
   name?: string;
@@ -29,7 +30,9 @@ interface moduleTemplate {
   nowModule: pageCellTemplate;
   moduleList: pageCellTemplate[];
   nowPage: pageCellTemplate;
+  pageList: pageCellTemplate[];
   routerBackup: RouteConfigsTable[];
+  nowLicense: string[];
 }
 
 /**
@@ -40,8 +43,17 @@ interface moduleTemplate {
  */
 function dealAsyncMenuList(cell, routerBackup) {
   // cell.type：1-模块，2-目录，3-菜单，4-按钮
+
   // 排除按钮
-  if (cell.type == 4) return false;
+  if (cell.type == 4) {
+    cell.urls.map((x) => {
+      const pageId = "page_" + cell.parentId;
+      licenseMap[pageId]
+        ? licenseMap[pageId].push(x)
+        : (licenseMap[pageId] = [x]);
+    });
+    return false;
+  }
 
   // 判断是否需要处理子节点
   if (cell.children && cell.children.length > 0)
@@ -109,9 +121,12 @@ export const moduleStore = defineStore({
   id: "module-info",
   state: (): moduleTemplate => ({
     moduleList: [],
+    pageList: [],
+    routerBackup: [],
+
     nowModule: {},
     nowPage: {},
-    routerBackup: [],
+    nowLicense: [],
   }),
   actions: {
     init(resData) {
@@ -124,9 +139,11 @@ export const moduleStore = defineStore({
       resData.map((x) => {
         moduleList.push(dealAsyncMenuList(x, this.routerBackup));
       });
+
       this.moduleList = moduleList
         .filter(Boolean)
         .sort((a, b) => a.orderNumber - b.orderNumber);
+
       this.nowModule = this.moduleList[0];
       // this.nowModule = this.routerBackup;
     },
@@ -159,6 +176,7 @@ export const moduleStore = defineStore({
     // 切换路由需要记录
     checkPage(pageMeta: routerMeta) {
       this.nowPage.meta = pageMeta;
+      this.nowLicense = licenseMap["page_" + pageMeta.menuId];
       localStorage.setItem("menuId", pageMeta.menuId);
     },
   },
