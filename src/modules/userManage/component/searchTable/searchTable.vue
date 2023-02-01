@@ -277,7 +277,6 @@ export default defineComponent({
      * @param {*} query
      */
     async search(query: { [key: string]: any } = this.query) {
-      console.log("qwe");
       this.query = {
         ...this.query,
         ...query,

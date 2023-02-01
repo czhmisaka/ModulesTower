@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 09:45:48
+ * @LastEditTime: 2023-02-01 11:13:21
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -223,9 +223,7 @@ export const getModuleFromView = (init = false) => {
       dealName.indexOf(pageConfigEnv) > -1 &&
       len == 4 &&
       dealName != pageConfigData,
-    (fileName: string) => {
-      // console.log(fileName, requireModule(fileName), "zxc");
-    }
+    (fileName: string) => {}
   );
 
   // 处理outPut文件

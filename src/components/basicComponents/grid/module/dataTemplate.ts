@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-05 09:35:41
+ * @LastEditTime: 2023-02-01 11:12:09
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -234,8 +234,6 @@ export const componentGetter = (
       break;
     case cardComponentType.fromData:
       if (!component.data) return "";
-
-      console.log(eval("(()=>{return " + component.data + "})()"));
       return {
         // component:defineComponent(Function('"use strict";return (' + component.data + ')')().bind(ref))
         // component: defineComponent(eval('(()=>{return '+component.data+'})()')),
@@ -295,5 +293,4 @@ export const gridCellMaker = (
   return gridCell;
 };
 
-
-export default {}
+export default {};

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-02 12:55:38
+ * @LastEditTime: 2023-02-01 11:13:15
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/pageConfigManage.ts
  */
 
@@ -56,8 +56,6 @@ export const pageConfigManage = async () => {
           showItemTemplate: pageConfigDataTableCellStorage.getAll(),
           searchFunc: async (query: stringAnyObj) => {
             if (!query) query = {};
-            console.log(query);
-
             let res = await post("/web/usc/page/config/page", { ...query });
             return res.data;
           },

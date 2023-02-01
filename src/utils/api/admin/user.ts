@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 09:39:21
+ * @LastEditTime: 2023-02-01 11:13:34
  * @FilePath: /configforpagedemo/src/utils/api/admin/user.ts
  */
 import { http } from "../../http";
@@ -60,7 +60,6 @@ export const getLogin = async (data?: object) => {
 export const getMenuList = async () => {
   let menuList = [] as menuInfoTemplate[];
   let res = await post("/web/usc/menu/list", {});
-  console.log("fuck");
   menuList = res.data;
   return menuList;
 };

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-10 17:24:31
+ * @LastEditTime: 2023-02-01 11:29:09
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -29,6 +29,7 @@ interface moduleTemplate {
   nowModule: pageCellTemplate;
   moduleList: pageCellTemplate[];
   nowPage: pageCellTemplate;
+  pageList: pageCellTemplate[];
   routerBackup: RouteConfigsTable[];
 }
 
@@ -40,8 +41,13 @@ interface moduleTemplate {
  */
 function dealAsyncMenuList(cell, routerBackup) {
   // cell.type：1-模块，2-目录，3-菜单，4-按钮
+
   // 排除按钮
-  if (cell.type == 4) return false;
+  if (cell.type == 4) {
+    console.log(cell);
+
+    return false;
+  }
 
   // 判断是否需要处理子节点
   if (cell.children && cell.children.length > 0)

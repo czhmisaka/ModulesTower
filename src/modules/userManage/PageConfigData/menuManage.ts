@@ -92,7 +92,7 @@ const showLinkOptions = {
   false: "否",
 };
 
-const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
+const 删除按钮 = btnMaker("删除", btnActionTemplate.Function, {
   icon: "Delete",
   elType: "danger",
   isShow: (data) => !data.children || data.children.length == 0,
@@ -353,7 +353,7 @@ pageConfigDataTableCellStorage.push(
               ["userManage_openDrawerForm"](that, drawerProps);
           },
         }),
-        deleteBtn,
+        删除按钮,
       ],
       {
         fixed: "right",

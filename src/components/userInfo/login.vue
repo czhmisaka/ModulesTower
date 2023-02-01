@@ -67,7 +67,6 @@ function onProcessLogin() {
           name: userInfo.value.name,
           avatar: "https://avatars.githubusercontent.com/u/22533472?v=4",
         });
-        console.log(res);
       } else {
         userInfo.value = getres.data[0];
       }

@@ -66,7 +66,6 @@ export default defineComponent({
   methods: {
     open() {
       this.modalStatus.isOpen = true;
-      console.log({ ...this.componentMap, ...this.componentLists }, this.componentLists);
     },
 
     // 添加组件

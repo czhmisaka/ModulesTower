@@ -192,7 +192,6 @@ export default defineComponent({
       };
     },
     baseComponentInfo() {
-      console.log(this.cardComponentDetail.name);
       if (Object.keys(this.componentList).indexOf(this.cardComponentDetail.name) > -1)
         return this.componentList[this.cardComponentDetail.name]["compontentInfo"];
       else return {};

@@ -82,8 +82,6 @@ export default defineComponent({
   },
   async mounted() {
     this.init();
-    let res = await GetAllUser();
-    console.log(res);
   },
 });
 </script>
