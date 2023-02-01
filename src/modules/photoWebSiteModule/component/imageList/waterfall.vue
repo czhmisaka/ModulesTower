@@ -8,9 +8,9 @@
   <cardBg>
     <div class="wholeScreen" ref="waterfall" v-if="open">
       <div ref="scroll" :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'">
-        <div class="row" v-for="imgList in rowList">
+        <div class="row" v-for="(imgList, rowIndex) in rowList">
           <waterFallItem
-            v-for="item in imgList"
+            v-for="(item, colIndex) in imgList"
             :url="item.url"
             :width="item.width - row.margin * 2"
             :height="row.height"
@@ -18,16 +18,29 @@
             :cusStyle="{
               margin: row.margin + 'px',
             }"
-            :class="selectedId == item.id ? ' normal selectedIn' : 'normal'"
-            @mouseenter="selectedId = item.id"
-            @click="setImage(item)"
+            :class="selected.id == item.id ? ' normal selectedIn' : 'normal'"
+            @click="setImage(item, rowIndex, colIndex)"
             @dblclick="nowShowType = showType.list"
             :noPreview="true"
           ></waterFallItem>
         </div>
       </div>
-      <div :class="nowShowType == showType.list ? 'active' : 'hideIn'">
-        <waterFallItem></waterFallItem>
+      <div
+        :class="nowShowType == showType.list ? 'active' : 'hideIn'"
+        @click="nowShowType = showType.waterFall"
+      >
+        <waterFallItem
+          :cusStyle="{
+            position: 'absolute',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            left: '0%',
+          }"
+          :url="selected.data.url"
+          :item="selected.data"
+          :noPreview="true"
+        ></waterFallItem>
+        <div class="bottomActionBtn"></div>
       </div>
     </div>
   </cardBg>
@@ -45,6 +58,7 @@ import {
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import waterFallItem from "@/modules/photoWebSiteModule/component/imageList/waterFallItem.vue";
+import { stringAnyObj } from "@/modules/userManage/types";
 
 let fuck = null;
 let Index = {};
@@ -70,6 +84,7 @@ function fuckk(that) {
     that.pkFunc(imageListForReSize);
   }
 }
+
 export default defineComponent({
   componentInfo: {
     labelNameCn: "瀑布流",
@@ -124,6 +139,7 @@ export default defineComponent({
     }
     this.$emit("ready");
     await this.$nextTick();
+    window.addEventListener("keydown", this.keyDown);
     this.init();
   },
   data: () => {
@@ -140,7 +156,12 @@ export default defineComponent({
         offset: 0,
       } as { [key: string]: number },
       open: false,
-      selectedId: -1,
+      selected: {
+        id: -1,
+        data: {} as stringAnyObj,
+        colIndex: -1,
+        rowIndex: -1,
+      },
       row: {
         height: "120",
         rowIndexSize: 2,
@@ -183,8 +204,67 @@ export default defineComponent({
       });
     },
 
-    setImage(data) {
+    // 选中图片
+    setImage(data, rowIndex, colIndex) {
+      this.selected.id = data.id;
+      this.selected.data = data;
+      this.selected.rowIndex = rowIndex;
+      this.selected.colIndex = colIndex;
       setData(this, { image: data });
+    },
+
+    // 键盘事件
+    keyDown(e) {
+      let { rowIndex, colIndex } = this.selected;
+      if (colIndex == -1) return;
+      const row = this.rowList[rowIndex];
+      const afterRow = this.rowList[rowIndex + 1];
+      const preRow = this.rowList[rowIndex - 1];
+      const offset = row
+        .map((x, i) => {
+          if (i < colIndex) return x.rowIndex;
+          else if (i == colIndex) return x.rowIndex * 0.5;
+          else return 0;
+        })
+        .reduce((a, b) => a + b);
+      console.log(offset, "sadasd");
+      let nextRowIndex = 0;
+
+      switch (e.code) {
+        case "ArrowUp":
+          if (rowIndex == 0) break;
+          for (let i = 0; i < preRow.length; i++) {
+            nextRowIndex += preRow[i].rowIndex;
+            if (nextRowIndex > offset) {
+              colIndex = i;
+              rowIndex--;
+              break;
+            }
+          }
+          break;
+        case "ArrowDown":
+          if (rowIndex == this.rowList.length - 1) break;
+          for (let i = 0; i < afterRow.length; i++) {
+            nextRowIndex += afterRow[i].rowIndex;
+            if (nextRowIndex > offset) {
+              colIndex = i;
+              rowIndex++;
+              break;
+            }
+          }
+          break;
+        case "ArrowLeft":
+          if (colIndex > 0) colIndex--;
+          else if (colIndex == 0 && rowIndex > 0) {
+            rowIndex--;
+            colIndex = preRow.length - 1;
+          }
+          break;
+        case "ArrowRight":
+          if (colIndex < this.rowList[rowIndex].length - 1) colIndex++;
+          break;
+      }
+      this.setImage(this.rowList[rowIndex][colIndex], rowIndex, colIndex);
     },
 
     async getImgList(val = this.baseData[this.watchKeyForCategory], isInit = false) {
@@ -196,6 +276,7 @@ export default defineComponent({
         limit,
         offset,
       });
+      if (list.length == 0) return;
       that.data = { limit, offset: list.length + offset };
       list = list.map((x) => {
         return {
@@ -284,14 +365,34 @@ export default defineComponent({
   width: calc(100% - 24px);
   height: calc(100% - 24px);
   margin: 12px;
-  overflow-y: scroll;
+  overflow-y: auto;
+
+  .active {
+    width: 100%;
+    height: 100%;
+    animation: moveIn 0.3s ease-in-out;
+    z-index: 1000;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+  .hideIn {
+    opacity: 0.2;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transform: translateX(100%);
+    backdrop-filter: blur(10px);
+    animation: moveOut 0.3s ease-in-out;
+    z-index: -1;
+  }
 }
 #waterfall {
   min-height: 100%;
 }
 .row {
   width: 100%;
-  height: calc(100px + 40px);
+  height: calc(120px + 40px);
   display: flex;
   justify-content: flex-start;
 }
@@ -323,20 +424,12 @@ export default defineComponent({
   0% {
     opacity: 1;
     transform: translateX(0px);
+    display: block;
   }
   100% {
     opacity: 0;
     transform: translateX(30px);
     backdrop-filter: blur(10px);
   }
-}
-.active {
-  animation: moveIn 0.3s ease-in-out;
-}
-.hideIn {
-  opacity: 0;
-  transform: translateX(30px);
-  backdrop-filter: blur(10px);
-  animation: moveOut 0.3s ease-in-out;
 }
 </style>
