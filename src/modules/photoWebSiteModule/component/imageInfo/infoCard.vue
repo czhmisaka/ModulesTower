@@ -68,8 +68,6 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import waterFallItem from "@/modules/photoWebSiteModule/component/imageList/waterFallItem.vue";
 
-import analyze from "rgbaster";
-
 export default defineComponent({
   componentInfo: {
     labelNameCn: "图片详情介绍",
@@ -95,9 +93,6 @@ export default defineComponent({
     "baseData.image": {
       handler(val) {
         this.initImageInfo(val);
-        analyze(val.url).then((result) => {
-          console.log(result, "asd");
-        });
       },
     },
   },
