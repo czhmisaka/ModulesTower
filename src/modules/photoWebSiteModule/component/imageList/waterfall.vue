@@ -8,7 +8,11 @@
   <cardBg>
     <div class="wholeScreen" ref="waterfall" v-if="open">
       <div ref="scroll" :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'">
-        <div class="row" v-for="(imgList, rowIndex) in rowList">
+        <div
+          class="row"
+          v-for="(imgList, rowIndex) in rowList"
+          :style="{ height: row.height + 40 + 'px' }"
+        >
           <waterFallItem
             v-for="(item, colIndex) in imgList"
             :url="item.url"
@@ -36,7 +40,7 @@
             transform: 'translateY(-50%)',
             left: '0%',
           }"
-          :url="selected.data.url"
+          :url="`/imageserver/` + selected?.data?.origin?.path"
           :item="selected.data"
           :noPreview="true"
         ></waterFallItem>
@@ -152,7 +156,7 @@ export default defineComponent({
         [key: string]: any;
       }[][],
       data: {
-        limit: 70,
+        limit: 50,
         offset: 0,
       } as { [key: string]: number },
       open: false,
@@ -163,7 +167,7 @@ export default defineComponent({
         rowIndex: -1,
       },
       row: {
-        height: "120",
+        height: 120,
         rowIndexSize: 2,
         rowIndexNumber: 0,
         lastOffset: 0,
@@ -206,6 +210,7 @@ export default defineComponent({
 
     // 选中图片
     setImage(data, rowIndex, colIndex) {
+      if (!data) return;
       this.selected.id = data.id;
       this.selected.data = data;
       this.selected.rowIndex = rowIndex;
@@ -215,6 +220,8 @@ export default defineComponent({
 
     // 键盘事件
     keyDown(e) {
+      e.preventDefault();
+
       let { rowIndex, colIndex } = this.selected;
       if (colIndex == -1) return;
       const row = this.rowList[rowIndex];
@@ -227,9 +234,8 @@ export default defineComponent({
           else return 0;
         })
         .reduce((a, b) => a + b);
-      console.log(offset, "sadasd");
       let nextRowIndex = 0;
-
+      console.log(e.code, "asd");
       switch (e.code) {
         case "ArrowUp":
           if (rowIndex == 0) break;
@@ -261,7 +267,14 @@ export default defineComponent({
           }
           break;
         case "ArrowRight":
-          if (colIndex < this.rowList[rowIndex].length - 1) colIndex++;
+          if (colIndex < row.length - 1) colIndex++;
+          else if (colIndex == row.length - 1 && rowIndex++ < this.rowList.length - 1) {
+            rowIndex++;
+            colIndex = 0;
+          } else {
+            console.log(rowIndex, this.rowList.length - 1);
+            this.getImgList();
+          }
           break;
       }
       this.setImage(this.rowList[rowIndex][colIndex], rowIndex, colIndex);
@@ -392,7 +405,6 @@ export default defineComponent({
 }
 .row {
   width: 100%;
-  height: calc(120px + 40px);
   display: flex;
   justify-content: flex-start;
 }
