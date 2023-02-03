@@ -9,7 +9,6 @@
     :cus-style="{
       overflow: 'scroll',
     }"
-    @click="click"
   >
     <el-card
       @click="rate"
@@ -152,10 +151,6 @@ export default defineComponent({
     };
   },
   methods: {
-    click() {
-      refreshDesktop(this);
-    },
-
     async rate() {
       await piwigoPost("/piwigo/ws.php?format=json", {
         method: "pwg.images.rate",
