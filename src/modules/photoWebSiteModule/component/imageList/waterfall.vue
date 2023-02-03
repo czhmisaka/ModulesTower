@@ -27,7 +27,11 @@
               margin: row.margin + 'px',
             }"
             :class="selected.id == item.id ? ' normal selectedIn' : 'normal'"
-            @click="setImage(item, rowIndex, colIndex)"
+            @click="
+              selected.id == item.id
+                ? (nowShowType = showType.list)
+                : setImage(item, rowIndex, colIndex)
+            "
             @dblclick="nowShowType = showType.list"
             :noPreview="true"
           ></waterFallItem>
