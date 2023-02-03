@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 14:37:02
+ * @LastEditTime: 2023-02-03 14:50:15
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -59,6 +59,7 @@ export interface btnCellTemplate extends stringAnyObj {
   function?: (that: stringAnyObj, data?: stringAnyObj) => void;
   url?: string;
   apiList: string[];
+  showAbleKey: string;
 }
 
 export interface PageDataTemplate extends stringAnyObj {

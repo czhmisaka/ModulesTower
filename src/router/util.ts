@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 11:13:21
+ * @LastEditTime: 2023-02-03 15:43:57
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -284,6 +284,10 @@ export const getModuleFromView = (init = false) => {
                 () => import(`../modules/${moduleName}/Index.vue`),
                 {
                   meta: {
+                    originData: {
+                      ...pageMap[pageName],
+                      desktopData: null,
+                    },
                     ...pageMap[pageName]["cusStyle"],
                     title:
                       pageMap[pageName]["name"] || moduleName + "_" + pageName,

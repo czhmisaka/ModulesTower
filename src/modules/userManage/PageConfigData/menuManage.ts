@@ -279,7 +279,8 @@ const 编辑按钮 = btnMaker(
         ["userManage_openDrawerForm"](that, drawerProps);
     },
   },
-  ["/web/usc/menu/update"]
+  ["/web/usc/menu/update"],
+  "编辑按钮"
 );
 
 const 新增按钮 = btnMaker(
@@ -341,7 +342,8 @@ const 新增按钮 = btnMaker(
         ["userManage_openDrawerForm"](that, drawerProps);
     },
   },
-  ["/web/usc/menu/insert"]
+  ["/web/usc/menu/insert"],
+  "目录/菜单/按钮新增按钮"
 );
 
 const 新增模块按钮 = btnMaker(
@@ -370,34 +372,41 @@ const 新增模块按钮 = btnMaker(
       },
     },
   },
-  ["/web/usc/menu/insert"]
+  ["/web/usc/menu/insert"],
+  "新增模块按钮"
 );
 
-const 删除按钮 = btnMaker("删除", btnActionTemplate.Function, {
-  icon: "Delete",
-  elType: "danger",
-  isShow: (data) => !data.children || data.children.length == 0,
-  function: async (that, data) => {
-    if (data.children && data.children.length > 0)
-      return ElMessage.warning("【无法删除】：存在子节点");
-    ElMessageBox({
-      title: "确认删除【" + data.name + "】吗？",
-      type: "warning",
-      callback: async (action) => {
-        if (action == "confirm") {
-          let res = await post("/web/usc/menu/delete", {
-            id: data.id,
-          });
-          if (res.message == "成功") {
-            ElMessage.success(res.message);
-            if (that.close) that.close();
-            else refreshDesktop(that);
-          } else ElMessage.error(res.message);
-        }
-      },
-    });
+const 删除按钮 = btnMaker(
+  "删除",
+  btnActionTemplate.Function,
+  {
+    icon: "Delete",
+    elType: "danger",
+    isShow: (data) => !data.children || data.children.length == 0,
+    function: async (that, data) => {
+      if (data.children && data.children.length > 0)
+        return ElMessage.warning("【无法删除】：存在子节点");
+      ElMessageBox({
+        title: "确认删除【" + data.name + "】吗？",
+        type: "warning",
+        callback: async (action) => {
+          if (action == "confirm") {
+            let res = await post("/web/usc/menu/delete", {
+              id: data.id,
+            });
+            if (res.message == "成功") {
+              ElMessage.success(res.message);
+              if (that.close) that.close();
+              else refreshDesktop(that);
+            } else ElMessage.error(res.message);
+          }
+        },
+      });
+    },
   },
-});
+  ["/web/usc/menu/delete"],
+  "删除按钮"
+);
 
 pageConfigDataTableCellStorage.push(
   tableCellTemplateMaker(

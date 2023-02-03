@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-11 15:46:46
+ * @LastEditTime: 2023-02-03 15:09:52
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -72,6 +72,7 @@ const pageConfig = {
       maxRows: 8,
       margin: 12,
     },
+    btnList: ["新增模块按钮", "删除按钮", "目录/菜单/按钮新增按钮", "编辑按钮"],
   },
   roleManage: {
     name: "角色管理",
