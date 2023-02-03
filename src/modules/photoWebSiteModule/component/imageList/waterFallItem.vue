@@ -6,27 +6,38 @@
 -->
 
 <script lang="ts">
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref, onMounted, watch } from "vue";
 import { useDark } from "@pureadmin/utils";
-import { ElImage } from "element-plus";
+import { ElImage, ElLoading } from "element-plus";
 
 export default defineComponent({
   name: "waterFallItem",
-  props: ["url", "width", "height", "cusStyle", "item", "noPreview"],
+  props: ["url", "width", "height", "cusStyle", "item", "noPreview", "fit"],
   setup(props, context) {
-    // console.log(props.item);
     const { isDark } = useDark();
+    const isLoading = ref(true);
+    const randomClass = "asd" + Math.floor(Math.random() * 100000000000000) + "_";
+    let load = ref(null);
+    onMounted(() => {
+      load.value = ElLoading.service({
+        target: "." + randomClass,
+      });
+    });
+    watch(
+      () => isLoading,
+      (val) => {
+        if (val.value == false) load.value.close();
+      }
+    );
     return () =>
       h(
         "div",
         {
+          class: randomClass,
           style: {
             float: "left",
             width: props.width ? props.width + "px" : "100%",
             height: props.height ? props.height + "px" : "",
-            // backgroundSize: "cover",
-            // backgroundImage: `url(${props.url})`,
-            // backgroundPosition: "center",
             ...props.cusStyle,
             display: "inline-block",
           },
@@ -36,10 +47,14 @@ export default defineComponent({
             style: { width: "100%", height: "100%", borderRadius: "3px" },
             src: props.url,
             teleported: true,
-            fit: "cover",
+            fit: props.fit ? props.fit : "cover",
             previewSrcList: props.noPreview
               ? []
               : [`/imageserver/` + props.item.origin.path],
+
+            onLoad: (e) => {
+              isLoading.value = false;
+            },
           }),
           h(
             "div",

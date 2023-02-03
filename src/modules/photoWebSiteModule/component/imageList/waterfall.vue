@@ -8,6 +8,9 @@
   <cardBg>
     <div class="wholeScreen" ref="waterfall" v-if="open">
       <div ref="scroll" :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'">
+        <div style="position: fixed; top: 0px; left: 0px; z-index: 100000">
+          {{ rowList.map((x) => x.length).reduce((a, b) => a + b) }}
+        </div>
         <div
           class="row"
           v-for="(imgList, rowIndex) in rowList"
@@ -39,7 +42,9 @@
             top: '50%',
             transform: 'translateY(-50%)',
             left: '0%',
+            height: '100%',
           }"
+          :fit="'contain'"
           :url="`/imageserver/` + selected?.data?.origin?.path"
           :item="selected.data"
           :noPreview="true"
@@ -156,7 +161,7 @@ export default defineComponent({
         [key: string]: any;
       }[][],
       data: {
-        limit: 50,
+        limit: 20,
         offset: 0,
       } as { [key: string]: number },
       open: false,
@@ -220,7 +225,11 @@ export default defineComponent({
 
     // 键盘事件
     keyDown(e) {
-      e.preventDefault();
+      if (
+        ["Space", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown"].indexOf(e.code) != -1
+      )
+        e.preventDefault();
+      // console.log(e.code, "asd");
 
       let { rowIndex, colIndex } = this.selected;
       if (colIndex == -1) return;
@@ -235,8 +244,12 @@ export default defineComponent({
         })
         .reduce((a, b) => a + b);
       let nextRowIndex = 0;
-      console.log(e.code, "asd");
       switch (e.code) {
+        case "Space":
+          if (this.nowShowType == showType.waterFall) this.nowShowType = showType.list;
+          else if (this.nowShowType == showType.list)
+            this.nowShowType = showType.waterFall;
+          break;
         case "ArrowUp":
           if (rowIndex == 0) break;
           for (let i = 0; i < preRow.length; i++) {
@@ -277,7 +290,9 @@ export default defineComponent({
           }
           break;
       }
-      this.setImage(this.rowList[rowIndex][colIndex], rowIndex, colIndex);
+
+      if (rowIndex != this.row.rowIndex || colIndex != this.row.colIndex)
+        this.setImage(this.rowList[rowIndex][colIndex], rowIndex, colIndex);
     },
 
     async getImgList(val = this.baseData[this.watchKeyForCategory], isInit = false) {
@@ -329,7 +344,7 @@ export default defineComponent({
       while (list.length > 0) {
         number++;
         list.sort((a, b) => b.rowIndex - a.rowIndex);
-        if (number > list.length) break;
+        if (number > this.data.limit) break;
         for (let i = 0; i < list.length; i++) {
           let x = list[i];
           if (getRowIndex() > x.rowIndex) {
