@@ -176,10 +176,6 @@ export default defineComponent({
     },
     async colorClick(color) {
       const that = this;
-      changeVisible(that, {
-        userManage_menuListRemote: false,
-        upload: false,
-      });
       changeCardPosition(that, {
         waterFall: {
           x: 0,
@@ -187,10 +183,19 @@ export default defineComponent({
         },
       });
       changeCardSize(that, {
+        InfoCard: {
+          width: 2,
+          height: 10,
+        },
         waterFall: {
           width: 10,
           height: 12,
         },
+      });
+      changeVisible(that, {
+        userManage_menuListRemote: false,
+        upload: false,
+        icon: true,
       });
       changeCardProperties(that, {
         waterFall: {
