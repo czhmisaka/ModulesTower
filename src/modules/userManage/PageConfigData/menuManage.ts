@@ -58,6 +58,7 @@ import {
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useModuleHook } from "@/store/modules/module";
 
 const typeToModule = {
   1: "模块",
@@ -76,6 +77,7 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
       `/web/usc/menu/${data.id ? "update" : "insert"}`,
       data
     );
+    console.log(that, query, "asd");
     if (res["message"] == "成功") {
       that.$message.success(res["message"]);
       setTimeout(() => {
@@ -408,11 +410,33 @@ const 删除按钮 = btnMaker(
   "删除按钮"
 );
 
+const 自动生成按钮 = btnMaker(
+  "自动生成按钮",
+  btnActionTemplate.Function,
+  {
+    icon: "Plus",
+    elType: "primary",
+    isShow: (data) => data.type == 3,
+    function: async (that, data) => {
+      console.log(that, data, "asd");
+      const { routerBackup } = useModuleHook();
+      const { id, urls } = data;
+      const router = routerBackup.find((x) => {
+        return x.path == urls[0];
+      });
+      const btnList = router.meta.originData.btnList;
+      console.log(btnList);
+    },
+  },
+  ["/web/usc/menu/insert"],
+  "自动生成按钮"
+);
+
 pageConfigDataTableCellStorage.push(
   tableCellTemplateMaker(
     "操作",
     "actionaction",
-    actionCell([新增按钮, 编辑按钮, 删除按钮], {
+    actionCell([新增按钮, 编辑按钮, 删除按钮, 自动生成按钮], {
       fixed: "right",
     })
   )
@@ -422,6 +446,13 @@ const SearchTemplate = pageConfigDataTableCellStorage.getByKeyArr(["name"]);
 
 const btnList = [新增模块按钮];
 
+export const menuManageBtnList = [
+  新增按钮,
+  新增模块按钮,
+  删除按钮,
+  编辑按钮,
+  自动生成按钮,
+];
 export const menuManage = async () => {
   return [
     gridCellMaker(

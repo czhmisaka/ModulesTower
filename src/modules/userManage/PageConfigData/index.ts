@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-03 15:09:52
+ * @LastEditTime: 2023-02-03 16:24:43
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -11,12 +11,14 @@ import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deep
 import { apiManage } from "./apiManage";
 import { department } from "./departmenet";
 import { pageConfigManage } from "./pageConfigManage";
-import { menuManage } from "./menuManage";
+import { menuManage, menuManageBtnList } from "./menuManage";
 import { roleManage } from "./roleManage";
 import { roleBindUserManage } from "./roleBindUserManage";
 import { mainDesktop, userManage } from "./main";
 import { actionLogManage } from "./actionLogManage";
 import { adminManage } from "./adminManage";
+import { stringAnyObj } from "@/modules/userManage/types";
+import { btnCellTemplate } from "../types";
 
 export interface desktopDataTemplate {
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -26,6 +28,9 @@ export interface desktopDataTemplate {
     maxRows: number;
     margin: number;
   };
+  permission?: stringAnyObj[];
+  dataPermission?: stringAnyObj[];
+  btnList?: btnCellTemplate[];
 }
 
 const pageConfig = {
@@ -72,7 +77,7 @@ const pageConfig = {
       maxRows: 8,
       margin: 12,
     },
-    btnList: ["新增模块按钮", "删除按钮", "目录/菜单/按钮新增按钮", "编辑按钮"],
+    btnList: menuManageBtnList,
   },
   roleManage: {
     name: "角色管理",

@@ -1,4 +1,5 @@
 import { type RouteComponent } from "vue-router";
+import { stringAnyObj } from "@/modules/userManage/types";
 
 export interface StorageConfigs {
   version?: string;
@@ -135,6 +136,7 @@ export interface RouteConfigsTable {
           rank: number;
           icon: string;
           ruleCheck: string[];
+          originData: stringAnyObj;
         };
         [key: string]: any;
       }
