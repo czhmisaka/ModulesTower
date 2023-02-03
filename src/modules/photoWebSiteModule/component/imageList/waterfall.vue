@@ -6,11 +6,12 @@
 -->
 <template>
   <cardBg>
-    <div class="wholeScreen" ref="waterfall" v-if="open">
-      <div ref="scroll" :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'">
-        <div style="position: fixed; top: 0px; left: 0px; z-index: 100000">
-          {{ rowList.map((x) => x.length).reduce((a, b) => a + b) }}
-        </div>
+    <div class="wholeScreen" :id="'waterfall_' + MathRandom" v-if="open">
+      <div
+        :id="'scroll_' + MathRandom"
+        :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'"
+      >
+        <div style="position: fixed; top: 0px; left: 0px; z-index: 100000"></div>
         <div
           class="row"
           v-for="(imgList, rowIndex) in rowList"
@@ -42,7 +43,7 @@
             top: '50%',
             transform: 'translateY(-50%)',
             left: '0%',
-            height: '100%',
+            height: 'calc(100% - 100px)',
           }"
           :fit="'contain'"
           :url="`/imageserver/` + selected?.data?.origin?.path"
@@ -77,23 +78,8 @@ enum showType {
   list,
   waterFall,
 }
-function fuckk(that) {
-  if (that.nowShowType != showType.waterFall) return;
-  const elw = that.$refs["waterfall"];
-  const offsetForScrollBar = 0;
-  const rowIndexNumber = Math.floor(
-    (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
-  );
-  const lastOffset = (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
-  if (that.row.rowIndexNumber != rowIndexNumber || that.row.lastOffset != lastOffset) {
-    that.row.rowIndexNumber = rowIndexNumber;
-    that.row.lastOffset = lastOffset;
-    if (that.rowList.length < 2) return;
-    that.rowList = [[]];
-    that.pkFunc(imageListForReSize);
-  }
-}
 
+const MathRandom = "asd";
 export default defineComponent({
   componentInfo: {
     labelNameCn: "瀑布流",
@@ -125,7 +111,7 @@ export default defineComponent({
   components: { cardBg, waterFallItem },
   watch: {
     nowShowType(val: showType) {
-      if (val == showType.waterFall) fuckk(this);
+      if (val == showType.waterFall) this.fuckk();
     },
     baseData: {
       handler: async function (val) {
@@ -153,6 +139,7 @@ export default defineComponent({
   },
   data: () => {
     return {
+      MathRandom,
       rowList: [[]] as {
         url: string;
         width: number;
@@ -161,7 +148,7 @@ export default defineComponent({
         [key: string]: any;
       }[][],
       data: {
-        limit: 20,
+        limit: 50,
         offset: 0,
       } as { [key: string]: number },
       open: false,
@@ -183,7 +170,34 @@ export default defineComponent({
       showType,
     };
   },
+  unMounted: () => {
+    if (fuck) clearInterval(fuck);
+  },
   methods: {
+    fuckk(thatt) {
+      const that = thatt ? thatt : this;
+      if (that.nowShowType != showType.waterFall) return;
+      this.open = true;
+
+      const elw = document.getElementById("waterfall_" + this.MathRandom);
+      const offsetForScrollBar = 0;
+      const rowIndexNumber = Math.floor(
+        (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
+      );
+      const lastOffset = (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
+      console.log(elw.offsetWidth, "asd", that.row.rowIndexNumber, rowIndexNumber);
+
+      if (
+        that.row.rowIndexNumber != rowIndexNumber ||
+        that.row.lastOffset != lastOffset
+      ) {
+        that.row.rowIndexNumber = rowIndexNumber;
+        that.row.lastOffset = lastOffset;
+        if (that.rowList.length < 2) return;
+        that.rowList = [[]];
+        that.pkFunc(imageListForReSize);
+      }
+    },
     async init() {
       if (isInit) return;
       isInit = true;
@@ -191,16 +205,16 @@ export default defineComponent({
       if (fuck) clearInterval(fuck);
 
       fuck = setInterval(() => {
-        fuckk(that);
+        that.fuckk(that);
       }, 200);
 
-      const elw = that.$refs["waterfall"];
+      const elw = document.getElementById("waterfall_" + this.MathRandom);
       let a = false;
 
-      fuckk(that);
+      that.fuckk();
 
       elw.addEventListener("scroll", (e) => {
-        const scroll = that.$refs["scroll"];
+        const scroll = document.getElementById("scroll_" + this.MathRandom);
         const box = scroll.parentElement;
         if (box.scrollTop + box.clientHeight > box.scrollHeight - 10) {
           if (a) return;
@@ -299,7 +313,7 @@ export default defineComponent({
       const that = this;
       if (!val) return null;
       let { limit, offset } = that.data;
-      let list = await that.getFunc(that, {
+      let list = await this.getFunc(that, {
         key: val,
         limit,
         offset,

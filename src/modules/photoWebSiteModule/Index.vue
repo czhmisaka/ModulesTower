@@ -20,7 +20,6 @@
       :component-lists="component"
       :cus-style="desktopData?.cusStyle"
     />
-    {{ dataText }}
   </div>
 </template>
 

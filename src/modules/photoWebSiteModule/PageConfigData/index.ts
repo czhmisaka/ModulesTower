@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-20 23:40:40
+ * @LastEditTime: 2023-02-04 00:46:01
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -29,6 +29,16 @@ const pageConfig = {
       wholeScreen: true,
       maxRows: 12,
       margin: 6,
+    },
+  },
+  main1: {
+    name: "图库1",
+    desktopData: mainDesktop,
+    gridColNum: 12,
+    cusStyle: {
+      wholeScreen: true,
+      maxRows: 14,
+      margin: 3,
     },
   },
 } as { [key: string]: desktopDataTemplate };

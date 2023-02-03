@@ -45,7 +45,6 @@ export default defineComponent({
             previewSrcList: props.noPreview
               ? []
               : [`/imageserver/` + props.item.origin.path],
-
             onLoad: (e) => {
               isLoading.value = false;
               if (load.value) {
@@ -89,8 +88,11 @@ export default defineComponent({
                     whiteSpace: "nowrap",
                   },
                 },
-                // [`${props.item.origin.width} x ${props.item.origin.height}`]
-                [`${props.item.width} x ${props.item.rowIndex}`]
+                [
+                  props.item?.origin
+                    ? `${props.item.origin.width}px * ${props.item.origin.height}px`
+                    : "",
+                ]
               ),
             ]
           ),

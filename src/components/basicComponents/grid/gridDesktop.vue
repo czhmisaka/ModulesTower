@@ -283,7 +283,8 @@ export default defineComponent({
               ? "组件「" + this.gridList[index].labelNameCN + "」"
               : "桌面组件",
             "请求执行事件<" + type + ">",
-            JSON.parse(JSON.stringify(value))
+            // JSON.parse(JSON.stringify(value))
+            value
           );
         else
           console.log(
@@ -322,7 +323,7 @@ export default defineComponent({
               changeList.map((x: string) => {
                 if (card.label == x) {
                   needRefreshCardList.push(index);
-                  card = deepMerge(JSON.parse(JSON.stringify(value[x])), card);
+                  card = deepMerge(value[x], card);
                 }
               });
               return card;

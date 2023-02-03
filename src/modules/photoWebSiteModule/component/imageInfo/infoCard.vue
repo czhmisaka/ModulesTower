@@ -17,6 +17,7 @@
       }"
       :body-style="{
         padding: '0px',
+        paddingBottom: '-5px',
       }"
     >
       <waterFallItem
@@ -31,15 +32,38 @@
         :noPreview="true"
       ></waterFallItem>
     </el-card>
+    <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="颜色">
+      <div class="flexBox">
+        <div
+          class="tag"
+          v-for="color in colorList"
+          :style="{
+            backgroundColor: color,
+          }"
+          @click="colorClick(color)"
+        ></div>
+      </div>
+    </el-card>
     <el-card
       title="基本信息"
-      :style="{
-        margin: '6px',
-        marginTop: '3px',
-      }"
-      :body-style="{
-        padding: '3px',
-      }"
+      :style="elCardInfo.style"
+      :body-style="elCardInfo.bodyStyle"
+    >
+      <el-descriptions :column="1" size="small" v-if="baseData['image']" border>
+        <el-descriptions-item
+          v-for="item in Object.keys(imageInfo)"
+          :align="'left'"
+          :label="item"
+          label-align="left"
+        >
+          {{ imageInfo[item] }}
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-card>
+    <el-card
+      title="相册信息"
+      :style="elCardInfo.style"
+      :body-style="elCardInfo.bodyStyle"
     >
       <el-descriptions :column="1" size="small" v-if="baseData['image']" border>
         <el-descriptions-item
@@ -67,6 +91,14 @@ import {
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import waterFallItem from "@/modules/photoWebSiteModule/component/imageList/waterFallItem.vue";
+
+import {
+  setData,
+  changeVisible,
+  changeCardPosition,
+  changeCardSize,
+  changeCardProperties,
+} from "@/components/basicComponents/grid/module/cardApi/index";
 
 export default defineComponent({
   componentInfo: {
@@ -102,7 +134,19 @@ export default defineComponent({
 
   data: () => {
     return {
+      tagList: [],
+      colorList: [] as string[],
       imageInfo: {},
+
+      elCardInfo: {
+        style: {
+          margin: "6px",
+          marginTop: "3px",
+        },
+        bodyStyle: {
+          padding: "3px",
+        },
+      },
     };
   },
   methods: {
@@ -117,8 +161,10 @@ export default defineComponent({
       if (!image || !image.id) return;
       let res = await get("/image-info?id=" + image.id, {});
       if (!res || !res.data) return;
-      const { tagList } = res.data;
+      const { tagList, color } = res.data;
       const info = res.data.info[0];
+      this.colorList = color;
+      this.tagList = tagList;
       this.imageInfo = {
         尺寸: `${info.width}px × ${info.height}px`,
         文件大小: `${info.filesize} Kb`,
@@ -126,6 +172,53 @@ export default defineComponent({
         创建日期: new Date(info.date_available.replace("T", " ")).toLocaleString(),
         修改日期: new Date(info.lastmodified.replace("T", " ")).toLocaleString(),
       };
+    },
+    async colorClick(color) {
+      const that = this;
+      changeVisible(that, {
+        userManage_menuListRemote: false,
+        upload: false,
+      });
+      changeCardPosition(that, {
+        waterFall: {
+          x: 0,
+          y: 0,
+        },
+      });
+      changeCardSize(that, {
+        waterFall: {
+          width: 10,
+          height: 12,
+        },
+      });
+      changeCardProperties(that, {
+        waterFall: {
+          getFunc: async function (that, data, asd) {
+            let res = await get(
+              `/palette?colors=${color.replace("rgb(", "").replace(")", "")}&offset=${
+                data.offset
+              }&limit=${data.limit}`,
+              {}
+            );
+            const resData = res.data;
+            const back = resData.map((x) => {
+              return {
+                ...x,
+                url:
+                  `/imageserver/i.php?` +
+                  x.path.replace("./", "/").replace(".", "-sm.") +
+                  "",
+              };
+            });
+            return back;
+          },
+        },
+      });
+      this.$nextTick(() => {
+        setData(that, {
+          category: {},
+        });
+      });
     },
   },
 });
@@ -138,5 +231,15 @@ export default defineComponent({
   height: calc(100% - 24px);
   margin: 12px;
   overflow-y: scroll;
+}
+.flexBox {
+  display: flex;
+  justify-content: flex-start;
+  border-radius: 3px;
+  overflow: hidden;
+  .tag {
+    width: 20%;
+    height: 15px;
+  }
 }
 </style>

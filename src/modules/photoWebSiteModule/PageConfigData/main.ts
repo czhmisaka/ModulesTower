@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-29 11:17:54
+ * @LastEditTime: 2023-02-03 23:27:03
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -91,48 +91,6 @@ export const mainDesktop = async () =>
     )
       .setPosition(2, 0)
       .setSize(8, 12),
-
-    gridCellMaker(
-      "editable",
-      "编辑",
-      {},
-      {
-        name: "setting_editable",
-        type: cardComponentType.componentList,
-      },
-      {
-        isSettingTool: true,
-      }
-    )
-      .setPosition(0, 11)
-      .setSize(1, 1),
-    gridCellMaker(
-      "openComponents",
-      "打开组件菜单",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "icon",
-      },
-      {
-        isSettingTool: true,
-        props: {
-          name: "Grid",
-          onClickFunc: (content: any) => {
-            const { context } = content;
-            context.emit(
-              "onChange",
-              {},
-              {
-                type: [cardOnChangeType.openComponentsList],
-              }
-            );
-          },
-        },
-      }
-    )
-      .setPosition(0, 10)
-      .setSize(1, 1),
     gridCellMaker(
       "InfoCard",
       "图片信息",
