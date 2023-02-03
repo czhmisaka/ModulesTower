@@ -6,7 +6,7 @@
 -->
 <template>
   <cardBg>
-    <div class="wholeScreen" :id="'waterfall_' + MathRandom" v-if="open">
+    <div class="wholeScreen" :id="'waterfall_' + MathRandom">
       <div
         :id="'scroll_' + MathRandom"
         :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'"
@@ -80,6 +80,27 @@ enum showType {
 }
 
 const MathRandom = "asd";
+
+function fuckk(thatt) {
+  const that = thatt ? thatt : this;
+  if (that.nowShowType != showType.waterFall) return;
+
+  const elw = document.getElementById("waterfall_" + that.MathRandom);
+  const offsetForScrollBar = 0;
+  const rowIndexNumber = Math.floor(
+    (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
+  );
+  const lastOffset = (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
+  if (
+    (that.row.rowIndexNumber != rowIndexNumber || that.row.lastOffset != lastOffset) &&
+    rowIndexNumber > 100
+  ) {
+    that.row.rowIndexNumber = rowIndexNumber;
+    that.row.lastOffset = lastOffset;
+    that.rowList = [[]];
+    that.pkFunc(imageListForReSize, that);
+  }
+}
 export default defineComponent({
   componentInfo: {
     labelNameCn: "瀑布流",
@@ -111,7 +132,7 @@ export default defineComponent({
   components: { cardBg, waterFallItem },
   watch: {
     nowShowType(val: showType) {
-      if (val == showType.waterFall) this.fuckk();
+      if (val == showType.waterFall) fuckk(this);
     },
     baseData: {
       handler: async function (val) {
@@ -128,14 +149,17 @@ export default defineComponent({
       },
     },
   },
+  async created() {
+    isInit = false;
+  },
   async mounted() {
     this.open = true;
     if (this.imageList && this.imageList.length > 0) {
     }
     this.$emit("ready");
     await this.$nextTick();
-    window.addEventListener("keydown", this.keyDown);
     this.init();
+    window.addEventListener("keydown", this.keyDown);
   },
   data: () => {
     return {
@@ -170,34 +194,7 @@ export default defineComponent({
       showType,
     };
   },
-  unMounted: () => {
-    if (fuck) clearInterval(fuck);
-  },
   methods: {
-    fuckk(thatt) {
-      const that = thatt ? thatt : this;
-      if (that.nowShowType != showType.waterFall) return;
-      this.open = true;
-
-      const elw = document.getElementById("waterfall_" + this.MathRandom);
-      const offsetForScrollBar = 0;
-      const rowIndexNumber = Math.floor(
-        (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
-      );
-      const lastOffset = (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
-      console.log(elw.offsetWidth, "asd", that.row.rowIndexNumber, rowIndexNumber);
-
-      if (
-        that.row.rowIndexNumber != rowIndexNumber ||
-        that.row.lastOffset != lastOffset
-      ) {
-        that.row.rowIndexNumber = rowIndexNumber;
-        that.row.lastOffset = lastOffset;
-        if (that.rowList.length < 2) return;
-        that.rowList = [[]];
-        that.pkFunc(imageListForReSize);
-      }
-    },
     async init() {
       if (isInit) return;
       isInit = true;
@@ -205,13 +202,13 @@ export default defineComponent({
       if (fuck) clearInterval(fuck);
 
       fuck = setInterval(() => {
-        that.fuckk(that);
+        fuckk(that);
       }, 200);
 
       const elw = document.getElementById("waterfall_" + this.MathRandom);
       let a = false;
 
-      that.fuckk();
+      fuckk(that);
 
       elw.addEventListener("scroll", (e) => {
         const scroll = document.getElementById("scroll_" + this.MathRandom);
@@ -243,7 +240,6 @@ export default defineComponent({
         ["Space", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown"].indexOf(e.code) != -1
       )
         e.preventDefault();
-      // console.log(e.code, "asd");
 
       let { rowIndex, colIndex } = this.selected;
       if (colIndex == -1) return;
@@ -299,7 +295,6 @@ export default defineComponent({
             rowIndex++;
             colIndex = 0;
           } else {
-            console.log(rowIndex, this.rowList.length - 1);
             this.getImgList();
           }
           break;
@@ -339,9 +334,9 @@ export default defineComponent({
       this.pkFunc(list);
     },
 
-    pkFunc(lists) {
+    pkFunc(lists, that = this) {
       let list = JSON.parse(JSON.stringify(lists));
-      const that = this;
+      if (that.row.rowIndexNumber == 0) return;
       list.sort((a, b) => b.rowIndex - a.rowIndex);
       function getRow() {
         return that.rowList[that.rowList.length - 1];
@@ -358,7 +353,7 @@ export default defineComponent({
       while (list.length > 0) {
         number++;
         list.sort((a, b) => b.rowIndex - a.rowIndex);
-        if (number > this.data.limit) break;
+        if (number > that.data.limit) break;
         for (let i = 0; i < list.length; i++) {
           let x = list[i];
           if (getRowIndex() > x.rowIndex) {

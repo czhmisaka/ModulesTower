@@ -48,6 +48,7 @@ export default defineComponent({
         if (Object.keys(PageConfig).indexOf(PageName) > -1) {
           let res = PageConfig[PageName];
           this.desktopData = res;
+          this.desktopDataList = [];
           this.desktopDataList = await this.desktopData.desktopData();
         } else {
           this.$message("没找到对应的页面呢,已前往模块首页");

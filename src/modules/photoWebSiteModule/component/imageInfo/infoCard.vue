@@ -9,6 +9,7 @@
     :cus-style="{
       overflow: 'scroll',
     }"
+    @click="click"
   >
     <el-card
       @click="rate"
@@ -98,6 +99,7 @@ import {
   changeCardPosition,
   changeCardSize,
   changeCardProperties,
+  refreshDesktop,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 
 export default defineComponent({
@@ -150,6 +152,10 @@ export default defineComponent({
     };
   },
   methods: {
+    click() {
+      refreshDesktop(this);
+    },
+
     async rate() {
       await piwigoPost("/piwigo/ws.php?format=json", {
         method: "pwg.images.rate",
@@ -193,7 +199,7 @@ export default defineComponent({
       });
       changeCardProperties(that, {
         waterFall: {
-          getFunc: async function (that, data, asd) {
+          getFunc: async function (that, data) {
             let res = await get(
               `/palette?colors=${color.replace("rgb(", "").replace(")", "")}&offset=${
                 data.offset

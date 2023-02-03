@@ -167,6 +167,9 @@ export default defineComponent({
                 context.emit("onChange", key, value, options);
               },
               onReady: (e = false) => {
+                console.log(
+                  `组件【${props.detail.labelNameCN || props.detail.label}】准备就绪`
+                );
                 isLoading.value = e;
               },
               baseData: props.baseData,
