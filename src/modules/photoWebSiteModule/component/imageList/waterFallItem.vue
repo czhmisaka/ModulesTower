@@ -23,12 +23,6 @@ export default defineComponent({
         target: "." + randomClass,
       });
     });
-    watch(
-      () => isLoading,
-      (val) => {
-        if (val.value == false) load.value.close();
-      }
-    );
     return () =>
       h(
         "div",
@@ -54,6 +48,9 @@ export default defineComponent({
 
             onLoad: (e) => {
               isLoading.value = false;
+              if (load.value) {
+                load.value.close();
+              }
             },
           }),
           h(
