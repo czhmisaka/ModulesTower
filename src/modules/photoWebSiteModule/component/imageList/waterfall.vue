@@ -187,7 +187,7 @@ export default defineComponent({
         rowIndex: -1,
       },
       row: {
-        height: 120,
+        height: 100,
         rowIndexSize: 2,
         rowIndexNumber: 0,
         lastOffset: 0,

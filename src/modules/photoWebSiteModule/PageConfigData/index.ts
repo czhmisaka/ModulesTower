@@ -1,11 +1,11 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-04 00:46:01
+ * @LastEditTime: 2023-02-04 02:53:07
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
-import { mainDesktop } from "./main";
+import { mainDesktop, mobile } from "./main";
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { isValidKey } from "@/utils/index";
 
@@ -32,12 +32,12 @@ const pageConfig = {
     },
   },
   main1: {
-    name: "图库1",
-    desktopData: mainDesktop,
-    gridColNum: 12,
+    name: "手机端图库",
+    desktopData: mobile,
+    gridColNum: 4,
     cusStyle: {
       wholeScreen: true,
-      maxRows: 14,
+      maxRows: 20,
       margin: 3,
     },
   },

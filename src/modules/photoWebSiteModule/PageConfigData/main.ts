@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-04 02:27:08
+ * @LastEditTime: 2023-02-04 03:00:10
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -151,4 +151,78 @@ export const mainDesktop = async () =>
     )
       .setPosition(10, 10)
       .setSize(2, 2),
+  ] as gridCellTemplate[];
+
+export const mobile = async () =>
+  [
+    gridCellMaker(
+      "upload",
+      "上传",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_upload",
+      },
+      {}
+    )
+      .setPosition(0, 0)
+      .setSize(1, 2),
+
+    gridCellMaker(
+      "userManage_menuListRemote",
+      "相册列表",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "userManage_menuList",
+      },
+      {
+        props: {
+          noSearch: true,
+          treeDataFunc: async (that) => {
+            let res = await get("/categories", {});
+            return res.data;
+          },
+          outputKey: "category",
+          defaultProps: {
+            label: "name",
+            children: "children",
+          },
+        },
+      }
+    )
+      .setPosition(0, 17)
+      .setSize(4, 3),
+
+    gridCellMaker(
+      "waterFall",
+      "瀑布流图片展示功能",
+      {},
+      {
+        name: "photoWebSiteModule_waterfall",
+        type: cardComponentType.componentList,
+      },
+      {
+        props: {
+          watchKeyForCategory: "category",
+          getFunc: getFunc,
+        },
+      }
+    )
+      .setPosition(0, 2)
+      .setSize(4, 15),
+    gridCellMaker(
+      "InfoCard",
+      "图片信息",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_infoCard",
+      },
+      {
+        props: {},
+      }
+    )
+      .setPosition(1, 0)
+      .setSize(3, 2),
   ] as gridCellTemplate[];
