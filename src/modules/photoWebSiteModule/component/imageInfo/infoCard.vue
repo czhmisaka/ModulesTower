@@ -67,12 +67,12 @@
     >
       <el-descriptions :column="1" size="small" v-if="baseData['image']" border>
         <el-descriptions-item
-          v-for="item in Object.keys(imageInfo)"
+          v-for="item in Object.keys(categoryInfo)"
           :align="'left'"
           :label="item"
           label-align="left"
         >
-          {{ imageInfo[item] }}
+          {{ categoryInfo[item] }}
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
@@ -116,11 +116,15 @@ export default defineComponent({
       label: "图片信息",
       type: inputType.obj,
     },
+    watchKeyForCategory: {
+      label: "baseData监听key(相册key)",
+      type: inputType.text,
+    },
   } as propInfo,
 
   baseProps: {},
 
-  props: ["baseData", "sizeUnit", "image"],
+  props: ["baseData", "sizeUnit", "image", "watchKeyForCategory"],
   components: { cardBg, waterFallItem },
   watch: {
     "baseData.image": {
@@ -138,6 +142,7 @@ export default defineComponent({
       tagList: [],
       colorList: [] as string[],
       imageInfo: {},
+      categoryInfo: {},
 
       elCardInfo: {
         style: {
@@ -173,6 +178,7 @@ export default defineComponent({
         创建日期: new Date(info.date_available.replace("T", " ")).toLocaleString(),
         修改日期: new Date(info.lastmodified.replace("T", " ")).toLocaleString(),
       };
+      this.categoryInfo = this.baseData[this.watchKeyForCategory];
     },
     async colorClick(color) {
       const that = this;

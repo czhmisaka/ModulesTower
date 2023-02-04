@@ -101,7 +101,9 @@ export const mainDesktop = async () =>
         name: "photoWebSiteModule_infoCard",
       },
       {
-        props: {},
+        props: {
+          watchKeyForCategory: "category",
+        },
       }
     )
       .setPosition(10, 0)
