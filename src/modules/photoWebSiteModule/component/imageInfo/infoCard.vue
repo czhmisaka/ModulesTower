@@ -61,6 +61,7 @@
       </el-descriptions>
     </el-card>
     <el-card
+      v-if="categoryInfo['相册名']"
       title="相册信息"
       :style="elCardInfo.style"
       :body-style="elCardInfo.bodyStyle"
@@ -178,7 +179,13 @@ export default defineComponent({
         创建日期: new Date(info.date_available.replace("T", " ")).toLocaleString(),
         修改日期: new Date(info.lastmodified.replace("T", " ")).toLocaleString(),
       };
-      this.categoryInfo = this.baseData[this.watchKeyForCategory];
+      const category = this.baseData[this.watchKeyForCategory];
+      if (category["name"])
+        this.categoryInfo = {
+          相册名: category["name"],
+          级别: category["rank"],
+        };
+      else this.categoryInfo = {};
     },
     async colorClick(color) {
       const that = this;
