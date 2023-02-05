@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 11:00:24
- * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 17:03:01
- * @FilePath: /configforpagedemo/src/App.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-11-07 23:23:55
+ * @FilePath: \ConfigForDesktopPage\src\App.vue
 -->
 <template>
   <el-config-provider :locale="currentLocale">

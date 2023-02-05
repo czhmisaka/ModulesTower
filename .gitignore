@@ -2,6 +2,7 @@
 node_modules
 /dist
 /test
+.cache
 
 package-lock.json
 # local env files

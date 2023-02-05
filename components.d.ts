@@ -46,7 +46,7 @@ declare module 'vue' {
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSlider: typeof import('element-plus/es')['ElSlider']
-    ElSpace: typeof import('element-plus/es')['ElSpace']
+    ElSpace: typeof import("element-plus/es")["ElSpace"];
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
@@ -67,6 +67,7 @@ declare module 'vue' {
     InfoList: typeof import('./src/components/basicComponents/list/info/infoList.vue')['default']
     InputCell: typeof import('./src/components/basicComponents/cell/input/inputCell.vue')['default']
     InputList: typeof import('./src/components/basicComponents/list/input/inputList.vue')['default']
+    Layout: typeof import('./src/components/basicComponents/layout/index.vue')['default']
     LessIcon: typeof import('./src/components/basicComponents/cell/icon/lessIcon.vue')['default']
     LineSlideExchange: typeof import('./src/components/animate/lineSlideExchange.vue')['default']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
