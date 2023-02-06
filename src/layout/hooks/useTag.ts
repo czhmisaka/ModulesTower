@@ -39,7 +39,7 @@ export function useTags() {
   /** 是否隐藏标签页，默认显示 */
   const showTags =
     ref(
-      storageLocal.getItem<StorageConfigs>("responsive-configure").hideTabs
+      storageLocal.getItem<StorageConfigs>("responsive-configure")?.hideTabs
     ) ?? ref("false");
   const multiTags: any = computed(() => {
     return useMultiTagsStoreHook().multiTags;

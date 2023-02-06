@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 16:24:09
+ * @LastEditTime: 2023-02-06 18:53:35
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -55,7 +55,6 @@ import { RouteConfigsTable } from "../../types/index";
 import { baseModuleRouter } from "./util";
 import { useModuleHook } from "@/store/modules/module";
 import { useTags } from "@/layout/hooks/useTag";
-const { onContentFullScreen } = useTags();
 
 // 路由存放
 const routes = [homeRouter, errorRouter];
@@ -189,15 +188,7 @@ router.beforeEach(async (to, from, next) => {
     meta = to.matched[1].meta;
     module.checkPage(to.matched[1].meta);
   } else if (to.matched.length == 0) {
-    next("/welcome");
-  }
-
-  // 特殊显示需求处理
-  if ("Fullscreen" in meta && meta.Fullscreen == true) {
-    console.log(meta, "meta ");
-    onContentFullScreen(true);
-  } else {
-    onContentFullScreen(false);
+    // next("/welcome");
   }
   next();
 });

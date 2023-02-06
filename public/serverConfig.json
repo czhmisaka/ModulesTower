@@ -3,7 +3,7 @@
   "Title": "集智低代码平台",
   "FixedHeader": true,
   "HiddenSideBar": false,
-  "MultiTagsCache": false,
+  "MultiTagsCache": true,
   "KeepAlive": true,
   "Layout": "vertical",
   "Theme": "default",

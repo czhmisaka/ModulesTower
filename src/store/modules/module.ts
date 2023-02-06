@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 16:07:52
+ * @LastEditTime: 2023-02-06 17:48:07
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -17,7 +17,6 @@ import {
 } from "@/router/util";
 import { RouteConfigsTable, routerMeta } from "../../../types";
 
-const router = useRouter();
 let licenseMap = {};
 
 interface pageCellTemplate extends stringAnyObj {
@@ -172,6 +171,7 @@ export const moduleStore = defineStore({
         number = this.moduleList.length - 1;
       this.nowModule = this.moduleList[number];
       initRouter(true).then(() => {
+        const router = useRouter();
         router.push("/");
         // router.push(this.nowModule[0]);
       });

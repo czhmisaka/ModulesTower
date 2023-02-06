@@ -106,6 +106,7 @@ const weekChange = (value): void => {
   storageConfigureChange("weak", value);
 };
 
+/** 隐藏标签页设置 */
 const tagsChange = () => {
   let showVal = settings.tabsVal;
   storageConfigureChange("hideTabs", showVal);
