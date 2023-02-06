@@ -218,8 +218,12 @@ export default defineComponent({
 
     refreshData(val: any) {
       if (val === -1) {
+        this.formData = {};
         this.$emit("inputChange", {});
         this.$emit("refresh");
+        this.$nextTick().then(() => {
+          this.handleSubmit();
+        });
       } else if (val && Object.keys(val).length > 0) {
         for (let x in val) {
           if (this.formData[x] != val[x]) {

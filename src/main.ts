@@ -1,16 +1,19 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-18 00:24:25
+ * @LastEditTime: 2023-02-06 17:50:11
  * @FilePath: /configforpagedemo/src/main.ts
  */
+let num = 0;
 
 import { createApp, Directive } from "vue";
 import App from "./App.vue";
 import iconCell from "./components/basicComponents/cell/icon/iconCell.vue";
+
 import router from "./router";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
+
 import { MotionPlugin } from "@vueuse/motion";
 import { getAction } from "@/router/util";
 import * as Icons from "@element-plus/icons-vue";
@@ -58,9 +61,9 @@ for (let x in Icons) {
   if (utils.isValidKey(x, Icons)) {
     app.component(x, Icons[x]);
   } else {
-    console.log("icon 加载失败 : ", x);
   }
 }
+
 app.component("vue-drag-resize", Vue3DraggableResizable);
 
 getServerConfig(app).then(async (config) => {

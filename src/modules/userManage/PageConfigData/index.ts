@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-17 23:52:18
+ * @LastEditTime: 2023-02-06 20:26:39
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -18,6 +18,9 @@ export interface desktopDataTemplate {
     maxRows: number;
     margin: number;
   };
+  permission?: stringAnyObj[];
+  dataPermission?: stringAnyObj[];
+  btnList?: btnCellTemplate[];
 }
 
 const pageConfig = {} as { [key: string]: desktopDataTemplate };

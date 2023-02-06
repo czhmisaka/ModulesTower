@@ -1,6 +1,6 @@
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import { ElOption, ElScrollbar, ElSelect, ElTreeSelect } from "element-plus";
-import { defineComponent, h, ref, watchEffect } from "vue";
+import { defineComponent, h, ref, shallowRef, watchEffect } from "vue";
 import { inputElementTemplate, formInputType, stringAnyObj } from "../../types";
 
 
@@ -327,7 +327,7 @@ inputElement[formInputType.searchList] = {
 inputElement[formInputType.indexListForSwitch] = {
   properties: async (that, cell) => {
     const { input } = cell;
-    let properties = {
+    let properties = shallowRef({
       ...base(cell),
       type: "string",
       "ui:widget": defineComponent({
@@ -362,7 +362,7 @@ inputElement[formInputType.indexListForSwitch] = {
           fontWeight: '900'
         },
       }
-    } as stringAnyObj;
+    }) as stringAnyObj;
     let attrs = {
       maxHeight: '400px'
     };

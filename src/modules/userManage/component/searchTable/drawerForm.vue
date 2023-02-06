@@ -68,9 +68,13 @@
     </div>
     <div :style="{ textAlign: 'left' }">
       <el-divider></el-divider>
-      <div v-for="item in plugInData.btnList" style="float: left; margin-right: 6px">
+      <div
+        v-for="item in plugInData.btnList.filter((btn) =>
+          btn && btn.isShow ? btn.isShow(formData) : true
+        )"
+        style="float: left; margin-right: 6px"
+      >
         <el-button
-          v-if="item.isShow(formData)"
           :loading="item.isLoading"
           @click="btnClick(item)"
           :type="item.elType"

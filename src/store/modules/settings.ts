@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-02-04 18:33:26
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-02-06 17:23:52
+ * @FilePath: /configforpagedemo/src/store/modules/settings.ts
+ */
 import { defineStore } from "pinia";
 import { store } from "@/store";
 import { setType } from "./types";
@@ -8,7 +14,7 @@ export const useSettingStore = defineStore({
   state: (): setType => ({
     title: getConfig().Title,
     fixedHeader: getConfig().FixedHeader,
-    hiddenSideBar: getConfig().HiddenSideBar
+    hiddenSideBar: getConfig().HiddenSideBar,
   }),
   getters: {
     getTitle() {
@@ -19,7 +25,7 @@ export const useSettingStore = defineStore({
     },
     getHiddenSideBar() {
       return this.HiddenSideBar;
-    }
+    },
   },
   actions: {
     CHANGE_SETTING({ key, value }) {
@@ -29,9 +35,11 @@ export const useSettingStore = defineStore({
       }
     },
     changeSetting(data) {
+      // console.log(this.fixedHeader, getConfig(), "asdd");
+
       this.CHANGE_SETTING(data);
-    }
-  }
+    },
+  },
 });
 
 export function useSettingStoreHook() {

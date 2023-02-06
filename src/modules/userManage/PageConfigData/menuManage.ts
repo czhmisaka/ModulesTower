@@ -58,6 +58,8 @@ import {
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useModuleHook } from "@/store/modules/module";
+import { btnCellTemplate } from "../types";
 
 const typeToModule = {
   1: "模块",
@@ -76,6 +78,7 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
       `/web/usc/menu/${data.id ? "update" : "insert"}`,
       data
     );
+    console.log(that, query, "asd");
     if (res["message"] == "成功") {
       that.$message.success(res["message"]);
       setTimeout(() => {
@@ -91,32 +94,6 @@ const showLinkOptions = {
   true: "是",
   false: "否",
 };
-
-const 删除按钮 = btnMaker("删除", btnActionTemplate.Function, {
-  icon: "Delete",
-  elType: "danger",
-  isShow: (data) => !data.children || data.children.length == 0,
-  function: async (that, data) => {
-    if (data.children && data.children.length > 0)
-      return ElMessage.warning("【无法删除】：存在子节点");
-    ElMessageBox({
-      title: "确认删除【" + data.name + "】吗？",
-      type: "warning",
-      callback: async (action) => {
-        if (action == "confirm") {
-          let res = await post("/web/usc/menu/delete", {
-            id: data.id,
-          });
-          if (res.message == "成功") {
-            ElMessage.success(res.message);
-            if (that.close) that.close();
-            else refreshDesktop(that);
-          } else ElMessage.error(res.message);
-        }
-      },
-    });
-  },
-});
 
 let iconMap = {};
 for (let x in Icons) {
@@ -229,6 +206,7 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       },
     }),
   }),
+  tableCellTemplateMaker("按钮key", "key", searchCell(formInputType.input)),
   // tableCellTemplateMaker("页面配置", "pageConfigId"),
   // tableCellTemplateMaker("配置参数", "meta"),
   tableCellTemplateMaker(
@@ -259,152 +237,257 @@ const disableType = pageConfigDataTableCellStorage.getByKey(
   })
 );
 
+const 编辑按钮 = btnMaker(
+  "编辑",
+  btnActionTemplate.Function,
+  {
+    icon: "Edit",
+    elType: "success",
+    function: async (that, data) => {
+      let propsArr = ["name", "icon"];
+      if (data.type < 4) {
+        propsArr.push("showLink");
+        propsArr.push("orderNumber");
+      }
+      let queryItemTemplate = [
+        disableType,
+        ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
+      ];
+      if (data.type == 3) {
+        queryItemTemplate.push(
+          pageConfigDataTableCellStorage.getByLabel("URL")
+        );
+      }
+      if (data.type == 4) {
+        queryItemTemplate.push(
+          pageConfigDataTableCellStorage.getByLabel("接口")
+        );
+        queryItemTemplate.push(
+          pageConfigDataTableCellStorage.getByLabel("按钮key")
+        );
+      }
+      let drawerProps = {
+        title: `编辑${typeToModule[data.type]}【${data.name}】`,
+        schema: { required: ["type", "name", "showLink"] },
+        queryItemTemplate,
+        data: {
+          ...data,
+          showLink: data.showLink == true ? "true" : "false",
+          type: data.type + "",
+        },
+        btnList: [submit],
+      } as drawerProps;
+      that.$modules
+        .getModuleApi()
+        ["userManage_openDrawerForm"](that, drawerProps);
+    },
+  },
+  ["/web/usc/menu/update"],
+  "编辑按钮"
+);
+
+const 新增按钮 = btnMaker(
+  "新增",
+  btnActionTemplate.Function,
+  {
+    icon: "Plus",
+    elType: "primary",
+    isShow: (data) => {
+      return data.type != 4;
+    },
+    function: async (that, data) => {
+      let propsArr = ["parentName", "name", "icon", "meta"];
+      if (data.type < 3) {
+        propsArr.push("showLink");
+        propsArr.push("orderNumber");
+      }
+      let queryItemTemplate = [
+        disableType,
+        ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
+      ];
+      if (data.type == 2) {
+        queryItemTemplate.push(
+          pageConfigDataTableCellStorage.getByLabel("URL")
+        );
+        queryItemTemplate.push(
+          pageConfigDataTableCellStorage.getByKey("pageConfigId")
+        );
+      }
+      if (data.type == 3) {
+        queryItemTemplate.push(
+          pageConfigDataTableCellStorage.getByLabel("接口")
+        );
+        queryItemTemplate.push(
+          pageConfigDataTableCellStorage.getByLabel("按钮key")
+        );
+      }
+      let drawerProps = {
+        title: `新增${typeToModule[data.type + 1]}`,
+        schema: {
+          required:
+            data.type == 2
+              ? ["type", "name", "showLink", "url"]
+              : data.type == 3
+              ? ["type", "name", "showLink", "key"]
+              : ["type", "name", "showLink"],
+        },
+        queryItemTemplate,
+        data: {
+          parentName: data.name,
+          parentId: data.id,
+          type: data.type + 1 + "",
+          showLink: "true",
+        },
+        btnList: [submit],
+      } as drawerProps;
+      that.$modules
+        .getModuleApi()
+        ["userManage_openDrawerForm"](that, drawerProps);
+    },
+  },
+  ["/web/usc/menu/insert"],
+  "目录/菜单/按钮新增按钮"
+);
+
+const 新增模块按钮 = btnMaker(
+  "新增模块",
+  btnActionTemplate.OpenDrawer,
+  {
+    icon: "plus",
+    elType: "primary",
+    drawerProps: {
+      title: "新增",
+      schema: {
+        required: ["type", "name", "showLink"],
+      },
+      queryItemTemplate: [
+        disableType,
+        ...pageConfigDataTableCellStorage.getByKeyArr([
+          "name",
+          "icon",
+          "showLink",
+        ]),
+      ],
+      btnList: [submit],
+      data: {
+        showLink: "true",
+        type: "1",
+      },
+    },
+  },
+  ["/web/usc/menu/insert"],
+  "新增模块按钮"
+);
+
+const 删除按钮 = btnMaker(
+  "删除",
+  btnActionTemplate.Function,
+  {
+    icon: "Delete",
+    elType: "danger",
+    isShow: (data) => !data.children || data.children.length == 0,
+    function: async (that, data) => {
+      if (data.children && data.children.length > 0)
+        return ElMessage.warning("【无法删除】：存在子节点");
+      ElMessageBox({
+        title: "确认删除【" + data.name + "】吗？",
+        type: "warning",
+        callback: async (action) => {
+          if (action == "confirm") {
+            let res = await post("/web/usc/menu/delete", {
+              id: data.id,
+            });
+            if (res.message == "成功") {
+              ElMessage.success(res.message);
+              if (that.close) that.close();
+              else refreshDesktop(that);
+            } else ElMessage.error(res.message);
+          }
+        },
+      });
+    },
+  },
+  ["/web/usc/menu/delete"],
+  "删除按钮"
+);
+
+const 自动生成按钮 = btnMaker(
+  "自动生成按钮权限",
+  btnActionTemplate.Function,
+  {
+    icon: "Plus",
+    elType: "primary",
+    isShow: (data) => data.type == 3,
+    function: async (that, data) => {
+      const { routerBackup } = useModuleHook();
+      const { id, urls } = data;
+      const router = routerBackup.find((x) => {
+        return x.path == urls[0];
+      });
+      const btnList = router.meta.originData.btnList;
+      if (btnList.length && btnList.length > 0)
+        ElMessageBox({
+          title:
+            "确认在【" +
+            data.name +
+            "】菜单自动生成【" +
+            btnList.map((x) => x.label).join("、") +
+            "】按钮吗？",
+          type: "warning",
+          callback: async (action) => {
+            if (action == "confirm") {
+              const baseData = {
+                showLink: true,
+                parentId: data.id,
+                type: 4,
+              };
+              let btnquery = btnList.map((btn: btnCellTemplate) => {
+                let back = {
+                  ...baseData,
+                  name: btn.label,
+                  icon: btn.icon,
+                  urls: btn.apiList || [],
+                  key: btn.showAbleKey,
+                };
+                return back;
+              });
+              let res = await post("/web/usc/menu/insertBatch", btnquery);
+              if (res.message == "成功")
+                ElMessage.success(`${res.data}个按钮生成成功`);
+              else ElMessage.error("生成失败");
+              if (that.close) that.close();
+              else refreshDesktop(that);
+            }
+          },
+        });
+      else ElMessage.error("该菜单下无默认按钮配置");
+    },
+  },
+  ["/web/usc/menu/insertBatch"],
+  "自动生成按钮"
+);
+
 pageConfigDataTableCellStorage.push(
   tableCellTemplateMaker(
     "操作",
     "actionaction",
-    actionCell(
-      [
-        btnMaker(
-          "新增",
-          btnActionTemplate.Function,
-          {
-            icon: "Plus",
-            elType: "primary",
-            isShow: (data) => {
-              return data.type != 4;
-            },
-            function: async (that, data) => {
-              let propsArr = ["parentName", "name", "icon", "meta"];
-              if (data.type < 3) {
-                propsArr.push("showLink");
-                propsArr.push("orderNumber");
-              }
-              let queryItemTemplate = [
-                disableType,
-                ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
-              ];
-              if (data.type == 2) {
-                queryItemTemplate.push(
-                  pageConfigDataTableCellStorage.getByLabel("URL")
-                );
-                queryItemTemplate.push(
-                  pageConfigDataTableCellStorage.getByKey("pageConfigId")
-                );
-              }
-              if (data.type == 3)
-                queryItemTemplate.push(
-                  pageConfigDataTableCellStorage.getByLabel("接口")
-                );
-              let drawerProps = {
-                title: `新增${typeToModule[data.type + 1]}`,
-                schema: {
-                  required:
-                    data.type == 2
-                      ? ["type", "name", "showLink", "url"]
-                      : ["type", "name", "showLink"],
-                },
-                queryItemTemplate,
-                data: {
-                  parentName: data.name,
-                  parentId: data.id,
-                  type: data.type + 1 + "",
-                  showLink: "true",
-                },
-                btnList: [submit],
-              } as drawerProps;
-              that.$modules
-                .getModuleApi()
-                ["userManage_openDrawerForm"](that, drawerProps);
-            },
-          },
-          ["/web/usc/menu/insert"]
-        ),
-        btnMaker(
-          "编辑",
-          btnActionTemplate.Function,
-          {
-            icon: "Edit",
-            elType: "success",
-            function: async (that, data) => {
-              let propsArr = ["name", "icon"];
-              if (data.type < 4) {
-                propsArr.push("showLink");
-                propsArr.push("orderNumber");
-              }
-              let queryItemTemplate = [
-                disableType,
-                ...pageConfigDataTableCellStorage.getByKeyArr(propsArr),
-              ];
-              if (data.type == 3) {
-                queryItemTemplate.push(
-                  pageConfigDataTableCellStorage.getByLabel("URL")
-                );
-              }
-              if (data.type == 4)
-                queryItemTemplate.push(
-                  pageConfigDataTableCellStorage.getByLabel("接口")
-                );
-              let drawerProps = {
-                title: `新增${typeToModule[data.type + 1]}`,
-                schema: { required: ["type", "name", "showLink"] },
-                queryItemTemplate,
-                data: {
-                  ...data,
-                  showLink: data.showLink == true ? "true" : "false",
-                  type: data.type + "",
-                },
-                btnList: [submit],
-              } as drawerProps;
-              that.$modules
-                .getModuleApi()
-                ["userManage_openDrawerForm"](that, drawerProps);
-            },
-          },
-          ["/web/usc/menu/update"]
-        ),
-        删除按钮,
-      ],
-      {
-        fixed: "right",
-      }
-    )
+    actionCell([新增按钮, 编辑按钮, 删除按钮, 自动生成按钮], {
+      fixed: "right",
+    })
   )
 );
 
 const SearchTemplate = pageConfigDataTableCellStorage.getByKeyArr(["name"]);
 
-const btnList = [
-  btnMaker(
-    "新增模块",
-    btnActionTemplate.OpenDrawer,
-    {
-      icon: "plus",
-      elType: "primary",
-      drawerProps: {
-        title: "新增",
-        schema: {
-          required: ["type", "name", "showLink"],
-        },
-        queryItemTemplate: [
-          disableType,
-          ...pageConfigDataTableCellStorage.getByKeyArr([
-            "name",
-            "icon",
-            "showLink",
-          ]),
-        ],
-        btnList: [submit],
-        data: {
-          showLink: "true",
-          type: "1",
-        },
-      },
-    },
-    ["/web/usc/menu/insert"]
-  ),
-];
+const btnList = [新增模块按钮];
 
+export const menuManageBtnList = [
+  新增按钮,
+  新增模块按钮,
+  删除按钮,
+  编辑按钮,
+  自动生成按钮,
+];
 export const menuManage = async () => {
   return [
     gridCellMaker(

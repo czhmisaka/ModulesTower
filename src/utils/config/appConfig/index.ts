@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-02-04 18:33:26
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-02-06 17:17:53
+ * @FilePath: /configforpagedemo/src/utils/config/appConfig/index.ts
+ */
 import { App } from "vue";
 import axios from "axios";
 import { loadEnv } from "@build/index";
@@ -14,7 +20,7 @@ const getConfig = (key?: string): ServerConfigs => {
     const arr = key.split(".");
     if (arr && arr.length) {
       let data = config;
-      arr.forEach(v => {
+      arr.forEach((v) => {
         if (data && typeof data[v] !== "undefined") {
           data = data[v];
         } else {
@@ -33,9 +39,10 @@ export const getServerConfig = async (app: App): Promise<undefined> => {
   return axios({
     baseURL: "",
     method: "get",
-    url: `${VITE_PUBLIC_PATH}serverConfig.json`
+    url: `${VITE_PUBLIC_PATH}serverConfig.json`,
   })
     .then(({ data: config }) => {
+      console.log(config, "asdasdasd");
       let $config = app.config.globalProperties.$config;
       // 自动注入项目配置
       if (app && $config && typeof config === "object") {

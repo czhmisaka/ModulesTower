@@ -11,6 +11,7 @@
     "parcelTest": "parcel build src/modules/userManage/PageConfigData/menuManage.ts"
   },
   "dependencies": {
+    "@babel/core": "7.20.2",
     "@ctrl/tinycolor": "^3.4.1",
     "@element-plus/icons-vue": "^0.2.4",
     "@lljj/vue3-form-element": "^1.14.0",

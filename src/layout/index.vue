@@ -31,6 +31,8 @@ const set: setType = reactive({
   }),
 
   fixedHeader: computed(() => {
+    console.log(pureSetting.fixedHeader, "asd");
+    // return pureSetting.fixedHeader || true;
     return pureSetting.fixedHeader;
   }),
 
@@ -131,7 +133,7 @@ const layoutHeader = defineComponent({
 </script>
 
 <template>
-  <div :class="['app-wrapper', set.classes]" v-resize>
+  <div v-if="!$route.meta.Fullscreen" :class="['app-wrapper', set.classes]" v-resize>
     <div
       v-show="
         set.device === 'mobile' && set.sidebar.opened && layout.includes('vertical')
@@ -162,6 +164,9 @@ const layoutHeader = defineComponent({
     </div>
     <!-- 系统设置 -->
     <setting />
+  </div>
+  <div v-else :class="['app-wrapper']" v-resize>
+    <app-main :fixed-header="false" />
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-02 01:55:46
+ * @LastEditTime: 2023-02-06 20:27:19
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -17,7 +17,6 @@ import {
 } from "@/router/util";
 import { RouteConfigsTable, routerMeta } from "../../../types";
 
-const router = useRouter();
 let licenseMap = {};
 
 interface pageCellTemplate extends stringAnyObj {
@@ -87,12 +86,14 @@ function dealAsyncMenuList(cell, routerBackup) {
   }
 
   // 补充meta
-  if (!cell.meta || typeof cell.meta != "object")
-    cell.meta = {
+  if (!cell.meta || typeof cell.meta != "object") {
+    let meta = {
       title: cell.name,
       icon: cell.icon,
       menuId: cell.id,
     };
+    cell.meta = meta;
+  }
 
   // 补充path
   if (cell.urls && cell.urls.length > 0) {
@@ -108,6 +109,7 @@ function dealAsyncMenuList(cell, routerBackup) {
             ...cell.meta,
             showLink: cell.showLink,
           };
+          break;
         }
       }
     }
@@ -154,9 +156,11 @@ export const moduleStore = defineStore({
       let baseModuleRouterList = [] as RouteConfigsTable[];
       moduleList.map((module: modulesCellTemplate, index: number) => {
         module.routers.map((route: RouteConfigsTable, i: number) => {
-          route.children.map((cell: RouteConfigsTable) => {
-            baseModuleRouterList.push(cell);
-          });
+          route.children
+            ? route.children.map((cell: RouteConfigsTable) => {
+                baseModuleRouterList.push(cell);
+              })
+            : baseModuleRouterList.push(route);
         });
       });
       this.routerBackup = baseModuleRouterList;
@@ -168,7 +172,9 @@ export const moduleStore = defineStore({
         number = this.moduleList.length - 1;
       this.nowModule = this.moduleList[number];
       initRouter(true).then(() => {
+        const router = useRouter();
         router.push("/");
+        // router.push(this.nowModule[0]);
       });
       return this.nowModule;
     },
