@@ -6,7 +6,7 @@ import {
   reactive,
   onMounted,
   CSSProperties,
-  getCurrentInstance
+  getCurrentInstance,
 } from "vue";
 import { tagsViewsType } from "../types";
 import { isEqual } from "lodash-unified";
@@ -51,57 +51,57 @@ export function useTags() {
       text: "重新加载",
       divided: false,
       disabled: false,
-      show: true
+      show: true,
     },
     {
       icon: "close",
       text: "关闭当前标签页",
       divided: false,
       disabled: multiTags.value.length > 1 ? false : true,
-      show: true
+      show: true,
     },
     {
       icon: "close-left-tags",
       text: "关闭左侧标签页",
       divided: true,
       disabled: multiTags.value.length > 1 ? false : true,
-      show: true
+      show: true,
     },
     {
       icon: "close-right-tags",
       text: "关闭右侧标签页",
       divided: false,
       disabled: multiTags.value.length > 1 ? false : true,
-      show: true
+      show: true,
     },
     {
       icon: "close-other-tags",
       text: "关闭其他标签页",
       divided: true,
       disabled: multiTags.value.length > 2 ? false : true,
-      show: true
+      show: true,
     },
     {
       icon: "close-all-tags",
       text: "关闭全部标签页",
       divided: false,
       disabled: multiTags.value.length > 1 ? false : true,
-      show: true
+      show: true,
     },
     {
       icon: "fullscreen",
       text: "整体页面全屏",
       divided: true,
       disabled: false,
-      show: true
+      show: true,
     },
     {
       icon: "fullscreen",
       text: "内容区全屏",
       divided: false,
       disabled: false,
-      show: true
-    }
+      show: true,
+    },
   ]);
 
   function conditionHandle(item, previous, next) {
@@ -125,20 +125,20 @@ export function useTags() {
   });
 
   const linkIsActive = computed(() => {
-    return item => {
+    return (item) => {
       return conditionHandle(item, "is-active", "");
     };
   });
 
   const scheduleIsActive = computed(() => {
-    return item => {
+    return (item) => {
       return conditionHandle(item, "schedule-active", "");
     };
   });
 
   const getTabStyle = computed((): CSSProperties => {
     return {
-      transform: `translateX(${translateX.value}px)`
+      transform: `translateX(${translateX.value}px)`,
     };
   });
 
@@ -180,10 +180,12 @@ export function useTags() {
     }
   }
 
-  function onContentFullScreen() {
-    pureSetting.hiddenSideBar
-      ? pureSetting.changeSetting({ key: "hiddenSideBar", value: false })
-      : pureSetting.changeSetting({ key: "hiddenSideBar", value: true });
+  function onContentFullScreen(value: boolean | string = "noway") {
+    if (value == "noway")
+      pureSetting.hiddenSideBar
+        ? pureSetting.changeSetting({ key: "hiddenSideBar", value: false })
+        : pureSetting.changeSetting({ key: "hiddenSideBar", value: true });
+    else pureSetting.changeSetting({ key: "hiddenSideBar", value });
   }
 
   onMounted(() => {
@@ -227,6 +229,6 @@ export function useTags() {
     onMounted,
     onMouseenter,
     onMouseleave,
-    onContentFullScreen
+    onContentFullScreen,
   };
 }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-03 15:43:57
+ * @LastEditTime: 2023-02-06 14:52:05
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -319,7 +319,7 @@ export const getModuleFromView = (init = false) => {
     }
   );
 
-  // 获取所有的模块构建出来的路由记录
+  // 获取所有的模块的路由记录
   moduleList["getAllPageRouter"] = async () => {
     let routes = [];
     moduleList.map((x) => {

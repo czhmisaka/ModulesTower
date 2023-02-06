@@ -411,24 +411,31 @@ const 删除按钮 = btnMaker(
 );
 
 const 自动生成按钮 = btnMaker(
-  "自动生成按钮",
+  "自动生成按钮权限",
   btnActionTemplate.Function,
   {
     icon: "Plus",
     elType: "primary",
     isShow: (data) => data.type == 3,
     function: async (that, data) => {
-      console.log(that, data, "asd");
       const { routerBackup } = useModuleHook();
       const { id, urls } = data;
       const router = routerBackup.find((x) => {
         return x.path == urls[0];
       });
+      const btnTemplate = {
+        name: "label",
+        icon: "icon",
+        urls: "apiList",
+      };
+      const baseData = {
+        showLink: true,
+      };
       const btnList = router.meta.originData.btnList;
-      console.log(btnList);
+      console.log(btnList, "qwe");
     },
   },
-  ["/web/usc/menu/insert"],
+  ["/web/usc/menu/insertBatch"],
   "自动生成按钮"
 );
 

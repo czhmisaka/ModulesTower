@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 11:17:04
+ * @LastEditTime: 2023-02-06 16:24:09
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -15,6 +15,7 @@ import {
   createWebHashHistory,
   RouteRecordNormalized,
 } from "vue-router";
+import { emitter } from "@/utils/mitt";
 import {
   routerCellMaker,
   getModuleFromView,
@@ -53,6 +54,8 @@ import remainingRouter from "./modules/remaining";
 import { RouteConfigsTable } from "../../types/index";
 import { baseModuleRouter } from "./util";
 import { useModuleHook } from "@/store/modules/module";
+import { useTags } from "@/layout/hooks/useTag";
+const { onContentFullScreen } = useTags();
 
 // 路由存放
 const routes = [homeRouter, errorRouter];
@@ -179,15 +182,24 @@ const module = useModuleHook();
 
 // 路由守卫
 // 控制默认到index界面执行匹配
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // console.log(to.matched, "匹配项目", to);
-  if (to.matched && to.matched.length > 1) module.checkPage(to.matched[1].meta);
-  else if (to.matched.length == 0) {
+  let meta = {} as { [key: string]: any };
+  if (to.matched && to.matched.length > 1) {
+    meta = to.matched[1].meta;
+    module.checkPage(to.matched[1].meta);
+  } else if (to.matched.length == 0) {
     next("/welcome");
   }
+
+  // 特殊显示需求处理
+  if ("Fullscreen" in meta && meta.Fullscreen == true) {
+    console.log(meta, "meta ");
+    onContentFullScreen(true);
+  } else {
+    onContentFullScreen(false);
+  }
   next();
-  // next( module.routerBackup.filter((x) => x.path== to.matched[1].path)[0]);
-  // commonDealFunction()
 });
 
 export default router;
