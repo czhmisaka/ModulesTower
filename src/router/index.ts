@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 18:53:35
+ * @LastEditTime: 2023-02-06 19:03:43
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -188,8 +188,18 @@ router.beforeEach(async (to, from, next) => {
     meta = to.matched[1].meta;
     module.checkPage(to.matched[1].meta);
   } else if (to.matched.length == 0) {
-    // next("/welcome");
+    next("/welcome");
   }
+
+  // // 特殊显示需求处理
+  // if ("Fullscreen" in meta && meta.Fullscreen == true) {
+  //   console.log(meta, "meta ");
+  //   // const { onContentFullScreen } = useTags();
+  //   // onContentFullScreen(true);
+  // } else {
+  //   // const { onContentFullScreen } = useTags();
+  //   // onContentFullScreen(false);
+  // }
   next();
 });
 

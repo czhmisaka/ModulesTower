@@ -59,6 +59,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { useModuleHook } from "@/store/modules/module";
+import { btnCellTemplate } from "../types";
 
 const typeToModule = {
   1: "模块",
@@ -423,16 +424,43 @@ const 自动生成按钮 = btnMaker(
       const router = routerBackup.find((x) => {
         return x.path == urls[0];
       });
-      const btnTemplate = {
-        name: "label",
-        icon: "icon",
-        urls: "apiList",
-      };
-      const baseData = {
-        showLink: true,
-      };
       const btnList = router.meta.originData.btnList;
-      console.log(btnList, "qwe");
+      if (btnList.length && btnList.length > 0)
+        ElMessageBox({
+          title:
+            "确认在【" +
+            data.name +
+            "】菜单自动生成【" +
+            btnList.map((x) => x.label).join("、") +
+            "】按钮吗？",
+          type: "warning",
+          callback: async (action) => {
+            if (action == "confirm") {
+              const baseData = {
+                showLink: true,
+                parentId: data.id,
+                type: 4,
+              };
+              let btnquery = btnList.map((btn: btnCellTemplate) => {
+                let back = {
+                  ...baseData,
+                  name: btn.label,
+                  icon: btn.icon,
+                  urls: btn.apiList || [],
+                  key: btn.showAbleKey,
+                };
+                return back;
+              });
+              let res = await post("/web/usc/menu/insertBatch", btnquery);
+              if (res.message == "成功")
+                ElMessage.success(`${res.data}个按钮生成成功`);
+              else ElMessage.error("生成失败");
+              if (that.close) that.close();
+              else refreshDesktop(that);
+            }
+          },
+        });
+      else ElMessage.error("该菜单下无默认按钮配置");
     },
   },
   ["/web/usc/menu/insertBatch"],
