@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 00:52:06
+ * @LastEditTime: 2023-02-07 12:36:34
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -43,6 +43,13 @@
           @click="colorClick(color)"
         ></div>
       </div>
+    </el-card>
+    <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="评分">
+      <el-rate
+        v-model="imageInfo.rate"
+        :colors="['#F7BA2A', '#FF9900', '#ff0000']"
+        @change="rate"
+      />
     </el-card>
     <el-card
       title="基本信息"
@@ -142,7 +149,14 @@ export default defineComponent({
     return {
       tagList: [],
       colorList: [] as string[],
-      imageInfo: {},
+      imageInfo: {
+        尺寸: "",
+        文件大小尺寸: "",
+        格式尺寸: "",
+        创建日期尺寸: "",
+        修改日期尺寸: "",
+        rate: 0,
+      },
       categoryInfo: {},
 
       elCardInfo: {
@@ -157,10 +171,10 @@ export default defineComponent({
     };
   },
   methods: {
-    async rate() {
+    async rate(e) {
       await piwigoPost("/piwigo/ws.php?format=json", {
         method: "pwg.images.rate",
-        rate: "1",
+        rate: e + "",
         image_id: this.baseData.image.id,
       });
     },
@@ -178,7 +192,13 @@ export default defineComponent({
         格式: info.file.split(".")[1],
         创建日期: new Date(info.date_available.replace("T", " ")).toLocaleString(),
         修改日期: new Date(info.lastmodified.replace("T", " ")).toLocaleString(),
+        rate: 0,
       };
+      let resInfo = await piwigoPost("/piwigo/ws.php?format=json", {
+        method: "pwg.images.getInfo",
+        image_id: this.baseData.image.id,
+      });
+      this.imageInfo.rate = resInfo.result.rates.count;
       const category = this.baseData[this.watchKeyForCategory];
       if (category["name"])
         this.categoryInfo = {

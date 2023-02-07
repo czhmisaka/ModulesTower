@@ -133,6 +133,7 @@ const layoutHeader = defineComponent({
 </script>
 
 <template>
+  {{ $route.meta.Fullscreen }}
   <div v-if="!$route.meta.Fullscreen" :class="['app-wrapper', set.classes]" v-resize>
     <div
       v-show="

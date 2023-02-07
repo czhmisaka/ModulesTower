@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 09:34:30
+ * @LastEditTime: 2023-02-06 22:45:59
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -83,7 +83,7 @@ enum showType {
   waterFall,
 }
 
-const MathRandom = "asd";
+const MathRandom = Math.random() * 100 + "_asd";
 
 function fuckk(thatt) {
   const that = thatt ? thatt : this;
@@ -105,6 +105,7 @@ function fuckk(thatt) {
     that.pkFunc(imageListForReSize, that);
   }
 }
+
 export default defineComponent({
   componentInfo: {
     labelNameCn: "瀑布流",

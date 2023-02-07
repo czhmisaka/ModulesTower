@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 00:17:44
+ * @LastEditTime: 2023-02-06 23:36:05
  * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
@@ -104,7 +104,8 @@ request.interceptors.response.use(
     if (
       (res.code === 200 && res.type != "error") ||
       res.type == "success" ||
-      res.code == 0
+      res.code == 0 ||
+      res.stat == "ok"
     ) {
       return Promise.resolve(res);
     } else if (res.code === 401) {
@@ -141,6 +142,14 @@ export function post(url: string, data: object) {
     method: "post",
     data,
   }) as stringAnyObj;
+}
+
+interface piwigoParams extends stringAnyObj {
+  method: string;
+}
+
+export async function piwigoMethod(piwigoParams: piwigoParams) {
+  return await piwigoPost("/piwigo/ws.php?format=json", piwigoParams);
 }
 export function piwigoPost(url: string, params: object) {
   let fd = new FormData();

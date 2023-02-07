@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-14 03:00:32
+ * @LastEditTime: 2023-02-06 23:37:04
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -20,6 +20,7 @@ import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
 import { stringAnyObj } from "@/modules/userManage/types";
 import { menuInfoTemplate } from "@/components/menu/menuConfigTemplate";
+import { piwigoMethod, piwigoPost } from "../../utils/api/requests";
 
 sessionStorage;
 export const useUserStore = defineStore({
@@ -57,13 +58,27 @@ export const useUserStore = defineStore({
     async loginByUsername(query) {
       return new Promise<UserResult>(async (resolve, reject) => {
         // let res = await getLogin(query);
-        let res = {
-          success: true,
+        let preLogin = await piwigoMethod({
+          method: "pwg.session.login",
+          ...query,
+        });
+        let res = await piwigoMethod({
+          method: "pwg.session.getStatus",
+        });
+        res = {
+          success: res.stat == "ok",
           data: {
-            token: "asd",
-            username: "fun",
+            ...res.result,
+            token: res.result.pwg_token,
           },
         };
+        // let res = {
+        //   success: true,
+        //   data: {
+        //     token: "asd",
+        //     username: "fun",
+        //   },
+        // };
         if (res && res.data) {
           let data = {
             ...res.data,
