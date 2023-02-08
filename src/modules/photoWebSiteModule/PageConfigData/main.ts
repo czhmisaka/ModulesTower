@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-04 03:00:10
+ * @LastEditTime: 2023-02-07 18:03:07
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -46,8 +46,8 @@ export const mainDesktop = async () =>
       },
       {}
     )
-      .setPosition(0, 9)
-      .setSize(2, 3),
+      .setPosition(0, 11)
+      .setSize(2, 1),
 
     gridCellMaker(
       "userManage_menuListRemote",
