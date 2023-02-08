@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 22:56:39
+ * @LastEditTime: 2023-02-08 22:42:12
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -31,17 +31,17 @@ const pageConfig = {
       margin: 6,
     },
   },
-  // main1: {
-  //   name: "全屏图库",
-  //   desktopData: mainDesktop,
-  //   gridColNum: 12,
-  //   cusStyle: {
-  //     wholeScreen: true,
-  //     maxRows: 12,
-  //     margin: 12,
-  //     Fullscreen: true,
-  //   },
-  // },
+  main1: {
+    name: "全屏图库",
+    desktopData: mainDesktop,
+    gridColNum: 12,
+    cusStyle: {
+      wholeScreen: true,
+      maxRows: 12,
+      margin: 12,
+      Fullscreen: true,
+    },
+  },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {
