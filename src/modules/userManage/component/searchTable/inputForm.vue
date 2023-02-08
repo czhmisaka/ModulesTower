@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 17:20:02
+ * @LastEditTime: 2023-02-08 18:09:07
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -53,7 +53,7 @@
           >
           <div
             v-for="item in btnList.filter((btn) =>
-              btn && btn.isShow ? btn.isShow(formData) : true
+              btn && btn.isShow ? btn.isShow(formData, btn) : true
             )"
             class="btn"
           >

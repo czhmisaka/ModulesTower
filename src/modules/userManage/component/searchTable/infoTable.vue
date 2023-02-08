@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 09:33:24
+ * @LastEditTime: 2023-02-08 18:42:01
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -78,7 +78,10 @@
             v-if="item.table.type == showType.btnList"
           >
             <el-button
-              v-for="btns in btnList(item, scope.row).filter((x, i) => {
+              v-for="btns in (btnList(item, scope.row)
+                ? btnList(item, scope.row)
+                : []
+              ).filter((x, i) => {
                 return i < 2;
               })"
               :loading="btns.isLoading"
@@ -144,7 +147,6 @@ export default defineComponent({
     btnList(item, data) {
       if (!item.table.btnList) return false;
       const back = item.table.btnList.filter((x) => {
-        console.log(x.label, x);
         return x.isShow(data, JSON.parse(JSON.stringify(x)));
       });
       if (back && back.length > 0) return back;
