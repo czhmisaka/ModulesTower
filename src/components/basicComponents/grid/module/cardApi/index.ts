@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 10:36:45
+ * @LastEditTime: 2023-02-08 10:54:13
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -250,7 +250,7 @@ export const upToTopDataChange = (
       type: [cardOnChangeType.upOnChange],
     });
   } catch (err) {
-    console.error("changeVisible 错误:", err, content, value);
+    console.error("upToTopDataChange 错误:", err, content, value);
   }
 };
 
