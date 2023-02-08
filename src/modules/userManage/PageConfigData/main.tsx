@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 15:40:23
+ * @LastEditTime: 2023-02-08 11:06:29
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -390,7 +390,7 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
             let attr = {
               buttonName: '新增部门',
               callBack: async (data) => {
-                let res = await post('/web/usc/unit/insertUser', { id: data.unitId, uids: [data.id] })
+                let res = await post('/web/usc/unit/insertUserBatch', [{ id: data.unitId, uids: [data.id] }])
                 ElMessage[res.message == '成功' ? 'success' : 'err'](res.message)
                 let user = await post('/web/usc/user/select', { id: data.id })
                 that.formData = user.data

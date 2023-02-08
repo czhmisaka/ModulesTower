@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-03 16:24:43
+ * @LastEditTime: 2023-02-08 16:21:11
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -73,9 +73,10 @@ const pageConfig = {
     desktopData: menuManage,
     gridColNum: 12,
     cusStyle: {
-      wholeScreen: true,
+      wholeScreen: false,
       maxRows: 8,
-      margin: 12,
+      margin: 0,
+      Fullscreen: true,
     },
     btnList: menuManageBtnList,
   },
