@@ -424,7 +424,7 @@ const 自动生成按钮 = btnMaker(
       const router = routerBackup.find((x) => {
         return x.path == urls[0];
       });
-      const btnList = router.meta.originData.btnList;
+      const btnList = router.meta?.originData?.btnList;
       if (btnList.length && btnList.length > 0)
         ElMessageBox({
           title:

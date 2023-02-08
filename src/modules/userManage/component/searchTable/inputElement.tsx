@@ -327,7 +327,7 @@ inputElement[formInputType.searchList] = {
 inputElement[formInputType.indexListForSwitch] = {
   properties: async (that, cell) => {
     const { input } = cell;
-    let properties = shallowRef({
+    let properties = {
       ...base(cell),
       type: "string",
       "ui:widget": defineComponent({
@@ -362,7 +362,7 @@ inputElement[formInputType.indexListForSwitch] = {
           fontWeight: '900'
         },
       }
-    }) as stringAnyObj;
+    } as stringAnyObj;
     let attrs = {
       maxHeight: '400px'
     };

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 20:27:19
+ * @LastEditTime: 2023-02-08 19:06:47
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -16,8 +16,10 @@ import {
   modulesCellTemplate,
 } from "@/router/util";
 import { RouteConfigsTable, routerMeta } from "../../../types";
+import { get } from "@/utils/api/requests";
 
 let licenseMap = {};
+let showAbleKeyMap = {};
 
 interface pageCellTemplate extends stringAnyObj {
   name?: string;
@@ -32,6 +34,11 @@ interface moduleTemplate {
   pageList: pageCellTemplate[];
   routerBackup: RouteConfigsTable[];
   nowLicense: string[];
+  nowShowAbleKey: string[];
+  userInfo: {
+    loginAdminFlag: boolean;
+    [key: string]: any;
+  };
 }
 
 /**
@@ -45,12 +52,16 @@ function dealAsyncMenuList(cell, routerBackup) {
 
   // 排除按钮
   if (cell.type == 4) {
+    const pageId = "page_" + cell.parentId;
     cell.urls.map((x) => {
-      const pageId = "page_" + cell.parentId;
       licenseMap[pageId]
         ? licenseMap[pageId].push(x)
         : (licenseMap[pageId] = [x]);
     });
+    showAbleKeyMap[pageId]
+      ? showAbleKeyMap[pageId].push(cell.key)
+      : (showAbleKeyMap[pageId] = [cell.key]);
+
     return false;
   }
 
@@ -129,10 +140,17 @@ export const moduleStore = defineStore({
     nowModule: {},
     nowPage: {},
     nowLicense: [],
+    nowShowAbleKey: [],
+    userInfo: {
+      loginAdminFlag: false,
+    },
   }),
   actions: {
     init(resData) {
       let moduleList = [];
+      get("/web/usc/user/select/loginUser", {}).then((res) => {
+        this.userInfo = res.data;
+      });
 
       // 注入各个模块的展示界面
       this.initRouterBackup();
@@ -183,6 +201,7 @@ export const moduleStore = defineStore({
     checkPage(pageMeta: routerMeta) {
       this.nowPage.meta = pageMeta;
       this.nowLicense = licenseMap["page_" + pageMeta.menuId];
+      this.nowShowAbleKey = showAbleKeyMap["page_" + pageMeta.menuId];
       localStorage.setItem("menuId", pageMeta.menuId);
     },
   },

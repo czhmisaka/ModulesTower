@@ -1,15 +1,15 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 21:55:11
+ * @LastEditTime: 2023-02-08 22:52:49
  * @FilePath: /configforpagedemo/src/modules/userManage/Index.vue
 -->
 
 <template>
   <div
     :style="{
-      width: 'calc(100% )',
-      height: 'calc(100% )',
+      width: 'calc(100% - 24px)',
+      height: 'calc(100%)',
       background: 'rgba(0,0,0,0)',
       overflow: 'hidden',
     }"

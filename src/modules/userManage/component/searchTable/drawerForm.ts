@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-03 15:49:14
+ * @LastEditTime: 2023-02-08 19:10:46
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -23,6 +23,7 @@ import {
 } from "@/modules/userManage/types";
 import { useModuleHook } from "@/store/modules/module";
 import { isShallow } from "vue";
+import { useUserStoreHook } from "@/store/modules/user";
 
 /**
  * @name: btnMaker
@@ -51,27 +52,27 @@ export const btnMaker = (
     label,
     type,
     showAbleKey,
-    isShow: (data: stringAnyObj) => {
-      let back = false;
-      if (!apiList) return true;
-      const { nowLicense } = useModuleHook();
-      if (nowLicense)
-        return apiList
-          .map((x) => {
-            return nowLicense.indexOf(x) == -1;
-          })
-          .filter(Boolean).length == 0
-          ? options.isShow
-            ? options.isShow(data)
-            : (back = true)
-          : (back = false);
-      else back = true;
-      if (back) return options.isShow ? options.isShow(data) : back;
-      return back;
-    },
     isDisable: () => false,
     isLoading: false,
     ...options,
+    isShow: (data: stringAnyObj, btn: btnCellTemplate) => {
+      const { apiList, showAbleKey } = btn;
+      let back = false;
+      if (!btn.apiList || btn.apiList.length == 0)
+        return options.isShow ? options.isShow(data) : true;
+      const { nowLicense, nowShowAbleKey, userInfo } = useModuleHook();
+      if (nowLicense && nowLicense.length > 0)
+        back =
+          apiList
+            .map((x) => {
+              return nowLicense.indexOf(x) == -1;
+            })
+            .filter(Boolean).length == 0;
+      if (nowShowAbleKey && nowShowAbleKey.length > 0)
+        back = nowShowAbleKey.indexOf(showAbleKey) != -1;
+      if (userInfo.adminFlag) back = true;
+      return back && options.isShow ? options.isShow(data) : back;
+    },
   } as btnCellTemplate;
 };
 

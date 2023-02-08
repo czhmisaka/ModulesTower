@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 15:10:03
+ * @LastEditTime: 2023-02-08 18:42:01
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -78,28 +78,19 @@
             v-if="item.table.type == showType.btnList"
           >
             <el-button
-              v-if="btnList(item, scope.row)"
-              :loading="btnList(item, scope.row)[0].isLoading"
+              v-for="btns in (btnList(item, scope.row)
+                ? btnList(item, scope.row)
+                : []
+              ).filter((x, i) => {
+                return i < 2;
+              })"
+              :loading="btns.isLoading"
               size="small"
               link
               type="primary"
-              @click="btnClick(btnList(item, scope.row)[0], scope.row)"
+              @click="btnClick(btns, scope.row)"
             >
-              {{ btnList(item, scope.row)[0]?.label }}
-            </el-button>
-            <el-button
-              v-if="
-                item.table.noDetail &&
-                btnList(item, scope.row) &&
-                btnList(item, scope.row).length > 1
-              "
-              :loading="btnList(item, scope.row)[1].isLoading"
-              size="small"
-              type="primary"
-              link
-              @click="btnClick(btnList(item, scope.row)[1], scope.row)"
-            >
-              {{ btnList(item, scope.row)[1]?.label }}
+              {{ btns.label }}
             </el-button>
             <el-button
               v-if="!item.table.noDetail"
@@ -155,7 +146,9 @@ export default defineComponent({
   methods: {
     btnList(item, data) {
       if (!item.table.btnList) return false;
-      const back = item.table.btnList.filter((x) => x.isShow(data));
+      const back = item.table.btnList.filter((x) => {
+        return x.isShow(data, JSON.parse(JSON.stringify(x)));
+      });
       if (back && back.length > 0) return back;
       else return false;
     },

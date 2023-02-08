@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 23:37:04
+ * @LastEditTime: 2023-02-08 22:53:22
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -35,6 +35,7 @@ export const useUserStore = defineStore({
     verifyCode: "",
     // 判断登录页面显示哪个组件（0：登录（默认）、1：手机登录、2：二维码登录、3：注册、4：忘记密码）
     currentPage: 0,
+    isAdminFlag: false,
     options: {} as stringAnyObj,
   }),
   actions: {
@@ -89,6 +90,7 @@ export const useUserStore = defineStore({
             expires: new Date(new Date().getTime() + 19999999),
           };
           this.options = data;
+          this.isAdminFlag = res.data.loginAdminFlag;
           setToken(data);
           resolve(data);
         }
