@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-03 15:49:14
+ * @LastEditTime: 2023-02-08 09:38:13
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -51,27 +51,35 @@ export const btnMaker = (
     label,
     type,
     showAbleKey,
-    isShow: (data: stringAnyObj) => {
+    isDisable: () => false,
+    isLoading: false,
+    ...options,
+    isShow: (data: stringAnyObj, btn: stringAnyObj = {}) => {
+      const { apiList, showAbleKey } = btn;
       let back = false;
       if (!apiList) return true;
       const { nowLicense } = useModuleHook();
-      if (nowLicense)
-        return apiList
+      console.log(
+        showAbleKey,
+        label,
+        "qwe",
+        apiList
           .map((x) => {
             return nowLicense.indexOf(x) == -1;
           })
           .filter(Boolean).length == 0
-          ? options.isShow
-            ? options.isShow(data)
-            : (back = true)
-          : (back = false);
+      );
+
+      if (nowLicense)
+        back =
+          apiList
+            .map((x) => {
+              return nowLicense.indexOf(x) == -1;
+            })
+            .filter(Boolean).length == 0;
       else back = true;
-      if (back) return options.isShow ? options.isShow(data) : back;
-      return back;
+      return back && options.isShow ? options.isShow(data) : back;
     },
-    isDisable: () => false,
-    isLoading: false,
-    ...options,
   } as btnCellTemplate;
 };
 

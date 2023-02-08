@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-17 14:18:19
+ * @LastEditTime: 2023-02-08 09:37:08
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -70,7 +70,7 @@
       <el-divider></el-divider>
       <div
         v-for="item in plugInData.btnList.filter((btn) =>
-          btn && btn.isShow ? btn.isShow(formData) : true
+          btn && btn.isShow ? btn.isShow(formData, JSON.parse(JSON.stringify(btn))) : true
         )"
         style="float: left; margin-right: 6px"
       >
