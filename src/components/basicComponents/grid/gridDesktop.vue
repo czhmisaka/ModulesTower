@@ -15,7 +15,7 @@
     class="baseGrid"
   >
     <grid-layout
-      :style="{ background: '#000' }"
+      :fuckName="'asdas' + idRandom"
       :layout="gridListToLayout()"
       :col-num="gridColNum"
       :row-height="gridRowNumAndUnit().blockSize"
@@ -112,15 +112,17 @@ import {
 } from "./module/dataTemplate";
 import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
 import componentsListModal from "@/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue";
-import VueGridLayout from "vue3-grid-layout";
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
+import gridLayout from "./GridLayout/GridLayout.vue";
+import gridItem from "./GridLayout/GridItem.vue";
+
 let useAble = 0;
 export default defineComponent({
   name: "gridDesktop",
   components: {
     card,
-    GridLayout: VueGridLayout.GridLayout,
-    GridItem: VueGridLayout.GridItem,
+    gridLayout,
+    gridItem,
     cardEditModal,
     componentsListModal,
   },
@@ -472,7 +474,7 @@ export default defineComponent({
         width: width,
         height: height,
       };
-      console.log(width, height, that.idRandom, "asd");
+      // console.log(width, height, that.idRandom, "asd");
     }, 500);
   },
 
