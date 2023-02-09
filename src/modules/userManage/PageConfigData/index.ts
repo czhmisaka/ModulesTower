@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 17:35:04
+ * @LastEditTime: 2023-02-09 15:27:02
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -29,19 +29,8 @@ const base = {
     margin: 12,
   },
 };
-export interface desktopDataTemplate {
-  desktopData?: () => Promise<gridCellTemplate[]>;
-  gridColNum?: number;
-  cusStyle?: {
-    wholeScreen: boolean;
-    maxRows: number;
-    margin: number;
-  };
-  permission?: stringAnyObj[];
-  dataPermission?: stringAnyObj[];
-  btnList?: btnCellTemplate[];
-}
 
+import { desktopDataTemplate } from "@/modules/userManage/types";
 const pageConfig = {
   user: {
     name: "用户管理",
@@ -91,6 +80,7 @@ const pageConfig = {
   dictManage: {
     name: "字典管理",
     desktopData: dictManage,
+    btnList: dictManageBtnList,
     ...base,
   },
   adminManage: {

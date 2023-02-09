@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 18:42:01
+ * @LastEditTime: 2023-02-09 16:20:00
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -82,7 +82,7 @@
                 ? btnList(item, scope.row)
                 : []
               ).filter((x, i) => {
-                return i < 2;
+                return i < 3;
               })"
               :loading="btns.isLoading"
               size="small"
@@ -96,6 +96,7 @@
               v-if="!item.table.noDetail"
               size="small"
               type="default"
+              style="float: right"
               @click="cellDblclick(scope.row)"
               icon="More"
             >

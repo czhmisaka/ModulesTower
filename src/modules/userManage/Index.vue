@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 16:13:48
+ * @LastEditTime: 2023-02-09 15:33:45
  * @FilePath: /configforpagedemo/src/modules/userManage/Index.vue
 -->
 
@@ -20,7 +20,6 @@
       :component-lists="component"
       :cus-style="desktopData?.cusStyle"
     />
-    {{ dataText }}
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 14:52:05
+ * @LastEditTime: 2023-02-09 10:14:32
  * @FilePath: /configforpagedemo/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -124,6 +124,7 @@ export const getModuleFromView = (init = false) => {
 
   // 如果你找到了这里的 require.context 搜索出了问题，先看一下是不是出现了空文件夹，如有则删除。  -- czh 20221109
   // 感谢自己，表现形式可能为 undifined files -- czh 20230116
+  // again ，可能需要做一个更好的提示信息 -- czh 20230209
   moduleList = [] as modulesCellTemplate[];
   const requireModule = require.context("@/modules/", true, /.\.ts|\.vue/g);
   const requireList = requireModule.keys() as string[];

@@ -78,7 +78,6 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
       `/web/usc/menu/${data.id ? "update" : "insert"}`,
       data
     );
-    console.log(that, query, "asd");
     if (res["message"] == "成功") {
       that.$message.success(res["message"]);
       setTimeout(() => {

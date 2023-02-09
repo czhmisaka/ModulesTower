@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 18:09:07
+ * @LastEditTime: 2023-02-09 16:13:11
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -32,7 +32,7 @@
         @change="onChange"
       >
         <div
-          v-if="btnList.length > 0 || !autoSearch"
+          v-if="(btnList && btnList.length > 0) || !autoSearch"
           slot-scope="{ formData }"
           :style="{ textAlign: 'right' }"
         >
@@ -52,10 +52,10 @@
             >搜索</el-button
           >
           <div
-            v-for="item in btnList.filter((btn) =>
+            v-for="item in (btnList || []).filter((btn) =>
               btn && btn.isShow ? btn.isShow(formData, btn) : true
             )"
-            class="btn"
+            class="floatLeft"
           >
             <el-button
               :loading="item.isLoading"
@@ -256,5 +256,9 @@ export default defineComponent({
 .btn {
   float: right;
   margin-left: 6px;
+}
+.floatLeft {
+  float: left;
+  margin-right: 6px;
 }
 </style>

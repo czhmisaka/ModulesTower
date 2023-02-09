@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 09:37:08
+ * @LastEditTime: 2023-02-09 18:19:42
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -13,7 +13,27 @@
     :with-header="plugInData.title ? true : false"
     :append-to-body="true"
   >
-    <div class="formBody" v-if="!plugInData['noEdit']">
+    <div
+      class="formBody"
+      v-if="isOpen && plugInData['gridDesktop'] && plugInData['gridDesktopConfig']"
+    >
+      <div
+        :style="{
+          width: 'calc(100%)',
+          height: 'calc(100%)',
+          background: 'rgba(0,0,0,0)',
+          overflow: 'hidden',
+        }"
+      >
+        <gridDesktop
+          :grid-col-num="plugInData['gridDesktopConfig'].gridColNum"
+          :desktopData="desktopDataList"
+          :component-lists="component"
+          :cus-style="plugInData['gridDesktopConfig']?.cusStyle"
+        />
+      </div>
+    </div>
+    <div class="formBody" v-else-if="isOpen && !plugInData['noEdit']">
       <el-scrollbar>
         <el-card>
           <VueForm
@@ -31,12 +51,12 @@
         </el-card>
       </el-scrollbar>
     </div>
-    <div class="formBody" v-else>
+    <div class="formBody" v-else-if="isOpen">
       <el-form ref="form" v-on:submit.prevent :label-position="'left'" size="small">
         <el-form-item
           :label-width="'120px'"
           :label="item.label"
-          v-for="item in plugInData['queryItemTemplate'].filter(
+          v-for="item in queryItemTemplate.filter(
             (x) => x.table.type != showType.btnList
           )"
         >
@@ -50,7 +70,7 @@
           </span>
         </el-form-item>
       </el-form>
-      <!-- <el-descriptions class="margin-top" :column="1">
+      <!-- <el-descriptions class="margin-top" :column="1" border>
         <el-descriptions-item
           min-width="100%"
           :label-align="'right'"
@@ -60,13 +80,21 @@
           )"
           :label="item.label"
         >
-          <span v-if="item.table.type == showType.func">
+          <span v-if="item.table.type == showType.funcComponent">
+            <component
+              :is="item.table.showFunc(plugInData['data'], item.key)"
+            ></component>
+          </span>
+          <span v-else-if="item.table.type == showType.func">
             {{ item.table.showFunc(plugInData["data"], item.key) }}
           </span>
         </el-descriptions-item>
       </el-descriptions> -->
     </div>
-    <div :style="{ textAlign: 'left' }">
+    <div
+      :style="{ textAlign: 'left' }"
+      v-if="isOpen && plugInData.btnList && plugInData.btnList.length > 0"
+    >
       <el-divider></el-divider>
       <div
         v-for="item in plugInData.btnList.filter((btn) =>
@@ -108,11 +136,20 @@ import {
 import drawerForm from "./drawerForm.vue";
 import { isMobile } from "@/utils/Env";
 
+import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
+import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
+
 let formDataForCheck = {};
 export default defineComponent({
   name: "drawerForm",
-  components: { VueForm },
+  components: { VueForm, gridDesktop },
   props: ["plugInData", "baseData"],
+
+  computed: {
+    component() {
+      return this.$modules.getAllComponents();
+    },
+  },
   watch: {
     formData: {
       handler(val) {
@@ -150,7 +187,7 @@ export default defineComponent({
       },
 
       queryItemTemplate: [] as tableCellTemplate[],
-
+      desktopDataList: [] as gridCellTemplate[],
       schema: {
         type: "object",
         properties: {},
@@ -233,9 +270,12 @@ export default defineComponent({
     async open() {
       this.isReady = false;
       await this.$nextTick();
-      this.queryItemTemplate = this.plugInData["queryItemTemplate"]
-        ? this.plugInData.queryItemTemplate
-        : [];
+      if (this.plugInData["gridDesktop"] && this.plugInData["gridDesktopConfig"]) {
+        this.desktopDataList = await this.plugInData["gridDesktopConfig"].desktopData();
+      } else if (this.plugInData["queryItemTemplate"])
+        this.queryItemTemplate = this.plugInData["queryItemTemplate"]
+          ? this.plugInData.queryItemTemplate
+          : [];
       await this.initForm(this.queryItemTemplate);
       this.isReady = true;
       if (this.plugInData["data"]) this.formData = this.plugInData["data"];

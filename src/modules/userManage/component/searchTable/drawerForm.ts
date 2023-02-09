@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 19:10:46
+ * @LastEditTime: 2023-02-09 11:06:43
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -24,6 +24,8 @@ import {
 import { useModuleHook } from "@/store/modules/module";
 import { isShallow } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
+import { ElMessage } from "element-plus";
+import { ElMessageBox } from "element-plus";
 
 /**
  * @name: btnMaker
@@ -83,13 +85,26 @@ export const btnMaker = (
  * @Date: 2022-12-14 14:56:27
  */
 export const dobuleCheckBtnMaker = (
-  label,
-  options: {
-    title: string;
-    context: (that: stringAnyObj, data?: stringAnyObj) => void | string;
-    function: (that: stringAnyObj, data?: stringAnyObj) => void;
-  }
-) => {};
+  title: string,
+  message: string,
+  options: stringAnyObj = {}
+) => {
+  return new Promise((res, rej) => {
+    ElMessageBox({
+      title,
+      message,
+      type: "warning",
+      callback: async (action) => {
+        if (action == "confirm") {
+          res(true);
+        } else {
+          rej(false);
+        }
+      },
+      ...options,
+    });
+  });
+};
 
 // 关闭按钮
 export const closeBtn = btnMaker("结束", btnActionTemplate.Function, {
@@ -121,6 +136,40 @@ export const openDrawerForm = (
   } catch (err) {
     console.error("openDrawerForm_数据上报错误:", err, content, value);
   }
+};
+
+/**
+ * @name: repBackMessageShow
+ * @description: 请求回调简易弹窗
+ * @authors: CZH
+ * @Date: 2023-02-09 10:46:52
+ * @param {*} that
+ * @param {*} res
+ */
+export const repBackMessageShow = (that, res) => {
+  if (res["message"] == "成功") {
+    that.$message.success(res["message"]);
+    setTimeout(() => {
+      that.close();
+    }, 500);
+  } else {
+    that.$message.danger(res["message"]);
+  }
+};
+
+/**
+ * @name: openDrawerFormEasy
+ * @description: 快速弹窗调用
+ * @authors: CZH
+ * @Date: 2023-02-09 10:54:24
+ * @param {stringAnyObj} that
+ * @param {drawerProps} drawerProps
+ */
+export const openDrawerFormEasy = (
+  that: stringAnyObj,
+  drawerProps: drawerProps
+) => {
+  that.$modules.getModuleApi()["userManage_openDrawerForm"](that, drawerProps);
 };
 
 let component = {};
