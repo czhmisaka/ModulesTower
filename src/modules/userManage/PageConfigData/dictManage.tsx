@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-08 16:28:14
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 18:05:38
+ * @LastEditTime: 2023-02-09 21:01:20
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/dictManage.tsx
  */
 import {
@@ -101,21 +101,26 @@ const 删除字典按钮 = btnMaker('删除', btnActionTemplate.Function, {
     }
 }, ['/web/usc/dict/delete'], '删除字典按钮')
 
-const 查看字典数据 = btnMaker('数据', btnActionTemplate.OpenDrawer, {
+const 查看字典数据 = btnMaker('数据', btnActionTemplate.Function, {
     elType: 'primary',
-    drawerProps: {
-        title: "查看数据",
-        size: 30,
-        gridDesktop: true,
-        gridDesktopConfig: {
-            desktopData: dictDataManage,
-            gridColNum: 12,
-            cusStyle: {
-                wholeScreen: true,
-                maxRows: 8,
-                margin: 3
+    function: async (that, data) => {
+        let drawerProps = {
+            title: "字典数据",
+            size: 80,
+            gridDesktop: true,
+            gridDesktopConfig: {
+                preBaseData: { dict: JSON.parse(JSON.stringify(data)) },
+                desktopData: dictDataManage,
+                gridColNum: 12,
+                cusStyle: {
+                    wholeScreen: true,
+                    maxRows: 8,
+                    margin: 3
+                }
             }
         }
+        console.log('start', drawerProps)
+        that.$modules.getModuleApi()["userManage_openDrawerForm"](that, drawerProps);
     }
 }, [], '查看字典数据列表')
 

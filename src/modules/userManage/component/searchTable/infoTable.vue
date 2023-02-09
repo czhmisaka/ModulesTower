@@ -96,7 +96,7 @@
               v-if="!item.table.noDetail"
               size="small"
               type="default"
-              style="float: right"
+              style="float: right; margin-right: 6px"
               @click="cellDblclick(scope.row)"
               icon="More"
             >

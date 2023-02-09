@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 15:24:20
+ * @LastEditTime: 2023-02-09 20:44:36
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -68,6 +68,7 @@ export interface desktopDataTemplate {
     maxRows: number;
     margin: number;
   };
+  preBaseData?: stringAnyObj;
   permission?: stringAnyObj[];
   dataPermission?: stringAnyObj[];
   btnList?: btnCellTemplate[];

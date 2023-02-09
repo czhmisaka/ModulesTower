@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 11:06:43
+ * @LastEditTime: 2023-02-09 20:59:07
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -125,6 +125,7 @@ export const openDrawerForm = (
   content: { [key: string]: any },
   value: drawerProps
 ) => {
+  console.log("openDrawerForm,", value);
   if (!checkContext(content, value)) return;
   try {
     let func = content["$emit"] ? "$emit" : "emit";

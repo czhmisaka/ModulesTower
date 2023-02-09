@@ -28,6 +28,7 @@
         <gridDesktop
           :grid-col-num="plugInData['gridDesktopConfig'].gridColNum"
           :desktopData="desktopDataList"
+          :preBaseData="plugInData['gridDesktopConfig'].preBaseData"
           :component-lists="component"
           :cus-style="plugInData['gridDesktopConfig']?.cusStyle"
         />
