@@ -1,11 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
-<<<<<<< HEAD
- * @LastEditTime: 2023-02-06 20:26:07
-=======
- * @LastEditTime: 2023-02-08 18:34:59
->>>>>>> add_vuePureAdmin
+ * @LastEditTime: 2023-02-08 22:53:33
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 

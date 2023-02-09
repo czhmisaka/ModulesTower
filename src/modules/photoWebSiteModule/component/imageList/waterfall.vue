@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 22:45:59
+ * @LastEditTime: 2023-02-09 01:03:53
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -106,6 +106,15 @@ function fuckk(thatt) {
   }
 }
 
+function getBaseDataByWatchKey(baseData: stringAnyObj, watchKey: string | string[]) {
+  if (typeof watchKey == "string") watchKey = [watchKey];
+  let backData = {};
+  watchKey.map((x) => {
+    if (Object.keys(baseData).indexOf(x) > -1) backData[x] = baseData[x];
+  });
+  return backData;
+}
+
 export default defineComponent({
   componentInfo: {
     labelNameCn: "瀑布流",
@@ -121,7 +130,7 @@ export default defineComponent({
       label: "获取图片的函数，搭配监听key使用",
       type: inputType.text,
     },
-    watchKeyForCategory: {
+    watchKey: {
       label: "baseData监听key(相册key)",
       type: inputType.text,
     },
@@ -133,7 +142,7 @@ export default defineComponent({
 
   baseProps: {},
 
-  props: ["baseData", "sizeUnit", "watchKeyForCategory", "imageList", "getFunc"],
+  props: ["baseData", "sizeUnit", "watchKey", "imageList", "getFunc"],
   components: { cardBg, waterFallItem },
   watch: {
     nowShowType(val: showType) {
@@ -141,15 +150,12 @@ export default defineComponent({
     },
     baseData: {
       handler: async function (val) {
-        if (
-          Object.keys(val).indexOf(this.watchKeyForCategory) > -1 &&
-          Index != val[this.watchKeyForCategory]
-        ) {
-          Index = val[this.watchKeyForCategory];
+        if (Object.keys(getBaseDataByWatchKey(val, this.watchKey)).length > 0) {
+          Index = getBaseDataByWatchKey(val, this.watchKey);
           this.data.offset = 0;
           this.rowList = [[]];
           imageListForReSize = [];
-          await this.getImgList(val[this.watchKeyForCategory], true);
+          await this.getImgList(getBaseDataByWatchKey(val, this.watchKey), true);
         }
       },
     },
@@ -309,12 +315,15 @@ export default defineComponent({
         this.setImage(this.rowList[rowIndex][colIndex], rowIndex, colIndex);
     },
 
-    async getImgList(val = this.baseData[this.watchKeyForCategory], isInit = false) {
+    async getImgList(
+      val = getBaseDataByWatchKey(this.baseData, this.watchKey),
+      isInit = false
+    ) {
       const that = this;
       if (!val) return null;
       let { limit, offset } = that.data;
       let list = await this.getFunc(that, {
-        key: val,
+        ...val,
         limit,
         offset,
       });

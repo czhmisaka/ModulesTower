@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-07 18:03:07
+ * @LastEditTime: 2023-02-09 01:03:09
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -18,12 +18,13 @@ import {
   changeCardPosition,
   changeCardProperties,
 } from "@/components/basicComponents/grid/module/cardApi/index";
-import { get, post } from "@/utils/api/requests";
+import { get, piwigoMethod, post } from "@/utils/api/requests";
 import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
+import { xor } from "lodash";
 const getFunc = async function (that, data) {
   let { limit, offset } = data;
   let res = await post(
-    `/images?offset=${offset}&limit=${limit}&catrgory=${data.key.id}`,
+    `/images?offset=${offset}&limit=${limit}&catrgory=${data.category.id}`,
     []
   );
   return res.data.list.map((x) => {
@@ -34,8 +35,18 @@ const getFunc = async function (that, data) {
     };
   });
 };
-export const mainDesktop = async () =>
-  [
+export const mainDesktop = async () => {
+  let res = await piwigoMethod({
+    method: "pwg.tags.getList",
+  });
+  let tagList = res.result.tags.map((x) => {
+    return {
+      ...x,
+      label: x.name,
+    };
+  });
+
+  return [
     gridCellMaker(
       "upload",
       "上传",
@@ -73,7 +84,24 @@ export const mainDesktop = async () =>
       }
     )
       .setPosition(0, 0)
-      .setSize(2, 9),
+      .setSize(2, 4),
+    gridCellMaker(
+      "asdasd",
+      "tag列表",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_tagList",
+      },
+      {
+        props: {
+          outputKey: "tags",
+          tagList: tagList,
+        },
+      }
+    )
+      .setPosition(0, 4)
+      .setSize(2, 4),
 
     gridCellMaker(
       "waterFall",
@@ -85,7 +113,7 @@ export const mainDesktop = async () =>
       },
       {
         props: {
-          watchKeyForCategory: "category",
+          watchKey: ["category", "tags"],
           getFunc: getFunc,
         },
       }
@@ -154,6 +182,7 @@ export const mainDesktop = async () =>
       .setPosition(10, 10)
       .setSize(2, 2),
   ] as gridCellTemplate[];
+};
 
 export const mobile = async () =>
   [
