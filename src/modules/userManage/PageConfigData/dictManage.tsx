@@ -37,6 +37,7 @@ import { btnCellTemplate } from "../types";
 import { openDrawerFormEasy } from '../component/searchTable/drawerForm';
 import { dobuleCheckBtnMaker } from '../component/searchTable/drawerForm';
 import { dictDataManage } from './dictDataManage';
+import { dictDataManageBtnList } from './dictDataManage';
 
 
 // 字典页面配置数据
@@ -148,7 +149,7 @@ export const ShowTemplate = 字典页面配置数据列.getAll()
 const btnList = [新增字典按钮];
 
 // 字典管理页面可用按钮配置表
-export const dictManageBtnList = [新增字典按钮, 编辑字典按钮, 删除字典按钮, 查看字典数据];
+export const dictManageBtnList = [新增字典按钮, 编辑字典按钮, 删除字典按钮, 查看字典数据, ...dictDataManageBtnList];
 
 
 /**

@@ -248,7 +248,8 @@ export default defineComponent({
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
 .flexBox {
-  text-align: left;
+  display: contents;
+  float: left;
   user-select: text;
   font-weight: 200;
   overflow: hidden;

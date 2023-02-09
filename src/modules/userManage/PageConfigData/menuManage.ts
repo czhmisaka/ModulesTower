@@ -115,8 +115,11 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
   ),
   tableCellTemplateMaker("名称", "name", {
     ...searchCell(formInputType.input),
-    ...showCell(showType.dataKey, {
+    ...showCell(showType.func, {
       width: "300px",
+      showFunc: (data, key) => {
+        return data["key"] ? data["name"] + "-" + data["key"] : data["name"];
+      },
     }),
   }),
   tableCellTemplateMaker("图标", "icon", {
@@ -126,6 +129,8 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
     ...showCell(showType.funcComponent, {
       style: {
         paddingLeft: "4px",
+        display: "inline-block",
+        width: "40px",
       },
       showFunc: (data, key) => {
         if (data[key] && data[key].indexOf("EL_") == 0)
@@ -411,7 +416,7 @@ const 删除按钮 = btnMaker(
 );
 
 const 自动生成按钮 = btnMaker(
-  "自动生成按钮权限",
+  "生成权限",
   btnActionTemplate.Function,
   {
     icon: "Plus",
@@ -430,7 +435,9 @@ const 自动生成按钮 = btnMaker(
             "确认在【" +
             data.name +
             "】菜单自动生成【" +
-            btnList.map((x) => x.label).join("、") +
+            btnList
+              .map((x) => (x.showAbleKey ? x.showAbleKey + x.label : x.label))
+              .join("、") +
             "】按钮吗？",
           type: "warning",
           callback: async (action) => {

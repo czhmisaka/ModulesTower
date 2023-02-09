@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-09 15:30:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 21:13:54
+ * @LastEditTime: 2023-02-09 21:18:12
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/dictDataManage.tsx
  */
 import {
@@ -118,7 +118,7 @@ const 删除字典数据按钮 = btnMaker('删除', btnActionTemplate.Function, 
 );
 
 const btnList = [新增字典数据按钮]
-export const dictDataManageBtnList = []
+export const dictDataManageBtnList = [编辑字典数据按钮, 新增字典数据按钮, 删除字典数据按钮]
 const ShowTemplate = 字典数据页面配置数据列.getAll()
 const SearchTemplate = []
 
