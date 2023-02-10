@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-09 15:30:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 21:18:12
+ * @LastEditTime: 2023-02-10 13:47:16
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/dictDataManage.tsx
  */
 import {
@@ -65,7 +65,7 @@ const 新增字典数据按钮 = btnMaker('新增', btnActionTemplate.Function, 
             queryItemTemplate: 字典数据页面配置数据列.getByKeyArr(['name', 'value', 'remark', 'orderNumber']),
             btnList: [提交字典数据修改或者新增的按钮],
             schema: {
-                require: ['name', 'key']
+                required: ['name', 'key']
             },
             data: {
                 key: that.baseData.dict.key
@@ -83,7 +83,7 @@ const 编辑字典数据按钮 = btnMaker('编辑', btnActionTemplate.Function, 
             queryItemTemplate: 字典数据页面配置数据列.getByKeyArr(['name', 'value', 'remark', 'orderNumber']),
             btnList: [提交字典数据修改或者新增的按钮],
             schema: {
-                require: ['name', 'key']
+                required: ['name', 'key']
             },
             data
         }
@@ -106,6 +106,23 @@ const 删除字典数据按钮 = btnMaker('删除', btnActionTemplate.Function, 
     }
 }, ['/web/usc/dict/data/delete'], '删除字典数据按钮')
 
+
+const 批量删除字段数据按钮 = btnMaker('批量删除', btnActionTemplate.Function, {
+    elType: 'danger',
+    icon: 'Delete',
+    function: async (that, data) => {
+        try {
+            if (await dobuleCheckBtnMaker('删除字典数据【' + that.selectedList.map(x => x.name).join('】【') + '】', '') == true) {
+                let res = await post('/web/usc/dict/data/deleteBatch', { ids: that.selectedList.map(x => x.id) })
+                repBackMessageShow(that, res)
+            }
+        } catch {
+            return true;
+        }
+    }
+}, ['/web/usc/dict/data/deleteBatch'], '批量删除字段数据按钮')
+
+
 // 添加操作栏目
 字典数据页面配置数据列.push(
     tableCellTemplateMaker(
@@ -117,8 +134,8 @@ const 删除字典数据按钮 = btnMaker('删除', btnActionTemplate.Function, 
     )
 );
 
-const btnList = [新增字典数据按钮]
-export const dictDataManageBtnList = [编辑字典数据按钮, 新增字典数据按钮, 删除字典数据按钮]
+const btnList = [新增字典数据按钮, 批量删除字段数据按钮]
+export const dictDataManageBtnList = [编辑字典数据按钮, 新增字典数据按钮, 删除字典数据按钮, 批量删除字段数据按钮]
 const ShowTemplate = 字典数据页面配置数据列.getAll()
 const SearchTemplate = []
 

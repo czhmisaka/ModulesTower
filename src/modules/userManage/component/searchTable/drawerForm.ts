@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 20:59:07
+ * @LastEditTime: 2023-02-10 13:43:32
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -151,7 +151,7 @@ export const repBackMessageShow = (that, res) => {
   if (res["message"] == "成功") {
     that.$message.success(res["message"]);
     setTimeout(() => {
-      that.close();
+      that.close ? that.close() : refreshDesktop(that);
     }, 500);
   } else {
     that.$message.danger(res["message"]);

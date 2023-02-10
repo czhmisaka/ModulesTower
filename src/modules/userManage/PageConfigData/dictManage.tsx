@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-08 16:28:14
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 21:01:20
+ * @LastEditTime: 2023-02-10 13:47:32
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/dictManage.tsx
  */
 import {
@@ -68,6 +68,9 @@ const 新增字典按钮 = btnMaker('新增字典按钮', btnActionTemplate.Open
     drawerProps: {
         title: '新增字典按钮',
         queryItemTemplate: 字典页面配置数据列.getByKeyArr(['name', 'key', 'remark']),
+        schema: {
+            required: ['name', 'key']
+        },
         btnList: [提交字典修改或者新增的按钮]
     }
 }, ['/web/usc/dict/insert'], '新增字典按钮')
@@ -80,7 +83,7 @@ const 编辑字典按钮 = btnMaker('编辑', btnActionTemplate.Function, {
             queryItemTemplate: 字典页面配置数据列.getByKeyArr(['name', 'key', 'remark']),
             btnList: [提交字典修改或者新增的按钮],
             schema: {
-                require: ['name', 'key']
+                required: ['name', 'key']
             },
             data
         }
