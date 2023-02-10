@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 17:50:11
+ * @LastEditTime: 2023-02-09 19:08:44
  * @FilePath: /configforpagedemo/src/main.ts
  */
 let num = 0;
@@ -46,7 +46,6 @@ import {
 app.component("IconifyIconOffline", IconifyIconOffline);
 app.component("IconifyIconOnline", IconifyIconOnline);
 app.component("FontIcon", FontIcon);
-
 // 自定义指令
 import * as directives from "@/directives";
 Object.keys(directives).forEach((key) => {

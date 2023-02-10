@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 22:53:11
+ * @LastEditTime: 2023-02-09 15:27:02
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -23,18 +23,6 @@ const base = {
     margin: 12,
   },
 };
-export interface desktopDataTemplate {
-  desktopData?: () => Promise<gridCellTemplate[]>;
-  gridColNum?: number;
-  cusStyle?: {
-    wholeScreen: boolean;
-    maxRows: number;
-    margin: number;
-  };
-  permission?: stringAnyObj[];
-  dataPermission?: stringAnyObj[];
-  btnList?: btnCellTemplate[];
-}
 
 const pageConfig = {} as { [key: string]: desktopDataTemplate };
 

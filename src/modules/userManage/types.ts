@@ -1,9 +1,11 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 22:53:33
+ * @LastEditTime: 2023-02-09 22:51:27
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
+
+import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 
 export interface stringAnyObj {
   [key: string]: any;
@@ -34,12 +36,42 @@ export enum btnActionTemplate {
  */
 export interface drawerProps {
   title: string;
-  queryItemTemplate: tableCellOptions[];
+  size?: number;
+
   schema?: stringAnyObj;
-  btnList?: btnCellTemplate[];
   data?: stringAnyObj;
+  //  true 纯数据展示模式
   noEdit?: boolean;
+  //  true 开启桌面模式 （需要搭配 gridDesktopConfig 属性使用
+  gridDesktop?: boolean;
+  gridDesktopConfig?: desktopDataTemplate;
+  // 表单输入服务
+  queryItemTemplate?: tableCellOptions[];
+
+  // 针对当前表单的按钮服务
+  btnList?: btnCellTemplate[];
+
   afterFunction?: (closeType: closeType, that: stringAnyObj) => void;
+}
+
+/**
+ * @name: gridDesktopConfigTemplate
+ * @description: 调起完整桌面服务的配置
+ * @authors: CZH
+ * @Date: 2023-02-09 14:55:34
+ */
+export interface desktopDataTemplate {
+  desktopData?: () => Promise<gridCellTemplate[]>;
+  gridColNum?: number;
+  cusStyle?: {
+    wholeScreen: boolean;
+    maxRows: number;
+    margin: number;
+  };
+  preBaseData?: stringAnyObj;
+  permission?: stringAnyObj[];
+  dataPermission?: stringAnyObj[];
+  btnList?: btnCellTemplate[];
 }
 
 /**
@@ -163,6 +195,7 @@ export enum formInputType {
   indexListForSwitch = "indexListForSwitch",
   botton = "botton",
   searchTable = "searchTable",
+  component = "component",
 }
 
 /**

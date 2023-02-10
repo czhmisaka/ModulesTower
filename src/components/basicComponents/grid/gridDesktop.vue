@@ -1,19 +1,21 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-21 23:09:11
+ * @LastEditTime: 2023-02-09 18:26:51
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
 <template>
   <div
-    ref="screenId"
+    :ref="'screenId_' + idRandom"
+    :id="'screenId_' + idRandom"
     :style="{
       overflow: cusStyle.wholeScreen ? 'hidden' : 'auto',
     }"
     class="baseGrid"
   >
     <grid-layout
+      :fuckName="'asdas' + idRandom"
       :layout="gridListToLayout()"
       :col-num="gridColNum"
       :row-height="gridRowNumAndUnit().blockSize"
@@ -110,21 +112,17 @@ import {
 } from "./module/dataTemplate";
 import { gridPositionByXY, outPutPositionAndGridSize } from "./module/util";
 import componentsListModal from "@/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue";
-import VueGridLayout from "vue3-grid-layout";
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
+import gridLayout from "./GridLayout/GridLayout.vue";
+import gridItem from "./GridLayout/GridItem.vue";
 
-let interval = null as any;
-let componentBoxInfo = {} as {
-  width: string | number;
-  height: string | number;
-};
-
+let useAble = 0;
 export default defineComponent({
   name: "gridDesktop",
   components: {
     card,
-    GridLayout: VueGridLayout.GridLayout,
-    GridItem: VueGridLayout.GridItem,
+    gridLayout,
+    gridItem,
     cardEditModal,
     componentsListModal,
   },
@@ -221,6 +219,13 @@ export default defineComponent({
         _componentDetail: {},
         _componentIndex: -1,
       } as { [key: string]: any },
+
+      interval: null,
+      idRandom: useAble++,
+      componentBoxInfo: {
+        width: 0,
+        height: 0,
+      },
     };
   },
   methods: {
@@ -370,9 +375,9 @@ export default defineComponent({
     gridRowNumAndUnit() {
       let width = 0;
       let height = 0;
-      if (this.$refs["screenId"]) {
-        width = this.$refs["screenId"].offsetWidth;
-        height = this.$refs["screenId"].offsetHeight;
+      if (this.$refs["screenId_" + this.idRandom]) {
+        width = this.$refs["screenId_" + this.idRandom].offsetWidth;
+        height = this.$refs["screenId_" + this.idRandom].offsetHeight;
       }
       let screen = {
         width: width || document.body.offsetWidth,
@@ -449,22 +454,34 @@ export default defineComponent({
 
   async mounted() {
     this.forceUpdateGridList();
-    if (interval) clearInterval(interval);
-    interval = setInterval(async () => {
+    const that = this;
+    if (that.interval) clearInterval(that.interval);
+    this.interval = setInterval(async () => {
       let width =
-        document.getElementById("screenId")?.offsetWidth || document.body.offsetWidth;
+        document.getElementById("screenId_" + that.idRandom)?.offsetWidth ||
+        document.body.offsetWidth;
       let height =
-        document.getElementById("screenId")?.offsetHeight || document.body.offsetHeight;
-      if (componentBoxInfo?.width != width || componentBoxInfo?.height != height) {
-        this.$forceUpdate();
-        this.updateTimes++;
-        if (this.updateTimes > 99999) this.updateTimes = -11111;
+        document.getElementById("screenId_" + that.idRandom)?.offsetHeight ||
+        document.body.offsetHeight;
+      if (
+        that.componentBoxInfo?.width != width ||
+        that.componentBoxInfo?.height != height
+      ) {
+        that.$forceUpdate();
+        that.updateTimes++;
+        if (that.updateTimes > 99999) that.updateTimes = -11111;
       }
-      componentBoxInfo = {
+      that.componentBoxInfo = {
         width: width,
         height: height,
       };
+      // console.log(width, height, that.idRandom, "asd");
     }, 500);
+  },
+
+  unmounted() {
+    console.log("fuck");
+    if (this.interval) clearInterval(this.interval);
   },
 });
 </script>

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 18:42:01
+ * @LastEditTime: 2023-02-09 16:20:00
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -82,7 +82,7 @@
                 ? btnList(item, scope.row)
                 : []
               ).filter((x, i) => {
-                return i < 2;
+                return i < 3;
               })"
               :loading="btns.isLoading"
               size="small"
@@ -96,6 +96,7 @@
               v-if="!item.table.noDetail"
               size="small"
               type="default"
+              style="float: right; margin-right: 6px"
               @click="cellDblclick(scope.row)"
               icon="More"
             >
@@ -247,7 +248,8 @@ export default defineComponent({
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
 .flexBox {
-  text-align: left;
+  display: contents;
+  float: left;
   user-select: text;
   font-weight: 200;
   overflow: hidden;

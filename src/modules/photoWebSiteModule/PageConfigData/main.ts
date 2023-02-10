@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 01:03:09
+ * @LastEditTime: 2023-02-09 23:02:25
  * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -21,6 +21,8 @@ import {
 import { get, piwigoMethod, post } from "@/utils/api/requests";
 import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
 import { xor } from "lodash";
+import { openDrawerFormEasy } from "../../userManage/component/searchTable/drawerForm";
+import { openDrawerForm } from "../../userManage/component/searchTable/drawerForm";
 const getFunc = async function (that, data) {
   let { limit, offset } = data;
   let res = await post(
@@ -180,7 +182,40 @@ export const mainDesktop = async () => {
       }
     )
       .setPosition(10, 10)
-      .setSize(2, 2),
+      .setSize(1, 2),
+    gridCellMaker(
+      "icon1",
+      "返回按钮1",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "icon",
+      },
+      {
+        showInGridDesktop: true,
+        props: {
+          name: "ArrowRightBold",
+          onClickFunc: ({ props, context, e }) => {
+            openDrawerForm(context, {
+              size: 80,
+              title: "",
+              gridDesktop: true,
+              gridDesktopConfig: {
+                desktopData: mainDesktop,
+                gridColNum: 12,
+                cusStyle: {
+                  wholeScreen: true,
+                  maxRows: 12,
+                  margin: 12,
+                },
+              },
+            });
+          },
+        },
+      }
+    )
+      .setPosition(11, 10)
+      .setSize(1, 2),
   ] as gridCellTemplate[];
 };
 
