@@ -15,7 +15,6 @@
     class="baseGrid"
   >
     <grid-layout
-      :fuckName="'asdas' + idRandom"
       :layout="gridListToLayout()"
       :col-num="gridColNum"
       :row-height="gridRowNumAndUnit().blockSize"
@@ -480,7 +479,6 @@ export default defineComponent({
   },
 
   unmounted() {
-    console.log("fuck");
     if (this.interval) clearInterval(this.interval);
   },
 });
