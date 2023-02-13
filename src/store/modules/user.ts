@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 18:44:58
+ * @LastEditTime: 2023-02-13 10:01:22
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -20,6 +20,8 @@ import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
 import { stringAnyObj } from "@/modules/userManage/types";
 import { menuInfoTemplate } from "@/components/menu/menuConfigTemplate";
+
+import { loginPage } from "@/router/index";
 
 sessionStorage;
 export const useUserStore = defineStore({
@@ -81,7 +83,7 @@ export const useUserStore = defineStore({
       this.roles = [];
       this.menuList = [];
       removeToken();
-      router.push("/login");
+      router.push(loginPage);
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
     },
