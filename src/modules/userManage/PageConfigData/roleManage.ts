@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 11:20:36
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-02-08 17:03:55
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleManage.ts
  */
 
@@ -144,6 +144,16 @@ const submitBtn = btnMaker("提交", btnActionTemplate.Function, {
   icon: "Plus",
   elType: "primary",
   function: async (that, data) => {
+    // let btnquery = btnList.map((btn: btnCellTemplate) => {
+    //   let back = {
+    //     showLink: true,
+    //     name: btn.label,
+    //     icon: btn.icon,
+    //     urls: btn.apiList || [],
+    //     key: btn.showAbleKey,
+    //   };
+    //   return back;
+    // });
     let res = await post(
       "/web/usc/role/" + (data.id ? "update" : "insert"),
       data
@@ -160,7 +170,7 @@ const submitBtn = btnMaker("提交", btnActionTemplate.Function, {
 });
 
 // 删除按钮
-const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
+const deleteBtn = btnMaker("", btnActionTemplate.Function, {
   icon: "Delete",
   elType: "danger",
   function: async (that, data) => {
@@ -169,6 +179,16 @@ const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
       type: "warning",
       callback: async (action) => {
         if (action == "confirm") {
+          // let btnquery = btnList.map((btn: btnCellTemplate) => {
+          //   let back = {
+          //     showLink: true,
+          //     name: btn.label,
+          //     icon: btn.icon,
+          //     urls: btn.apiList || [],
+          //     key: btn.showAbleKey,
+          //   };
+          //   return back;
+          // })
           let res = await post("/web/usc/role/delete", { id: data.id });
           if (res.message && res.message == "成功") ElMessage.success("成功");
           if (that.close) that.close();
@@ -177,7 +197,10 @@ const deleteBtn = btnMaker("删除", btnActionTemplate.Function, {
       },
     });
   },
-});
+},
+  ["/web/usc/role/delete"],
+  "删除按钮"
+);
 
 // 打开弹窗 / 支持新增&编辑
 const editModelBtn = btnMaker("编辑", btnActionTemplate.Function, {
@@ -215,9 +238,11 @@ const editModelBtn = btnMaker("编辑", btnActionTemplate.Function, {
     };
     that.$modules
       .getModuleApi()
-      ["userManage_openDrawerForm"](that, drawerProps);
+    ["userManage_openDrawerForm"](that, drawerProps);
   },
-});
+},
+
+);
 
 // 打开新增弹窗
 export const addModelBtn = {
@@ -271,6 +296,10 @@ export const roleDetailModel = {
   btnList: [{ ...addModelBtn, label: "新增子角色" }, deleteBtn, editModelBtn],
   noEdit: true,
 };
+
+export const roleManageBtnList = [
+  deleteBtn,
+];
 
 export const roleManage = async () => {
   return [

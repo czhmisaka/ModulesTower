@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-03 16:24:43
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-02-10 15:53:22
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -12,7 +12,7 @@ import { apiManage } from "./apiManage";
 import { department } from "./departmenet";
 import { pageConfigManage } from "./pageConfigManage";
 import { menuManage, menuManageBtnList } from "./menuManage";
-import { roleManage } from "./roleManage";
+import { roleManage, roleManageBtnList } from "./roleManage";
 import { roleBindUserManage } from "./roleBindUserManage";
 import { mainDesktop, userManage } from "./main";
 import { actionLogManage } from "./actionLogManage";
@@ -88,6 +88,7 @@ const pageConfig = {
       maxRows: 8,
       margin: 12,
     },
+    btnList: roleManageBtnList,
   },
   apiManage: {
     name: "API管理",

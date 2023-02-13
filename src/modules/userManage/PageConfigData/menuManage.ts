@@ -216,10 +216,10 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       showFunc: (data: stringAnyObj, key: string) =>
         data && data[key] && data[key].length > 0
           ? data[key]
-              .map((x) => {
-                return "【" + x.name + "】";
-              })
-              .join(" ")
+            .map((x) => {
+              return "【" + x.name + "】";
+            })
+            .join(" ")
           : "",
     })
   ),
@@ -279,7 +279,7 @@ const 编辑按钮 = btnMaker(
       } as drawerProps;
       that.$modules
         .getModuleApi()
-        ["userManage_openDrawerForm"](that, drawerProps);
+      ["userManage_openDrawerForm"](that, drawerProps);
     },
   },
   ["/web/usc/menu/update"],
@@ -328,8 +328,8 @@ const 新增按钮 = btnMaker(
             data.type == 2
               ? ["type", "name", "showLink", "url"]
               : data.type == 3
-              ? ["type", "name", "showLink", "key"]
-              : ["type", "name", "showLink"],
+                ? ["type", "name", "showLink", "key"]
+                : ["type", "name", "showLink"],
         },
         queryItemTemplate,
         data: {
@@ -342,7 +342,7 @@ const 新增按钮 = btnMaker(
       } as drawerProps;
       that.$modules
         .getModuleApi()
-        ["userManage_openDrawerForm"](that, drawerProps);
+      ["userManage_openDrawerForm"](that, drawerProps);
     },
   },
   ["/web/usc/menu/insert"],

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 16:55:35
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-02-10 15:53:27
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -131,9 +131,12 @@ export const roleBindUserManage = async () => {
 
       that.$modules
         .getModuleApi()
-        ["userManage_openDrawerForm"](that, drawerProps);
+      ["userManage_openDrawerForm"](that, drawerProps);
     },
-  });
+  },
+    ["/web/usc/user/page/org"],
+    "新增角色绑定关系按钮"
+  );
 
   const unBindUser = btnMaker("解除绑定关系", btnActionTemplate.Function, {
     icon: "Connection",
@@ -167,10 +170,18 @@ export const roleBindUserManage = async () => {
         },
       });
     },
-  });
+  },
+    ["/web/usc/role/cancelUser"],
+    "解除绑定关系按钮"
+  );
 
   // btnList
   const btnList = [addUser] as btnCellTemplate[];
+
+  // const roleBindUserManageBtnList = [
+  //   addUser,
+  //   unBindUser,
+  // ]
 
   // 操作按钮
   userTableCellStorage.push(
@@ -206,9 +217,9 @@ export const roleBindUserManage = async () => {
                 .map((x) => {
                   return x.parentId == id
                     ? {
-                        ...x,
-                        children: getSon(x.id),
-                      }
+                      ...x,
+                      children: getSon(x.id),
+                    }
                     : false;
                 })
                 .filter(Boolean);
@@ -292,4 +303,7 @@ export const roleBindUserManage = async () => {
       .setPosition(3, 0)
       .setSize(9, 8),
   ] as gridCellTemplate[];
+
+
 };
+

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 16:25:41
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-02-10 16:29:50
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -137,9 +137,12 @@ export const department = async () => {
       };
       that.$modules
         .getModuleApi()
-        ["userManage_openDrawerForm"](that, drawerProps);
+      ["userManage_openDrawerForm"](that, drawerProps);
     },
-  });
+  },
+    ["/web/usc/unit/insert"],
+    "新增部门按钮"
+  );
 
   const 删除部门 = btnMaker("删除", btnActionTemplate.Function, {
     icon: "Delete",
@@ -164,7 +167,10 @@ export const department = async () => {
         },
       });
     },
-  });
+  },
+    ["/web/usc/unit/delete"],
+    "删除部门按钮"
+  );
   const 编辑部门 = btnMaker("编辑", btnActionTemplate.Function, {
     icon: "Edit",
     elType: "primary",
@@ -182,9 +188,12 @@ export const department = async () => {
       };
       that.$modules
         .getModuleApi()
-        ["userManage_openDrawerForm"](that, drawerProps);
+      ["userManage_openDrawerForm"](that, drawerProps);
     },
-  });
+  },
+    ["/web/usc/unit/update"],
+    "编辑部门按钮"
+  );
 
   const btnList = [新增部门];
 
@@ -287,3 +296,4 @@ export const department = async () => {
       .setSize(9, 8),
   ] as gridCellTemplate[];
 };
+
