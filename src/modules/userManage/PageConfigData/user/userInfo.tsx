@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 11:25:27
+ * @LastEditTime: 2023-02-13 13:35:07
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userInfo.tsx
  */
 
@@ -123,7 +123,7 @@ const userTableCellStorage = new SearchCellStorage([
  * @authors: CZH
  * @Date: 2022-12-14 08:30:00
  */
-export const userInfoCard = async () => {
+export const userInfoCard = async (userInfo) => {
   return [
     gridCellMaker(
       "userInfo",
@@ -135,7 +135,7 @@ export const userInfoCard = async () => {
       },
       {
         props: {
-          watchKey: 'userInfo',
+          userInfo
         },
         isSettingTool: false,
       }

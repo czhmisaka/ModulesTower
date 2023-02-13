@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 11:24:23
+ * @LastEditTime: 2023-02-13 13:31:12
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -41,6 +41,7 @@ import {
 } from "@/modules/userManage/types";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { userInfoCard } from '@/modules/userManage/PageConfigData/user/userInfo';
+import { openDrawerFormEasy } from '../component/searchTable/drawerForm';
 
 // 性别
 const gender = {
@@ -462,21 +463,18 @@ export const mainDesktop = async () => {
         size: 70,
         gridDesktop: true,
         gridDesktopConfig: {
-          desktopData: userInfoCard,
+          desktopData: async () => await userInfoCard(data),
           gridColNum: 12,
-          preBaseData: data,
-        }
+        },
       } as drawerProps
+      openDrawerFormEasy(that, drawProps)
     }
   })
 
   const tableAction = tableCellTemplateMaker(
     "操作",
     "actionBtnList",
-    // actionCell([unitBindBtn, roleBindBtn, editUserModel], {
-    //   fixed: "right",
-    //   noDetail: true
-    // })
+    //[unitBindBtn, roleBindBtn, editUserModel]
     actionCell([editUserModel, 打开用户信息弹窗], {
       fixed: "right",
       noDetail: true
