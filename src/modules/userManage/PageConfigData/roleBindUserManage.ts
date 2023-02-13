@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-02-10 15:53:27
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-02-13 14:46:00
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/roleBindUserManage.ts
  */
 
@@ -45,72 +45,74 @@ import {
   addModelBtn,
 } from "@/modules/userManage/PageConfigData/roleManage";
 
-export const roleBindUserManage = async () => {
-  // 性别
-  const gender = {
-    1: "男",
-    2: "女",
-  };
+// 性别
+const gender = {
+  1: "男",
+  2: "女",
+};
 
-  const userTableCellStorage = new SearchCellStorage([
-    tableCellTemplateMaker("名字", "name"),
-    tableCellTemplateMaker("性别", "gender", staticSelectCell(gender)),
-    tableCellTemplateMaker("icon", "icon"),
-    tableCellTemplateMaker("简介", "description"),
-    tableCellTemplateMaker("管理员", "adminFlag"),
-    tableCellTemplateMaker("邮箱", "mail"),
-    tableCellTemplateMaker("手机号", "mobile"),
-    tableCellTemplateMaker("身份证信息", "idCard"),
-    tableCellTemplateMaker("浙政钉code", "zzdCode"),
-    tableCellTemplateMaker("部门", "unitIds", {
-      ...searchCell(formInputType.selects, {}),
-    }),
-    tableCellTemplateMaker("排序", "orderNumber"),
-  ]);
+const userTableCellStorage = new SearchCellStorage([
+  tableCellTemplateMaker("名字", "name"),
+  tableCellTemplateMaker("性别", "gender", staticSelectCell(gender)),
+  tableCellTemplateMaker("icon", "icon"),
+  tableCellTemplateMaker("简介", "description"),
+  tableCellTemplateMaker("管理员", "adminFlag"),
+  tableCellTemplateMaker("邮箱", "mail"),
+  tableCellTemplateMaker("手机号", "mobile"),
+  tableCellTemplateMaker("身份证信息", "idCard"),
+  tableCellTemplateMaker("浙政钉code", "zzdCode"),
+  tableCellTemplateMaker("部门", "unitIds", {
+    ...searchCell(formInputType.selects, {}),
+  }),
+  tableCellTemplateMaker("排序", "orderNumber"),
+]);
 
-  // 用户绑定表单
-  const userBindRole = new SearchCellStorage([
-    tableCellTemplateMaker(
-      "绑定用户",
-      "uids",
-      searchCell(formInputType.searchList, {
-        funcInputOptionsLoader: async (that) => {
-          const remoteMethod = async (query: string) => {
-            let res = await post("/web/usc/user/page/org", {
-              name: query,
+// 用户绑定表单
+const userBindRole = new SearchCellStorage([
+  tableCellTemplateMaker(
+    "绑定用户",
+    "uids",
+    searchCell(formInputType.searchList, {
+      funcInputOptionsLoader: async (that) => {
+        const remoteMethod = async (query: string) => {
+          let res = await post("/web/usc/user/page/org", {
+            name: query,
+          });
+          let data = [];
+          if (res?.data?.list)
+            data = res.data.list.map((x) => {
+              return {
+                value: x.id + "",
+                label: x.name,
+              };
             });
-            let data = [];
-            if (res?.data?.list)
-              data = res.data.list.map((x) => {
-                return {
-                  value: x.id + "",
-                  label: x.name,
-                };
-              });
-            return data;
-          };
-          return {
-            "remote-method": remoteMethod,
-          };
-        },
-      })
-    ),
-  ]);
+          return data;
+        };
+        return {
+          "remote-method": remoteMethod,
+        };
+      },
+    })
+  ),
+]);
 
-  const submit = btnMaker("提交", btnActionTemplate.Function, {
-    icon: "Position",
-    function: async (that, data) => {
-      let res = await post("/web/usc/role/authUser", data);
-      if (res.message == "成功") {
-        ElMessage.success(res.message);
-        if (that.close) that.close();
-        else refreshDesktop(that);
-      } else ElMessage.error(res.message);
-    },
-  });
+const submit = btnMaker("提交", btnActionTemplate.Function, {
+  icon: "Position",
+  function: async (that, data) => {
+    let res = await post("/web/usc/role/authUser", data);
+    if (res.message == "成功") {
+      ElMessage.success(res.message);
+      if (that.close) that.close();
+      else refreshDesktop(that);
+    } else ElMessage.error(res.message);
+  },
+});
 
-  // 新增角色绑定关系
-  const addUser = btnMaker("绑定用户", btnActionTemplate.Function, {
+// 新增角色绑定关系
+const addUser = btnMaker(
+  "绑定用户",
+  btnActionTemplate.Function,
+  {
     icon: "Connection",
     elType: "primary",
     function: (that, data) => {
@@ -131,14 +133,17 @@ export const roleBindUserManage = async () => {
 
       that.$modules
         .getModuleApi()
-      ["userManage_openDrawerForm"](that, drawerProps);
+        ["userManage_openDrawerForm"](that, drawerProps);
     },
   },
-    ["/web/usc/user/page/org"],
-    "新增角色绑定关系按钮"
-  );
+  ["/web/usc/user/page/org"],
+  "新增角色绑定关系按钮"
+);
 
-  const unBindUser = btnMaker("解除绑定关系", btnActionTemplate.Function, {
+const unBindUser = btnMaker(
+  "解除绑定关系",
+  btnActionTemplate.Function,
+  {
     icon: "Connection",
     elType: "danger",
     function: async (that, data) => {
@@ -171,23 +176,21 @@ export const roleBindUserManage = async () => {
       });
     },
   },
-    ["/web/usc/role/cancelUser"],
-    "解除绑定关系按钮"
-  );
+  ["/web/usc/role/cancelUser"],
+  "解除绑定关系按钮"
+);
 
-  // btnList
-  const btnList = [addUser] as btnCellTemplate[];
+// btnList
+const btnList = [addUser] as btnCellTemplate[];
 
-  // const roleBindUserManageBtnList = [
-  //   addUser,
-  //   unBindUser,
-  // ]
+export const roleBindUserManageBtnList = [addUser, unBindUser];
 
-  // 操作按钮
-  userTableCellStorage.push(
-    tableCellTemplateMaker("操作", "actionBtnList", actionCell([unBindUser]))
-  );
+// 操作按钮
+userTableCellStorage.push(
+  tableCellTemplateMaker("操作", "actionBtnList", actionCell([unBindUser]))
+);
 
+export const roleBindUserManage = async () => {
   return [
     gridCellMaker(
       "MenuList",
@@ -217,9 +220,9 @@ export const roleBindUserManage = async () => {
                 .map((x) => {
                   return x.parentId == id
                     ? {
-                      ...x,
-                      children: getSon(x.id),
-                    }
+                        ...x,
+                        children: getSon(x.id),
+                      }
                     : false;
                 })
                 .filter(Boolean);
@@ -303,7 +306,4 @@ export const roleBindUserManage = async () => {
       .setPosition(3, 0)
       .setSize(9, 8),
   ] as gridCellTemplate[];
-
-
 };
-

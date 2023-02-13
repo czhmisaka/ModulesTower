@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 13:31:12
+ * @LastEditTime: 2023-02-13 14:42:25
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -272,7 +272,6 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
       .getModuleApi()
     ["userManage_openDrawerForm"](that, drawerProps);
   },
-  premission: ["admin"],
   icon: "Setting",
 });
 

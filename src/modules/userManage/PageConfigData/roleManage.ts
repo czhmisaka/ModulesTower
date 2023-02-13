@@ -170,34 +170,37 @@ const submitBtn = btnMaker("提交", btnActionTemplate.Function, {
 });
 
 // 删除按钮
-const deleteBtn = btnMaker("", btnActionTemplate.Function, {
-  icon: "Delete",
-  elType: "danger",
-  function: async (that, data) => {
-    ElMessageBox({
-      title: "确认删除【" + data.name + "】吗？",
-      type: "warning",
-      callback: async (action) => {
-        if (action == "confirm") {
-          // let btnquery = btnList.map((btn: btnCellTemplate) => {
-          //   let back = {
-          //     showLink: true,
-          //     name: btn.label,
-          //     icon: btn.icon,
-          //     urls: btn.apiList || [],
-          //     key: btn.showAbleKey,
-          //   };
-          //   return back;
-          // })
-          let res = await post("/web/usc/role/delete", { id: data.id });
-          if (res.message && res.message == "成功") ElMessage.success("成功");
-          if (that.close) that.close();
-          else refreshDesktop(that);
-        }
-      },
-    });
+const deleteBtn = btnMaker(
+  "",
+  btnActionTemplate.Function,
+  {
+    icon: "Delete",
+    elType: "danger",
+    function: async (that, data) => {
+      ElMessageBox({
+        title: "确认删除【" + data.name + "】吗？",
+        type: "warning",
+        callback: async (action) => {
+          if (action == "confirm") {
+            // let btnquery = btnList.map((btn: btnCellTemplate) => {
+            //   let back = {
+            //     showLink: true,
+            //     name: btn.label,
+            //     icon: btn.icon,
+            //     urls: btn.apiList || [],
+            //     key: btn.showAbleKey,
+            //   };
+            //   return back;
+            // })
+            let res = await post("/web/usc/role/delete", { id: data.id });
+            if (res.message && res.message == "成功") ElMessage.success("成功");
+            if (that.close) that.close();
+            else refreshDesktop(that);
+          }
+        },
+      });
+    },
   },
-},
   ["/web/usc/role/delete"],
   "删除按钮"
 );
@@ -238,11 +241,9 @@ const editModelBtn = btnMaker("编辑", btnActionTemplate.Function, {
     };
     that.$modules
       .getModuleApi()
-    ["userManage_openDrawerForm"](that, drawerProps);
+      ["userManage_openDrawerForm"](that, drawerProps);
   },
-},
-
-);
+});
 
 // 打开新增弹窗
 export const addModelBtn = {
@@ -258,17 +259,23 @@ export const addModelBtn = {
 };
 
 // 绑定用户到某个角色
-const authUserToRole = btnMaker("绑定用户", btnActionTemplate.Function, {
-  icon: "Connection",
-  function: async (that, data) => {
-    that.$router.push({
-      path: "/userManage/ROLEBINDUSERMANAGE",
-      query: {
-        roleId: data.id,
-      },
-    });
+const authUserToRole = btnMaker(
+  "绑定用户",
+  btnActionTemplate.Function,
+  {
+    icon: "Connection",
+    function: async (that, data) => {
+      that.$router.push({
+        path: "/userManage/ROLEBINDUSERMANAGE",
+        query: {
+          roleId: data.id,
+        },
+      });
+    },
   },
-});
+  ["/userManage/ROLEBINDUSERMANAGE"],
+  "绑定用户到某个角色"
+);
 
 // 搜索表单同级别按钮
 const btnList = [addModelBtn] as btnCellTemplate[];
@@ -297,9 +304,7 @@ export const roleDetailModel = {
   noEdit: true,
 };
 
-export const roleManageBtnList = [
-  deleteBtn,
-];
+export const roleManageBtnList = [deleteBtn, authUserToRole];
 
 export const roleManage = async () => {
   return [
