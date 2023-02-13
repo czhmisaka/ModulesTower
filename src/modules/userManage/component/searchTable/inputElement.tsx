@@ -429,4 +429,16 @@ inputElement[formInputType.botton] = {
   },
 };
 
+
+
+
+// 预计接入 griddesktop 展示部分数据
+import gridDesktop from '@/components/basicComponents/grid/index';
+inputElement[formInputType.component] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+
+  }
+}
+
 export default inputElement;

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 09:33:24
+ * @LastEditTime: 2023-02-09 16:20:00
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -78,8 +78,11 @@
             v-if="item.table.type == showType.btnList"
           >
             <el-button
-              v-for="btns in btnList(item, scope.row).filter((x, i) => {
-                return i < 2;
+              v-for="btns in (btnList(item, scope.row)
+                ? btnList(item, scope.row)
+                : []
+              ).filter((x, i) => {
+                return i < 3;
               })"
               :loading="btns.isLoading"
               size="small"
@@ -93,6 +96,7 @@
               v-if="!item.table.noDetail"
               size="small"
               type="default"
+              style="float: right; margin-right: 6px"
               @click="cellDblclick(scope.row)"
               icon="More"
             >
@@ -144,7 +148,6 @@ export default defineComponent({
     btnList(item, data) {
       if (!item.table.btnList) return false;
       const back = item.table.btnList.filter((x) => {
-        console.log(x.label, x);
         return x.isShow(data, JSON.parse(JSON.stringify(x)));
       });
       if (back && back.length > 0) return back;
@@ -245,7 +248,8 @@ export default defineComponent({
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
 .flexBox {
-  text-align: left;
+  display: contents;
+  float: left;
   user-select: text;
   font-weight: 200;
   overflow: hidden;

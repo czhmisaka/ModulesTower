@@ -144,13 +144,14 @@ const transitionMain = defineComponent({
 
 .app-main-nofixed-header {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
+  overflow: scroll !important;
   position: relative;
 }
 
 .main-content {
   margin: 12px;
-  width: calc(100% - 24px) !important;
+  width: calc(100% - 24px);
 }
 .wholeScreen-box {
   height: calc(100% - 24px);

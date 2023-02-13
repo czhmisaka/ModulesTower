@@ -23,6 +23,7 @@ import { toggleTheme } from "@pureadmin/theme/dist/browser-utils";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
+import { loginPage } from "@/router/index";
 
 const router = useRouter();
 const { device } = useNav();
@@ -130,7 +131,7 @@ function onReset() {
   useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
   toggleClass(Grey, "html-grey", document.querySelector("html"));
   toggleClass(Weak, "html-weakness", document.querySelector("html"));
-  router.push("/login");
+  router.push(loginPage);
   useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
   resetRouter();
 }

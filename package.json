@@ -49,9 +49,9 @@
     "vue-drag-resize": "^1.5.4",
     "vue-router": "^4.0.0-0",
     "vue3-draggable-resizable": "^1.6.4",
-    "vue3-grid-layout": "^1.0.0",
     "vue3markedcomponent": "^0.1.0",
-    "xe-utils": "^3.5.6"
+    "xe-utils": "^3.5.6",
+    "interactjs": "^1.10.11"
   },
   "devDependencies": {
     "@commitlint/cli": "13.1.0",
@@ -67,7 +67,7 @@
     "@types/lodash": "^4.14.180",
     "@types/lodash-es": "^4.17.6",
     "@types/mockjs": "1.0.3",
-    "@types/node": "14.14.14",
+    "@types/node": "^17.0.33",
     "@types/nprogress": "0.2.0",
     "@types/qs": "^6.9.7",
     "@typescript-eslint/eslint-plugin": "^5.10.2",

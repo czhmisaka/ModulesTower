@@ -65,6 +65,8 @@ declare module 'vue' {
     ElUpload: typeof import('element-plus/es')['ElUpload']
     FuncComponentLoader: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/funcComponentLoader.vue')['default']
     GridDesktop: typeof import('./src/components/basicComponents/grid/gridDesktop.vue')['default']
+    GridItem: typeof import('./src/components/basicComponents/grid/GridLayout/GridItem.vue')['default']
+    GridLayout: typeof import('./src/components/basicComponents/grid/GridLayout/GridLayout.vue')['default']
     Header: typeof import('./src/components/header/header.vue')['default']
     Icon: typeof import('./src/components/basicComponents/cell/icon/icon.vue')['default']
     IconCell: typeof import('./src/components/basicComponents/cell/icon/iconCell.vue')['default']

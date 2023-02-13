@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 09:20:58
+ * @LastEditTime: 2023-02-08 18:38:02
  * @FilePath: /configforpagedemo/src/store/modules/types.ts
  */
 import { stringAnyObj } from "@/modules/userManage/types";
@@ -49,6 +49,7 @@ export type userType = {
   username?: string;
   roles?: Array<string>;
   verifyCode?: string;
+  isAdminFlag?: boolean;
   currentPage?: number;
   menuList?: stringAnyObj[];
   options: stringAnyObj;

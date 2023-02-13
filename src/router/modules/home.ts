@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-02-13 09:16:34
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-02-13 09:59:40
+ * @FilePath: /configforpagedemo/src/router/modules/home.ts
+ */
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
 
@@ -9,7 +15,7 @@ const homeRouter: RouteConfigsTable = {
   meta: {
     icon: "home-filled",
     title: "首页",
-    rank: 0
+    rank: 0,
   },
   children: [
     {
@@ -17,10 +23,10 @@ const homeRouter: RouteConfigsTable = {
       name: "Welcome",
       component: () => import("@/views/welcome/index.vue"),
       meta: {
-        title: "首页"
-      }
-    }
-  ]
+        title: "首页",
+      },
+    },
+  ],
 };
 
 export default homeRouter;
