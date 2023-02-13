@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 09:37:57
+ * @LastEditTime: 2023-02-13 11:25:27
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userInfo.tsx
  */
 
@@ -123,8 +123,25 @@ const userTableCellStorage = new SearchCellStorage([
  * @authors: CZH
  * @Date: 2022-12-14 08:30:00
  */
-export const userManageCard = async () => {
-
+export const userInfoCard = async () => {
   return [
+    gridCellMaker(
+      "userInfo",
+      "菜单列表分层获取",
+      {},
+      {
+        name: "userManage_userInfoCard",
+        type: cardComponentType.componentList,
+      },
+      {
+        props: {
+          watchKey: 'userInfo',
+        },
+        isSettingTool: false,
+      }
+    )
+      .setPosition(0, 0)
+      .setSize(12, 4),
+
   ] as gridCellTemplate[];
 };

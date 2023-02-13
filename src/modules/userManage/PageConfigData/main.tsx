@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 11:06:29
+ * @LastEditTime: 2023-02-13 11:24:23
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -37,8 +37,10 @@ import {
   btnActionTemplate,
   stringAnyObj,
   formInputType,
+  drawerProps,
 } from "@/modules/userManage/types";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { userInfoCard } from '@/modules/userManage/PageConfigData/user/userInfo';
 
 // 性别
 const gender = {
@@ -452,11 +454,32 @@ export const mainDesktop = async () => {
 
   const btnList = [addNewModel, selectedDeleteBtn];
 
+  const 打开用户信息弹窗 = btnMaker('用户信息弹窗', btnActionTemplate.Function, {
+    elType: 'primary',
+    function: async (that, data) => {
+      let drawProps = {
+        title: '用户信息',
+        size: 70,
+        gridDesktop: true,
+        gridDesktopConfig: {
+          desktopData: userInfoCard,
+          gridColNum: 12,
+          preBaseData: data,
+        }
+      } as drawerProps
+    }
+  })
+
   const tableAction = tableCellTemplateMaker(
     "操作",
     "actionBtnList",
-    actionCell([unitBindBtn, roleBindBtn, editUserModel], {
+    // actionCell([unitBindBtn, roleBindBtn, editUserModel], {
+    //   fixed: "right",
+    //   noDetail: true
+    // })
+    actionCell([editUserModel, 打开用户信息弹窗], {
       fixed: "right",
+      noDetail: true
     })
   );
 
