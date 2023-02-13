@@ -1,12 +1,15 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 11:12:35
+ * @LastEditTime: 2023-02-13 19:30:59
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import inputElement, { globalBaseCellDeal } from "./inputElement";
+import { useModuleHook } from "@/store/modules/module";
+import { useRemoteDictHook } from "@/store/modules/remoteDict";
+
 import {
   btnCellTemplate,
   stringAnyObj,
@@ -213,6 +216,45 @@ export const searchCell = (
 };
 
 /**
+ * @name: 函数名
+ * @description: waitForWriting
+ * @authors: CZH
+ * @Date: 2023-02-13 18:06:59
+ */
+export const remoteDictSelectSearchCell = async (
+  dictKey: string,
+  inputProperties?: tableCellOptionsInputPropertiesTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
+  console.log("fuck", {
+    ...searchCell(formInputType.remoteDictSelect, {
+      dictKey,
+      ...inputProperties,
+    }),
+    ...showCell(showType.func, {
+      showFunc: async (data, key) => {
+        const { getByKey } = useRemoteDictHook();
+        return await getByKey(dictKey)[data[key]];
+      },
+      ...showOptions,
+    }),
+  });
+  return {
+    ...searchCell(formInputType.remoteDictSelect, {
+      dictKey,
+      ...inputProperties,
+    }),
+    ...showCell(showType.func, {
+      showFunc: async (data, key) => {
+        const { getByKey } = useRemoteDictHook();
+        return await getByKey(dictKey)[data[key]];
+      },
+      ...showOptions,
+    }),
+  };
+};
+
+/**
  * @name: staticSelectCell
  * @description: 静态资源选择 展示&输入组合
  * @authors: CZH
@@ -309,6 +351,7 @@ export const propertiesMaker = async (
     const { input } = cell;
     if (input && input.type) {
       const inputElementDeal = inputElement[cell.input.type];
+      console.log(input, "asd");
       if (inputElementDeal && inputElementDeal.properties)
         properties[cell.key] = await inputElementDeal.properties(that, cell);
       else

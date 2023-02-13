@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 18:19:42
+ * @LastEditTime: 2023-02-13 15:49:11
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -14,7 +14,10 @@
     :append-to-body="true"
   >
     <div
-      class="formBody"
+      :class="
+        'formBody ' +
+        (!plugInData.btnList || plugInData.btnList.length == 0 ? 'formBody_noBtn' : '')
+      "
       v-if="isOpen && plugInData['gridDesktop'] && plugInData['gridDesktopConfig']"
     >
       <div
@@ -292,6 +295,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 .formBody {
   height: calc(100% - 85px);
+  overflow-y: auto;
+}
+
+.formBody_noBtn {
+  height: calc(100%);
   overflow-y: auto;
 }
 </style>

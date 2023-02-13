@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 18:00:05
+ * @LastEditTime: 2023-02-13 15:26:14
  * @FilePath: /configforpagedemo/src/utils/api/admin/routes.ts
  */
 import { useModuleHook } from "@/store/modules/module";
@@ -13,8 +13,6 @@ type Result = {
   success: boolean;
   data: Array<any>;
 };
-
-
 
 export const getAsyncRoutes = async (noRefresh: boolean = false) => {
   if (noRefresh) {

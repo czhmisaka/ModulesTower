@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 14:42:25
+ * @LastEditTime: 2023-02-13 15:45:03
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -458,7 +458,7 @@ export const mainDesktop = async () => {
     elType: 'primary',
     function: async (that, data) => {
       let drawProps = {
-        title: '用户信息',
+        title: '',
         size: 70,
         gridDesktop: true,
         gridDesktopConfig: {

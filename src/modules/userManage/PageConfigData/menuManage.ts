@@ -60,6 +60,7 @@ import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { useModuleHook } from "@/store/modules/module";
 import { btnCellTemplate } from "../types";
+import { dobuleCheckBtnMaker } from "../component/searchTable/drawerForm";
 
 const typeToModule = {
   1: "模块",
@@ -220,10 +221,10 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
       showFunc: (data: stringAnyObj, key: string) =>
         data && data[key] && data[key].length > 0
           ? data[key]
-            .map((x) => {
-              return "【" + x.name + "】";
-            })
-            .join(" ")
+              .map((x) => {
+                return "【" + x.name + "】";
+              })
+              .join(" ")
           : "",
     })
   ),
@@ -283,7 +284,7 @@ const 编辑按钮 = btnMaker(
       } as drawerProps;
       that.$modules
         .getModuleApi()
-      ["userManage_openDrawerForm"](that, drawerProps);
+        ["userManage_openDrawerForm"](that, drawerProps);
     },
   },
   ["/web/usc/menu/update"],
@@ -332,8 +333,8 @@ const 新增按钮 = btnMaker(
             data.type == 2
               ? ["type", "name", "showLink", "url"]
               : data.type == 3
-                ? ["type", "name", "showLink", "key"]
-                : ["type", "name", "showLink"],
+              ? ["type", "name", "showLink", "key"]
+              : ["type", "name", "showLink"],
         },
         queryItemTemplate,
         data: {
@@ -346,7 +347,7 @@ const 新增按钮 = btnMaker(
       } as drawerProps;
       that.$modules
         .getModuleApi()
-      ["userManage_openDrawerForm"](that, drawerProps);
+        ["userManage_openDrawerForm"](that, drawerProps);
     },
   },
   ["/web/usc/menu/insert"],
@@ -393,22 +394,21 @@ const 删除按钮 = btnMaker(
     function: async (that, data) => {
       if (data.children && data.children.length > 0)
         return ElMessage.warning("【无法删除】：存在子节点");
-      ElMessageBox({
-        title: "确认删除【" + data.name + "】吗？",
-        type: "warning",
-        callback: async (action) => {
-          if (action == "confirm") {
-            let res = await post("/web/usc/menu/delete", {
-              id: data.id,
-            });
-            if (res.message == "成功") {
-              ElMessage.success(res.message);
-              if (that.close) that.close();
-              else refreshDesktop(that);
-            } else ElMessage.error(res.message);
-          }
-        },
-      });
+      let res = await dobuleCheckBtnMaker(
+        "删除节点",
+        "确认删除【" + data.name + "】吗？",
+        { type: "warning" }
+      ).catch((x) => {});
+      if (res) {
+        let res = await post("/web/usc/menu/delete", {
+          id: data.id,
+        });
+        if (res.message == "成功") {
+          ElMessage.success(res.message);
+          if (that.close) that.close();
+          else refreshDesktop(that);
+        } else ElMessage.error(res.message);
+      }
     },
   },
   ["/web/usc/menu/delete"],

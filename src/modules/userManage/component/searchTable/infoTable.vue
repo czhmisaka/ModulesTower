@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 16:20:00
+ * @LastEditTime: 2023-02-13 18:36:59
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -219,7 +219,7 @@ export default defineComponent({
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
         await btn.function(that, data);
-        this.$emit("search");
+        // this.$emit("search");
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
@@ -251,7 +251,6 @@ export default defineComponent({
   display: contents;
   float: left;
   user-select: text;
-  font-weight: 200;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

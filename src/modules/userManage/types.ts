@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 20:44:36
+ * @LastEditTime: 2023-02-13 19:29:31
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -102,6 +102,8 @@ export interface PageDataTemplate extends stringAnyObj {
 }
 
 export interface tableCellOptionsInputPropertiesTemplate {
+  // 字典属性
+  dictKey?: string;
   // 表单属性
   propertiesOption?: stringAnyObj;
   // 输入值属性，不同输入方式有不同的数据解构方案
@@ -193,6 +195,7 @@ export enum formInputType {
   botton = "botton",
   searchTable = "searchTable",
   component = "component",
+  remoteDictSelect = "remoteDictSelect",
 }
 
 /**

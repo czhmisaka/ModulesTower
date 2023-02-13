@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-11 17:57:13
+ * @LastEditTime: 2023-02-13 17:10:56
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -78,9 +78,6 @@ import {
   btnActionTemplate,
 } from "@/modules/userManage/types";
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
-let interval = null;
-
-let baseData = {};
 
 export default defineComponent({
   componentInfo: {
@@ -144,8 +141,11 @@ export default defineComponent({
       handler(val) {
         this.searchKeyWithBaseData
           ? this.searchKeyWithBaseData.map((key) => {
-              if (Object.keys(val).indexOf(key) > -1 && baseData[key] != val[key]) {
-                baseData[key] = val[key];
+              if (
+                Object.keys(val).indexOf(key) > -1 &&
+                this.baseDataForCheck[key] != val[key]
+              ) {
+                this.baseDataForCheck[key] = val[key];
                 this.search();
               }
             })
@@ -181,6 +181,9 @@ export default defineComponent({
 
       // 计算列表可用高度
       TableHeight: 500,
+
+      interval: null,
+      baseDataForCheck: {},
     };
   },
   async mounted() {
@@ -191,8 +194,8 @@ export default defineComponent({
     this.isReady = true;
     await this.search();
     let that = this;
-    if (interval) clearInterval(interval);
-    interval = setInterval(() => {
+    if (that.interval) clearInterval(that.interval);
+    that.interval = setInterval(() => {
       if (that.$refs["mainBox"] && that.$refs["inputBox"]) {
         let baseHeight = 0;
         let offsetHeight = -6;
@@ -208,7 +211,7 @@ export default defineComponent({
           that.TableHeight =
             that.$refs["mainBox"].$el.offsetHeight - 24 - baseHeight - offsetHeight;
       }
-    }, 30);
+    }, 200);
   },
   methods: {
     async initData() {
@@ -258,7 +261,7 @@ export default defineComponent({
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
         await btn.function(that, data);
-        this.$emit("onSearch");
+        // this.$emit("onSearch");
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
