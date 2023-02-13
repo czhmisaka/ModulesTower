@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 15:49:11
+ * @LastEditTime: 2023-02-13 21:19:55
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -296,6 +296,7 @@ export default defineComponent({
 .formBody {
   height: calc(100% - 85px);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .formBody_noBtn {

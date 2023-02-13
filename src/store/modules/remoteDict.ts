@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 18:56:44
+ * @LastEditTime: 2023-02-13 20:32:10
  * @FilePath: /configforpagedemo/src/store/modules/remoteDict.ts
  */
 import { defineStore } from "pinia";
@@ -38,29 +38,46 @@ interface remoteDictTemplate {
 }
 
 export const remoteDictStore = defineStore({
-  id: "module-info",
+  id: "remote-dict",
   state: (): remoteDictTemplate => ({
     isLoadKeyList: [],
     keyMap: {},
   }),
   actions: {
-    async loadKey(key): Promise<{ [key: string]: any }> {
-      let res = await post("/web/usc/dict/get/key", { key });
-      console.log(key, res, "asd");
-      this.isLoadKeyList.push(key);
-      let map = {};
-      res.data.map((x) => {
-        map[x.value] = x.name;
+    async loadKey(keys: string[]): Promise<void> {
+      keys.map(async (key) => {
+        this.isLoadKeyList.push(key);
+        let res = await post("/web/usc/dict/get/key", { key });
+        let map = {};
+        res.data.dictDataList.map((x) => {
+          map[x.value] = x.name;
+        });
+        this.keyMap[key] = map;
       });
-      this.keyMap[key] = map;
-      return this.keyMap[key];
     },
+
+    waitForKey(key) {
+      return new Promise((res, rej) => {
+        const that = this;
+        let num = 0;
+        let interval = setInterval(() => {
+          if (that.keyMap[key]) {
+            clearInterval(interval);
+            return res(that.keyMap[key]);
+          } else if (num > 30) {
+            clearInterval(interval);
+          } else num++;
+        }, 100);
+      });
+    },
+
     async getByKey(key: string): Promise<{ [key: string]: any }> {
-      //   if (this.isLoadKeyList.indexOf(key) != -1)
-      //     return JSON.parse(JSON.stringify(this.keyMap[key]));
-      //   else {
-      return await this.loadKey([key]);
-      //   }
+      if (this.isLoadKeyList.indexOf(key) != -1)
+        return await this.waitForKey(key);
+      else {
+        await this.loadKey([key]);
+        return this.keyMap[key];
+      }
     },
   },
 });

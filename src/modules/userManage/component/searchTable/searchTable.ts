@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 19:51:03
+ * @LastEditTime: 2023-02-13 20:22:00
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -221,25 +221,18 @@ export const searchCell = (
  * @authors: CZH
  * @Date: 2023-02-13 18:06:59
  */
-export const remoteDictSelectSearchCell = async (
-  dictKey: string,
-  inputProperties?: tableCellOptionsInputPropertiesTemplate,
-  showOptions?: tableCellOptionsTableTemplate
-) => {
+export const remoteDictSelectSearchCell = (dictKey: string) => {
   let back = {
     ...showCell(showType.func, {
       showFunc: async (data, key) => {
-        const { getByKey } = useRemoteDictHook();
-        return await getByKey(dictKey)[data[key]];
+        const remoteDictStore = useRemoteDictHook();
+        return await remoteDictStore.getByKey(dictKey)[data[key]];
       },
-      ...showOptions,
     }),
     ...searchCell(formInputType.remoteDictSelect, {
       dictKey,
-      ...inputProperties,
     }),
   } as tableCellOptions;
-  console.log("fuckData =", back);
   return back;
 };
 
@@ -298,7 +291,7 @@ export const tableCellTemplateMaker = (
   key: string,
   options: tableCellOptions = {}
 ): tableCellTemplate => {
-  return {
+  let back = {
     label,
     key,
     table: {
@@ -315,6 +308,7 @@ export const tableCellTemplateMaker = (
     },
     ...options,
   };
+  return back;
 };
 
 /**
@@ -340,7 +334,6 @@ export const propertiesMaker = async (
     const { input } = cell;
     if (input && input.type) {
       const inputElementDeal = inputElement[cell.input.type];
-      console.log(input, "asd");
       if (inputElementDeal && inputElementDeal.properties)
         properties[cell.key] = await inputElementDeal.properties(that, cell);
       else

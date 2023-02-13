@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 19:48:03
+ * @LastEditTime: 2023-02-13 22:13:24
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userInfo.tsx
  */
 
@@ -99,6 +99,7 @@ const userTableCellStorage = new SearchCellStorage([
             isLeaf: "isLeaf",
           },
           nodeKey: "id",
+
         };
         attr["load"] = async (node, resolve) => {
           let res = await post("/web/usc/unit/list", {
@@ -131,12 +132,109 @@ const roleManage = [
   tableCellTemplateMaker('角色', 'name'),
   tableCellTemplateMaker('描述', 'description'),
 ]
-// 用户角色按钮列表
-const roleBindBtnList = []
 
+const 新增角色 = btnMaker('新增', btnActionTemplate.Function, {
+  elType: 'primary',
+  function: async (that, data) => {
+    let drawerProps = {
+      title: '新增角色',
+      queryItemTemplate: [
+        tableCellTemplateMaker('角色', 'roleId', searchCell(formInputType.searchList, {
+          funcInputOptionsLoader: async (that) => {
+            let attr = {
+              multiple: false,
+            };
+            attr["remoteMethod"] = async (query) => {
+              let res = await post("/web/usc/role/list", {
+                name: query,
+              });
+              return res.data.map((x) => {
+                return {
+                  value: x.id + "",
+                  label: x.name,
+                };
+              });
+            };
+            return attr;
+          },
+        }))
+      ],
+      data: {
+        uids: that.query.uids
+      },
+      btnList: [
+        btnMaker('提交', btnActionTemplate.Function, {
+          elType: 'primary',
+          function: async (that, data) => {
+            let res = await post('/web/usc/role/authUser', data);
+            repBackMessageShow(that, res)
+          }
+        })
+      ]
+    } as drawerProps;
+    openDrawerFormEasy(that, drawerProps)
+  }
+}, [], '')
+
+const 删除角色 = btnMaker('删除', btnActionTemplate.Function, {
+  function: async (that, data) => {
+    let res = await dobuleCheckBtnMaker('删除角色', '').catch(x => { })
+    if (res) {
+      let res = await post('/web/usc/role/cancelUser', data);
+      repBackMessageShow(that, res)
+    }
+  }
+}, [], '')
+
+roleManage.push(
+  tableCellTemplateMaker(
+    "操作",
+    "actionBtnList",
+    actionCell([删除角色], {
+      fixed: "right",
+      noDetail: true
+    })
+  )
+)
+
+// 用户角色按钮列表
+const roleBindBtnList = [新增角色]
+
+const 部门 = tableCellTemplateMaker(
+  "部门",
+  "unitIds",
+  searchCell(formInputType.treeSelectRemote, {
+    funcInputOptionsLoader: async (that) => {
+      let attr = {
+        props: {
+          label: "name",
+          isLeaf: "isLeaf",
+        },
+        nodeKey: "id",
+        multiple: false,
+        showCheckbox: false
+      };
+      attr["load"] = async (node, resolve) => {
+        let res = await post("/web/usc/unit/list", {
+          parentId: node.data.id,
+        });
+        return resolve(
+          res.data.map((x) => {
+            return {
+              ...x,
+              isLeaf: !x.hasLeaf,
+              value: x.id,
+            };
+          })
+        );
+      };
+      return attr;
+    },
+  })
+)
 // 部门管理列表
 let departmentManage = new SearchCellStorage([
-  tableCellTemplateMaker('部门', 'unitId',),
+  部门,
   tableCellTemplateMaker('职务', 'jobName', remoteDictSelectSearchCell('sys_user_job')),
   tableCellTemplateMaker('办公地址', 'officeAddress'),
 ])
@@ -167,26 +265,22 @@ const 提交部门编辑或者新增 = btnMaker('提交', btnActionTemplate.Func
 
 const editDrawProps = {
   title: '',
-  schema: {
-    required: []
-  },
   btnList: [提交部门编辑或者新增],
   data: {},
   queryItemTemplate: departmentManage.getByLabelArr(['部门', '职务', '办公地址'])
 } as drawerProps;
-console.log(editDrawProps.queryItemTemplate, JSON.parse(JSON.stringify(departmentManage.getAll())), 'asd')
 
 const 编辑部门按钮 = btnMaker('编辑', btnActionTemplate.Function, {
   elType: 'primary',
   function: async (that, data) => {
     openDrawerFormEasy(that, {
-      ...editDrawProps, data
+      ...editDrawProps, data, title: '编辑部门'
     })
   }
 }, ['/web/usc/unit/updateUser'], '编辑用户和部门绑定关系的按钮')
 const 新增部门按钮 = btnMaker('新增', btnActionTemplate.OpenDrawer, {
   elType: 'primary',
-  drawerProps: editDrawProps
+  drawerProps: { ...editDrawProps, title: '新增绑定部门' }
 }, ['/web/usc/unit/insertUserBatch'], '新增用户和部门绑定关系的按钮')
 
 
@@ -269,10 +363,17 @@ export const userInfoCard = async (userInfo) => {
       props: {
         showItemTemplate: roleManage,
         autoSearch: true,
+        defaultQuery: { uids: [userInfo.id] },
         searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
           num++;
           if (num > 2) res = await post('/web/usc/user/select', { id: userInfo.id })
-          return res.data.roles
+          return res.data.roles.map(x => {
+            return {
+              ...x,
+              roleId: x.id,
+              uids: [userInfo.id]
+            }
+          })
         },
         btnList: roleBindBtnList
       },
