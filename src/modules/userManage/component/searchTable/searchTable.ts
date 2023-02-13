@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 19:30:59
+ * @LastEditTime: 2023-02-13 19:51:03
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -226,11 +226,7 @@ export const remoteDictSelectSearchCell = async (
   inputProperties?: tableCellOptionsInputPropertiesTemplate,
   showOptions?: tableCellOptionsTableTemplate
 ) => {
-  console.log("fuck", {
-    ...searchCell(formInputType.remoteDictSelect, {
-      dictKey,
-      ...inputProperties,
-    }),
+  let back = {
     ...showCell(showType.func, {
       showFunc: async (data, key) => {
         const { getByKey } = useRemoteDictHook();
@@ -238,20 +234,13 @@ export const remoteDictSelectSearchCell = async (
       },
       ...showOptions,
     }),
-  });
-  return {
     ...searchCell(formInputType.remoteDictSelect, {
       dictKey,
       ...inputProperties,
     }),
-    ...showCell(showType.func, {
-      showFunc: async (data, key) => {
-        const { getByKey } = useRemoteDictHook();
-        return await getByKey(dictKey)[data[key]];
-      },
-      ...showOptions,
-    }),
-  };
+  } as tableCellOptions;
+  console.log("fuckData =", back);
+  return back;
 };
 
 /**

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 19:27:24
+ * @LastEditTime: 2023-02-13 19:48:03
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userInfo.tsx
  */
 
@@ -174,7 +174,7 @@ const editDrawProps = {
   data: {},
   queryItemTemplate: departmentManage.getByLabelArr(['部门', '职务', '办公地址'])
 } as drawerProps;
-console.log(editDrawProps.queryItemTemplate, 'asd')
+console.log(editDrawProps.queryItemTemplate, JSON.parse(JSON.stringify(departmentManage.getAll())), 'asd')
 
 const 编辑部门按钮 = btnMaker('编辑', btnActionTemplate.Function, {
   elType: 'primary',
