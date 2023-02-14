@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 21:20:54
+ * @LastEditTime: 2023-02-14 22:07:45
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -27,9 +27,11 @@ const getFunc = async function (that, data) {
   let { limit, offset, query } = data;
   let { tags, name } = query;
   let res = await post(
-    `/images?offset=${offset}&limit=${limit}&catrgory=${data.category.id}${
-      tags ? "&tags=" + tags : ""
-    }${name ? "&name=" + name : ""}`,
+    `/images?offset=${offset}&limit=${limit}${
+      Object.keys(query).length == 0 && data.category?.id
+        ? "&catrgory=" + data.category?.id
+        : ""
+    }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}`,
     []
   );
   return res.data.list.map((x) => {
