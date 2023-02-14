@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 19:29:31
+ * @LastEditTime: 2023-02-13 22:26:49
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -72,6 +72,7 @@ export interface desktopDataTemplate {
   permission?: stringAnyObj[];
   dataPermission?: stringAnyObj[];
   btnList?: btnCellTemplate[];
+  Fullscreen?: boolean;
 }
 
 /**

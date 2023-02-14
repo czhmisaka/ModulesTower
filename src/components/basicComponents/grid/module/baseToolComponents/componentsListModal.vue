@@ -1,13 +1,13 @@
 <!--
  * @Date: 2022-05-30 10:48:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 21:37:58
+ * @LastEditTime: 2023-02-13 22:48:53
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue
 -->
 
 <template>
   <div
-    class="background"
+    :class="'background ' + (modalStatus.isOpen ? '' : 'close')"
     :style="{
       zIndex: modalStatus.isOpen ? 10000000 : -1,
       opacity: modalStatus.isOpen ? '1' : '0',
@@ -145,6 +145,11 @@ export default defineComponent({
       text-align: center;
     }
   }
+
+  .close {
+    transform: translateX(-10000px);
+  }
+
   .content::-webkit-scrollbar {
     width: 4px;
     height: 10px;

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 21:19:55
+ * @LastEditTime: 2023-02-13 22:25:07
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -12,6 +12,8 @@
     :size="`${plugInData.size || (isMobile() ? 100 : 50)}%`"
     :with-header="plugInData.title ? true : false"
     :append-to-body="true"
+    :close-on-click-modal="true"
+    :show-close="true"
   >
     <div
       :class="
