@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 01:03:53
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
+ * @LastEditTime: 2023-02-14 17:40:58
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
   <cardBg>
@@ -109,10 +109,14 @@ function fuckk(thatt) {
 function getBaseDataByWatchKey(baseData: stringAnyObj, watchKey: string | string[]) {
   if (typeof watchKey == "string") watchKey = [watchKey];
   let backData = {};
+  let num = 0;
   watchKey.map((x) => {
-    if (Object.keys(baseData).indexOf(x) > -1) backData[x] = baseData[x];
+    if (Object.keys(baseData).indexOf(x) > -1) {
+      num++;
+      backData[x] = baseData[x];
+    }
   });
-  return backData;
+  return num > 0 ? backData : false;
 }
 
 export default defineComponent({
@@ -150,12 +154,13 @@ export default defineComponent({
     },
     baseData: {
       handler: async function (val) {
-        if (Object.keys(getBaseDataByWatchKey(val, this.watchKey)).length > 0) {
-          Index = getBaseDataByWatchKey(val, this.watchKey);
+        let back = getBaseDataByWatchKey(val, this.watchKey);
+        if (back && JSON.stringify(back) != this.preData) {
+          this.preData = JSON.stringify(back);
           this.data.offset = 0;
           this.rowList = [[]];
           imageListForReSize = [];
-          await this.getImgList(getBaseDataByWatchKey(val, this.watchKey), true);
+          await this.getImgList(back, true);
         }
       },
     },
@@ -200,7 +205,7 @@ export default defineComponent({
         lastOffset: 0,
         margin: 3,
       },
-
+      preData: "",
       nowShowType: showType.waterFall as showType,
       showType,
     };

@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 23:02:25
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
+ * @LastEditTime: 2023-02-14 17:35:51
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
 import {
@@ -115,7 +115,7 @@ export const mainDesktop = async () => {
       },
       {
         props: {
-          watchKey: ["category", "tags"],
+          watchKey: ["category"],
           getFunc: getFunc,
         },
       }
