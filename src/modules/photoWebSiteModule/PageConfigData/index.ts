@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 22:42:12
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/index.ts
+ * @LastEditTime: 2023-02-14 19:02:44
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
 import { mainDesktop, mobile } from "./main";
@@ -28,7 +28,7 @@ const pageConfig = {
     cusStyle: {
       wholeScreen: true,
       maxRows: 12,
-      margin: 6,
+      margin: 12,
     },
   },
   main1: {

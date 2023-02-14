@@ -1,0 +1,108 @@
+<!--
+ * @Date: 2023-01-20 23:35:00
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-02-14 21:30:20
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
+-->
+<template>
+  <cardBg>
+    <div
+      class="wholeBox"
+      :style="{
+        lineHeight: sizeUnit.blockSize + 'px',
+      }"
+    >
+      <el-input v-model="query['name']" placeholder="图片名字" class="item"></el-input>
+      <el-select
+        v-model="query['tags']"
+        :placeholder="'标签'"
+        style="width: auto"
+        class="item"
+        multiple
+        clearable
+        collapse-tags
+      >
+        <el-option v-for="tag in tagList" :value="tag.id" :label="tag.name"></el-option>
+      </el-select>
+      <el-button
+        :style="{ margin: `${(sizeUnit.blockSize - 30) / 2}px 0px`, float: 'right' }"
+        @click="clear"
+        >清空</el-button
+      >
+    </div>
+  </cardBg>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import {
+  componentInfo,
+  gridSizeMaker,
+} from "@/components/basicComponents/grid/module/dataTemplate";
+import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+
+import {
+  changeVisible,
+  changeCardSize,
+  changeCardPosition,
+  changeCardProperties,
+  setData,
+} from "@/components/basicComponents/grid/module/cardApi/index";
+export default defineComponent({
+  name: "searchInfo",
+  componentInfo: {
+    labelNameCn: "搜索栏",
+    key: "searchInfo",
+    description:
+      "用于对接某个piwigo - pythonserver 的服务器，展示当前的所有相册列表，并提供部相册的增删功能 , 展示可搜索的选项列表",
+    gridInfo: {
+      middle: gridSizeMaker(4, 8),
+    },
+  } as componentInfo,
+
+  propsDetail: {},
+
+  baseProps: {},
+
+  components: { cardBg },
+  watch: {
+    query: {
+      handler(val) {
+        let data = {};
+        data[this.outputKey] = val;
+        const that = this;
+        setData(that, data);
+      },
+      deep: true,
+    },
+  },
+  props: ["baseData", "sizeUnit", "onClickFunc", "tagList", "outputKey"],
+  data() {
+    return {
+      query: {},
+    };
+  },
+  mounted() {
+    this.$emit("ready");
+  },
+
+  methods: {
+    clear() {
+      this.query = {};
+    },
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.wholeBox {
+  width: calc(100%);
+  height: 100%;
+  text-align: left;
+  padding: 0px 12px;
+  .item {
+    width: 80px;
+    margin-right: 6px;
+  }
+}
+</style>

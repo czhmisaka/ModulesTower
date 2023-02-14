@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-07 14:59:51
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
+ * @LastEditTime: 2023-02-14 18:58:30
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
   <cardBg
@@ -227,6 +227,7 @@ export default defineComponent({
       });
       changeVisible(that, {
         userManage_menuListRemote: false,
+        searchInfo: false,
         upload: false,
         icon: true,
       });

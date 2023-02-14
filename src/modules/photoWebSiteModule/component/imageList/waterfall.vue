@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 17:40:58
+ * @LastEditTime: 2023-02-14 20:46:37
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -272,9 +272,9 @@ export default defineComponent({
       let nextRowIndex = 0;
       switch (e.code) {
         case "Space":
-          if (this.nowShowType == showType.waterFall) this.nowShowType = showType.list;
-          else if (this.nowShowType == showType.list)
-            this.nowShowType = showType.waterFall;
+          // if (this.nowShowType == showType.waterFall) this.nowShowType = showType.list;
+          // else if (this.nowShowType == showType.list)
+          //   this.nowShowType = showType.waterFall;
           break;
         case "ArrowUp":
           if (rowIndex == 0) break;

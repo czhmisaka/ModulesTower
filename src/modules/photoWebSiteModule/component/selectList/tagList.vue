@@ -1,14 +1,8 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 00:33:16
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/selectList/tagList.vue
--->
-<!--
- * @Date: 2022-10-20 21:59:36
- * @LastEditors: CZH
- * @LastEditTime: 2023-01-19 23:05:52
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/upload.vue
+ * @LastEditTime: 2023-02-14 18:52:41
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/tagList.vue
 -->
 <template>
   <cardBg>

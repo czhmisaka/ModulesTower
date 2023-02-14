@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 17:35:51
+ * @LastEditTime: 2023-02-14 21:20:54
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -24,9 +24,12 @@ import { xor } from "lodash";
 import { openDrawerFormEasy } from "../../userManage/component/searchTable/drawerForm";
 import { openDrawerForm } from "../../userManage/component/searchTable/drawerForm";
 const getFunc = async function (that, data) {
-  let { limit, offset } = data;
+  let { limit, offset, query } = data;
+  let { tags, name } = query;
   let res = await post(
-    `/images?offset=${offset}&limit=${limit}&catrgory=${data.category.id}`,
+    `/images?offset=${offset}&limit=${limit}&catrgory=${data.category.id}${
+      tags ? "&tags=" + tags : ""
+    }${name ? "&name=" + name : ""}`,
     []
   );
   return res.data.list.map((x) => {
@@ -41,12 +44,19 @@ export const mainDesktop = async () => {
   let res = await piwigoMethod({
     method: "pwg.tags.getList",
   });
-  let tagList = res.result.tags.map((x) => {
-    return {
-      ...x,
-      label: x.name,
-    };
-  });
+  let tagList = res.result.tags
+    .map((x) => {
+      return {
+        ...x,
+        label: x.name,
+      };
+    })
+    .concat([
+      {
+        id: "-1",
+        name: "全部",
+      },
+    ]);
 
   return [
     gridCellMaker(
@@ -59,8 +69,8 @@ export const mainDesktop = async () => {
       },
       {}
     )
-      .setPosition(0, 11)
-      .setSize(2, 1),
+      .setPosition(0, 10)
+      .setSize(2, 2),
 
     gridCellMaker(
       "userManage_menuListRemote",
@@ -86,25 +96,24 @@ export const mainDesktop = async () => {
       }
     )
       .setPosition(0, 0)
-      .setSize(2, 4),
+      .setSize(2, 10),
     gridCellMaker(
-      "asdasd",
-      "tag列表",
+      "searchInfo",
+      "搜索栏",
       {},
       {
         type: cardComponentType.componentList,
-        name: "photoWebSiteModule_tagList",
+        name: "photoWebSiteModule_searchInfo",
       },
       {
         props: {
-          outputKey: "tags",
+          outputKey: "query",
           tagList: tagList,
         },
       }
     )
-      .setPosition(0, 4)
-      .setSize(2, 4),
-
+      .setPosition(2, 0)
+      .setSize(8, 1),
     gridCellMaker(
       "waterFall",
       "瀑布流图片展示功能",
@@ -115,13 +124,13 @@ export const mainDesktop = async () => {
       },
       {
         props: {
-          watchKey: ["category"],
+          watchKey: ["category", "query"],
           getFunc: getFunc,
         },
       }
     )
-      .setPosition(2, 0)
-      .setSize(8, 12),
+      .setPosition(2, 1)
+      .setSize(8, 11),
     gridCellMaker(
       "InfoCard",
       "图片信息",
@@ -154,7 +163,7 @@ export const mainDesktop = async () => {
             changeCardPosition(context, {
               waterFall: {
                 x: 2,
-                y: 0,
+                y: 1,
               },
             });
             changeCardSize(context, {
@@ -164,13 +173,14 @@ export const mainDesktop = async () => {
               },
               waterFall: {
                 width: 8,
-                height: 12,
+                height: 11,
               },
             });
             changeVisible(context, {
               userManage_menuListRemote: true,
               upload: true,
               icon: false,
+              searchInfo: true,
             });
             changeCardProperties(context, {
               waterFall: {
@@ -182,40 +192,7 @@ export const mainDesktop = async () => {
       }
     )
       .setPosition(10, 10)
-      .setSize(1, 2),
-    gridCellMaker(
-      "icon1",
-      "返回按钮1",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "icon",
-      },
-      {
-        showInGridDesktop: true,
-        props: {
-          name: "ArrowRightBold",
-          onClickFunc: ({ props, context, e }) => {
-            openDrawerForm(context, {
-              size: 80,
-              title: "",
-              gridDesktop: true,
-              gridDesktopConfig: {
-                desktopData: mainDesktop,
-                gridColNum: 12,
-                cusStyle: {
-                  wholeScreen: true,
-                  maxRows: 12,
-                  margin: 12,
-                },
-              },
-            });
-          },
-        },
-      }
-    )
-      .setPosition(11, 10)
-      .setSize(1, 2),
+      .setSize(2, 2),
   ] as gridCellTemplate[];
 };
 
