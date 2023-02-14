@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 22:30:02
+ * @LastEditTime: 2023-02-15 00:28:34
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -23,17 +23,51 @@ import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/def
 import { xor } from "lodash";
 import { openDrawerFormEasy } from "../../userManage/component/searchTable/drawerForm";
 import { openDrawerForm } from "../../userManage/component/searchTable/drawerForm";
+import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
+import { btnActionTemplate } from "@/modules/userManage/types";
+import { tableCellTemplateMaker } from "@/modules/userManage/component/searchTable/searchTable";
+import { repBackMessageShow } from "@/modules/userManage/component/searchTable/drawerForm";
+import { stringAnyObj } from "../../userManage/types";
+let baseData = {} as { [key: string]: any };
 const getFunc = async function (that, data) {
   let { limit, offset, query } = data;
   let { tags, name } = query;
-  let res = await post(
-    `/images?offset=${offset}&limit=${limit}${
-      Object.keys(query).length == 0 && data.category?.id
-        ? "&catrgory=" + data.category?.id
-        : ""
-    }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}`,
-    []
-  );
+  let res = {} as stringAnyObj;
+  if (
+    JSON.stringify(baseData["category"]) !=
+    JSON.stringify(that.baseData["category"])
+  ) {
+    res = await post(
+      `/images?offset=${offset}&limit=${limit}${
+        Object.keys(query).length == 0 && data.category?.id
+          ? "&catrgory=" + data.category?.id
+          : ""
+      }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}`,
+      []
+    );
+  } else if (
+    JSON.stringify(baseData["collection"]) !=
+    JSON.stringify(that.baseData["collection"])
+  ) {
+    console.log(data, "asd");
+    let resp = await piwigoMethod({
+      col_id: data["collection"].id,
+      method: "pwg.collections.getImages",
+      per_page: limit,
+      page: Math.floor(offset / limit),
+    });
+    res = {
+      data: {
+        list: resp.result.images.map((x) => {
+          return {
+            ...x,
+            path: x.element_url.replace("http://42.192.134.238:1200", "."),
+          };
+        }),
+      },
+    };
+  }
+  baseData = JSON.parse(JSON.stringify(that.baseData));
   return res.data.list.map((x) => {
     let path = x.path.replace("./", "/");
     return {
@@ -42,23 +76,39 @@ const getFunc = async function (that, data) {
     };
   });
 };
+
+const 新增收藏夹 = btnMaker("新增收藏夹", btnActionTemplate.OpenDrawer, {
+  elType: "primary",
+  drawerProps: {
+    title: "新增收藏夹",
+    queryItemTemplate: [
+      tableCellTemplateMaker("收藏夹名", "name"),
+      tableCellTemplateMaker("comment", "comment"),
+    ],
+    btnList: [
+      btnMaker("提交", btnActionTemplate.Function, {
+        function: async (that, data) => {
+          let res = await piwigoMethod({
+            method: "pwg.collections.create",
+            ...data,
+          });
+          repBackMessageShow(that, res);
+        },
+      }),
+    ],
+  },
+});
+
 export const mainDesktop = async () => {
   let res = await piwigoMethod({
     method: "pwg.tags.getList",
   });
-  let tagList = res.result.tags
-    .map((x) => {
-      return {
-        ...x,
-        label: x.name,
-      };
-    })
-    .concat([
-      {
-        id: "-1",
-        name: "全部",
-      },
-    ]);
+  let tagList = res.result.tags.map((x) => {
+    return {
+      ...x,
+      label: x.name,
+    };
+  });
 
   return [
     gridCellMaker(
@@ -75,7 +125,7 @@ export const mainDesktop = async () => {
       .setSize(2, 2),
 
     gridCellMaker(
-      "userManage_menuListRemote",
+      "categoryList",
       "相册列表",
       {},
       {
@@ -98,7 +148,34 @@ export const mainDesktop = async () => {
       }
     )
       .setPosition(0, 0)
-      .setSize(2, 10),
+      .setSize(2, 5),
+    gridCellMaker(
+      "collectionList",
+      "收藏夹列表",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "userManage_menuList",
+      },
+      {
+        props: {
+          treeDataFunc: async (that) => {
+            let col = await piwigoMethod({
+              method: "pwg.collections.getList",
+            });
+            return col.result.collections;
+          },
+          searchBtn: 新增收藏夹,
+          outputKey: "collection",
+          defaultProps: {
+            label: "name",
+            children: "children",
+          },
+        },
+      }
+    )
+      .setPosition(0, 5)
+      .setSize(2, 5),
     gridCellMaker(
       "searchInfo",
       "搜索栏",
@@ -126,7 +203,7 @@ export const mainDesktop = async () => {
       },
       {
         props: {
-          watchKey: ["category", "query"],
+          watchKey: ["category", "collection", "query"],
           getFunc: getFunc,
         },
       }
@@ -178,7 +255,15 @@ export const mainDesktop = async () => {
                 width: 8,
                 height: 11,
               },
-              userManage_menuListRemote: {
+              categoryList: {
+                width: 2,
+                height: 5,
+              },
+              collectionList: {
+                width: 2,
+                height: 5,
+              },
+              cate: {
                 width: 2,
                 height: 10,
               },
@@ -188,13 +273,13 @@ export const mainDesktop = async () => {
               },
             });
             changeVisible(context, {
-              userManage_menuListRemote: true,
               upload: true,
               icon: false,
               searchInfo: true,
             });
             changeCardProperties(context, {
               waterFall: {
+                watchKey: ["category", "query", "collection"],
                 getFunc: getFunc,
               },
             });

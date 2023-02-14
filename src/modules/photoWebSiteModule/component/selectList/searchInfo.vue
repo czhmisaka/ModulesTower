@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 22:21:41
+ * @LastEditTime: 2023-02-14 23:59:59
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -84,7 +84,11 @@ export default defineComponent({
               width: 10,
               height: 11,
             },
-            userManage_menuListRemote: {
+            categoryList: {
+              width: 0,
+              height: 0,
+            },
+            collectionList: {
               width: 0,
               height: 0,
             },
@@ -109,10 +113,15 @@ export default defineComponent({
               width: 8,
               height: 11,
             },
-            userManage_menuListRemote: {
+            categoryList: {
               width: 2,
-              height: 10,
+              height: 5,
             },
+            collectionList: {
+              width: 2,
+              height: 5,
+            },
+
             searchInfo: {
               width: 8,
               height: 1,

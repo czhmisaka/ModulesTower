@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 18:58:30
+ * @LastEditTime: 2023-02-15 00:07:11
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -68,7 +68,7 @@
       </el-descriptions>
     </el-card>
     <el-card
-      v-if="categoryInfo['相册名']"
+      v-if="categoryInfo['相册名'] && baseData['category']"
       title="相册信息"
       :style="elCardInfo.style"
       :body-style="elCardInfo.bodyStyle"
@@ -224,6 +224,14 @@ export default defineComponent({
           width: 10,
           height: 12,
         },
+        categoryList: {
+          width: 0,
+          height: 0,
+        },
+        collectionList: {
+          width: 0,
+          height: 0,
+        },
       });
       changeVisible(that, {
         userManage_menuListRemote: false,
@@ -233,6 +241,7 @@ export default defineComponent({
       });
       changeCardProperties(that, {
         waterFall: {
+          watchKey: ["color"],
           getFunc: async function (that, data) {
             let res = await get(
               `/palette?colors=${color.replace("rgb(", "").replace(")", "")}&offset=${
@@ -257,6 +266,7 @@ export default defineComponent({
       this.$nextTick(() => {
         setData(that, {
           category: {},
+          color: color,
         });
       });
     },
