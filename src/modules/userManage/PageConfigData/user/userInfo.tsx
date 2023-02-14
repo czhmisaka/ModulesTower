@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-10 15:51:14
+ * @LastEditTime: 2023-02-13 13:35:07
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userInfo.tsx
  */
 
@@ -123,46 +123,25 @@ const userTableCellStorage = new SearchCellStorage([
  * @authors: CZH
  * @Date: 2022-12-14 08:30:00
  */
-export const userManage = async () => {
-  const tableAction = tableCellTemplateMaker(
-    "操作",
-    "actionBtnList",
-    actionCell([], {
-      fixed: "right",
-    })
-  );
+export const userInfoCard = async (userInfo) => {
   return [
     gridCellMaker(
-      "searchTable",
-      "搜索结果列表",
+      "userInfo",
+      "菜单列表分层获取",
       {},
       {
-        name: "userManage_searchTable",
+        name: "userManage_userInfoCard",
         type: cardComponentType.componentList,
       },
       {
         props: {
-          searchItemTemplate: [],
-          showItemTemplate: [
-            ...userTableCellStorage.getAll(["unitId"]),
-            tableAction,
-          ],
-          searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            let res = await post("/web/usc/user/page/org", {
-              ...query,
-            });
-            if (!res.data["list"]) res.data["list"] = [];
-            if (!res.data["data"]) res.data["data"] = res.data["list"];
-            return res.data;
-          },
-          autoSearch: false,
-          searchKeyWithBaseData: ["unit"],
-          btnList: [],
+          userInfo
         },
         isSettingTool: false,
       }
     )
       .setPosition(0, 0)
-      .setSize(12, 8),
+      .setSize(12, 4),
+
   ] as gridCellTemplate[];
 };

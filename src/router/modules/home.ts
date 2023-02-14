@@ -1,8 +1,8 @@
 /*
- * @Date: 2022-11-21 16:13:14
+ * @Date: 2023-02-13 09:16:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-14 03:31:37
- * @FilePath: /configforpagedemo/src/router/modules/home.ts
+ * @LastEditTime: 2023-02-14 17:30:38
+ * @FilePath: /ConfigForDesktopPage/src/router/modules/home.ts
  */
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
