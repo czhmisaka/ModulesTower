@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 15:45:03
+ * @LastEditTime: 2023-02-14 15:02:27
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -42,6 +42,8 @@ import {
 import { ElMessage, ElMessageBox } from "element-plus";
 import { userInfoCard } from '@/modules/userManage/PageConfigData/user/userInfo';
 import { openDrawerFormEasy } from '../component/searchTable/drawerForm';
+
+import { departmentDrawerprops, 新增部门 } from './departmenet'
 
 // 性别
 const gender = {
@@ -413,6 +415,8 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
 
 
 
+
+
 /**
  * @name: mainDesktop
  * @description: 基于部门的用户管理
@@ -454,7 +458,7 @@ export const mainDesktop = async () => {
 
   const btnList = [addNewModel, selectedDeleteBtn];
 
-  const 打开用户信息弹窗 = btnMaker('用户信息弹窗', btnActionTemplate.Function, {
+  const 打开用户信息弹窗 = btnMaker('用户信息', btnActionTemplate.Function, {
     elType: 'primary',
     function: async (that, data) => {
       let drawProps = {
@@ -504,6 +508,10 @@ export const mainDesktop = async () => {
             });
             resolve(data);
           },
+          clickItemDetailFunc: (that, data) => {
+            departmentDrawerprops(that, data)
+          },
+          searchBtn: 新增部门,
           outputKey: "unit",
           defaultProps: {
             label: "name",

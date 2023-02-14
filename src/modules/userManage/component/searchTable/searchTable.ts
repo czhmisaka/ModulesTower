@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 20:22:00
+ * @LastEditTime: 2023-02-14 10:35:43
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -224,9 +224,12 @@ export const searchCell = (
 export const remoteDictSelectSearchCell = (dictKey: string) => {
   let back = {
     ...showCell(showType.func, {
-      showFunc: async (data, key) => {
+      showFunc: (data, key) => {
         const remoteDictStore = useRemoteDictHook();
-        return await remoteDictStore.getByKey(dictKey)[data[key]];
+        remoteDictStore.getByKey(dictKey)[data[key]];
+        return remoteDictStore.keyMap[dictKey]
+          ? remoteDictStore.keyMap[dictKey][data[key]]
+          : "";
       },
     }),
     ...searchCell(formInputType.remoteDictSelect, {

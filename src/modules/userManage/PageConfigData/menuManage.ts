@@ -429,7 +429,7 @@ const 自动生成按钮 = btnMaker(
         return x.path == urls[0];
       });
       const btnList = router.meta?.originData?.btnList;
-      if (btnList.length && btnList.length > 0)
+      if (btnList && btnList.length && btnList.length > 0)
         ElMessageBox({
           title:
             "确认在【" +

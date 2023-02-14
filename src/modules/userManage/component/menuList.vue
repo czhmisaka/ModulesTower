@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 17:17:19
+ * @LastEditTime: 2023-02-14 15:14:08
  * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -30,10 +30,11 @@
           搜索
         </el-button>
         <el-button
+          style="margin-left: 0px"
           :size="size"
           v-if="searchBtn && selectedKey.length == 0"
           :loading="searchBtn.isLoading"
-          :type="searchBtn.type"
+          :type="searchBtn.elType"
           @click="btnClick(searchBtn)"
         >
           {{ searchBtn.label }}

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-30 10:48:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 22:48:53
+ * @LastEditTime: 2023-02-14 10:28:54
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue
 -->
 
@@ -11,6 +11,7 @@
     :style="{
       zIndex: modalStatus.isOpen ? 10000000 : -1,
       opacity: modalStatus.isOpen ? '1' : '0',
+      transform: modalStatus.isOpen ? '' : 'translatex(100000px)',
     }"
     @click="modalStatus.isOpen = false"
   >
@@ -46,6 +47,7 @@ import {
   gridCellTemplate,
   CardComponentTemplate,
 } from "../dataTemplate";
+import { translate } from "element-plus";
 export default defineComponent({
   props: ["sizeUnit", "gridList", "componentLists"],
   components: {
