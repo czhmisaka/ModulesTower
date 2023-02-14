@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 22:07:45
+ * @LastEditTime: 2023-02-14 22:30:02
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -167,6 +167,7 @@ export const mainDesktop = async () => {
                 x: 2,
                 y: 1,
               },
+              searchInfo: { x: 2, y: 0 },
             });
             changeCardSize(context, {
               InfoCard: {
@@ -176,6 +177,14 @@ export const mainDesktop = async () => {
               waterFall: {
                 width: 8,
                 height: 11,
+              },
+              userManage_menuListRemote: {
+                width: 2,
+                height: 10,
+              },
+              searchInfo: {
+                width: 8,
+                height: 1,
               },
             });
             changeVisible(context, {
