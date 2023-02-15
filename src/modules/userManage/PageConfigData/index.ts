@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 14:46:35
+ * @LastEditTime: 2023-02-15 14:04:32
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -21,6 +21,7 @@ import { stringAnyObj } from "@/modules/userManage/types";
 import { btnCellTemplate } from "../types";
 import { dictManageBtnList, dictManage } from "./dictManage";
 
+import { userFieldList } from "./user/userValueManage";
 const base = {
   gridColNum: 12,
   cusStyle: {
@@ -89,6 +90,11 @@ const pageConfig = {
   adminManage: {
     name: "管理员权限编辑",
     desktopData: adminManage,
+    ...base,
+  },
+  userValueManage: {
+    name: "成员字段管理",
+    desktopData: userFieldList,
     ...base,
   },
 } as { [key: string]: desktopDataTemplate };
