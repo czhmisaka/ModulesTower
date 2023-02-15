@@ -58,6 +58,28 @@ inputElement[formInputType.datePicker] = {
   },
 };
 
+inputElement[formInputType.upload] = {
+  properties: (that, cell) => {
+    let properties = {
+      ...base(cell),
+      "ui:widget": "UploadWidget",
+      "ui:options": {
+        "action": cell.input.action,
+      },
+    }
+    let attrs = {
+      responseFileUrl: (res) => {
+        console.log(res)
+        return (res ? (res.data) : '')
+      },
+    }
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    })
+    return properties
+  }
+}
+
 inputElement[formInputType.datePickerRanger] = {
   properties: (that, cell) => {
     return {
@@ -436,7 +458,6 @@ inputElement[formInputType.remoteDictSelect] = {
     let inputOptions = await getByKey(dictKey) as {
       [key: string]: any
     }
-    console.log(inputOptions, 'asd')
     let properties = {
       ...base(cell),
       type: "string",

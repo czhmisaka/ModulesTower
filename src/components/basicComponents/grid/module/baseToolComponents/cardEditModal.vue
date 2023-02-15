@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 22:43:40
+ * @LastEditTime: 2023-02-15 19:03:42
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -369,7 +369,7 @@ export default defineComponent({
   top: 0px;
   left: 0px;
   backdrop-filter: blur(10px);
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.05);
   transition: all 0.5s;
   display: flex;
   justify-content: center;

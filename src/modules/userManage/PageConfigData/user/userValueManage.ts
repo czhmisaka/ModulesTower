@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-14 16:00:45
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 16:28:57
+ * @LastEditTime: 2023-02-15 19:53:36
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userValueManage.ts
  */
 import {
@@ -42,15 +42,24 @@ import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi
 import { tableCellTemplate } from "../../types";
 import { repBackMessageShow } from "@/modules/userManage/component/searchTable/drawerForm";
 import { openDrawerFormEasy } from "../../component/searchTable/drawerForm";
+import { staticSelectCell } from "../../component/searchTable/searchTable";
 
 const tfConfig = {
   true: "允许",
   false: "不允许",
 };
 
+export const userFieldTypeConfig = {
+  remoteDictSelect: "在线字典",
+  input: "Text",
+  number: "数字",
+  datePicker: "日期",
+  mobile: "手机号",
+  upload: "图片上传",
+};
+
 const 用户字段存储库 = new SearchCellStorage([
   tableCellTemplateMaker("字段名", "name"),
-  tableCellTemplateMaker("类型", "type"),
   tableCellTemplateMaker(
     "用户可编辑",
     "updateTerm",
@@ -69,6 +78,32 @@ const 用户字段存储库 = new SearchCellStorage([
     "排序",
     "orderNumber",
     searchCell(formInputType.number)
+  ),
+  tableCellTemplateMaker(
+    "上传测试",
+    "fieldOptions",
+    searchCell(formInputType.upload, {
+      action: "/api/web/file/upload",
+    })
+  ),
+  tableCellTemplateMaker(
+    "类型",
+    "type",
+    staticSelectCell(userFieldTypeConfig, {
+      // onChangeFunc: async (that, data) => {
+      //   let back = 用户字段存储库.getByKeyArr([
+      //     "name",
+      //     "updateTerm",
+      //     "showTerm",
+      //     "type",
+      //   ]);
+      //   switch (data.type) {
+      //     case formInputType.remoteDictSelect:
+      //       back.push(用户字段存储库.getByK);
+      //   }
+      //   return back;
+      // },
+    })
   ),
 ]);
 
@@ -89,13 +124,14 @@ const 新增或编辑用户字段的提交按钮 = btnMaker(
 const 用户字段表单 = {
   title: "新增用户字段",
   schema: {
-    required: ["name", "updateTerm", "showTerm", "type"],
+    required: ["name", "updateTerm", "showTerm", "type", "fieldOptions"],
   },
   queryItemTemplate: 用户字段存储库.getByKeyArr([
     "name",
     "updateTerm",
     "showTerm",
     "type",
+    "fieldOptions",
   ]),
   btnList: [新增或编辑用户字段的提交按钮],
 } as drawerProps;
@@ -117,7 +153,11 @@ const 编辑用户字段按钮 = btnMaker(
     function: async (that, data) => {
       let drawerProps = {
         ...用户字段表单,
-        data,
+        data: {
+          ...data,
+          showTerm: data.showTerm + "",
+          updateTerm: data.updateTerm + "",
+        },
       } as drawerProps;
       openDrawerFormEasy(that, drawerProps);
     },
@@ -126,20 +166,26 @@ const 编辑用户字段按钮 = btnMaker(
   "编辑用户字段按钮"
 );
 
-const 删除用户字段按钮 = btnMaker("删除", btnActionTemplate.Function, {
-  elType: "primary",
-  function: async (that, data) => {
-    let api = "/web/usc/customize/field/delete";
-    if (
-      await dobuleCheckBtnMaker("确认删除", data.name).catch(() => {
-        return false;
-      })
-    ) {
-      let res = await post(api, data);
-      repBackMessageShow(that, res);
-    }
+const 删除用户字段按钮 = btnMaker(
+  "删除",
+  btnActionTemplate.Function,
+  {
+    elType: "primary",
+    function: async (that, data) => {
+      let api = "/web/usc/customize/field/delete";
+      if (
+        await dobuleCheckBtnMaker("确认删除", data.name).catch(() => {
+          return false;
+        })
+      ) {
+        let res = await post(api, data);
+        repBackMessageShow(that, res);
+      }
+    },
   },
-});
+  ["/web/usc/customize/field/delete"],
+  "删除用户字段按钮"
+);
 
 const btnList = [新增用户字段按钮];
 

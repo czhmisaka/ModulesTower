@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 22:25:07
+ * @LastEditTime: 2023-02-15 18:37:38
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -76,26 +76,6 @@
           </span>
         </el-form-item>
       </el-form>
-      <!-- <el-descriptions class="margin-top" :column="1" border>
-        <el-descriptions-item
-          min-width="100%"
-          :label-align="'right'"
-          :align="'left'"
-          v-for="item in plugInData['queryItemTemplate'].filter(
-            (x) => x.table.type != showType.btnList
-          )"
-          :label="item.label"
-        >
-          <span v-if="item.table.type == showType.funcComponent">
-            <component
-              :is="item.table.showFunc(plugInData['data'], item.key)"
-            ></component>
-          </span>
-          <span v-else-if="item.table.type == showType.func">
-            {{ item.table.showFunc(plugInData["data"], item.key) }}
-          </span>
-        </el-descriptions-item>
-      </el-descriptions> -->
     </div>
     <div
       :style="{ textAlign: 'left' }"
@@ -222,12 +202,16 @@ export default defineComponent({
     },
 
     async checkOnChange(val = this.formData, force = false) {
+      console.log(val);
       Object.keys(val).map((key) => {
         if (val[key] != formDataForCheck[key] || force) {
-          this.queryItemTemplate.map((cell) => {
+          this.queryItemTemplate.map(async (cell) => {
             if (cell.key == key && cell.input && cell.input.onChangeFunc) {
               // 如有返回则可以重置表单的输入方案
-              const queryItemTemplate = cell.input.onChangeFunc(this, this.formData);
+              const queryItemTemplate = await cell.input.onChangeFunc(
+                this,
+                this.formData
+              );
               if (queryItemTemplate) this.initForm(queryItemTemplate);
             }
           });

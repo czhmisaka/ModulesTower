@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 10:35:43
+ * @LastEditTime: 2023-02-15 17:14:13
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -204,12 +204,12 @@ export const showCell = (
  * @Date: 2022-12-06 14:54:07
  */
 export const searchCell = (
-  formInputType: formInputType,
+  nowformInputType: formInputType,
   options?: tableCellOptionsInputPropertiesTemplate
 ): tableCellOptions => {
   let tableCellOption = {} as tableCellOptions;
   tableCellOption.input = {
-    type: formInputType,
+    type: nowformInputType,
     ...options,
   };
   return tableCellOption;
