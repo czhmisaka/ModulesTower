@@ -50,14 +50,6 @@ import { repBackMessageShow } from '@/modules/userManage/component/searchTable/d
 import { tableCellOptions } from '../../types';
 import { openDrawerFormEasy } from '../../component/searchTable/drawerForm';
 
-// 性别
-const gender = {
-  1: "男",
-  2: "女",
-};
-
-
-
 // 角色管理
 const roleManage = [
   tableCellTemplateMaker('角色', 'name'),

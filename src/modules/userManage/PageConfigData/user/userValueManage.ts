@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-14 16:00:45
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 14:22:58
+ * @LastEditTime: 2023-02-16 16:52:03
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userValueManage.ts
  */
 import {
@@ -207,6 +207,12 @@ const btnList = [新增用户字段按钮];
     })
   )
 );
+
+export const userValueManageBtnList = [
+  编辑用户字段按钮,
+  删除用户字段按钮,
+  新增用户字段按钮,
+];
 
 export const userFieldList = async () => {
   return [

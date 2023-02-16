@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 14:04:32
+ * @LastEditTime: 2023-02-16 16:52:17
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -33,6 +33,7 @@ const base = {
 
 import { desktopDataTemplate } from "@/modules/userManage/types";
 import { roleBindUserManageBtnList } from "./roleBindUserManage";
+import { userValueManageBtnList } from "./user/userValueManage";
 const pageConfig = {
   user: {
     name: "用户管理",
@@ -95,6 +96,7 @@ const pageConfig = {
   userValueManage: {
     name: "成员字段管理",
     desktopData: userFieldList,
+    btnList: userValueManageBtnList,
     ...base,
   },
 } as { [key: string]: desktopDataTemplate };

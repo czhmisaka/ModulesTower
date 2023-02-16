@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 15:59:34
+ * @LastEditTime: 2023-02-16 16:17:24
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -54,7 +54,7 @@ const gender = {
 const userTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("姓名", "name"),
   tableCellTemplateMaker("性别", "gender", staticSelectCell(gender)),
-  tableCellTemplateMaker("icon", "icon"),
+  tableCellTemplateMaker("icon", "icon", searchCell(formInputType.uploadImage)),
   tableCellTemplateMaker("简介", "description"),
   tableCellTemplateMaker("管理员", "adminFlag"),
   tableCellTemplateMaker("邮箱", "mail"),
