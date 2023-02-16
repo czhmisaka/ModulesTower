@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 20:41:10
+ * @LastEditTime: 2023-02-16 20:43:37
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";

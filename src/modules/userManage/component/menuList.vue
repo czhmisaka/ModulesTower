@@ -11,7 +11,7 @@
     }"
   >
     <div :class="`menuBox box_${random}`">
-      <div class="searchBar">
+      <div class="searchBar" v-if="!noSearch">
         <el-input
           :style="{
             width: '100%',
@@ -42,7 +42,11 @@
       </div>
 
       <!-- 这里展示的是搜索结果 -->
-      <div class="content" v-if="searchResult.length != 0 && selectedKey">
+      <div
+        class="content"
+        :style="noSearch ? 'max-height: calc(100%)' : 'max-height: calc(100% - 40px)'"
+        v-if="searchResult.length != 0 && selectedKey"
+      >
         <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
@@ -60,7 +64,11 @@
       </div>
 
       <!-- 这里展示的是默认树形结构 -->
-      <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
+      <div
+        class="content"
+        :style="noSearch ? 'max-height: calc(100%)' : 'max-height: calc(100% - 40px)'"
+        v-if="searchResult.length == 0 && selectedKey == ''"
+      >
         <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
@@ -295,7 +303,6 @@ export default defineComponent({
   .content {
     width: 100%;
     height: auto;
-    max-height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
     .searchItem {

@@ -150,10 +150,9 @@ const transitionMain = defineComponent({
 }
 
 .main-content {
-  margin: 12px;
-  width: calc(100% - 24px);
+  width: calc(100% - 0px);
 }
 .wholeScreen-box {
-  height: calc(100% - 24px);
+  height: calc(100% - 0px);
 }
 </style>

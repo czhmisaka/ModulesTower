@@ -147,8 +147,8 @@ export const openDrawerForm = (
  * @param {*} res
  */
 export const repBackMessageShow = (that, res) => {
-  if (res["message"] == "成功") {
-    that.$message.success(res["message"]);
+  if (res["message"] == "成功" || res?.stat == "ok") {
+    that.$message.success(res["message"] || "成功");
     setTimeout(() => {
       that.close ? that.close() : refreshDesktop(that);
     }, 500);
