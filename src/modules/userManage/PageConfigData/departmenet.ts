@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 15:12:26
+ * @LastEditTime: 2023-02-16 09:56:47
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -112,6 +112,8 @@ export const UnitTableCellStorage = new SearchCellStorage([
 
 const userTableSearchTemplate = [...UnitTableCellStorage.getByKeyArr(["name"])];
 
+// 2023-02-16 要求可以更换上级部门 , 等待讨论
+// 同时要求回显之前的部门
 export const 新增部门 = btnMaker(
   "新增部门",
   btnActionTemplate.Function,

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 10:13:27
+ * @LastEditTime: 2023-02-16 15:48:38
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userInfo.tsx
  */
 
@@ -55,77 +55,6 @@ const gender = {
   1: "男",
   2: "女",
 };
-
-const userTableCellStorage = new SearchCellStorage([
-  tableCellTemplateMaker("姓名", "name"),
-  tableCellTemplateMaker("性别", "gender", staticSelectCell(gender)),
-  tableCellTemplateMaker("icon", "icon"),
-  tableCellTemplateMaker("简介", "description"),
-  tableCellTemplateMaker("管理员", "adminFlag"),
-  tableCellTemplateMaker("邮箱", "mail"),
-  tableCellTemplateMaker("手机号", "mobile"),
-  tableCellTemplateMaker(
-    "生日",
-    "birthday",
-    DateCell({
-      width: "200px",
-    })
-  ),
-  tableCellTemplateMaker("身份证信息", "idCard"),
-  tableCellTemplateMaker("浙政钉code", "zzdCode"),
-  tableCellTemplateMaker("id", "id"),
-  tableCellTemplateMaker("创建者id", "createUserId"),
-  tableCellTemplateMaker(
-    "创建时间",
-    "createTime",
-    DateCell({
-      width: "200px",
-    })
-  ),
-  tableCellTemplateMaker("修改者id", "updateUserId"),
-  tableCellTemplateMaker(
-    "最近修改时间",
-    "updateTime",
-    DateCell({
-      width: "200px",
-    })
-  ),
-  tableCellTemplateMaker(
-    "部门",
-    "unitIds",
-    searchCell(formInputType.treeSelectRemote, {
-      funcInputOptionsLoader: async (that) => {
-        let attr = {
-          props: {
-            label: "name",
-            isLeaf: "isLeaf",
-          },
-          nodeKey: "id",
-
-        };
-        attr["load"] = async (node, resolve) => {
-          let res = await post("/web/usc/unit/list", {
-            parentId: node.data.id,
-          });
-          return resolve(
-            res.data.map((x) => {
-              return {
-                ...x,
-                isLeaf: !x.hasLeaf,
-                value: x.id,
-              };
-            })
-          );
-        };
-        return attr;
-      },
-    })
-  ),
-  tableCellTemplateMaker("部门信息", "unitNames"),
-  tableCellTemplateMaker("职务", "jobName"),
-  tableCellTemplateMaker("排序", "orderNumber"),
-]);
-
 
 
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 08:58:57
+ * @LastEditTime: 2023-02-16 09:27:37
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -117,7 +117,7 @@ export interface tableCellOptionsInputPropertiesTemplate {
   onChangeFunc?: (
     that: stringAnyObj,
     data: stringAnyObj
-  ) => void | Promise<tableCellOptions[] | void> | tableCellOptions[];
+  ) => Promise<tableCellOptions[] | void> | tableCellOptions[] | void;
   // 一些style
   style?: stringAnyObj;
   [key: string]: any;

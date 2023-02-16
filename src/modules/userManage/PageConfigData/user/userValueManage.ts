@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-14 16:00:45
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 09:24:17
+ * @LastEditTime: 2023-02-16 14:22:58
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userValueManage.ts
  */
 import {
@@ -50,13 +50,15 @@ const tfConfig = {
 };
 
 export const userFieldTypeConfig = {
-  remoteDictSelect: "在线字典",
   input: "Text",
   number: "数字",
   datePicker: "日期",
   mobile: "手机号",
   upload: "图片上传",
+  remoteDictSelect: "在线字典",
 };
+
+export const userFieldStorage = async () => {};
 
 const 用户字段存储库 = new SearchCellStorage([
   tableCellTemplateMaker("字段名", "name"),
@@ -71,11 +73,46 @@ const 用户字段存储库 = new SearchCellStorage([
     "orderNumber",
     searchCell(formInputType.number)
   ),
-  tableCellTemplateMaker("类型", "type", staticSelectCell(userFieldTypeConfig)),
   tableCellTemplateMaker(
-    "特殊参数",
+    "类型",
+    "type",
+    staticSelectCell(userFieldTypeConfig, {
+      onChangeFunc: async (that, data) => {
+        let back = 用户字段存储库.getByKeyArr([
+          "name",
+          "updateTerm",
+          "showTerm",
+          "type",
+        ]);
+        if (data.type == formInputType.remoteDictSelect) {
+          back.push(用户字段存储库.getByKey("fieldOptions"));
+        }
+        return back;
+      },
+    })
+  ),
+  tableCellTemplateMaker(
+    "字典key",
     "fieldOptions",
-    searchCell(formInputType.input)
+    searchCell(formInputType.searchList, {
+      funcInputOptionsLoader: async (that) => {
+        let attr = {
+          multiple: false,
+        };
+        attr["remoteMethod"] = async (query) => {
+          let res = await post("/web/usc/dict/page", {
+            name: query,
+          });
+          return res.data.list.map((x) => {
+            return {
+              value: x.id + "",
+              label: x.name,
+            };
+          });
+        };
+        return attr;
+      },
+    })
   ),
 ]);
 
@@ -113,7 +150,7 @@ const 新增用户字段按钮 = btnMaker(
   {
     drawerProps: 用户字段表单,
   },
-  ["/web/usc/customize/field/insert"],
+  ["/web/usc/customize/field/insert", "/web/usc/dict/page"],
   "新增用户字段按钮"
 );
 
@@ -133,7 +170,7 @@ const 编辑用户字段按钮 = btnMaker(
       openDrawerFormEasy(that, drawerProps);
     },
   },
-  ["/web/usc/customize/field/update"],
+  ["/web/usc/customize/field/update", "/web/usc/dict/page"],
   "编辑用户字段按钮"
 );
 
@@ -184,7 +221,7 @@ export const userFieldList = async () => {
       {
         props: {
           searchItemTemplate: [],
-          showItemTemplate: 用户字段存储库.getAll(),
+          showItemTemplate: 用户字段存储库.getAll(["fieldOptions"]),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await post("/web/usc/customize/field/list/", {
               ...query,
