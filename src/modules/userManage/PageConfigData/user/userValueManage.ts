@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-14 16:00:45
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 08:58:46
+ * @LastEditTime: 2023-02-16 09:24:17
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userValueManage.ts
  */
 import {
@@ -63,47 +63,19 @@ const 用户字段存储库 = new SearchCellStorage([
   tableCellTemplateMaker(
     "用户可编辑",
     "updateTerm",
-    searchCell(formInputType.select, {
-      inputOptions: tfConfig,
-    })
+    staticSelectCell(tfConfig)
   ),
-  tableCellTemplateMaker(
-    "用户可查看",
-    "showTerm",
-    searchCell(formInputType.select, {
-      inputOptions: tfConfig,
-    })
-  ),
+  tableCellTemplateMaker("用户可查看", "showTerm", staticSelectCell(tfConfig)),
   tableCellTemplateMaker(
     "排序",
     "orderNumber",
     searchCell(formInputType.number)
   ),
+  tableCellTemplateMaker("类型", "type", staticSelectCell(userFieldTypeConfig)),
   tableCellTemplateMaker(
-    "上传测试",
+    "特殊参数",
     "fieldOptions",
-    searchCell(formInputType.uploadImage, {
-      action: "/api/web/file/upload",
-    })
-  ),
-  tableCellTemplateMaker(
-    "类型",
-    "type",
-    staticSelectCell(userFieldTypeConfig, {
-      // onChangeFunc: async (that, data) => {
-      //   let back = 用户字段存储库.getByKeyArr([
-      //     "name",
-      //     "updateTerm",
-      //     "showTerm",
-      //     "type",
-      //   ]);
-      //   switch (data.type) {
-      //     case formInputType.remoteDictSelect:
-      //       back.push(用户字段存储库.getByK);
-      //   }
-      //   return back;
-      // },
-    })
+    searchCell(formInputType.input)
   ),
 ]);
 
@@ -124,14 +96,13 @@ const 新增或编辑用户字段的提交按钮 = btnMaker(
 const 用户字段表单 = {
   title: "新增用户字段",
   schema: {
-    required: ["name", "updateTerm", "showTerm", "type", "fieldOptions"],
+    required: ["name", "updateTerm", "showTerm", "type"],
   },
   queryItemTemplate: 用户字段存储库.getByKeyArr([
     "name",
     "updateTerm",
     "showTerm",
     "type",
-    "fieldOptions",
   ]),
   btnList: [新增或编辑用户字段的提交按钮],
 } as drawerProps;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 17:14:13
+ * @LastEditTime: 2023-02-16 09:14:26
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -259,7 +259,7 @@ export const staticSelectCell = (
       ...inputProperties,
     }),
     ...showCell(showType.func, {
-      showFunc: (data, key) => inputOptions[data[key]],
+      showFunc: (data, key) => inputOptions[data[key] + ""],
       ...showOptions,
     }),
   };
