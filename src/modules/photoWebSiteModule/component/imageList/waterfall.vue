@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 00:54:59
+ * @LastEditTime: 2023-02-17 01:14:23
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -160,7 +160,7 @@ export default defineComponent({
           this.data.offset = 0;
           this.rowList = [[]];
           imageListForReSize = [];
-          this.isLoading = false;
+          // this.isLoading = false;
           await this.getImgList(back, true);
         }
       },
@@ -323,14 +323,14 @@ export default defineComponent({
         this.setImage(this.rowList[rowIndex][colIndex], rowIndex, colIndex);
     },
 
-    async getImgList(
-      val = getBaseDataByWatchKey(this.baseData, this.watchKey),
-      isInit = false
-    ) {
+    async getImgList(val = getBaseDataByWatchKey(this.baseData, this.watchKey)) {
       const that = this;
       if (that.isLoading) return null;
       if (!val) return null;
       that.isLoading = true;
+      setTimeout(() => {
+        that.isLoading = false;
+      }, 500);
       let { limit, offset } = that.data;
       let list = await this.getFunc(that, {
         ...val,

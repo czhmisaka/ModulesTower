@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 00:56:37
+ * @LastEditTime: 2023-02-17 01:22:38
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -28,7 +28,7 @@ import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/def
 import { xor } from "lodash";
 import { openDrawerFormEasy } from "../../userManage/component/searchTable/drawerForm";
 import { openDrawerForm } from "../../userManage/component/searchTable/drawerForm";
-import { btnActionTemplate } from "@/modules/userManage/types";
+import { btnActionTemplate, drawerProps } from "@/modules/userManage/types";
 import { tableCellTemplateMaker } from "@/modules/userManage/component/searchTable/searchTable";
 import { repBackMessageShow } from "@/modules/userManage/component/searchTable/drawerForm";
 import { stringAnyObj } from "../../userManage/types";
@@ -36,9 +36,12 @@ import { stringAnyObj } from "../../userManage/types";
 // 图片信息操作列表
 import { InfoCardBtnList } from "./InfoCardBtnList";
 import { setData } from "../../../components/basicComponents/grid/module/cardApi/index";
+import { dobuleCheckBtnMaker } from "../../userManage/component/searchTable/drawerForm";
+import { drawerForm } from "@/modules/userManage/component/searchTable/drawerForm";
 
 let baseData = {} as { [key: string]: any };
 let lastFunc = -1;
+let dataBe = {};
 
 // 获取图片列表
 const getFunc = async function (that, data) {
@@ -50,7 +53,7 @@ const getFunc = async function (that, data) {
       `/images?offset=${offset}&limit=${limit}${
         Object.keys(query).length == 0 && data.category?.id
           ? "&catrgory=" + data.category?.id
-          : ""
+          : "&catrgory=1"
       }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}`,
       []
     );
@@ -58,7 +61,6 @@ const getFunc = async function (that, data) {
   };
   const getCollection = async (data) => {
     let { limit, offset, query } = data;
-    let { tags, name } = query;
     let resp = await piwigoMethod({
       col_id: data["collection"].id,
       method: "pwg.collections.getImages",
@@ -128,6 +130,20 @@ const 新增收藏夹 = btnMaker("新增收藏夹", btnActionTemplate.OpenDrawer
   },
 });
 
+const 删除收藏夹 = btnMaker("删除", btnActionTemplate.Function, {
+  elType: "danger",
+  icon: "Delete",
+  function: async (that, data) => {
+    if (await dobuleCheckBtnMaker("删除收藏夹", data.name).catch(() => false)) {
+      let res = await piwigoMethod({
+        method: "pwg.collections.delete",
+        col_id: data.id,
+      });
+      repBackMessageShow(that, res);
+    }
+  },
+});
+
 export const mainDesktop = async () => {
   let res = await piwigoMethod({
     method: "pwg.tags.getList",
@@ -193,6 +209,15 @@ export const mainDesktop = async () => {
               method: "pwg.collections.getList",
             });
             return col.result.collections;
+          },
+          clickItemDetailFunc: (that, data) => {
+            openDrawerFormEasy(that, {
+              title: "收藏夹【" + data.name + "】",
+              queryItemTemplate: [tableCellTemplateMaker("名字", "name")],
+              noEdit: true,
+              data,
+              btnList: [删除收藏夹],
+            });
           },
           searchBtn: 新增收藏夹,
           outputKey: "collection",
