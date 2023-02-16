@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 14:42:25
+ * @LastEditors: huangjunchao 3363926843@qq.com
+ * @LastEditTime: 2023-02-14 16:24:55
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -224,7 +224,7 @@ const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
   premission: ["admin"],
   icon: "Plus",
   elType: "primary",
-});
+}, ["/web/usc/user/insert"], "创建新用户");
 
 /**
   * @name: 打开编辑弹窗
@@ -273,7 +273,7 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
     ["userManage_openDrawerForm"](that, drawerProps);
   },
   icon: "Setting",
-});
+}, ["/web/usc/user/update"], "编辑用户");
 
 /**
  * @name: roleBindBtn
@@ -341,7 +341,7 @@ const roleBindBtn = btnMaker("用户角色管理", btnActionTemplate.Function, {
       .getModuleApi()
     ["userManage_openDrawerForm"](that, drawerProps);
   },
-});
+}, ["/web/usc/role/cancelUser", "/web/usc/role/authUser"], "'取消角色绑定','新增角色绑定'");
 
 /**
  * @name: unitBindBtn
@@ -400,7 +400,8 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
             }
             return attr
           }
-        }))
+        }
+        ))
       ],
       data: { ...res.data },
       btnList: [closeBtn],
@@ -409,7 +410,7 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
       .getModuleApi()
     ["userManage_openDrawerForm"](that, drawerProps);
   },
-});
+}, ["/web/usc/unit/deleteUser", "/web/usc/unit/insertUserBatch"], "'删除部门','新增部门'");
 
 
 
@@ -450,7 +451,9 @@ export const mainDesktop = async () => {
     },
     icon: "Delete",
     elType: "danger",
-  });
+  }, ["/web/usc/unit/deleteUser"],
+    "批量删除成员按钮"
+  );
 
   const btnList = [addNewModel, selectedDeleteBtn];
 
@@ -468,7 +471,9 @@ export const mainDesktop = async () => {
       } as drawerProps
       openDrawerFormEasy(that, drawProps)
     }
-  })
+  }, ["/web/usc/unit/editUserModel"],
+    "打开用户信息弹窗按钮"
+  )
 
   const tableAction = tableCellTemplateMaker(
     "操作",

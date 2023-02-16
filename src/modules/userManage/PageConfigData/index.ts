@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 14:46:35
+ * @LastEditors: huangjunchao 3363926843@qq.com
+ * @LastEditTime: 2023-02-13 14:57:06
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -9,14 +9,14 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { apiManage } from "./apiManage";
-import { department } from "./departmenet";
+import { departmenetBtnList, department } from "./departmenet";
 import { pageConfigManage } from "./pageConfigManage";
 import { menuManage, menuManageBtnList } from "./menuManage";
 import { roleManage, roleManageBtnList } from "./roleManage";
 import { roleBindUserManage } from "./roleBindUserManage";
 import { mainDesktop, userManage } from "./main";
 import { actionLogManage } from "./actionLogManage";
-import { adminManage } from "./adminManage";
+import { adminManage, adminManageBtnList } from "./adminManage";
 import { stringAnyObj } from "@/modules/userManage/types";
 import { btnCellTemplate } from "../types";
 import { dictManageBtnList, dictManage } from "./dictManage";
@@ -50,6 +50,7 @@ const pageConfig = {
   department: {
     name: "部门管理",
     desktopData: department,
+    btnList: departmenetBtnList,
     ...base,
   },
   menuManage: {
@@ -89,6 +90,7 @@ const pageConfig = {
   adminManage: {
     name: "管理员权限编辑",
     desktopData: adminManage,
+    btnList: adminManageBtnList,
     ...base,
   },
 } as { [key: string]: desktopDataTemplate };
