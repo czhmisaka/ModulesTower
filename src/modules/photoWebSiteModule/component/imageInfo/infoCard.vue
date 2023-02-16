@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 00:41:33
+ * @LastEditTime: 2023-02-17 00:57:21
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -11,7 +11,6 @@
     }"
   >
     <el-card
-      @click="rate"
       :style="{
         margin: '6px',
       }"
