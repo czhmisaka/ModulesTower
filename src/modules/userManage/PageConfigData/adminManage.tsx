@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 11:13:12
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-02-13 11:27:37
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/adminManage.tsx
  */
 
@@ -21,10 +21,12 @@ import {
   DateCell,
   actionCell
 } from "@/modules/userManage/component/searchTable/searchTable";
-import { btnActionTemplate, formInputType, showType, stringAnyObj } from "@/modules/userManage/types";
+import { btnActionTemplate, formInputType, showType, stringAnyObj, btnCellTemplate } from "@/modules/userManage/types";
 import { btnMaker, } from "../component/searchTable/drawerForm";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
+import router from "../router";
+
 
 export const adminManage = async () => {
   const 管理员判断参数 = {
@@ -59,8 +61,11 @@ export const adminManage = async () => {
       } else {
         that.$message.danger(res["message"]);
       }
-    }
-  })
+    },
+  },
+    ["/web/usc/user/edit/admin"],
+    "新增管理员按钮"
+  )
 
   const 新增管理员弹窗 = btnMaker('新增管理员', btnActionTemplate.OpenDrawer, {
     icon: 'plus',
@@ -82,8 +87,11 @@ export const adminManage = async () => {
         }
       }))],
       btnList: [新增管理员]
-    }
-  })
+    },
+  },
+    ["/web/usc/user/page/org"],
+    "新增管理员弹窗按钮"
+  )
 
   const 取消管理员权限 = btnMaker('取消管理员权限',
     btnActionTemplate.Function, {
@@ -107,8 +115,11 @@ export const adminManage = async () => {
           }
         }
       })
-    }
-  })
+    },
+  },
+    ["/web/usc/user/edit/admin"],
+    "取消管理员权限按钮"
+  )
 
   const 搜索区域操作栏 = [新增管理员弹窗];
   const 列表右侧操作栏 = tableCellTemplateMaker('操作', 'action', actionCell([取消管理员权限], {
@@ -143,4 +154,9 @@ export const adminManage = async () => {
       .setPosition(0, 0)
       .setSize(12, 8),
   ] as gridCellTemplate[];
+
 };
+
+export const adminManageBtnList = [
+  //新增管理员
+]

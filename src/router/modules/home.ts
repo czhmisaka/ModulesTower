@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-14 03:31:37
+ * @LastEditTime: 2023-02-16 20:41:05
  * @FilePath: /configforpagedemo/src/router/modules/home.ts
  */
 import type { RouteConfigsTable } from "/#/index";

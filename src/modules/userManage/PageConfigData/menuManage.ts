@@ -60,6 +60,7 @@ import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { useModuleHook } from "@/store/modules/module";
 import { btnCellTemplate } from "../types";
+import { dobuleCheckBtnMaker } from "../component/searchTable/drawerForm";
 
 const typeToModule = {
   1: "模块",
@@ -393,22 +394,21 @@ const 删除按钮 = btnMaker(
     function: async (that, data) => {
       if (data.children && data.children.length > 0)
         return ElMessage.warning("【无法删除】：存在子节点");
-      ElMessageBox({
-        title: "确认删除【" + data.name + "】吗？",
-        type: "warning",
-        callback: async (action) => {
-          if (action == "confirm") {
-            let res = await post("/web/usc/menu/delete", {
-              id: data.id,
-            });
-            if (res.message == "成功") {
-              ElMessage.success(res.message);
-              if (that.close) that.close();
-              else refreshDesktop(that);
-            } else ElMessage.error(res.message);
-          }
-        },
-      });
+      let res = await dobuleCheckBtnMaker(
+        "删除节点",
+        "确认删除【" + data.name + "】吗？",
+        { type: "warning" }
+      ).catch((x) => {});
+      if (res) {
+        let res = await post("/web/usc/menu/delete", {
+          id: data.id,
+        });
+        if (res.message == "成功") {
+          ElMessage.success(res.message);
+          if (that.close) that.close();
+          else refreshDesktop(that);
+        } else ElMessage.error(res.message);
+      }
     },
   },
   ["/web/usc/menu/delete"],
@@ -429,7 +429,7 @@ const 自动生成按钮 = btnMaker(
         return x.path == urls[0];
       });
       const btnList = router.meta?.originData?.btnList;
-      if (btnList.length && btnList.length > 0)
+      if (btnList && btnList.length && btnList.length > 0)
         ElMessageBox({
           title:
             "确认在【" +

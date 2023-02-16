@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 20:26:52
+ * @LastEditTime: 2023-02-16 20:40:57
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -94,7 +94,18 @@ export function resetRouter() {
 }
 
 /** 路由白名单 */
-const whiteList = ["/login"];
+const whiteList = [
+  router
+    .getRoutes()
+    .filter((x) => x.meta["allPeopleCanSee"])
+    .map((x) => x.path),
+];
+
+/** 登录页面 */
+export const loginPage = router
+  .getRoutes()
+  .filter((x) => x.meta["loginPage"])
+  .map((x) => x.path)[0];
 
 router.beforeEach((to: toRouteType, _from, next) => {
   if (to.meta?.keepAlive) {
@@ -133,7 +144,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
       // 刷新
       if (
         usePermissionStoreHook().wholeMenus.length === 0 &&
-        to.path !== "/login"
+        to.path !== loginPage
       )
         initRouter().then((router: Router) => {
           if (!useMultiTagsStoreHook().getMultiTagsCache) {
@@ -160,11 +171,11 @@ router.beforeEach((to: toRouteType, _from, next) => {
       next();
     }
   } else {
-    if (to.path !== "/login") {
+    if (to.path !== loginPage) {
       if (whiteList.indexOf(to.path) !== -1) {
         next();
       } else {
-        next({ path: "/login" });
+        next({ path: loginPage });
       }
     } else {
       next();

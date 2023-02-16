@@ -40,6 +40,15 @@ inputElement[formInputType.input] = {
   },
 };
 
+inputElement[formInputType.mobile] = {
+  properties: (that, cell) => {
+    return {
+      type: "string",
+    };
+  },
+};
+
+
 inputElement[formInputType.number] = {
   properties: (that, cell) => {
     return {
@@ -49,6 +58,8 @@ inputElement[formInputType.number] = {
   },
 };
 
+
+
 inputElement[formInputType.datePicker] = {
   properties: (that, cell) => {
     return {
@@ -57,6 +68,48 @@ inputElement[formInputType.datePicker] = {
     };
   },
 };
+
+inputElement[formInputType.upload] = {
+  properties: (that, cell) => {
+    let properties = {
+      ...base(cell),
+      "ui:widget": "UploadWidget",
+      "ui:options": {
+        "action": cell.input.action || '/api/web/file/upload',
+      },
+    }
+    let attrs = {
+      responseFileUrl: (res) => {
+        return (res ? (res.data) : '')
+      },
+    }
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    })
+    return properties
+  }
+}
+
+inputElement[formInputType.uploadImage] = {
+  properties: (that, cell) => {
+    let properties = {
+      ...base(cell),
+      "ui:widget": "UploadWidget",
+      "ui:options": {
+        "action": cell.input.action || '/api/web/file/upload',
+      },
+    }
+    let attrs = {
+      responseFileUrl: (res) => {
+        return (res ? (res.data) : '')
+      },
+    }
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    })
+    return properties
+  }
+}
 
 inputElement[formInputType.datePickerRanger] = {
   properties: (that, cell) => {
@@ -429,11 +482,38 @@ inputElement[formInputType.botton] = {
   },
 };
 
+inputElement[formInputType.remoteDictSelect] = {
+  properties: async (that, cell) => {
+    const { dictKey } = cell.input;
+    const { getByKey } = useRemoteDictHook();
+    let inputOptions = await getByKey(dictKey) as {
+      [key: string]: any
+    }
+    let properties = {
+      ...base(cell),
+      type: "string",
+      inputOptions,
+      "ui:widget": "SelectWidget",
+      "ui:options": {
+        attrs: {
+          clearable: true,
+        },
+      },
+      enum: Object.keys(inputOptions),
+      enumNames: Object.keys(inputOptions).map(
+        (x) => inputOptions[x]
+      ),
+    }
+    return properties;
+  }
+}
+
 
 
 
 // 预计接入 griddesktop 展示部分数据
 import gridDesktop from '@/components/basicComponents/grid/index';
+import { useRemoteDictHook } from '@/store/modules/remoteDict';
 inputElement[formInputType.component] = {
   properties: async (that, cell) => {
     const { input } = cell;
