@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-14 16:00:45
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 16:52:03
+ * @LastEditTime: 2023-02-16 19:07:05
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userValueManage.ts
  */
 import {
@@ -25,6 +25,7 @@ import {
   searchCell,
   actionCell,
   showCell,
+  remoteDictSelectSearchCell,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import {
   btnActionTemplate,
@@ -54,11 +55,41 @@ export const userFieldTypeConfig = {
   number: "数字",
   datePicker: "日期",
   mobile: "手机号",
-  upload: "图片上传",
+  uploadImage: "图片上传",
   remoteDictSelect: "在线字典",
 };
+const valueListApi = "/web/usc/customize/field/list/";
 
-export const userFieldStorage = async () => {};
+/**
+ * @name: userFieldStorage
+ * @description: 获取用户表单中的额外字段
+ * @authors: CZH
+ * @Date: 2023-02-16 19:02:22
+ */
+export const userFieldStorage = async () => {
+  let res = await post(valueListApi, {});
+  const list = res.data;
+  let userFieldStorage = new SearchCellStorage([]);
+  list.map((cell) => {
+    let inputOptions = {};
+    if (cell.type == formInputType.remoteDictSelect) {
+      userFieldStorage.push(
+        tableCellTemplateMaker(
+          cell.name,
+          cell.key,
+          remoteDictSelectSearchCell(cell["fieldOptions"])
+        )
+      );
+    } else {
+      userFieldStorage.push(
+        tableCellTemplateMaker(cell.name, cell.key, {
+          ...searchCell(cell.type, inputOptions),
+        })
+      );
+    }
+  });
+  return userFieldStorage;
+};
 
 const 用户字段存储库 = new SearchCellStorage([
   tableCellTemplateMaker("字段名", "name"),
@@ -105,7 +136,7 @@ const 用户字段存储库 = new SearchCellStorage([
           });
           return res.data.list.map((x) => {
             return {
-              value: x.id + "",
+              value: x.key + "",
               label: x.name,
             };
           });
@@ -215,6 +246,16 @@ export const userValueManageBtnList = [
 ];
 
 export const userFieldList = async () => {
+  const showModel = btnMaker("测试展示表单", btnActionTemplate.Function, {
+    function: async (that, data) => {
+      let storage = await userFieldStorage();
+      let drawerProps = {
+        title: "",
+        queryItemTemplate: storage.getAll(),
+      };
+      openDrawerFormEasy(that, drawerProps);
+    },
+  });
   return [
     gridCellMaker(
       "searchTable",
@@ -229,7 +270,7 @@ export const userFieldList = async () => {
           searchItemTemplate: [],
           showItemTemplate: 用户字段存储库.getAll(["fieldOptions"]),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            let res = await post("/web/usc/customize/field/list/", {
+            let res = await post(valueListApi, {
               ...query,
             });
             if (!res.data["list"]) res.data["list"] = [];
@@ -239,7 +280,7 @@ export const userFieldList = async () => {
           autoSearch: true,
           searchKeyWithBaseData: ["unit"],
           defaultQuery: {},
-          btnList,
+          btnList: [...btnList, showModel],
         },
         isSettingTool: false,
       }

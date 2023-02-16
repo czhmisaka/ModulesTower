@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 16:17:24
+ * @LastEditTime: 2023-02-16 17:50:11
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -32,6 +32,7 @@ import {
   searchCell,
   staticSelectCell,
   actionCell,
+  remoteDictSelectSearchCell,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import {
   btnActionTemplate,
@@ -53,7 +54,7 @@ const gender = {
 
 const userTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("姓名", "name"),
-  tableCellTemplateMaker("性别", "gender", staticSelectCell(gender)),
+  tableCellTemplateMaker("性别", "gender", remoteDictSelectSearchCell('sys_user_sex')),
   tableCellTemplateMaker("icon", "icon", searchCell(formInputType.uploadImage)),
   tableCellTemplateMaker("简介", "description"),
   tableCellTemplateMaker("管理员", "adminFlag"),

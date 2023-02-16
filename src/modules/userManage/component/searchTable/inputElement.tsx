@@ -40,6 +40,15 @@ inputElement[formInputType.input] = {
   },
 };
 
+inputElement[formInputType.mobile] = {
+  properties: (that, cell) => {
+    return {
+      type: "string",
+    };
+  },
+};
+
+
 inputElement[formInputType.number] = {
   properties: (that, cell) => {
     return {
@@ -48,6 +57,8 @@ inputElement[formInputType.number] = {
     };
   },
 };
+
+
 
 inputElement[formInputType.datePicker] = {
   properties: (that, cell) => {
@@ -64,12 +75,32 @@ inputElement[formInputType.upload] = {
       ...base(cell),
       "ui:widget": "UploadWidget",
       "ui:options": {
-        "action": cell.input.action,
+        "action": cell.input.action || '/web/file/upload',
       },
     }
     let attrs = {
       responseFileUrl: (res) => {
-        console.log(res)
+        return (res ? (res.data) : '')
+      },
+    }
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    })
+    return properties
+  }
+}
+
+inputElement[formInputType.uploadImage] = {
+  properties: (that, cell) => {
+    let properties = {
+      ...base(cell),
+      "ui:widget": "UploadWidget",
+      "ui:options": {
+        "action": cell.input.action || '/web/file/upload',
+      },
+    }
+    let attrs = {
+      responseFileUrl: (res) => {
         return (res ? (res.data) : '')
       },
     }
