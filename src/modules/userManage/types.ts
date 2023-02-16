@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 22:51:27
+ * @LastEditTime: 2023-02-16 20:41:46
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -72,6 +72,7 @@ export interface desktopDataTemplate {
   permission?: stringAnyObj[];
   dataPermission?: stringAnyObj[];
   btnList?: btnCellTemplate[];
+  Fullscreen?: boolean;
 }
 
 /**
@@ -102,6 +103,8 @@ export interface PageDataTemplate extends stringAnyObj {
 }
 
 export interface tableCellOptionsInputPropertiesTemplate {
+  // 字典属性
+  dictKey?: string;
   // 表单属性
   propertiesOption?: stringAnyObj;
   // 输入值属性，不同输入方式有不同的数据解构方案
@@ -114,7 +117,7 @@ export interface tableCellOptionsInputPropertiesTemplate {
   onChangeFunc?: (
     that: stringAnyObj,
     data: stringAnyObj
-  ) => void | Promise<tableCellOptions[] | void> | tableCellOptions[];
+  ) => Promise<tableCellOptions[] | void> | tableCellOptions[] | void;
   // 一些style
   style?: stringAnyObj;
   [key: string]: any;
@@ -187,6 +190,7 @@ export enum formInputType {
   radioGroup = "radioGroup",
   radio = "radio",
   upload = "upload",
+  uploadImage = "uploadImage",
   mobile = "mobile",
   idCard = "idCard",
   treeSelect = "treeSelect",
@@ -196,6 +200,7 @@ export enum formInputType {
   botton = "botton",
   searchTable = "searchTable",
   component = "component",
+  remoteDictSelect = "remoteDictSelect",
 }
 
 /**

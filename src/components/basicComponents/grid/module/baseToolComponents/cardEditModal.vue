@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-28 14:50:13
+ * @LastEditTime: 2023-02-16 08:53:44
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -104,8 +104,8 @@
               :label="formItem.label"
             >
               <el-select v-model="premission[index + '_FormItem']" placeholder="">
-                <el-option :label="true" :value="true"></el-option>
-                <el-option :label="false" :value="false"></el-option>
+                <el-option :label="'true'" :value="true"></el-option>
+                <el-option :label="'false'" :value="false"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -365,11 +365,11 @@ export default defineComponent({
   height: 100%;
   position: fixed;
   z-index: -1;
-  opacity: 0;
+  opacity: 0.7;
   top: 0px;
   left: 0px;
   backdrop-filter: blur(10px);
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.05);
   transition: all 0.5s;
   display: flex;
   justify-content: center;
@@ -381,11 +381,15 @@ export default defineComponent({
 .open {
   opacity: 1;
   z-index: 100000;
+  transform: translate(0%);
   .formModalBox {
     transform: scale(1);
   }
 }
 
+.close {
+  transform: translate(-100%);
+}
 .formModalBox {
   transition: all 0.4s;
   position: absolute;

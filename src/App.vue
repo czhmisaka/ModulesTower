@@ -93,11 +93,11 @@ export default defineComponent({
   height: 6px;
 }
 *::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.02);
   border-radius: 3px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #409eff;
+  background: #e6e8eb;
   border-radius: 3px;
 }
 </style>

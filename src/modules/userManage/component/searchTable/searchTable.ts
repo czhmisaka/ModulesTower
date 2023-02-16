@@ -1,12 +1,15 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 11:12:35
+ * @LastEditTime: 2023-02-16 09:14:26
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import inputElement, { globalBaseCellDeal } from "./inputElement";
+import { useModuleHook } from "@/store/modules/module";
+import { useRemoteDictHook } from "@/store/modules/remoteDict";
+
 import {
   btnCellTemplate,
   stringAnyObj,
@@ -201,15 +204,39 @@ export const showCell = (
  * @Date: 2022-12-06 14:54:07
  */
 export const searchCell = (
-  formInputType: formInputType,
+  nowformInputType: formInputType,
   options?: tableCellOptionsInputPropertiesTemplate
 ): tableCellOptions => {
   let tableCellOption = {} as tableCellOptions;
   tableCellOption.input = {
-    type: formInputType,
+    type: nowformInputType,
     ...options,
   };
   return tableCellOption;
+};
+
+/**
+ * @name: 函数名
+ * @description: waitForWriting
+ * @authors: CZH
+ * @Date: 2023-02-13 18:06:59
+ */
+export const remoteDictSelectSearchCell = (dictKey: string) => {
+  let back = {
+    ...showCell(showType.func, {
+      showFunc: (data, key) => {
+        const remoteDictStore = useRemoteDictHook();
+        remoteDictStore.getByKey(dictKey)[data[key]];
+        return remoteDictStore.keyMap[dictKey]
+          ? remoteDictStore.keyMap[dictKey][data[key]]
+          : "";
+      },
+    }),
+    ...searchCell(formInputType.remoteDictSelect, {
+      dictKey,
+    }),
+  } as tableCellOptions;
+  return back;
 };
 
 /**
@@ -232,7 +259,7 @@ export const staticSelectCell = (
       ...inputProperties,
     }),
     ...showCell(showType.func, {
-      showFunc: (data, key) => inputOptions[data[key]],
+      showFunc: (data, key) => inputOptions[data[key] + ""],
       ...showOptions,
     }),
   };
@@ -267,7 +294,7 @@ export const tableCellTemplateMaker = (
   key: string,
   options: tableCellOptions = {}
 ): tableCellTemplate => {
-  return {
+  let back = {
     label,
     key,
     table: {
@@ -284,6 +311,7 @@ export const tableCellTemplateMaker = (
     },
     ...options,
   };
+  return back;
 };
 
 /**

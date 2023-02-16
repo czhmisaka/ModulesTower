@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 17:34:53
- * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
+ * @LastEditTime: 2023-02-16 20:43:37
+ * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";

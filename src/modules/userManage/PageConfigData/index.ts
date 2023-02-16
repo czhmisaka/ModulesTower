@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 15:27:02
+ * @LastEditTime: 2023-02-16 20:40:46
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -15,6 +15,8 @@ import { stringAnyObj } from "@/modules/userManage/types";
 import { btnCellTemplate } from "../types";
 import { dictManageBtnList, dictManage } from "./dictManage";
 
+import { userFieldList } from "./user/userValueManage";
+import { desktopDataTemplate } from "@/modules/userManage/types";
 const base = {
   gridColNum: 12,
   cusStyle: {

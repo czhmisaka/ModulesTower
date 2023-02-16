@@ -1,17 +1,13 @@
 <!--
  * @Date: 2022-05-30 10:48:53
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 21:37:58
+ * @LastEditTime: 2023-02-15 19:53:23
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue
 -->
 
 <template>
   <div
-    class="background"
-    :style="{
-      zIndex: modalStatus.isOpen ? 10000000 : -1,
-      opacity: modalStatus.isOpen ? '1' : '0',
-    }"
+    :class="'background ' + (modalStatus.isOpen ? 'open' : 'close')"
     @click="modalStatus.isOpen = false"
   >
     <div class="content" @click.stop="() => {}">
@@ -46,6 +42,7 @@ import {
   gridCellTemplate,
   CardComponentTemplate,
 } from "../dataTemplate";
+import { translate } from "element-plus";
 export default defineComponent({
   props: ["sizeUnit", "gridList", "componentLists"],
   components: {
@@ -65,6 +62,7 @@ export default defineComponent({
   },
   methods: {
     open() {
+      console.log("fuckisOpen");
       this.modalStatus.isOpen = true;
     },
 
@@ -109,17 +107,18 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .background {
-  z-index: 1000;
+  width: 100%;
+  height: 100%;
   position: fixed;
-  top: 0%;
-  left: 0%;
-  width: 100vw;
-  height: 100vh;
-  opacity: 0;
-  backdrop-filter: blur(5px);
-  background-color: rgba(0, 0, 0, 0.6);
   z-index: -1;
-  transition: all 0.4s;
+  opacity: 0.7;
+  top: 0px;
+  left: 0px;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: all 0.5s;
+  display: flex;
+  justify-content: center;
   .content {
     width: 80vw;
     height: 80vh;
@@ -145,6 +144,7 @@ export default defineComponent({
       text-align: center;
     }
   }
+
   .content::-webkit-scrollbar {
     width: 4px;
     height: 10px;
@@ -159,5 +159,17 @@ export default defineComponent({
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: #555;
   }
+}
+.open {
+  opacity: 1;
+  z-index: 100000;
+  transform: translate(0%);
+  .formModalBox {
+    transform: scale(1);
+  }
+}
+
+.close {
+  transform: translate(100%);
 }
 </style>
