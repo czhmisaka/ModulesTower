@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 00:07:11
+ * @LastEditTime: 2023-02-16 23:32:30
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -68,21 +68,26 @@
       </el-descriptions>
     </el-card>
     <el-card
-      v-if="categoryInfo['相册名'] && baseData['category']"
+      v-if="categoryInfo.length > 0"
       title="相册信息"
       :style="elCardInfo.style"
       :body-style="elCardInfo.bodyStyle"
     >
-      <el-descriptions :column="1" size="small" v-if="baseData['image']" border>
-        <el-descriptions-item
-          v-for="item in Object.keys(categoryInfo)"
-          :align="'left'"
-          :label="item"
-          label-align="left"
+      <el-tag class="floatTag" v-for="item in categoryInfo" effect="dark" type="info"
+        >相册【{{ item.name }}】</el-tag
+      >
+    </el-card>
+    <el-card title="操作" :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle">
+      <div v-for="item in btnList" style="float: left; margin-right: 6px">
+        <el-button
+          :loading="item.isLoading"
+          @click="btnClick(item)"
+          :type="item.elType"
+          :icon="item.icon"
         >
-          {{ categoryInfo[item] }}
-        </el-descriptions-item>
-      </el-descriptions>
+          {{ item.label }}
+        </el-button>
+      </div>
     </el-card>
   </cardBg>
 </template>
@@ -91,7 +96,14 @@
 import { defineComponent, watch } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import { get, post, piwigoPost } from "@/utils/api/requests";
-
+import {
+  btnActionTemplate,
+  stringAnyObj,
+  btnCellTemplate,
+  showType,
+  tableCellTemplate,
+  tableCellOptions,
+} from "@/modules/userManage/types";
 import {
   componentInfo,
   inputType,
@@ -132,7 +144,7 @@ export default defineComponent({
 
   baseProps: {},
 
-  props: ["baseData", "sizeUnit", "image", "watchKeyForCategory"],
+  props: ["baseData", "sizeUnit", "image", "watchKeyForCategory", "btnList"],
   components: { cardBg, waterFallItem },
   watch: {
     "baseData.image": {
@@ -157,11 +169,12 @@ export default defineComponent({
         修改日期尺寸: "",
         rate: 0,
       },
-      categoryInfo: {},
+      categoryInfo: [] as any[],
 
       elCardInfo: {
         style: {
           margin: "6px",
+          textAlign: "left",
           marginTop: "3px",
         },
         bodyStyle: {
@@ -199,14 +212,29 @@ export default defineComponent({
         image_id: this.baseData.image.id,
       });
       this.imageInfo.rate = resInfo.result.rates.count;
-      const category = this.baseData[this.watchKeyForCategory];
-      if (category["name"])
-        this.categoryInfo = {
-          相册名: category["name"],
-          级别: category["rank"],
-        };
-      else this.categoryInfo = {};
+      this.categoryInfo = resInfo.result.categories;
     },
+
+    /**
+     * @name: btnClick
+     * @description: 按钮点击事件
+     * @authors: CZH
+     * @Date: 2022-12-02 09:27:05
+     * @param {*} btn
+     */
+    async btnClick(btn: btnCellTemplate) {
+      if (btn.type == btnActionTemplate.OpenDrawer) {
+        this.drawerData = btn.drawerProps;
+        this.$refs["drawer"].open();
+      } else if (btn.type == btnActionTemplate.Function && btn.function) {
+        let that = this;
+        await btn.function(that, this.formData);
+      } else if (btn.type == btnActionTemplate.Url) {
+        window.open(btn.url);
+      }
+    },
+
+    // 进入颜色选择
     async colorClick(color) {
       const that = this;
       changeCardPosition(that, {
@@ -291,5 +319,10 @@ export default defineComponent({
     width: 20%;
     height: 15px;
   }
+}
+.floatTag {
+  float: left;
+  margin-right: 3px;
+  margin-bottom: 3px;
 }
 </style>

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 15:37:08
+ * @LastEditTime: 2023-02-16 22:25:41
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -29,15 +29,15 @@ import { tableCellTemplateMaker } from "@/modules/userManage/component/searchTab
 import { repBackMessageShow } from "@/modules/userManage/component/searchTable/drawerForm";
 import { stringAnyObj } from "../../userManage/types";
 let baseData = {} as { [key: string]: any };
+let lastFunc = -1;
+
+// 获取图片列表
 const getFunc = async function (that, data) {
-  let { limit, offset, query } = data;
-  let { tags, name } = query;
   let res = {} as stringAnyObj;
-  if (
-    JSON.stringify(baseData["category"]) !=
-    JSON.stringify(that.baseData["category"])
-  ) {
-    res = await post(
+  const getCategory = async (data) => {
+    let { limit, offset, query } = data;
+    let { tags, name } = query;
+    let res = await post(
       `/images?offset=${offset}&limit=${limit}${
         Object.keys(query).length == 0 && data.category?.id
           ? "&catrgory=" + data.category?.id
@@ -45,17 +45,18 @@ const getFunc = async function (that, data) {
       }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}`,
       []
     );
-  } else if (
-    JSON.stringify(baseData["collection"]) !=
-    JSON.stringify(that.baseData["collection"])
-  ) {
+    return res;
+  };
+  const getCollection = async (data) => {
+    let { limit, offset, query } = data;
+    let { tags, name } = query;
     let resp = await piwigoMethod({
       col_id: data["collection"].id,
       method: "pwg.collections.getImages",
       per_page: limit,
       page: Math.floor(offset / limit),
     });
-    res = {
+    return {
       data: {
         list: resp.result.images.map((x) => {
           return {
@@ -65,8 +66,23 @@ const getFunc = async function (that, data) {
         }),
       },
     };
-  }
+  };
+  if (
+    JSON.stringify(baseData["category"]) !=
+    JSON.stringify(that.baseData["category"])
+  ) {
+    lastFunc = 1;
+    res = await getCategory(data);
+  } else if (
+    JSON.stringify(baseData["collection"]) !=
+    JSON.stringify(that.baseData["collection"])
+  ) {
+    lastFunc = 2;
+    res = await getCollection(data);
+  } else if (lastFunc == 1) res = await getCategory(data);
+  else if (lastFunc == 2) res = await getCollection(data);
   baseData = JSON.parse(JSON.stringify(that.baseData));
+  console.log(res, "asd");
   return res.data.list.map((x) => {
     let path = x.path.replace("./", "/");
     return {
