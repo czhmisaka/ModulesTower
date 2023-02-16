@@ -75,7 +75,7 @@ inputElement[formInputType.upload] = {
       ...base(cell),
       "ui:widget": "UploadWidget",
       "ui:options": {
-        "action": cell.input.action || '/web/file/upload',
+        "action": cell.input.action || '/api/web/file/upload',
       },
     }
     let attrs = {
@@ -96,7 +96,7 @@ inputElement[formInputType.uploadImage] = {
       ...base(cell),
       "ui:widget": "UploadWidget",
       "ui:options": {
-        "action": cell.input.action || '/web/file/upload',
+        "action": cell.input.action || '/api/web/file/upload',
       },
     }
     let attrs = {

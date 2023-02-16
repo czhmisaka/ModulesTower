@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 17:50:11
+ * @LastEditTime: 2023-02-16 19:37:49
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -45,6 +45,8 @@ import { userInfoCard } from '@/modules/userManage/PageConfigData/user/userInfo'
 import { openDrawerFormEasy } from '../component/searchTable/drawerForm';
 
 import { departmentDrawerprops, 新增部门 } from './departmenet'
+import { userFieldStorage } from "./user/userValueManage";
+import { repBackMessageShow } from '@/modules/userManage/component/searchTable/drawerForm';
 
 // 性别
 const gender = {
@@ -178,6 +180,24 @@ const searchTable = new SearchCellStorage([
 ]);
 
 
+const submitUserInfo = btnMaker("提交", btnActionTemplate.Function, {
+  icon: "Position",
+  function: async (that, data) => {
+    let res = await post(
+      "/web/usc/user/" + (data.id ? "update" : "insert"),
+      {
+        ...data,
+        ext: JSON.stringify(data)
+      }
+    );
+    repBackMessageShow(that, res)
+  },
+  premission: [
+    '/web/usc/user/update',
+    '/web/usc/user/insert'
+  ],
+})
+
 /**
   * @name: 打开新增弹窗
   * @description: waitForWriting
@@ -188,35 +208,14 @@ const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
   function: async (that, data) => {
     let drawerProps = {
       title: "创建新用户",
-      queryItemTemplate: userTableCellStorage.getByKeyArr([
+      queryItemTemplate: [...userTableCellStorage.getByKeyArr([
         "name",
-        "gender",
         "icon",
-        "description",
-        "mail",
-        "mobile",
-        "birthday",
-        "idCard",
-        "unitIds",
       ]),
+      ... await (await userFieldStorage()).getAll()
+      ],
       btnList: [
-        btnMaker("提交", btnActionTemplate.Function, {
-          icon: "Position",
-          function: async (that, data) => {
-            let res = await post(
-              "/web/usc/user/" + (data.id ? "update" : "insert"),
-              data
-            );
-            ElMessage[res.message == "成功" ? "success" : "error"](
-              res.message
-            );
-            if (res.message == "成功" && that.close) that.close();
-          },
-          premission: [
-            '/web/usc/user/update',
-            '/web/usc/user/insert'
-          ],
-        }),
+        submitUserInfo
       ],
       data: {}
     };
@@ -240,36 +239,19 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
     data.gender = data.gender + ''
     let drawerProps = {
       title: "用户编辑",
-      queryItemTemplate: userTableCellStorage.getByKeyArr([
+      queryItemTemplate: [...userTableCellStorage.getByKeyArr([
         "name",
-        "gender",
         "icon",
-        "description",
-        "mail",
-        "mobile",
-        "birthday",
-        "idCard",
       ]),
-      btnList: [
-        btnMaker("提交", btnActionTemplate.Function, {
-          icon: "Position",
-          function: async (that, data) => {
-            let res = await post(
-              "/web/usc/user/" + (data.id ? "update" : "insert"),
-              data
-            );
-            ElMessage[res.message == "成功" ? "success" : "error"](
-              res.message
-            );
-            if (res.message == "成功" && that.close) that.close();
-          },
-          premission: [
-            '/web/usc/user/update',
-            '/web/usc/user/insert'
-          ],
-        }),
+      ... await (await userFieldStorage()).getAll()
       ],
-      data
+      btnList: [
+        submitUserInfo
+      ],
+      data: {
+        ...(JSON.parse(data.ext)),
+        ...data,
+      }
     };
     that.$modules
       .getModuleApi()
