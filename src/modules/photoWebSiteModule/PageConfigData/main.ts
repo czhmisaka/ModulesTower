@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 22:25:41
+ * @LastEditTime: 2023-02-16 23:40:53
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -12,6 +12,11 @@ import {
   cardOnChangeType,
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
+
+import {
+  btnMaker,
+  closeBtn,
+} from "@/modules/userManage/component/searchTable/drawerForm";
 import {
   changeVisible,
   changeCardSize,
@@ -23,7 +28,6 @@ import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/def
 import { xor } from "lodash";
 import { openDrawerFormEasy } from "../../userManage/component/searchTable/drawerForm";
 import { openDrawerForm } from "../../userManage/component/searchTable/drawerForm";
-import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
 import { btnActionTemplate } from "@/modules/userManage/types";
 import { tableCellTemplateMaker } from "@/modules/userManage/component/searchTable/searchTable";
 import { repBackMessageShow } from "@/modules/userManage/component/searchTable/drawerForm";
@@ -113,6 +117,9 @@ const 新增收藏夹 = btnMaker("新增收藏夹", btnActionTemplate.OpenDrawer
     ],
   },
 });
+
+// 图片信息操作列表
+const InfoCardBtnList = [];
 
 export const mainDesktop = async () => {
   let res = await piwigoMethod({
@@ -235,6 +242,7 @@ export const mainDesktop = async () => {
       },
       {
         props: {
+          btnList: InfoCardBtnList,
           watchKeyForCategory: "category",
         },
       }
@@ -306,77 +314,3 @@ export const mainDesktop = async () => {
       .setSize(2, 2),
   ] as gridCellTemplate[];
 };
-
-export const mobile = async () =>
-  [
-    gridCellMaker(
-      "upload",
-      "上传",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "photoWebSiteModule_upload",
-      },
-      {}
-    )
-      .setPosition(0, 0)
-      .setSize(1, 2),
-
-    gridCellMaker(
-      "userManage_menuListRemote",
-      "相册列表",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "userManage_menuList",
-      },
-      {
-        props: {
-          noSearch: true,
-          treeDataFunc: async (that) => {
-            let res = await get("/categories", {});
-            return res.data;
-          },
-          outputKey: "category",
-          defaultProps: {
-            label: "name",
-            children: "children",
-          },
-        },
-      }
-    )
-      .setPosition(0, 17)
-      .setSize(4, 3),
-
-    gridCellMaker(
-      "waterFall",
-      "瀑布流图片展示功能",
-      {},
-      {
-        name: "photoWebSiteModule_waterfall",
-        type: cardComponentType.componentList,
-      },
-      {
-        props: {
-          watchKeyForCategory: "category",
-          getFunc: getFunc,
-        },
-      }
-    )
-      .setPosition(0, 2)
-      .setSize(4, 15),
-    gridCellMaker(
-      "InfoCard",
-      "图片信息",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "photoWebSiteModule_infoCard",
-      },
-      {
-        props: {},
-      }
-    )
-      .setPosition(1, 0)
-      .setSize(3, 2),
-  ] as gridCellTemplate[];
