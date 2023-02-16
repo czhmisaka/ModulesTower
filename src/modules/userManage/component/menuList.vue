@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 20:41:41
- * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
+ * @LastEditTime: 2023-02-17 00:10:11
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
 -->
 <template>
   <cardBg
@@ -302,6 +302,7 @@ export default defineComponent({
   }
   .content {
     width: 100%;
+    min-height: 100%;
     height: auto;
     overflow-y: auto;
     overflow-x: hidden;

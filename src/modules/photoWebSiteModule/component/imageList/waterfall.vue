@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 20:46:37
+ * @LastEditTime: 2023-02-17 00:54:59
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -160,6 +160,7 @@ export default defineComponent({
           this.data.offset = 0;
           this.rowList = [[]];
           imageListForReSize = [];
+          this.isLoading = false;
           await this.getImgList(back, true);
         }
       },
@@ -208,6 +209,8 @@ export default defineComponent({
       preData: "",
       nowShowType: showType.waterFall as showType,
       showType,
+
+      isLoading: false,
     };
   },
   methods: {
@@ -325,7 +328,9 @@ export default defineComponent({
       isInit = false
     ) {
       const that = this;
+      if (that.isLoading) return null;
       if (!val) return null;
+      that.isLoading = true;
       let { limit, offset } = that.data;
       let list = await this.getFunc(that, {
         ...val,
@@ -351,6 +356,7 @@ export default defineComponent({
       });
       imageListForReSize = imageListForReSize.concat(list);
       this.pkFunc(list);
+      that.isLoading = false;
     },
 
     pkFunc(lists, that = this) {

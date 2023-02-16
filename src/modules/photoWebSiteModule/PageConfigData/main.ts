@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 23:40:53
+ * @LastEditTime: 2023-02-17 00:56:37
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -32,6 +32,11 @@ import { btnActionTemplate } from "@/modules/userManage/types";
 import { tableCellTemplateMaker } from "@/modules/userManage/component/searchTable/searchTable";
 import { repBackMessageShow } from "@/modules/userManage/component/searchTable/drawerForm";
 import { stringAnyObj } from "../../userManage/types";
+
+// 图片信息操作列表
+import { InfoCardBtnList } from "./InfoCardBtnList";
+import { setData } from "../../../components/basicComponents/grid/module/cardApi/index";
+
 let baseData = {} as { [key: string]: any };
 let lastFunc = -1;
 
@@ -77,16 +82,21 @@ const getFunc = async function (that, data) {
   ) {
     lastFunc = 1;
     res = await getCategory(data);
+    setData(that, {
+      collection: {},
+    });
   } else if (
     JSON.stringify(baseData["collection"]) !=
     JSON.stringify(that.baseData["collection"])
   ) {
     lastFunc = 2;
     res = await getCollection(data);
+    setData(that, {
+      category: {},
+    });
   } else if (lastFunc == 1) res = await getCategory(data);
   else if (lastFunc == 2) res = await getCollection(data);
   baseData = JSON.parse(JSON.stringify(that.baseData));
-  console.log(res, "asd");
   return res.data.list.map((x) => {
     let path = x.path.replace("./", "/");
     return {
@@ -117,9 +127,6 @@ const 新增收藏夹 = btnMaker("新增收藏夹", btnActionTemplate.OpenDrawer
     ],
   },
 });
-
-// 图片信息操作列表
-const InfoCardBtnList = [];
 
 export const mainDesktop = async () => {
   let res = await piwigoMethod({

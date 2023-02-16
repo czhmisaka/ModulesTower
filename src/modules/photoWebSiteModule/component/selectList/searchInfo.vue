@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 23:59:59
+ * @LastEditTime: 2023-02-17 00:14:40
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -25,6 +25,7 @@
         <el-option v-for="tag in tagList" :value="tag.id" :label="tag.name"></el-option>
       </el-select>
       <el-button
+        v-if="Object.keys(query).length > 0"
         :style="{ margin: `${(sizeUnit.blockSize - 30) / 2}px 0px`, float: 'right' }"
         @click="clear"
         >清空</el-button
@@ -71,6 +72,8 @@ export default defineComponent({
       handler(val) {
         let value = JSON.parse(JSON.stringify(val));
         if (value.tags && value.tags.length == 0) delete value.tags;
+        console.log(value.name, "asd");
+        if ("name" in value && value.name == "") delete value.name;
         let data = {};
         data[this.outputKey] = value;
         const that = this;

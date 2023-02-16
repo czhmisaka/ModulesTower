@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 23:38:08
+ * @LastEditTime: 2023-02-17 00:41:33
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -77,13 +77,19 @@
         >相册【{{ item.name }}】</el-tag
       >
     </el-card>
-    <el-card title="操作" :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle">
-      <div v-for="item in btnList" style="float: left; margin-right: 6px">
+    <el-card
+      title="操作"
+      :style="elCardInfo.style"
+      :body-style="{ ...elCardInfo.bodyStyle, padding: '0px' }"
+      v-if="imageInfo['尺寸']"
+    >
+      <div v-for="item in btnList" class="floatTag" style="margin: 3px; margin-top: 2px">
         <el-button
           :loading="item.isLoading"
           @click="btnClick(item)"
           :type="item.elType"
           :icon="item.icon"
+          size="small"
         >
           {{ item.label }}
         </el-button>
@@ -159,6 +165,7 @@ export default defineComponent({
 
   data: () => {
     return {
+      data: {},
       tagList: [],
       colorList: [] as string[],
       imageInfo: {
@@ -211,6 +218,7 @@ export default defineComponent({
         method: "pwg.images.getInfo",
         image_id: this.baseData.image.id,
       });
+      this.data = resInfo.result;
       this.imageInfo.rate = resInfo.result.rates.count;
       this.categoryInfo = resInfo.result.categories;
     },
@@ -228,7 +236,7 @@ export default defineComponent({
         this.$refs["drawer"].open();
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
-        await btn.function(that, this.formData);
+        await btn.function(that, this.data);
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
