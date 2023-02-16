@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 00:28:34
+ * @LastEditTime: 2023-02-15 15:37:08
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -49,7 +49,6 @@ const getFunc = async function (that, data) {
     JSON.stringify(baseData["collection"]) !=
     JSON.stringify(that.baseData["collection"])
   ) {
-    console.log(data, "asd");
     let resp = await piwigoMethod({
       col_id: data["collection"].id,
       method: "pwg.collections.getImages",
