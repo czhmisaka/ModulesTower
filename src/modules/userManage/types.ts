@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 22:26:49
+ * @LastEditTime: 2023-02-16 08:58:57
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -186,7 +186,7 @@ export enum formInputType {
   timePickerRanger = "timePickerRanger",
   radioGroup = "radioGroup",
   radio = "radio",
-  upload = "upload",
+  uploadImage = "uploadImage",
   mobile = "mobile",
   idCard = "idCard",
   treeSelect = "treeSelect",

@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-14 16:00:45
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 19:53:36
+ * @LastEditTime: 2023-02-16 08:58:46
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userValueManage.ts
  */
 import {
@@ -82,7 +82,7 @@ const 用户字段存储库 = new SearchCellStorage([
   tableCellTemplateMaker(
     "上传测试",
     "fieldOptions",
-    searchCell(formInputType.upload, {
+    searchCell(formInputType.uploadImage, {
       action: "/api/web/file/upload",
     })
   ),

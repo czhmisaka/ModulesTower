@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 19:03:42
+ * @LastEditTime: 2023-02-16 08:53:44
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -104,8 +104,8 @@
               :label="formItem.label"
             >
               <el-select v-model="premission[index + '_FormItem']" placeholder="">
-                <el-option :label="true" :value="true"></el-option>
-                <el-option :label="false" :value="false"></el-option>
+                <el-option :label="'true'" :value="true"></el-option>
+                <el-option :label="'false'" :value="false"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
