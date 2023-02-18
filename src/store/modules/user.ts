@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 05:22:14
+ * @LastEditTime: 2023-02-19 06:02:34
  * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -64,30 +64,8 @@ export const useUserStore = defineStore({
           method: "pwg.session.login",
           ...query,
         });
-        let res = await piwigoMethod({
-          method: "pwg.session.getStatus",
-        });
-        res = {
-          success: res.stat == "ok",
-          data: {
-            ...res.result,
-            token: res.result.pwg_token,
-          },
-        };
-        if (res && res.data) {
-          let data = {
-            ...res.data,
-            accessToken: res.data.token,
-            refreshToken: res.data.token,
-            username: query.username,
-            roles: ["admin"],
-            expires: new Date(new Date().getTime() + 19999999),
-          };
-          this.options = data;
-          this.isAdminFlag = res.data.loginAdminFlag;
-          setToken(data);
-          resolve(data);
-        }
+        let data = await this.loadOption();
+        resolve(data);
       });
     },
 
@@ -126,10 +104,19 @@ export const useUserStore = defineStore({
           roles: ["admin"],
           expires: new Date(new Date().getTime() + 19999999),
         };
-        this.options = data;
+        let res_userInfo = await piwigoMethod({
+          method: "pwg.users.getList",
+          username: data.username,
+        });
+        this.options = {
+          ...data,
+          ...res_userInfo.result.users[0],
+        };
         this.isAdminFlag = res.data.loginAdminFlag;
-        setToken(data);
+        setToken(this.options);
+        return this.options;
       }
+      return {};
     },
 
     /** 刷新`token` */

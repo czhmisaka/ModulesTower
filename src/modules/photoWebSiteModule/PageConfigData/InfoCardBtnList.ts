@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-02-16 23:41:40
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-02-19 06:07:39
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
+ */
 import {
   btnMaker,
   repBackMessageShow,
@@ -11,6 +17,7 @@ import { tableCellTemplateMaker } from "@/modules/userManage/component/searchTab
 import { searchCell } from "../../userManage/component/searchTable/searchTable";
 import { piwigoMethod } from "@/utils/api/requests";
 import { openDrawerFormEasy } from "../../userManage/component/searchTable/drawerForm";
+import { useUserStoreHook } from "@/store/modules/user";
 
 const 提交 = btnMaker("确定", btnActionTemplate.Function, {
   elType: "primary",
@@ -39,10 +46,13 @@ export const 收藏按钮 = btnMaker("收藏", btnActionTemplate.Function, {
               let attr = {
                 multiple: false,
               };
+              const user = useUserStoreHook();
+
               attr["remoteMethod"] = async (query) => {
                 let res = await piwigoMethod({
                   method: "pwg.collections.getList",
                   name: query,
+                  user_id: user.getOptions().id,
                 });
                 return res.result.collections.map((x) => {
                   return {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 04:58:13
+ * @LastEditTime: 2023-02-19 05:38:40
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -37,6 +37,7 @@ import { stringAnyObj } from "../../userManage/types";
 import { InfoCardBtnList } from "./InfoCardBtnList";
 import { setData } from "../../../components/basicComponents/grid/module/cardApi/index";
 import { dobuleCheckBtnMaker } from "../../userManage/component/searchTable/drawerForm";
+import { useUserStoreHook } from "@/store/modules/user";
 
 let baseData = {} as { [key: string]: any };
 let lastFunc = -1;
@@ -204,8 +205,11 @@ export const mainDesktop = async () => {
       {
         props: {
           treeDataFunc: async (that) => {
+            const user = useUserStoreHook();
+            console.log(user.getOptions(), "asd user.getOptions()");
             let col = await piwigoMethod({
               method: "pwg.collections.getList",
+              user_id: user.getOptions().id,
             });
             return col.result.collections;
           },
