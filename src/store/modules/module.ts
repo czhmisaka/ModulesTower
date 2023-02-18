@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 05:23:06
+ * @LastEditTime: 2023-02-19 06:43:44
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -12,6 +12,7 @@ import { useRouter } from "vue-router";
 
 import {
   flatChildrenArr,
+  getAction,
   getModuleFromView,
   modulesCellTemplate,
 } from "@/router/util";
@@ -167,9 +168,8 @@ export const moduleStore = defineStore({
       this.moduleList = moduleList
         .filter(Boolean)
         .sort((a, b) => a.orderNumber - b.orderNumber);
-
-      this.nowModule = this.moduleList[0];
-      // this.nowModule = this.routerBackup;
+      // this.nowModule = this.moduleList[0];
+      this.nowModule = { children: this.routerBackup };
     },
 
     initRouterBackup() {

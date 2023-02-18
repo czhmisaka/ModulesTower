@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 20:41:15
- * @FilePath: /configforpagedemo/src/utils/api/admin/routes.ts
+ * @LastEditTime: 2023-02-19 06:43:48
+ * @FilePath: /ConfigForDesktopPage/src/utils/api/admin/routes.ts
  */
 import { useModuleHook } from "@/store/modules/module";
 import { http } from "../../http";
@@ -27,10 +27,9 @@ export const getAsyncRoutes = async (noRefresh: boolean = false) => {
     // });
     // data.filter(Boolean);
     const module = useModuleHook();
-    module.init([]);
+    await module.init([]);
     return {
-      // data: module.nowModule.children || [],
-      data: [],
+      data: module.nowModule.children || [],
     };
   }
 };

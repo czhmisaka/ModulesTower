@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 05:38:40
+ * @LastEditTime: 2023-02-19 06:29:39
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -206,7 +206,6 @@ export const mainDesktop = async () => {
         props: {
           treeDataFunc: async (that) => {
             const user = useUserStoreHook();
-            console.log(user.getOptions(), "asd user.getOptions()");
             let col = await piwigoMethod({
               method: "pwg.collections.getList",
               user_id: user.getOptions().id,
