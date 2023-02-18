@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 19:42:59
+ * @LastEditTime: 2023-02-19 05:23:06
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -17,6 +17,7 @@ import {
 } from "@/router/util";
 import { RouteConfigsTable, routerMeta } from "../../../types";
 import { get } from "@/utils/api/requests";
+import { useUserStoreHook } from "@/store/modules/user";
 
 let licenseMap = {};
 let showAbleKeyMap = {};
@@ -146,11 +147,14 @@ export const moduleStore = defineStore({
     },
   }),
   actions: {
-    init(resData) {
+    async init(resData) {
       let moduleList = [];
       // get("/web/usc/user/select/loginUser", {}).then((res) => {
       //   this.userInfo = res.data;
       // });
+
+      const user = useUserStoreHook();
+      await user.loadOption();
 
       // 注入各个模块的展示界面
       this.initRouterBackup();

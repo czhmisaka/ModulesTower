@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 00:57:21
+ * @LastEditTime: 2023-02-18 20:05:52
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -11,9 +11,7 @@
     }"
   >
     <el-card
-      :style="{
-        margin: '6px',
-      }"
+      :style="elCardInfo.style"
       :body-style="{
         padding: '0px',
         paddingBottom: '-5px',
@@ -181,7 +179,7 @@ export default defineComponent({
         style: {
           margin: "6px",
           // textAlign: "left",
-          marginTop: "3px",
+          marginRight: "0px",
         },
         bodyStyle: {
           padding: "3px",

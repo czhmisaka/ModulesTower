@@ -1,15 +1,14 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 04:49:44
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
+ * @LastEditTime: 2023-02-19 05:08:43
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/index.ts
  */
 
-import { mainDesktop } from "./main";
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { isValidKey } from "@/utils/index";
+import { tagManage } from "./tagManage";
 
-import { PageConfig as ManageOnlyPageConfig } from "./managerOnly";
 export interface desktopDataTemplate {
   name: string;
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -22,28 +21,16 @@ export interface desktopDataTemplate {
 }
 
 const pageConfig = {
-  main: {
-    name: "图库",
-    desktopData: mainDesktop,
+  tagManage: {
+    name: "标签管理",
+    desktopData: tagManage,
     gridColNum: 12,
     cusStyle: {
       wholeScreen: true,
-      maxRows: 12,
-      margin: 12,
+      maxRows: 8,
+      margin: 6,
     },
   },
-  main1: {
-    name: "全屏图库",
-    desktopData: mainDesktop,
-    gridColNum: 12,
-    cusStyle: {
-      wholeScreen: true,
-      maxRows: 12,
-      margin: 12,
-      Fullscreen: true,
-    },
-  },
-  ...ManageOnlyPageConfig,
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

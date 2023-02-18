@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 20:43:37
- * @FilePath: /configforpagedemo/src/store/modules/user.ts
+ * @LastEditTime: 2023-02-19 05:22:14
+ * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
@@ -24,7 +24,6 @@ import { piwigoMethod, piwigoPost } from "../../utils/api/requests";
 
 import { loginPage } from "@/router/index";
 
-sessionStorage;
 export const useUserStore = defineStore({
   id: "pure-user",
   state: (): userType => ({
@@ -75,13 +74,6 @@ export const useUserStore = defineStore({
             token: res.result.pwg_token,
           },
         };
-        // let res = {
-        //   success: true,
-        //   data: {
-        //     token: "asd",
-        //     username: "fun",
-        //   },
-        // };
         if (res && res.data) {
           let data = {
             ...res.data,
@@ -113,6 +105,31 @@ export const useUserStore = defineStore({
     /** 获取用户详情 */
     getOptions() {
       return this.options;
+    },
+
+    async loadOption() {
+      let res = await piwigoMethod({
+        method: "pwg.session.getStatus",
+      });
+      res = {
+        success: res.stat == "ok",
+        data: {
+          ...res.result,
+          token: res.result.pwg_token,
+        },
+      };
+      if (res && res.data) {
+        let data = {
+          ...res.data,
+          accessToken: res.data.token,
+          refreshToken: res.data.token,
+          roles: ["admin"],
+          expires: new Date(new Date().getTime() + 19999999),
+        };
+        this.options = data;
+        this.isAdminFlag = res.data.loginAdminFlag;
+        setToken(data);
+      }
     },
 
     /** 刷新`token` */

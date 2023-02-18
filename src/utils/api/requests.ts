@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 20:41:20
- * @FilePath: /configforpagedemo/src/utils/api/requests.ts
+ * @LastEditTime: 2023-02-18 15:17:48
+ * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
 import axios from "axios";
@@ -109,6 +109,17 @@ request.interceptors.response.use(
     ) {
       return Promise.resolve(res);
     } else if (res.code === 401) {
+      // 未登录状态
+      ElMessage({
+        message: "登录过期啦",
+        type: "warning",
+      });
+      useUserStoreHook().logOut();
+    } else if (
+      res.code == 403 &&
+      res.stat == "fail" &&
+      res.message == "Forbidden"
+    ) {
       // 未登录状态
       ElMessage({
         message: "登录过期啦",

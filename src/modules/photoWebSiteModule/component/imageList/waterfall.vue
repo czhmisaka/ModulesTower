@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 01:14:23
+ * @LastEditTime: 2023-02-19 05:08:08
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -142,11 +142,15 @@ export default defineComponent({
       label: "图片列表(直接渲染用）",
       type: inputType.array,
     },
+    startSearch: {
+      label: "首次搜索",
+      type: inputType.boolean,
+    },
   } as propInfo,
 
   baseProps: {},
 
-  props: ["baseData", "sizeUnit", "watchKey", "imageList", "getFunc"],
+  props: ["baseData", "sizeUnit", "watchKey", "imageList", "getFunc", "startSearch"],
   components: { cardBg, waterFallItem },
   watch: {
     nowShowType(val: showType) {
@@ -177,6 +181,14 @@ export default defineComponent({
     await this.$nextTick();
     this.init();
     window.addEventListener("keydown", this.keyDown);
+    if (this.startSearch) {
+      fuck = null;
+      Index = {};
+      isInit = false;
+      imageListForReSize = [];
+      this.rowList = [[]];
+      await this.getImgList(this.baseData, true);
+    }
   },
   data: () => {
     return {

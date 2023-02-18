@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 01:22:38
+ * @LastEditTime: 2023-02-19 04:58:13
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -37,7 +37,6 @@ import { stringAnyObj } from "../../userManage/types";
 import { InfoCardBtnList } from "./InfoCardBtnList";
 import { setData } from "../../../components/basicComponents/grid/module/cardApi/index";
 import { dobuleCheckBtnMaker } from "../../userManage/component/searchTable/drawerForm";
-import { drawerForm } from "@/modules/userManage/component/searchTable/drawerForm";
 
 let baseData = {} as { [key: string]: any };
 let lastFunc = -1;
