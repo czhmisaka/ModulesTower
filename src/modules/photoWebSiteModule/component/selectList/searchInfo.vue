@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 23:17:04
+ * @LastEditTime: 2023-02-20 00:20:29
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -12,6 +12,19 @@
         lineHeight: sizeUnit.blockSize + 'px',
       }"
     >
+      <span
+        style="top: 3px; position: relative; margin-right: 6px; display: inline-block"
+      >
+        <el-color-picker
+          v-model="query['color']"
+          color-format="rgb"
+          validate-event
+          size="default"
+          :style="{
+            margin: '3px',
+          }"
+        />
+      </span>
       <el-input v-model="query['name']" placeholder="图片名字" class="item"></el-input>
       <el-select
         v-model="query['tags']"

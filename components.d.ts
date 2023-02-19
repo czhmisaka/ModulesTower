@@ -24,6 +24,7 @@ declare module 'vue' {
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCheckBox: typeof import('element-plus/es')['ElCheckBox']
+    ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
     ElContainer: typeof import("element-plus/es")["ElContainer"];
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
