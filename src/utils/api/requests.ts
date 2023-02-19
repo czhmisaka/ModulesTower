@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-18 15:17:48
+ * @LastEditTime: 2023-02-19 17:56:48
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -115,11 +115,14 @@ request.interceptors.response.use(
         type: "warning",
       });
       useUserStoreHook().logOut();
-    } else if (
-      res.code == 403 &&
-      res.stat == "fail" &&
-      res.message == "Forbidden"
-    ) {
+    } else if ("err" in res && res.err == 401) {
+      // 未登录状态
+      ElMessage({
+        message: "登录过期啦",
+        type: "warning",
+      });
+      useUserStoreHook().logOut();
+    } else if ((res.code == 401 || res.code == 403) && res.stat == "fail") {
       // 未登录状态
       ElMessage({
         message: "登录过期啦",
