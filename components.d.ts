@@ -4,8 +4,6 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    '* @Date': 2022-10-31 08:52:55
-    '* @LastEditTime': 2022-12-07 20:17:18
     Card: typeof import('./src/components/basicComponents/grid/module/gridCard/card.vue')['default']
     CardApiControler: typeof import('./src/components/basicComponents/cell/action/cardApiControler.vue')['default']
     CardBg: typeof import('./src/components/basicComponents/cell/card/cardBg.vue')['default']
@@ -24,8 +22,11 @@ declare module 'vue' {
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
+    ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
+    ElCheckBox: typeof import('element-plus/es')['ElCheckBox']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
     ElContainer: typeof import("element-plus/es")["ElContainer"];
+    ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
     ElDescriptionsItem: typeof import('element-plus/es')['ElDescriptionsItem']
     ElDialog: typeof import('element-plus/es')['ElDialog']
@@ -45,7 +46,7 @@ declare module 'vue' {
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElMenuItemGroup: typeof import("element-plus/es")["ElMenuItemGroup"];
     ElOption: typeof import('element-plus/es')['ElOption']
-    ElOptions: typeof import('element-plus/es')['ElOptions']
+    ElOptions: typeof import("element-plus/es")["ElOptions"];
     ElPagination: typeof import('element-plus/es')['ElPagination']
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElRadio: typeof import('element-plus/es')['ElRadio']
@@ -55,7 +56,7 @@ declare module 'vue' {
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSlider: typeof import('element-plus/es')['ElSlider']
-    ElSpace: typeof import('element-plus/es')['ElSpace']
+    ElSpace: typeof import("element-plus/es")["ElSpace"];
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']

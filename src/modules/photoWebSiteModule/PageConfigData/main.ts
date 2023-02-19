@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 06:29:39
+ * @LastEditTime: 2023-02-19 23:14:09
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -48,13 +48,43 @@ const getFunc = async function (that, data) {
   let res = {} as stringAnyObj;
   const getCategory = async (data) => {
     let { limit, offset, query } = data;
-    let { tags, name } = query;
+    let {
+      tags,
+      name,
+      date_available_end,
+      date_available_start,
+      file_size_min,
+      file_size_max,
+      width_min,
+      width_max,
+      height_min,
+      height_max,
+    } = query;
+    console.log(query);
     let res = await post(
       `/images?offset=${offset}&limit=${limit}${
         Object.keys(query).length == 0 && data.category?.id
           ? "&catrgory=" + data.category?.id
           : "&catrgory=1"
-      }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}`,
+      }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}${
+        file_size_max ? "&file_size_max=" + file_size_max : ""
+      }${
+        date_available_start
+          ? "&date_available_start=" + date_available_start
+          : ""
+      }${file_size_min ? "&file_size_min=" + file_size_min : ""}${
+        date_available_end
+          ? "&date_available_end=" +
+            new Date(date_available_end[1]).toLocaleString() +
+            "&date_available_start=" +
+            new Date(date_available_end[0]).toLocaleString()
+          : ""
+      }
+      ${width_min ? "&width_min=" + width_min : ""}${
+        width_max ? "&width_max=" + width_max : ""
+      }${height_min ? "&height_min=" + height_min : ""}${
+        height_max ? "&height_max=" + height_max : ""
+      }`,
       []
     );
     return res;
