@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-20 11:21:16
+ * @LastEditTime: 2023-02-20 11:41:26
  * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
@@ -190,27 +190,15 @@ const module = useModuleHook();
 
 // 路由守卫
 // 控制默认到index界面执行匹配
-router.beforeEach(async (to, from, next) => {
-  console.log(to.matched, "匹配项目", to);
+router.beforeEach((to, from, next) => {
   let meta = {} as { [key: string]: any };
   if (to.matched && to.matched.length > 1) {
     meta = to.matched[1].meta;
     module.checkPage(to.matched[1].meta);
     next();
   } else if (to.matched.length == 0) {
-    next("/welcome");
-  }
-
-  // // 特殊显示需求处理
-  // if ("Fullscreen" in meta && meta.Fullscreen == true) {
-  //   console.log(meta, "meta ");
-  //   // const { onContentFullScreen } = useTags();
-  //   // onContentFullScreen(true);
-  // } else {
-  //   // const { onContentFullScreen } = useTags();
-  //   // onContentFullScreen(false);
-  // }
-  else next();
+    next("/");
+  } else next();
 });
 
 export default router;
