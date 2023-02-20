@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 06:36:03
+ * @LastEditTime: 2023-02-20 11:03:46
  * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
@@ -94,7 +94,7 @@ export function resetRouter() {
 
 /** 路由白名单 */
 const whiteList = [
-  router
+  ...router
     .getRoutes()
     .filter((x) => x.meta["allPeopleCanSee"])
     .map((x) => x.path),
@@ -209,7 +209,7 @@ router.beforeEach(async (to, from, next) => {
   //   // const { onContentFullScreen } = useTags();
   //   // onContentFullScreen(false);
   // }
-  next();
+  else next();
 });
 
 export default router;
