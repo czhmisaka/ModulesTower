@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 06:02:34
+ * @LastEditTime: 2023-02-20 11:55:08
  * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -96,7 +96,7 @@ export const useUserStore = defineStore({
           token: res.result.pwg_token,
         },
       };
-      if (res && res.data) {
+      if (res && res.success && res.data) {
         let data = {
           ...res.data,
           accessToken: res.data.token,

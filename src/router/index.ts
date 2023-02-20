@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-20 11:41:26
+ * @LastEditTime: 2023-02-20 11:58:58
  * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
@@ -190,15 +190,15 @@ const module = useModuleHook();
 
 // 路由守卫
 // 控制默认到index界面执行匹配
-router.beforeEach((to, from, next) => {
-  let meta = {} as { [key: string]: any };
-  if (to.matched && to.matched.length > 1) {
-    meta = to.matched[1].meta;
-    module.checkPage(to.matched[1].meta);
-    next();
-  } else if (to.matched.length == 0) {
-    next("/");
-  } else next();
-});
+// router.beforeEach((to, from, next) => {
+//   let meta = {} as { [key: string]: any };
+//   if (to.matched && to.matched.length > 1) {
+//     meta = to.matched[1].meta;
+//     module.checkPage(to.matched[1].meta);
+//     next(to.matched[1]);
+//   } else if (to.matched.length == 0) {
+//     next("/");
+//   } else next();
+// });
 
 export default router;
