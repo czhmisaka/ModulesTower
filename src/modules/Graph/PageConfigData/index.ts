@@ -1,31 +1,39 @@
-
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-08 15:32:06
- * @FilePath: /configforpagedemo/src/modules/minio/PageConfigData/index.ts
+ * @LastEditTime: 2023-02-20 16:48:27
+ * @FilePath: /configforpagedemo/src/modules/Graph/PageConfigData/index.ts
  */
 
-import { mainDesktop } from './main';
-import { gridCellTemplate } from '@/components/basicComponents/grid/module/dataTemplate';
-import { isValidKey } from '@/utils/index';
+import { mainDesktop } from "./main";
+import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
+import { isValidKey } from "@/utils/index";
 
-export interface desktopDataTemplate { desktopData?: gridCellTemplate[], gridColNum?: number }
+import { desktopDataTemplate } from "@/modules/userManage/types";
 
+const base = {
+  gridColNum: 12,
+  cusStyle: {
+    wholeScreen: true,
+    maxRows: 8,
+    margin: 12,
+  },
+};
 
 const pageConfig = {
-    main: { desktopData: mainDesktop, gridColNum: 12 },
-} as { [key: string]: desktopDataTemplate }
-
-
+  main: {
+    desktopData: mainDesktop,
+    ...base,
+  },
+} as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {
-    [key: string]: desktopDataTemplate
-}
+  [key: string]: desktopDataTemplate;
+};
 
 Object.keys(pageConfig).map((key: string) => {
-    if (isValidKey(key, pageConfig))
-        Page[String(key).toUpperCase()] = pageConfig[key] as desktopDataTemplate
-})
+  if (isValidKey(key, pageConfig))
+    Page[String(key).toUpperCase()] = pageConfig[key] as desktopDataTemplate;
+});
 
-export const PageConfig = { ...Page }
+export const PageConfig = { ...Page };

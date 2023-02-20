@@ -119,7 +119,9 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
     ...showCell(showType.func, {
       width: "300px",
       showFunc: (data, key) => {
-        return data["key"] ? data["name"] + "-" + data["key"] : data["name"];
+        return data["key"]
+          ? data["name"] + "【" + data["key"] + "】"
+          : data["name"];
       },
     }),
   }),
@@ -212,6 +214,7 @@ const pageConfigDataTableCellStorage = new SearchCellStorage([
     }),
   }),
   tableCellTemplateMaker("按钮key", "key", searchCell(formInputType.input)),
+  tableCellTemplateMaker("key", "key", searchCell(formInputType.input)),
   // tableCellTemplateMaker("页面配置", "pageConfigId"),
   // tableCellTemplateMaker("配置参数", "meta"),
   tableCellTemplateMaker(

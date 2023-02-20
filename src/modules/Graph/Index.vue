@@ -1,23 +1,24 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-03 10:37:09
- * @FilePath: /configforpagedemo/src/modules/minio/Index.vue
+ * @LastEditTime: 2023-02-09 15:33:45
+ * @FilePath: /configforpagedemo/src/modules/userManage/Index.vue
 -->
 
 <template>
   <div
     :style="{
-      width: '100%',
-      height: '100%',
+      width: 'calc(100% - 24px)',
+      height: 'calc(100%)',
       background: 'rgba(0,0,0,0)',
       overflow: 'hidden',
     }"
   >
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
-      :desktopData="desktopData.desktopData"
+      :desktopData="desktopDataList"
       :component-lists="component"
+      :cus-style="desktopData?.cusStyle"
     />
   </div>
 </template>
@@ -27,21 +28,28 @@ import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
 import { isValidKey } from "@/utils/index";
-import component from "./component/index";
 import { GetAllUser } from "@/utils/api/user/user";
 
 export default defineComponent({
   components: {
     gridDesktop,
   },
+
+  computed: {
+    component() {
+      return this.$modules.getAllComponents();
+    },
+  },
   methods: {
     async init() {
       if (this.$route) {
-        let PageName = this.$route.path.split("/")[
-          this.$route.path.split("/").length - 1
-        ];
-        if (isValidKey(PageName, PageConfig)) {
-          this.desktopData = PageConfig[PageName];
+        let PageName = String(
+          this.$route.path.split("/")[this.$route.path.split("/").length - 1]
+        );
+        if (Object.keys(PageConfig).indexOf(PageName) > -1) {
+          let res = PageConfig[PageName];
+          this.desktopData = res;
+          this.desktopDataList = await this.desktopData.desktopData();
         } else {
           this.$message("没找到对应的页面呢,已前往模块首页");
           this.$router.push({
@@ -64,9 +72,10 @@ export default defineComponent({
   },
   data: () => {
     return {
-      desktopData: PageConfig["MAIN"],
+      desktopDataList: [],
+      desktopData: PageConfig[Object.keys(PageConfig)[0]],
       Env: {},
-      component,
+      dataText: "",
     };
   },
   async mounted() {
