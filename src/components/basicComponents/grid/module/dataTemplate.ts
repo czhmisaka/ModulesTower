@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 11:12:09
+ * @LastEditTime: 2023-02-17 17:18:13
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -177,6 +177,7 @@ export interface propInfo {
   [key: string]: {
     label: string;
     type: inputType;
+    description?: string;
     localData?: {
       [key: string]: any;
     };

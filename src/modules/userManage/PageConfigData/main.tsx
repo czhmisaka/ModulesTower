@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 19:37:49
+ * @LastEditTime: 2023-02-17 11:12:35
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -47,6 +47,7 @@ import { openDrawerFormEasy } from '../component/searchTable/drawerForm';
 import { departmentDrawerprops, 新增部门 } from './departmenet'
 import { userFieldStorage } from "./user/userValueManage";
 import { repBackMessageShow } from '@/modules/userManage/component/searchTable/drawerForm';
+import { tableCellTemplate } from '../types';
 
 // 性别
 const gender = {
@@ -180,14 +181,21 @@ const searchTable = new SearchCellStorage([
 ]);
 
 
+
+// 提交用户信息
 const submitUserInfo = btnMaker("提交", btnActionTemplate.Function, {
   icon: "Position",
   function: async (that, data) => {
+    let ext = {}
+    let queryItemTemplate = (await userFieldStorage()).getAll()
+    queryItemTemplate.map((cell: tableCellTemplate) => {
+      ext[cell.key] = data[cell.key]
+    })
     let res = await post(
       "/web/usc/user/" + (data.id ? "update" : "insert"),
       {
         ...data,
-        ext: JSON.stringify(data)
+        ext: JSON.stringify(ext)
       }
     );
     repBackMessageShow(that, res)
@@ -212,7 +220,7 @@ const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
         "name",
         "icon",
       ]),
-      ... await (await userFieldStorage()).getAll()
+      ... (await userFieldStorage()).getAll()
       ],
       btnList: [
         submitUserInfo

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-02-13 10:25:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 14:13:16
+ * @LastEditTime: 2023-02-17 17:18:56
  * @FilePath: /configforpagedemo/src/modules/userManage/component/userCard/userInfoCard.vue
 -->
 <template>
@@ -50,6 +50,19 @@ export default defineComponent({
       middle: gridSizeMaker(4, 3),
     },
   } as componentInfo,
+
+  propsDetail: {
+    userInfo: {
+      label: "用户信息",
+      type: inputType.obj,
+    },
+    showTemplate: {
+      label: "可用展示模板函数",
+      description: "需要输出SearchStorage构建的对象",
+      type: inputType.functionEditor,
+    },
+  } as propInfo,
+
   props: ["userInfo", "showTemplate", "title", "watchKey", "baseData"],
   components: {
     cardBg,
