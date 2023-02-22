@@ -77,8 +77,7 @@ export default defineComponent({
         .linkDirectionalArrowLength(10)
         .d3VelocityDecay(0.3);
       canvas.d3Force("link").distance((link) => {
-        console.log(link.target.type);
-        return link.target.type == "问题编号" ? 200 : 80;
+        return link.target.type == "问题编号" ? 250 : 150;
       });
       canvas.d3Force("charge").strength(-100);
     }
