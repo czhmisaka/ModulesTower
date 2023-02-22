@@ -38,7 +38,7 @@ export default defineComponent({
     },
   } as componentInfo,
 
-  props: ["baseData", "sizeUnit", "title", "chartOptions"],
+  props: ["baseData", "sizeUnit", "title", "chartOptions", "extraFuncList"],
   data: () => {
     return {
       ForceGraph,
@@ -83,6 +83,10 @@ export default defineComponent({
       canvas.d3Force("charge").strength(-100);
     }
     this.$emit("ready");
+  },
+
+  methods: {
+    async init() {},
   },
 });
 </script>

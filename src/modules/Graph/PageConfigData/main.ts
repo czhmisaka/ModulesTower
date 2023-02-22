@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-20 20:59:31
+ * @LastEditTime: 2023-02-21 12:22:23
  * @FilePath: /configforpagedemo/src/modules/Graph/PageConfigData/main.ts
  */
 
@@ -159,12 +159,33 @@ export const mainDesktop = async () => {
       },
       {
         props: {
+          title: "1",
           chartOptions: {
             nodes: nodes,
             links: links,
           },
         },
       }
-    ).setSize(12, 8),
+    ).setSize(3, 4),
+    gridCellMaker(
+      "forceGraph",
+      "forceGraph",
+      {},
+      {
+        name: "Graph_forceGraph",
+        type: cardComponentType.componentList,
+      },
+      {
+        props: {
+          title: "2",
+          chartOptions: {
+            nodes: nodes,
+            links: links,
+          },
+        },
+      }
+    )
+      .setSize(9, 8)
+      .setPosition(3, 0),
   ] as gridCellTemplate[];
 };

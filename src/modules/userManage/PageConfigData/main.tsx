@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 11:12:35
+ * @LastEditTime: 2023-02-21 15:37:14
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -218,7 +218,9 @@ const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
       title: "创建新用户",
       queryItemTemplate: [...userTableCellStorage.getByKeyArr([
         "name",
+        'mobile',
         "icon",
+        'unitIds'
       ]),
       ... (await userFieldStorage()).getAll()
       ],
