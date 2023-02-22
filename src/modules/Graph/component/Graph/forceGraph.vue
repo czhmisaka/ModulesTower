@@ -102,7 +102,7 @@ export default defineComponent({
           canvas.d3Force("charge").strength(-400);
         }
         that.$emit("ready");
-      }, 500 + Math.random() * 500);
+      }, 500 + Math.random() * 2000);
     },
   },
 });
