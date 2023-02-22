@@ -177,7 +177,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
         next({ path: loginPage });
       }
     } else {
-      next();
+      next();h
     }
   }
 });
