@@ -5,12 +5,8 @@
  * @FilePath: /configforpagedemo/src/modules/Graph/component/Echarts/echarts.vue
 -->
 <template>
-  <cardBg
-    :cusStyle="{
-      padding: '12px',
-    }"
-  >
-    <div :id="`canvas_${title}`" class="wholeBox"></div>
+  <cardBg :cusStyle="{}">
+    <div class="wholeBox" :id="`canvas_${title}`"></div>
   </cardBg>
 </template>
 
@@ -47,45 +43,67 @@ export default defineComponent({
   watch: {
     chartOptions: {
       handler(val) {
-        this.$emit("ready");
+        this.$emit("ready", true);
+        this.init();
       },
     },
   },
   mounted() {
-    if (this.chartOptions) {
-      const myGraph = ForceGraph();
-      const canvas = myGraph(document.getElementById(`canvas_${this.title}`))
-        .graphData(this.chartOptions)
-        .nodeCanvasObject((node, ctx, globalScale) => {
-          const label = node["name"] + "";
-          const fontSize = 14 / globalScale;
-          ctx.font = `${fontSize}px Sans-Serif`;
-          const textWidth = ctx.measureText(label).width;
-          const bckgDimensions = [textWidth, fontSize].map((n) => n + fontSize * 0.2); // some padding
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, textWidth / 2 + node["val"], 0, 360, false);
-          ctx.fillStyle = node["bgColor"];
-          ctx.fill();
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillStyle = node["color"] || "#fff";
-          ctx.fillText(label, node.x, node.y);
-          node["__bckgDimensions"] = bckgDimensions; // to re-use in nodePointerAreaPaint
-        })
-        .nodeRelSize(10)
-        .linkDirectionalParticles(2)
-        .linkDirectionalArrowLength(10)
-        .d3VelocityDecay(0.3);
-      canvas.d3Force("link").distance((link) => {
-        return link.target.type == "问题编号" ? 250 : 150;
-      });
-      canvas.d3Force("charge").strength(-100);
-    }
-    this.$emit("ready");
+    this.init();
   },
 
   methods: {
-    async init() {},
+    async init() {
+      const that = this;
+      setTimeout(() => {
+        if (that.chartOptions) {
+          const myGraph = ForceGraph();
+          const canvas = myGraph(document.getElementById(`canvas_${that.title}`))
+            .graphData(that.chartOptions)
+            .nodeCanvasObject((node, ctx, globalScale) => {
+              let label = node["name"] + "";
+              let title = "【" + node["type"] + "】";
+              label =
+                label.length > 7
+                  ? label.substring(0, 7) + " ..."
+                  : label.length < 4
+                  ? "  " + label + "  "
+                  : label;
+              const fontSize = 14 / globalScale;
+              ctx.font = `${fontSize}px Sans-Serif`;
+              const textWidth = ctx.measureText(label).width;
+              const titleWidth = ctx.measureText(title).width;
+              const bckgDimensions = [textWidth, fontSize].map((n) => n + fontSize * 0.2); // some padding
+              ctx.beginPath();
+              ctx.arc(
+                node.x,
+                node.y,
+                (titleWidth > textWidth ? titleWidth : textWidth) / 2 + node["val"],
+                0,
+                360,
+                false
+              );
+              ctx.fillStyle = node["bgColor"];
+              ctx.fill();
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillStyle = node["color"] || "#fff";
+              ctx.fillText(label, node.x, node.y);
+              ctx.fillText(title, node.x, node.y - fontSize - 1);
+              node["__bckgDimensions"] = bckgDimensions; // to re-use in nodePointerAreaPaint
+            })
+            .nodeRelSize(10)
+            .linkDirectionalParticles(1)
+            .linkDirectionalArrowLength(10)
+            .d3VelocityDecay(0.3);
+          canvas.d3Force("link").distance((link) => {
+            return link.target.type == "问题编号" ? 300 : 200;
+          });
+          canvas.d3Force("charge").strength(-400);
+        }
+        that.$emit("ready");
+      }, 500 + Math.random() * 500);
+    },
   },
 });
 </script>

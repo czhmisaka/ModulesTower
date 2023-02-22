@@ -52,7 +52,7 @@
 		"tests/**/*.ts",
 		"tests/**/*.tsx",
 		"config/proxyTable.ts",
-		"types/*.d.ts", "src/components/basicComponents/grid/helpers/utils.js",
+		"types/*.d.ts", "src/components/basicComponents/grid/helpers/utils.js", "src/modules/Graph/PageConfigData/Data.js", "src/modules/Graph/PageConfigData/Data.js",
 	],
 	"exclude": [
 		"node_modules"
