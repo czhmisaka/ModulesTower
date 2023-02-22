@@ -33,7 +33,10 @@
     "echarts": "^5.3.3",
     "element-plus": "^2.2.20",
     "element-resize-detector": "^1.2.4",
+    "force-graph": "^1.43.0",
     "fs": "^0.0.1-security",
+    "html2canvas": "^1.4.1",
+    "interactjs": "^1.10.11",
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "mitt": "^3.0.0",
@@ -50,8 +53,7 @@
     "vue-router": "^4.0.0-0",
     "vue3-draggable-resizable": "^1.6.4",
     "vue3markedcomponent": "^0.1.0",
-    "xe-utils": "^3.5.6",
-    "interactjs": "^1.10.11"
+    "xe-utils": "^3.5.6"
   },
   "devDependencies": {
     "@commitlint/cli": "13.1.0",

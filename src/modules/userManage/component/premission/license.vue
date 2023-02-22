@@ -5,14 +5,13 @@
  * @FilePath: /configforpagedemo/src/modules/userManage/component/premission/license.vue
 -->
 
-<template>
-  <div></div>
-</template>
+<template></template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
 export default defineComponent({
+  components: {},
   setup() {
     return {};
   },
