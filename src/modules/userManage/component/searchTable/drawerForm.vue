@@ -202,7 +202,6 @@ export default defineComponent({
     },
 
     async checkOnChange(val = this.formData, force = false) {
-      console.log(val);
       Object.keys(val).map((key) => {
         if (val[key] != formDataForCheck[key] || force) {
           this.queryItemTemplate.map(async (cell) => {

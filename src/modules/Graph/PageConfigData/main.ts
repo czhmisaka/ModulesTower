@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-22 20:24:14
+ * @LastEditTime: 2023-02-23 17:57:25
  * @FilePath: /configforpagedemo/src/modules/Graph/PageConfigData/main.ts
  */
 
@@ -81,7 +81,7 @@ export const mainDesktop = async () => {
     c: string[];
   }
 
-  const fuckConnectLinkRule = [
+  const tagConnectLinkRule = [
     ToCreateFuckLinkRule(NTT.问题编号, [NTT.问题描述]),
     ToCreateFuckLinkRule(NTT.问题描述, [
       NTT.问题领域,
@@ -160,6 +160,7 @@ export const mainDesktop = async () => {
     );
   }
 
+  console.log(nodes[0]);
   function getFuckNodeAndLinkForFuckNothing(index) {
     let nodess = nodes[index].map((x, id) => {
       return {
@@ -170,7 +171,7 @@ export const mainDesktop = async () => {
         val: x.type != NTT.问题编号 ? id % 6 : 20,
         bgColor: getFuckUIColor(x.type),
         // bgColor:
-        //   fuckConnectLinkRule
+        //   tagConnectLinkRule
         //     .map((c, i) => {
         //       return c.c.indexOf(x.type) != -1 ? getRandomColor(i + 10) : false;
         //     })
@@ -178,7 +179,7 @@ export const mainDesktop = async () => {
       };
     });
 
-    let links = fuckLinkCreate(nodess, fuckConnectLinkRule);
+    let links = fuckLinkCreate(nodess, tagConnectLinkRule);
     return {
       nodes: nodess,
       links,

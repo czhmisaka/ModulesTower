@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-22 10:04:18
+ * @LastEditTime: 2023-02-23 21:00:50
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -55,9 +55,9 @@ const gender = {
   2: "女",
 };
 
-const userTableCellStorage = new SearchCellStorage([
+export const userTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("姓名", "name"),
-  tableCellTemplateMaker("性别", "gender", remoteDictSelectSearchCell('sys_user_sex')),
+  tableCellTemplateMaker("性别", "gender", remoteDictSelectSearchCell('lcdp_user_gender')),
   tableCellTemplateMaker("icon", "icon", searchCell(formInputType.uploadImage)),
   tableCellTemplateMaker("简介", "description"),
   tableCellTemplateMaker("管理员", "adminFlag"),
@@ -238,12 +238,6 @@ const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
   elType: "primary",
 });
 
-/**
-  * @name: 打开编辑弹窗
-  * @description: waitForWriting
-  * @authors: CZH
-  * @Date: 2022-12-09 17:50:58
-  */
 const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
   function: async (that, data) => {
     data.gender = data.gender + ''
@@ -252,6 +246,7 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
       queryItemTemplate: [...userTableCellStorage.getByKeyArr([
         "name",
         "icon",
+        "mobile"
       ]),
       ... await (await userFieldStorage()).getAll()
       ],
@@ -269,6 +264,7 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
   },
   icon: "Setting",
 });
+
 
 /**
  * @name: roleBindBtn
@@ -456,11 +452,11 @@ export const mainDesktop = async () => {
     function: async (that, data) => {
       let drawProps = {
         title: '',
-        size: 70,
+        size: 60,
         gridDesktop: true,
         gridDesktopConfig: {
           desktopData: async () => await userInfoCard(data),
-          gridColNum: 12,
+          gridColNum: 6,
         },
       } as drawerProps
       openDrawerFormEasy(that, drawProps)
@@ -470,8 +466,7 @@ export const mainDesktop = async () => {
   const tableAction = tableCellTemplateMaker(
     "操作",
     "actionBtnList",
-    //[unitBindBtn, roleBindBtn, editUserModel]
-    actionCell([editUserModel, 打开用户信息弹窗], {
+    actionCell([打开用户信息弹窗], {
       fixed: "right",
       noDetail: true
     })

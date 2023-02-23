@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 20:55:57
+ * @LastEditTime: 2023-02-23 18:38:48
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -229,7 +229,28 @@ export const refreshDesktop = (content: { [key: string]: any }) => {
       }
     );
   } catch (err) {
-    console.error("changeVisible 错误:", err, content, { 1: 1 });
+    console.error("refreshDesktop 错误:", err, content, { 1: 1 });
+  }
+};
+
+/**
+ * @name: hightLightComponent
+ * @description: 高亮组件
+ * @authors: CZH
+ * @Date: 2022-12-05 19:32:21
+ */
+export const hightLightComponent = (
+  content: { [key: string]: any },
+  value: string[] = []
+) => {
+  if (!checkContext(content, { 1: 1 })) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    content[func]("onChange", value, {
+      type: [cardOnChangeType.hightLightCard],
+    });
+  } catch (err) {
+    console.error("hightLightComponent 错误:", err, content, value);
   }
 };
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 17:18:13
+ * @LastEditTime: 2023-02-23 18:03:29
  * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -20,6 +20,7 @@ export enum cardOnChangeType {
   cardDelete = "cardDelete",
   openComponentsList = "openComponentsList",
   moduleApi = "moduleApi",
+  hightLightCard = "hightLightCard",
 }
 
 export const gridSizeConfig = (

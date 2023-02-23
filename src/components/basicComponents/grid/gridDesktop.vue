@@ -27,6 +27,14 @@
       :maxRows="cusStyle.maxRows || 30"
       :margin="[gridRowNumAndUnit().margin, gridRowNumAndUnit().margin]"
     >
+      <div
+        :class="'grayBg ' + (hightLightComponentsList.length > 0 ? 'grayBg_Active' : '')"
+        :style="{
+          zIndex: hightLightComponentsList.length > 0 ? 20000 : -1,
+          width: hightLightControler.show ? '100vw' : '0px',
+          height: hightLightControler.show ? '100vh' : '0px',
+        }"
+      ></div>
       <grid-item
         v-for="(item, index) in gridListToLayout()"
         :x="item.x"
@@ -225,6 +233,13 @@ export default defineComponent({
         width: 0,
         height: 0,
       },
+
+      // 高光组件列表
+      hightLightComponentsList: [] as string[],
+      hightLightControler: {
+        show: false,
+        timeOut: null,
+      },
     };
   },
   methods: {
@@ -339,6 +354,28 @@ export default defineComponent({
           } else {
             console.error("输入数据有误", value);
           }
+        } else if (type == cardOnChangeType.hightLightCard) {
+          if (this.hightLightControler.timeOut)
+            clearTimeout(this.hightLightControler.timeOut);
+          if (typeof value == "object" && value.length > 0) {
+            const cardLabelList = this.gridList.map((card: gridCellTemplate) => {
+              return card.label;
+            });
+            this.hightLightControler.show = true;
+            value.map((cardLabel) => {
+              if (
+                cardLabelList.indexOf(cardLabel) > -1 &&
+                this.hightLightComponentsList.indexOf(cardLabel) == -1
+              )
+                this.hightLightComponentsList.push(cardLabel);
+            });
+          } else {
+            this.hightLightComponentsList = [];
+            const that = this;
+            this.hightLightControler.timeOut = setTimeout(() => {
+              that.hightLightControler.show = false;
+            }, 300);
+          }
         } else if (type == cardOnChangeType.cardEdit) {
           this.baseData._componentDetail = this.gridList[index];
           this.baseData._componentIndex = index;
@@ -384,6 +421,7 @@ export default defineComponent({
         colNum: this.gridColNum,
         unit: "vw",
         blockSize: 0, // px单位的 单个grid单元大小
+        colSize: 0,
         margin: this.cusStyle?.margin || 12,
       };
       if (this.cusStyle.wholeScreen == true) {
@@ -422,7 +460,10 @@ export default defineComponent({
         if (gridCell.options.showInGridDesktop) {
           style = {
             maxWidth: "10000px",
-            zIndex: "100",
+            zIndex:
+              this.hightLightComponentsList.indexOf(gridCell.label) > -1
+                ? "20001"
+                : "100",
             opacity: "1",
           };
         } else {
@@ -490,7 +531,16 @@ export default defineComponent({
   display: block;
   position: relative;
 }
-
+.grayBg {
+  transition: background-color 0.3s;
+  background-color: rgba(0, 0, 0, 0);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+}
+.grayBg_Active {
+  background-color: rgba(0, 0, 0, 0.6);
+}
 @keyframes hoverFadeInOut {
   0% {
     background-color: rgba(0, 0, 0, 0);
