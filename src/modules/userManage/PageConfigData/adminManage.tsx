@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: huangjunchao 3363926843@qq.com
- * @LastEditTime: 2023-02-16 14:26:57
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-02-24 15:00:12
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/adminManage.tsx
  */
 
@@ -28,7 +28,7 @@ import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi
 import router from "../router";
 
 
-const 新增管理员 = btnMaker('提交', btnActionTemplate.Function, {
+const 提交 = btnMaker('提交', btnActionTemplate.Function, {
   icon: 'plus',
   elType: 'primary',
   function: async (that, data) => {
@@ -67,7 +67,7 @@ const 新增管理员弹窗 = btnMaker('新增管理员', btnActionTemplate.Open
         }
       }
     }))],
-    btnList: [新增管理员]
+    btnList: [提交]
   },
 },
   ["/web/usc/user/page/org"],
@@ -160,7 +160,6 @@ export const adminManage = async () => {
 };
 
 export const adminManageBtnList = [
-  新增管理员,
   新增管理员弹窗,
   取消管理员权限
 ]
