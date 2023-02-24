@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: huangjunchao 3363926843@qq.com
- * @LastEditTime: 2023-02-24 14:17:28
+ * @LastEditTime: 2023-02-24 14:29:05
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -203,6 +203,11 @@ const 编辑部门 = btnMaker(
 );
 
 const btnList = [新增部门];
+export const departmentBtnList = [
+  新增部门,
+  删除部门,
+  编辑部门
+];
 
 export const departmentDrawerprops = (that, data) => {
   that.$modules.getModuleApi()["userManage_openDrawerForm"](that, {

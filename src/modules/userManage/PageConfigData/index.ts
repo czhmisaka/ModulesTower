@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: huangjunchao 3363926843@qq.com
- * @LastEditTime: 2023-02-24 14:17:32
+ * @LastEditTime: 2023-02-24 14:29:02
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -9,7 +9,7 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { apiManage } from "./apiManage";
-import { departmenetBtnList, department } from "./departmenet";
+import { department, departmentBtnList } from "./departmenet";
 import { pageConfigManage } from "./pageConfigManage";
 import { menuManage, menuManageBtnList } from "./menuManage";
 import { roleManage, roleManageBtnList } from "./roleManage";
@@ -52,7 +52,7 @@ const pageConfig = {
   department: {
     name: "部门管理",
     desktopData: department,
-    btnList: departmenetBtnList,
+    btnList: departmentBtnList,
     ...base,
   },
   menuManage: {
