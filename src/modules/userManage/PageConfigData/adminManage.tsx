@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-02-13 11:27:37
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-02-24 15:00:12
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/adminManage.tsx
  */
 
@@ -28,6 +28,82 @@ import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi
 import router from "../router";
 
 
+const 提交 = btnMaker('提交', btnActionTemplate.Function, {
+  icon: 'plus',
+  elType: 'primary',
+  function: async (that, data) => {
+    if (!data.id) ElMessage.error('请选择用户')
+    let res = await post('/web/usc/user/edit/admin', { id: data.id, adminFlag: true })
+    if (res["message"] == "成功") {
+      that.$message.success(res["message"]);
+      setTimeout(() => {
+        that.close();
+      }, 500);
+    } else {
+      that.$message.danger(res["message"]);
+    }
+  },
+},
+  ["/web/usc/user/edit/admin"],
+  "新增管理员按钮"
+)
+
+const 新增管理员弹窗 = btnMaker('新增管理员', btnActionTemplate.OpenDrawer, {
+  icon: 'plus',
+  elType: 'primary',
+  drawerProps: {
+    title: '新增管理员',
+    queryItemTemplate: [tableCellTemplateMaker('用户', 'id', searchCell(formInputType.searchList, {
+      inputOptions: {
+        multiple: false,
+        remoteMethod: async (query) => {
+          let res = await post('/web/usc/user/page/org', { name: query, pageSize: 20, pageNumber: 0 })
+          return res.data.list.map(x => {
+            return {
+              value: x.id + '',
+              label: x.name + '-' + x.unitNames
+            }
+          })
+        }
+      }
+    }))],
+    btnList: [提交]
+  },
+},
+  ["/web/usc/user/page/org"],
+  "新增管理员弹窗按钮"
+)
+
+const 取消管理员权限 = btnMaker('取消管理员权限',
+  btnActionTemplate.Function, {
+  icon: "delete",
+  elType: "danger",
+  function: async (that, data) => {
+    ElMessageBox({
+      type: "warning",
+      title: `解除用户【${data.name}】的管理员权限吗`,
+      callback: async (action) => {
+        if (action == "confirm") {
+          let res = await post("/web/usc/user/edit/admin", {
+            id: data.id,
+            adminFlag: false
+          });
+          if (res.message == "成功") {
+            ElMessage.success(res.message);
+            if (that.close) that.close();
+            else refreshDesktop(that);
+          } else ElMessage.error(res.message);
+        }
+      }
+    })
+  },
+},
+  ["/web/usc/user/edit/admin"],
+  "取消管理员权限按钮"
+)
+
+const 搜索区域操作栏 = [新增管理员弹窗];
+
 export const adminManage = async () => {
   const 管理员判断参数 = {
     true: '是',
@@ -47,81 +123,7 @@ export const adminManage = async () => {
     }),
   ]);
 
-  const 新增管理员 = btnMaker('提交', btnActionTemplate.Function, {
-    icon: 'plus',
-    elType: 'primary',
-    function: async (that, data) => {
-      if (!data.id) ElMessage.error('请选择用户')
-      let res = await post('/web/usc/user/edit/admin', { id: data.id, adminFlag: true })
-      if (res["message"] == "成功") {
-        that.$message.success(res["message"]);
-        setTimeout(() => {
-          that.close();
-        }, 500);
-      } else {
-        that.$message.danger(res["message"]);
-      }
-    },
-  },
-    ["/web/usc/user/edit/admin"],
-    "新增管理员按钮"
-  )
 
-  const 新增管理员弹窗 = btnMaker('新增管理员', btnActionTemplate.OpenDrawer, {
-    icon: 'plus',
-    elType: 'primary',
-    drawerProps: {
-      title: '新增管理员',
-      queryItemTemplate: [tableCellTemplateMaker('用户', 'id', searchCell(formInputType.searchList, {
-        inputOptions: {
-          multiple: false,
-          remoteMethod: async (query) => {
-            let res = await post('/web/usc/user/page/org', { name: query, pageSize: 20, pageNumber: 0 })
-            return res.data.list.map(x => {
-              return {
-                value: x.id + '',
-                label: x.name + '-' + x.unitNames
-              }
-            })
-          }
-        }
-      }))],
-      btnList: [新增管理员]
-    },
-  },
-    ["/web/usc/user/page/org"],
-    "新增管理员弹窗按钮"
-  )
-
-  const 取消管理员权限 = btnMaker('取消管理员权限',
-    btnActionTemplate.Function, {
-    icon: "delete",
-    elType: "danger",
-    function: async (that, data) => {
-      ElMessageBox({
-        type: "warning",
-        title: `解除用户【${data.name}】的管理员权限吗`,
-        callback: async (action) => {
-          if (action == "confirm") {
-            let res = await post("/web/usc/user/edit/admin", {
-              id: data.id,
-              adminFlag: false
-            });
-            if (res.message == "成功") {
-              ElMessage.success(res.message);
-              if (that.close) that.close();
-              else refreshDesktop(that);
-            } else ElMessage.error(res.message);
-          }
-        }
-      })
-    },
-  },
-    ["/web/usc/user/edit/admin"],
-    "取消管理员权限按钮"
-  )
-
-  const 搜索区域操作栏 = [新增管理员弹窗];
   const 列表右侧操作栏 = tableCellTemplateMaker('操作', 'action', actionCell([取消管理员权限], {
     fixed: "right",
   }))
@@ -158,5 +160,6 @@ export const adminManage = async () => {
 };
 
 export const adminManageBtnList = [
-  //新增管理员
+  新增管理员弹窗,
+  取消管理员权限
 ]

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-22 09:29:27
+ * @LastEditTime: 2023-02-24 23:41:04
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -55,9 +55,9 @@ const gender = {
   2: "女",
 };
 
-const userTableCellStorage = new SearchCellStorage([
+export const userTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("姓名", "name"),
-  tableCellTemplateMaker("性别", "gender", remoteDictSelectSearchCell('sys_user_sex')),
+  tableCellTemplateMaker("性别", "gender", remoteDictSelectSearchCell('lcdp_user_gender')),
   tableCellTemplateMaker("icon", "icon", searchCell(formInputType.uploadImage)),
   tableCellTemplateMaker("简介", "description"),
   tableCellTemplateMaker("管理员", "adminFlag"),
@@ -236,14 +236,8 @@ const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
   premission: ["admin"],
   icon: "Plus",
   elType: "primary",
-});
+}, ["/web/usc/user/insert"], "创建新用户");
 
-/**
-  * @name: 打开编辑弹窗
-  * @description: waitForWriting
-  * @authors: CZH
-  * @Date: 2022-12-09 17:50:58
-  */
 const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
   function: async (that, data) => {
     data.gender = data.gender + ''
@@ -252,6 +246,7 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
       queryItemTemplate: [...userTableCellStorage.getByKeyArr([
         "name",
         "icon",
+        "mobile"
       ]),
       ... await (await userFieldStorage()).getAll()
       ],
@@ -268,7 +263,8 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
     ["userManage_openDrawerForm"](that, drawerProps);
   },
   icon: "Setting",
-});
+}, ["/web/usc/user/update"], "编辑用户");
+
 
 /**
  * @name: roleBindBtn
@@ -336,7 +332,7 @@ const roleBindBtn = btnMaker("用户角色管理", btnActionTemplate.Function, {
       .getModuleApi()
     ["userManage_openDrawerForm"](that, drawerProps);
   },
-});
+}, ["/web/usc/role/cancelUser", "/web/usc/role/authUser"], "'取消角色绑定','新增角色绑定'");
 
 /**
  * @name: unitBindBtn
@@ -395,7 +391,8 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
             }
             return attr
           }
-        }))
+        }
+        ))
       ],
       data: { ...res.data },
       btnList: [closeBtn],
@@ -404,7 +401,7 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
       .getModuleApi()
     ["userManage_openDrawerForm"](that, drawerProps);
   },
-});
+}, ["/web/usc/unit/deleteUser", "/web/usc/unit/insertUserBatch"], "'删除部门','新增部门'");
 
 
 
@@ -447,7 +444,9 @@ export const mainDesktop = async () => {
     },
     icon: "Delete",
     elType: "danger",
-  });
+  }, ["/web/usc/unit/deleteUser"],
+    "批量删除成员按钮"
+  );
 
   const btnList = [addNewModel, selectedDeleteBtn];
 
@@ -456,22 +455,23 @@ export const mainDesktop = async () => {
     function: async (that, data) => {
       let drawProps = {
         title: '',
-        size: 70,
+        size: 60,
         gridDesktop: true,
         gridDesktopConfig: {
           desktopData: async () => await userInfoCard(data),
-          gridColNum: 12,
+          gridColNum: 6,
         },
       } as drawerProps
       openDrawerFormEasy(that, drawProps)
     }
-  })
+  }, ["/web/usc/unit/editUserModel"],
+    "打开用户信息弹窗按钮"
+  )
 
   const tableAction = tableCellTemplateMaker(
     "操作",
     "actionBtnList",
-    //[unitBindBtn, roleBindBtn, editUserModel]
-    actionCell([editUserModel, 打开用户信息弹窗], {
+    actionCell([打开用户信息弹窗], {
       fixed: "right",
       noDetail: true
     })

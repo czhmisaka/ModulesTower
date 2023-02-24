@@ -1,8 +1,8 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-20 11:58:58
- * @FilePath: /ConfigForDesktopPage/src/router/index.ts
+ * @LastEditTime: 2023-02-24 23:41:09
+ * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
 import {
@@ -173,11 +173,14 @@ router.beforeEach((to: toRouteType, _from, next) => {
     if (to.path !== loginPage) {
       if (whiteList.indexOf(to.path) !== -1) {
         next();
+      } else if (to.meta["allPeopleCanSee"]) {
+        next();
       } else {
         next({ path: loginPage });
       }
     } else {
-      next();h
+      next();
+      h;
     }
   }
 });

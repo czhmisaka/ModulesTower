@@ -388,7 +388,7 @@ export default defineComponent({
 }
 
 .close {
-  transform: translate(-100%);
+  transform: translateX(100vw);
 }
 .formModalBox {
   transition: all 0.4s;

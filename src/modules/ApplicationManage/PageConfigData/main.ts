@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-23 17:57:25
+ * @LastEditTime: 2023-02-21 12:22:23
  * @FilePath: /configforpagedemo/src/modules/Graph/PageConfigData/main.ts
  */
 
@@ -18,8 +18,6 @@ import {
   changeCardPosition,
   changeCardProperties,
 } from "@/components/basicComponents/grid/module/cardApi/index";
-
-import { nodes } from "./Data";
 
 export const mainDesktop = async () => {
   enum NTT {
@@ -81,7 +79,7 @@ export const mainDesktop = async () => {
     c: string[];
   }
 
-  const tagConnectLinkRule = [
+  const fuckConnectLinkRule = [
     ToCreateFuckLinkRule(NTT.问题编号, [NTT.问题描述]),
     ToCreateFuckLinkRule(NTT.问题描述, [
       NTT.问题领域,
@@ -115,15 +113,11 @@ export const mainDesktop = async () => {
     rules.map((rule) => {
       let target = nodes.filter((x) => x.type == rule.p)[0].id;
       rule.c.map((c) => {
-        nodes
-          .filter((x) => x.type == c)
-          .map((c) => {
-            let source = c.id;
-            back.push({
-              target,
-              source,
-            });
-          });
+        let source = nodes.filter((x) => x.type == c)[0].id;
+        back.push({
+          target,
+          source,
+        });
       });
     });
     return back;
@@ -136,55 +130,23 @@ export const mainDesktop = async () => {
     );
   }
 
-  function getFuckUIColor(type): string {
-    const back = {
-      编号: "#f00",
-      描述: "rgb(250,94,194)",
-      发现: "rgb(148,215,246)",
-      问题: "rgb(144,167,115)",
-      涉及: "rgb(144,167,115)",
-      制度: "rgb(167,119,115)",
-      规则: "rgb(166,148,246)",
-      标签: "rgb(255,189,23)",
-      人才: "rgb(148,215,246)",
-    };
-
-    console.log(
-      type,
-      back[Object.keys(back).filter((x) => type.indexOf(x) > -1)[0] || "1"] ||
-        "#333"
-    );
-    return (
-      back[Object.keys(back).filter((x) => type.indexOf(x) > -1)[0] || "1"] ||
-      "rgb(246,199,148)"
-    );
-  }
-
-  console.log(nodes[0]);
-  function getFuckNodeAndLinkForFuckNothing(index) {
-    let nodess = nodes[index].map((x, id) => {
-      return {
-        id,
-        name: x.value,
-        type: x.type,
-        description: "asdasd",
-        val: x.type != NTT.问题编号 ? id % 6 : 20,
-        bgColor: getFuckUIColor(x.type),
-        // bgColor:
-        //   tagConnectLinkRule
-        //     .map((c, i) => {
-        //       return c.c.indexOf(x.type) != -1 ? getRandomColor(i + 10) : false;
-        //     })
-        //     .filter(Boolean)[0] || getRandomColor(2),
-      };
-    });
-
-    let links = fuckLinkCreate(nodess, tagConnectLinkRule);
+  let nodes = nodeTypeList.map((x, id) => {
     return {
-      nodes: nodess,
-      links,
+      id,
+      name: x + "-" + (id % 4),
+      type: x,
+      description: "asdasd",
+      val: x != NTT.问题编号 ? id % 6 : 20,
+      bgColor:
+        fuckConnectLinkRule
+          .map((c, i) => {
+            return c.c.indexOf(x) != -1 ? getRandomColor(i + 10) : false;
+          })
+          .filter(Boolean)[0] || getRandomColor(2),
     };
-  }
+  });
+
+  let links = fuckLinkCreate(nodes, fuckConnectLinkRule);
 
   return [
     gridCellMaker(
@@ -197,87 +159,33 @@ export const mainDesktop = async () => {
       },
       {
         props: {
+          title: "1",
+          chartOptions: {
+            nodes: nodes,
+            links: links,
+          },
+        },
+      }
+    ).setSize(3, 4),
+    gridCellMaker(
+      "forceGraph",
+      "forceGraph",
+      {},
+      {
+        name: "Graph_forceGraph",
+        type: cardComponentType.componentList,
+      },
+      {
+        props: {
           title: "2",
-          chartOptions: getFuckNodeAndLinkForFuckNothing(0),
-        },
-      }
-    )
-      .setSize(9, 7)
-      .setPosition(3, 1),
-    gridCellMaker(
-      "a",
-      "a",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "icon",
-      },
-      {
-        isSettingTool: true,
-        props: {
-          name: "Link",
-          onClickFunc: (content: any) => {
-            const { context } = content;
-            changeCardProperties(context, {
-              forceGraph: {
-                chartOptions: getFuckNodeAndLinkForFuckNothing(0),
-              },
-            });
+          chartOptions: {
+            nodes: nodes,
+            links: links,
           },
         },
       }
     )
-      .setPosition(0, 0)
-      .setSize(1, 1),
-    gridCellMaker(
-      "a",
-      "a",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "icon",
-      },
-      {
-        isSettingTool: true,
-        props: {
-          name: "Link",
-          onClickFunc: (content: any) => {
-            const { context } = content;
-            changeCardProperties(context, {
-              forceGraph: {
-                chartOptions: getFuckNodeAndLinkForFuckNothing(1),
-              },
-            });
-          },
-        },
-      }
-    )
-      .setPosition(1, 0)
-      .setSize(1, 1),
-    gridCellMaker(
-      "a",
-      "a",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "icon",
-      },
-      {
-        isSettingTool: true,
-        props: {
-          name: "Link",
-          onClickFunc: (content: any) => {
-            const { context } = content;
-            changeCardProperties(context, {
-              forceGraph: {
-                chartOptions: getFuckNodeAndLinkForFuckNothing(2),
-              },
-            });
-          },
-        },
-      }
-    )
-      .setPosition(2, 0)
-      .setSize(1, 1),
+      .setSize(9, 8)
+      .setPosition(3, 0),
   ] as gridCellTemplate[];
 };

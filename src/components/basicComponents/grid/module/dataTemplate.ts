@@ -20,6 +20,7 @@ export enum cardOnChangeType {
   cardDelete = "cardDelete",
   openComponentsList = "openComponentsList",
   moduleApi = "moduleApi",
+  hightLightCard = "hightLightCard",
 }
 
 export const gridSizeConfig = (

@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-14 16:00:45
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 19:07:05
+ * @LastEditTime: 2023-02-23 20:44:28
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userValueManage.ts
  */
 import {
@@ -79,6 +79,10 @@ export const userFieldStorage = async () => {
           cell.key,
           remoteDictSelectSearchCell(cell["fieldOptions"])
         )
+      );
+    } else if (cell.type == formInputType.datePicker) {
+      userFieldStorage.push(
+        tableCellTemplateMaker(cell.name, cell.key, DateCell())
       );
     } else {
       userFieldStorage.push(

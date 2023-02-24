@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 15:48:38
+ * @LastEditTime: 2023-02-24 17:38:22
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userInfo.tsx
  */
 
@@ -42,6 +42,7 @@ import {
   formInputType,
   drawerProps,
   showType,
+  tableCellTemplate
 } from "@/modules/userManage/types";
 import { dateEquals, ElMessage, ElMessageBox } from "element-plus";
 import { setSize } from '@/components/basicComponents/grid/module/util';
@@ -49,6 +50,8 @@ import { dobuleCheckBtnMaker } from '../../component/searchTable/drawerForm';
 import { repBackMessageShow } from '@/modules/userManage/component/searchTable/drawerForm';
 import { tableCellOptions } from '../../types';
 import { openDrawerFormEasy } from '../../component/searchTable/drawerForm';
+import { userFieldList, userFieldStorage } from "./userValueManage";
+import { userTableCellStorage } from "../main";
 
 // 角色管理
 const roleManage = [
@@ -120,6 +123,9 @@ roleManage.push(
   )
 )
 
+
+
+
 // 用户角色按钮列表
 const roleBindBtnList = [新增角色]
 
@@ -175,7 +181,7 @@ const 部门无法编辑 = tableCellTemplateMaker('部门 ', 'name', searchCell(
 let departmentManage = new SearchCellStorage([
   部门,
   部门无法编辑,
-  tableCellTemplateMaker('职务', 'jobName', remoteDictSelectSearchCell('sys_user_job')),
+  tableCellTemplateMaker('职务', 'jobName', remoteDictSelectSearchCell('lcdp_user_job')),
   tableCellTemplateMaker('办公地址', 'officeAddress'),
 ])
 
@@ -217,6 +223,7 @@ const 编辑部门按钮 = btnMaker('编辑', btnActionTemplate.Function, {
   function: async (that, data) => {
     openDrawerFormEasy(that, {
       queryItemTemplate: departmentManage.getByKeyArr(['name', 'jobName', 'officeAddress']),
+      btnList: [提交部门编辑或者新增],
       data,
       title: '编辑部门'
     })
@@ -227,7 +234,9 @@ const 新增部门按钮 = btnMaker('新增', btnActionTemplate.Function, {
   function: async (that, data) => {
     console.log(that, data, 'qwe')
     openDrawerFormEasy(that, {
-      ...editDrawProps, title: '新增绑定部门', data: {
+      ...editDrawProps,
+      title: '新增绑定部门',
+      data: {
         uid: that.query.uids[0]
       },
     })
@@ -252,6 +261,33 @@ const departmentManageBtnList = [新增部门按钮]
 
 
 export const userInfoCardBtnList = [删除部门按钮, 新增部门按钮, 编辑部门按钮]
+
+
+
+// 提交用户信息
+const submitUserInfo = btnMaker("提交", btnActionTemplate.Function, {
+  icon: "Position",
+  function: async (that, data) => {
+    let ext = {}
+    let queryItemTemplate = (await userFieldStorage()).getAll()
+    queryItemTemplate.map((cell: tableCellTemplate) => {
+      ext[cell.key] = data[cell.key]
+    })
+    let res = await post(
+      "/web/usc/user/" + (data.id ? "update" : "insert"),
+      {
+        ...data,
+        ext: JSON.stringify(ext)
+      }
+    );
+    repBackMessageShow(that, res)
+  },
+  premission: [
+    '/web/usc/user/update',
+    '/web/usc/user/insert'
+  ],
+})
+
 /**
  * @name: userManage
  * @description: 用户管理界面
@@ -261,7 +297,51 @@ export const userInfoCardBtnList = [删除部门按钮, 新增部门按钮, 编�
 export const userInfoCard = async (userInfo) => {
   if (!userInfo.id) ElMessage.error('用户id不存在')
   let res = await post('/web/usc/user/select', { id: userInfo.id })
-  let num = 0
+  let num = 0;
+
+  let userInfoWithExt = async () => {
+    num++;
+    if (num > 3) res = await post('/web/usc/user/select', { id: userInfo.id })
+    return {
+      ...res.data,
+      ...JSON.parse(res.data.ext)
+    }
+  }
+  const userFieldTemplate = await (await userFieldStorage()).getAll()
+  const userTemplate = [...userTableCellStorage.getByKeyArr([
+    "name",
+    "icon",
+    "mobile"
+  ]),
+  ...userFieldTemplate
+  ]
+
+  /**
+  * @name: 打开编辑弹窗p-=
+  * @description: waitForWriting
+  * @authors: CZH
+  * @Date: 2022-12-09 17:50:58
+  */
+  const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
+    function: async (that, data) => {
+      let drawerProps = {
+        title: "用户编辑",
+        queryItemTemplate: userTemplate,
+        btnList: [
+          submitUserInfo
+        ],
+        data: {
+          ...(JSON.parse(data.ext)),
+          ...data,
+        }
+      };
+      that.$modules
+        .getModuleApi()
+      ["userManage_openDrawerForm"](that, drawerProps);
+    },
+    elType: 'primary',
+    icon: "Setting",
+  });
   return [
     gridCellMaker(
       "userInfo",
@@ -273,25 +353,27 @@ export const userInfoCard = async (userInfo) => {
       },
       {
         props: {
-          userInfo
+          showTemplate: userFieldTemplate,
+          userInfo: userInfoWithExt,
+          btnList: [editUserModel]
         },
         isSettingTool: false,
       }
     )
       .setPosition(0, 0)
-      .setSize(12, 4),
+      .setSize(4, 2),
     gridCellMaker(
       'departmentBindManager', "角色部门管理列表", {}, {
       name: 'userManage_searchTable',
       type: cardComponentType.componentList
     }, {
       props: {
-        showItemTemplate: departmentManage.getAll(),
+        showItemTemplate: departmentManage.getAll(['unitId']),
         autoSearch: true,
         defaultQuery: { uids: [userInfo.id] },
         searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
           num++;
-          if (num > 2) res = await post('/web/usc/user/select', { id: userInfo.id })
+          if (num > 3) res = await post('/web/usc/user/select', { id: userInfo.id })
           return res.data.units.map(x => {
             return {
               ...x,
@@ -305,7 +387,7 @@ export const userInfoCard = async (userInfo) => {
         btnList: departmentManageBtnList,
       },
       isSettingTool: false,
-    }).setSize(12, 5).setPosition(0, 4),
+    }).setSize(6, 4).setPosition(0, 2),
 
     gridCellMaker(
       'roleBindManager', "角色权限管理列表", {}, {
@@ -318,7 +400,7 @@ export const userInfoCard = async (userInfo) => {
         defaultQuery: { uids: [userInfo.id] },
         searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
           num++;
-          if (num > 2) res = await post('/web/usc/user/select', { id: userInfo.id })
+          if (num > 3) res = await post('/web/usc/user/select', { id: userInfo.id })
           return res.data.roles.map(x => {
             return {
               ...x,
@@ -330,6 +412,6 @@ export const userInfoCard = async (userInfo) => {
         btnList: roleBindBtnList
       },
       isSettingTool: false,
-    }).setSize(12, 5).setPosition(0, 9)
+    }).setSize(6, 4).setPosition(0, 6)
   ] as gridCellTemplate[];
 };

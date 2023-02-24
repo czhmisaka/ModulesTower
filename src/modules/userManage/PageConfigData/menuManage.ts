@@ -480,7 +480,7 @@ pageConfigDataTableCellStorage.push(
   tableCellTemplateMaker(
     "操作",
     "actionaction",
-    actionCell([新增按钮, 编辑按钮, 删除按钮, 自动生成按钮], {
+    actionCell([新增按钮, 编辑按钮, 自动生成按钮, 删除按钮], {
       fixed: "right",
     })
   )
@@ -493,9 +493,9 @@ const btnList = [新增模块按钮];
 export const menuManageBtnList = [
   新增按钮,
   新增模块按钮,
+  自动生成按钮,
   删除按钮,
   编辑按钮,
-  自动生成按钮,
 ];
 export const menuManage = async () => {
   return [

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-22 18:12:53
+ * @LastEditTime: 2023-02-20 16:48:27
  * @FilePath: /configforpagedemo/src/modules/Graph/PageConfigData/index.ts
  */
 
@@ -17,7 +17,6 @@ const base = {
     wholeScreen: true,
     maxRows: 8,
     margin: 12,
-    Fullscreen: true,
   },
 };
 

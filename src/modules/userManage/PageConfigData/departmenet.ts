@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 09:56:47
+ * @LastEditors: huangjunchao 3363926843@qq.com
+ * @LastEditTime: 2023-02-24 14:29:05
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -138,7 +138,7 @@ export const 新增部门 = btnMaker(
       };
       that.$modules
         .getModuleApi()
-        ["userManage_openDrawerForm"](that, drawerProps);
+      ["userManage_openDrawerForm"](that, drawerProps);
     },
   },
   ["/web/usc/unit/insert"],
@@ -195,7 +195,7 @@ const 编辑部门 = btnMaker(
       };
       that.$modules
         .getModuleApi()
-        ["userManage_openDrawerForm"](that, drawerProps);
+      ["userManage_openDrawerForm"](that, drawerProps);
     },
   },
   ["/web/usc/unit/update"],
@@ -203,6 +203,11 @@ const 编辑部门 = btnMaker(
 );
 
 const btnList = [新增部门];
+export const departmentBtnList = [
+  新增部门,
+  删除部门,
+  编辑部门
+];
 
 export const departmentDrawerprops = (that, data) => {
   that.$modules.getModuleApi()["userManage_openDrawerForm"](that, {

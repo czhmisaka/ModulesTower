@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 20:40:46
+ * @LastEditTime: 2023-02-24 23:41:01
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/index.ts
  */
 
@@ -10,7 +10,7 @@ import { isValidKey } from "@/utils/index";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { mainDesktop, userManage } from "./main";
 import { actionLogManage } from "./actionLogManage";
-import { adminManage } from "./adminManage";
+import { adminManage, adminManageBtnList } from "./adminManage";
 import { stringAnyObj } from "@/modules/userManage/types";
 import { btnCellTemplate } from "../types";
 import { dictManageBtnList, dictManage } from "./dictManage";
