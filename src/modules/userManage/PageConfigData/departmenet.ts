@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: huangjunchao 3363926843@qq.com
- * @LastEditTime: 2023-02-13 15:02:10
+ * @LastEditTime: 2023-02-24 14:17:28
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/departmenet.ts
  */
 
@@ -37,7 +37,6 @@ import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm"
 import { ElMessage, ElMessageBox } from "element-plus";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 
-
 const submit = btnMaker("提交", btnActionTemplate.Function, {
   icon: "Position",
   elType: "primary",
@@ -52,7 +51,7 @@ const submit = btnMaker("提交", btnActionTemplate.Function, {
 });
 
 // 部门数据
-const UnitTableCellStorage = new SearchCellStorage([
+export const UnitTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("ID", "id"),
   tableCellTemplateMaker("创建者ID", "createUserId"),
   tableCellTemplateMaker(
@@ -111,92 +110,115 @@ const UnitTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("浙政钉Code", "zzdCode"),
 ]);
 
-const userTableSearchTemplate = [
-  ...UnitTableCellStorage.getByKeyArr(["name"]),
-];
+const userTableSearchTemplate = [...UnitTableCellStorage.getByKeyArr(["name"])];
 
-const 新增部门 = btnMaker("新增部门", btnActionTemplate.Function, {
-  icon: "Plus",
-  elType: "primary",
-  function: async (that, data) => {
-    let drawerProps = {
-      title: "新增部门",
-      schema: {
-        required: ["name"],
-      },
-      queryItemTemplate: UnitTableCellStorage.getByKeyArr([
-        "name",
-        "description",
-        "orderNumber",
-      ]),
-      btnList: [submit],
-      data: {
-        parentId:
-          data && "id" in data ? data.id : that.baseData?.unit?.id || "",
-      },
-    };
-    that.$modules
-      .getModuleApi()
-    ["userManage_openDrawerForm"](that, drawerProps);
+// 2023-02-16 要求可以更换上级部门 , 等待讨论
+// 同时要求回显之前的部门
+export const 新增部门 = btnMaker(
+  "新增部门",
+  btnActionTemplate.Function,
+  {
+    elType: "primary",
+    function: async (that, data) => {
+      let drawerProps = {
+        title: "新增部门",
+        schema: {
+          required: ["name"],
+        },
+        queryItemTemplate: UnitTableCellStorage.getByKeyArr([
+          "name",
+          "description",
+          "orderNumber",
+        ]),
+        btnList: [submit],
+        data: {
+          parentId:
+            data && "id" in data ? data.id : that.baseData?.unit?.id || "",
+        },
+      };
+      that.$modules
+        .getModuleApi()
+      ["userManage_openDrawerForm"](that, drawerProps);
+    },
   },
-},
   ["/web/usc/unit/insert"],
   "新增部门按钮"
 );
 
-const 删除部门 = btnMaker("删除", btnActionTemplate.Function, {
-  icon: "Delete",
-  elType: "danger",
-  function: async (that, data) => {
-    if (data.children && data.children.length > 0)
-      return ElMessage.warning("【无法删除】：存在子部门");
-    ElMessageBox({
-      title: "确认删除【" + data.name + "】吗？",
-      type: "warning",
-      callback: async (action) => {
-        if (action == "confirm") {
-          let res = await post("/web/usc/unit/delete", {
-            id: data.id,
-          });
-          if (res.message == "成功") {
-            ElMessage.success(res.message);
-            if (that.close) that.close();
-            else refreshDesktop(that);
-          } else ElMessage.error(res.message);
-        }
-      },
-    });
+const 删除部门 = btnMaker(
+  "删除",
+  btnActionTemplate.Function,
+  {
+    icon: "Delete",
+    elType: "danger",
+    function: async (that, data) => {
+      if (data.children && data.children.length > 0)
+        return ElMessage.warning("【无法删除】：存在子部门");
+      ElMessageBox({
+        title: "确认删除【" + data.name + "】吗？",
+        type: "warning",
+        callback: async (action) => {
+          if (action == "confirm") {
+            let res = await post("/web/usc/unit/delete", {
+              id: data.id,
+            });
+            if (res.message == "成功") {
+              ElMessage.success(res.message);
+              if (that.close) that.close();
+              else refreshDesktop(that);
+            } else ElMessage.error(res.message);
+          }
+        },
+      });
+    },
   },
-},
   ["/web/usc/unit/delete"],
   "删除部门按钮"
 );
-const 编辑部门 = btnMaker("编辑", btnActionTemplate.Function, {
-  icon: "Edit",
-  elType: "primary",
-  function: async (that, data) => {
-    let drawerProps = {
-      title: `编辑部门`,
-      schema: { required: ["name"] },
-      queryItemTemplate: UnitTableCellStorage.getByKeyArr([
-        "name",
-        "description",
-        "orderNumber",
-      ]),
-      data,
-      btnList: [submit],
-    };
-    that.$modules
-      .getModuleApi()
-    ["userManage_openDrawerForm"](that, drawerProps);
+const 编辑部门 = btnMaker(
+  "编辑",
+  btnActionTemplate.Function,
+  {
+    icon: "Edit",
+    elType: "primary",
+    function: async (that, data) => {
+      let drawerProps = {
+        title: `编辑部门`,
+        schema: { required: ["name"] },
+        queryItemTemplate: UnitTableCellStorage.getByKeyArr([
+          "name",
+          "description",
+          "orderNumber",
+        ]),
+        data,
+        btnList: [submit],
+      };
+      that.$modules
+        .getModuleApi()
+      ["userManage_openDrawerForm"](that, drawerProps);
+    },
   },
-},
   ["/web/usc/unit/update"],
   "编辑部门按钮"
 );
 
 const btnList = [新增部门];
-export const departmenetBtnList = [新增部门, 删除部门, 编辑部门];
+
+export const departmentDrawerprops = (that, data) => {
+  that.$modules.getModuleApi()["userManage_openDrawerForm"](that, {
+    title: "部门详情",
+    queryItemTemplate: UnitTableCellStorage.getByLabelArr([
+      "部门名称",
+      "部门人数",
+      "行政区划",
+      "部门排序",
+      "操作",
+    ]),
+    btnList: [新增部门, 删除部门, 编辑部门],
+    noEdit: true,
+    data,
+  });
+};
 
 UnitTableCellStorage.push(
   tableCellTemplateMaker(
@@ -235,19 +257,7 @@ export const department = async () => {
             resolve(data);
           },
           clickItemDetailFunc: (that, data) => {
-            that.$modules.getModuleApi()["userManage_openDrawerForm"](that, {
-              title: "部门详情",
-              queryItemTemplate: UnitTableCellStorage.getByLabelArr([
-                "部门名称",
-                "部门人数",
-                "行政区划",
-                "部门排序",
-                "操作",
-              ]),
-              btnList: [新增部门, 删除部门, 编辑部门],
-              noEdit: true,
-              data,
-            });
+            departmentDrawerprops(that, data);
           },
           outputKey: "unit",
           defaultProps: {
@@ -298,4 +308,3 @@ export const department = async () => {
       .setSize(9, 8),
   ] as gridCellTemplate[];
 };
-

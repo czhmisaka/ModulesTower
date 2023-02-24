@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-18 23:06:49
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-18 23:07:03
+ * @LastEditTime: 2023-02-17 18:47:14
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/card/cardBg.vue
 -->
 
@@ -16,6 +16,10 @@ export default defineComponent({
       default: () => {
         return {} as { [key: string]: any };
       },
+    },
+    title: {
+      type: String,
+      default: "",
     },
   },
   setup(props, context) {

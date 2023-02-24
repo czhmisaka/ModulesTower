@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-30 17:03:01
+ * @LastEditTime: 2023-02-13 16:54:09
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
@@ -93,11 +93,11 @@ export default defineComponent({
   height: 6px;
 }
 *::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.02);
   border-radius: 3px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #409eff;
+  background: #e6e8eb;
   border-radius: 3px;
 }
 </style>

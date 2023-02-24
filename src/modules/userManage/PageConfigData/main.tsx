@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: huangjunchao 3363926843@qq.com
- * @LastEditTime: 2023-02-14 16:24:55
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-02-23 21:00:50
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/main.tsx
  */
 
@@ -32,6 +32,7 @@ import {
   searchCell,
   staticSelectCell,
   actionCell,
+  remoteDictSelectSearchCell,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import {
   btnActionTemplate,
@@ -43,16 +44,21 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { userInfoCard } from '@/modules/userManage/PageConfigData/user/userInfo';
 import { openDrawerFormEasy } from '../component/searchTable/drawerForm';
 
+import { departmentDrawerprops, 新增部门 } from './departmenet'
+import { userFieldStorage } from "./user/userValueManage";
+import { repBackMessageShow } from '@/modules/userManage/component/searchTable/drawerForm';
+import { tableCellTemplate } from '../types';
+
 // 性别
 const gender = {
   1: "男",
   2: "女",
 };
 
-const userTableCellStorage = new SearchCellStorage([
+export const userTableCellStorage = new SearchCellStorage([
   tableCellTemplateMaker("姓名", "name"),
-  tableCellTemplateMaker("性别", "gender", staticSelectCell(gender)),
-  tableCellTemplateMaker("icon", "icon"),
+  tableCellTemplateMaker("性别", "gender", remoteDictSelectSearchCell('lcdp_user_gender')),
+  tableCellTemplateMaker("icon", "icon", searchCell(formInputType.uploadImage)),
   tableCellTemplateMaker("简介", "description"),
   tableCellTemplateMaker("管理员", "adminFlag"),
   tableCellTemplateMaker("邮箱", "mail"),
@@ -175,6 +181,31 @@ const searchTable = new SearchCellStorage([
 ]);
 
 
+
+// 提交用户信息
+const submitUserInfo = btnMaker("提交", btnActionTemplate.Function, {
+  icon: "Position",
+  function: async (that, data) => {
+    let ext = {}
+    let queryItemTemplate = (await userFieldStorage()).getAll()
+    queryItemTemplate.map((cell: tableCellTemplate) => {
+      ext[cell.key] = data[cell.key]
+    })
+    let res = await post(
+      "/web/usc/user/" + (data.id ? "update" : "insert"),
+      {
+        ...data,
+        ext: JSON.stringify(ext)
+      }
+    );
+    repBackMessageShow(that, res)
+  },
+  premission: [
+    '/web/usc/user/update',
+    '/web/usc/user/insert'
+  ],
+})
+
 /**
   * @name: 打开新增弹窗
   * @description: waitForWriting
@@ -185,35 +216,16 @@ const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
   function: async (that, data) => {
     let drawerProps = {
       title: "创建新用户",
-      queryItemTemplate: userTableCellStorage.getByKeyArr([
+      queryItemTemplate: [...userTableCellStorage.getByKeyArr([
         "name",
-        "gender",
+        'mobile',
         "icon",
-        "description",
-        "mail",
-        "mobile",
-        "birthday",
-        "idCard",
-        "unitIds",
+        'unitIds'
       ]),
+      ... (await userFieldStorage()).getAll()
+      ],
       btnList: [
-        btnMaker("提交", btnActionTemplate.Function, {
-          icon: "Position",
-          function: async (that, data) => {
-            let res = await post(
-              "/web/usc/user/" + (data.id ? "update" : "insert"),
-              data
-            );
-            ElMessage[res.message == "成功" ? "success" : "error"](
-              res.message
-            );
-            if (res.message == "成功" && that.close) that.close();
-          },
-          premission: [
-            '/web/usc/user/update',
-            '/web/usc/user/insert'
-          ],
-        }),
+        submitUserInfo
       ],
       data: {}
     };
@@ -226,47 +238,25 @@ const addNewModel = btnMaker("新增", btnActionTemplate.Function, {
   elType: "primary",
 }, ["/web/usc/user/insert"], "创建新用户");
 
-/**
-  * @name: 打开编辑弹窗
-  * @description: waitForWriting
-  * @authors: CZH
-  * @Date: 2022-12-09 17:50:58
-  */
 const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
   function: async (that, data) => {
     data.gender = data.gender + ''
     let drawerProps = {
       title: "用户编辑",
-      queryItemTemplate: userTableCellStorage.getByKeyArr([
+      queryItemTemplate: [...userTableCellStorage.getByKeyArr([
         "name",
-        "gender",
         "icon",
-        "description",
-        "mail",
-        "mobile",
-        "birthday",
-        "idCard",
+        "mobile"
       ]),
-      btnList: [
-        btnMaker("提交", btnActionTemplate.Function, {
-          icon: "Position",
-          function: async (that, data) => {
-            let res = await post(
-              "/web/usc/user/" + (data.id ? "update" : "insert"),
-              data
-            );
-            ElMessage[res.message == "成功" ? "success" : "error"](
-              res.message
-            );
-            if (res.message == "成功" && that.close) that.close();
-          },
-          premission: [
-            '/web/usc/user/update',
-            '/web/usc/user/insert'
-          ],
-        }),
+      ... await (await userFieldStorage()).getAll()
       ],
-      data
+      btnList: [
+        submitUserInfo
+      ],
+      data: {
+        ...(JSON.parse(data.ext)),
+        ...data,
+      }
     };
     that.$modules
       .getModuleApi()
@@ -274,6 +264,7 @@ const editUserModel = btnMaker("编辑", btnActionTemplate.Function, {
   },
   icon: "Setting",
 }, ["/web/usc/user/update"], "编辑用户");
+
 
 /**
  * @name: roleBindBtn
@@ -414,6 +405,8 @@ const unitBindBtn = btnMaker("用户部门管理", btnActionTemplate.Function, {
 
 
 
+
+
 /**
  * @name: mainDesktop
  * @description: 基于部门的用户管理
@@ -457,16 +450,16 @@ export const mainDesktop = async () => {
 
   const btnList = [addNewModel, selectedDeleteBtn];
 
-  const 打开用户信息弹窗 = btnMaker('用户信息弹窗', btnActionTemplate.Function, {
+  const 打开用户信息弹窗 = btnMaker('用户信息', btnActionTemplate.Function, {
     elType: 'primary',
     function: async (that, data) => {
       let drawProps = {
-        title: '用户信息',
-        size: 70,
+        title: '',
+        size: 60,
         gridDesktop: true,
         gridDesktopConfig: {
           desktopData: async () => await userInfoCard(data),
-          gridColNum: 12,
+          gridColNum: 6,
         },
       } as drawerProps
       openDrawerFormEasy(that, drawProps)
@@ -478,8 +471,7 @@ export const mainDesktop = async () => {
   const tableAction = tableCellTemplateMaker(
     "操作",
     "actionBtnList",
-    //[unitBindBtn, roleBindBtn, editUserModel]
-    actionCell([editUserModel, 打开用户信息弹窗], {
+    actionCell([打开用户信息弹窗], {
       fixed: "right",
       noDetail: true
     })
@@ -509,6 +501,10 @@ export const mainDesktop = async () => {
             });
             resolve(data);
           },
+          clickItemDetailFunc: (that, data) => {
+            departmentDrawerprops(that, data)
+          },
+          searchBtn: 新增部门,
           outputKey: "unit",
           defaultProps: {
             label: "name",

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 18:19:42
+ * @LastEditTime: 2023-02-15 18:37:38
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -12,9 +12,14 @@
     :size="`${plugInData.size || (isMobile() ? 100 : 50)}%`"
     :with-header="plugInData.title ? true : false"
     :append-to-body="true"
+    :close-on-click-modal="true"
+    :show-close="true"
   >
     <div
-      class="formBody"
+      :class="
+        'formBody ' +
+        (!plugInData.btnList || plugInData.btnList.length == 0 ? 'formBody_noBtn' : '')
+      "
       v-if="isOpen && plugInData['gridDesktop'] && plugInData['gridDesktopConfig']"
     >
       <div
@@ -71,26 +76,6 @@
           </span>
         </el-form-item>
       </el-form>
-      <!-- <el-descriptions class="margin-top" :column="1" border>
-        <el-descriptions-item
-          min-width="100%"
-          :label-align="'right'"
-          :align="'left'"
-          v-for="item in plugInData['queryItemTemplate'].filter(
-            (x) => x.table.type != showType.btnList
-          )"
-          :label="item.label"
-        >
-          <span v-if="item.table.type == showType.funcComponent">
-            <component
-              :is="item.table.showFunc(plugInData['data'], item.key)"
-            ></component>
-          </span>
-          <span v-else-if="item.table.type == showType.func">
-            {{ item.table.showFunc(plugInData["data"], item.key) }}
-          </span>
-        </el-descriptions-item>
-      </el-descriptions> -->
     </div>
     <div
       :style="{ textAlign: 'left' }"
@@ -219,10 +204,13 @@ export default defineComponent({
     async checkOnChange(val = this.formData, force = false) {
       Object.keys(val).map((key) => {
         if (val[key] != formDataForCheck[key] || force) {
-          this.queryItemTemplate.map((cell) => {
+          this.queryItemTemplate.map(async (cell) => {
             if (cell.key == key && cell.input && cell.input.onChangeFunc) {
               // 如有返回则可以重置表单的输入方案
-              const queryItemTemplate = cell.input.onChangeFunc(this, this.formData);
+              const queryItemTemplate = await cell.input.onChangeFunc(
+                this,
+                this.formData
+              );
               if (queryItemTemplate) this.initForm(queryItemTemplate);
             }
           });
@@ -292,6 +280,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 .formBody {
   height: calc(100% - 85px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.formBody_noBtn {
+  height: calc(100%);
   overflow-y: auto;
 }
 </style>

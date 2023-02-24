@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 16:20:00
+ * @LastEditTime: 2023-02-14 09:41:05
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -11,6 +11,7 @@
       :header-cell-style="isDark ? tableHeaderDark : tableHeader"
       :data="dataList"
       @selection-change="selectPosition"
+      @row-dblclick="cellDblclick"
       v-loading="loading"
       style="cursor: default"
       :row-style="{ 'min-height': '60px', 'min-width': '100px' }"
@@ -63,9 +64,7 @@
               placement="top-start"
               trigger="hover"
               :show-after="500"
-              :content="
-                `【${item.label}】` + item.table.showFunc(scope.row, item.key) + ''
-              "
+              :content="item.table.showFunc(scope.row, item.key) + ''"
             >
               <template #reference>
                 {{ item.table.showFunc(scope.row, item.key) }}
@@ -77,6 +76,15 @@
             :style="item.table?.style"
             v-if="item.table.type == showType.btnList"
           >
+            <el-button
+              v-if="!item.table.noDetail"
+              size="small"
+              link
+              type="primary"
+              @click="cellDblclick(scope.row)"
+            >
+              详情
+            </el-button>
             <el-button
               v-for="btns in (btnList(item, scope.row)
                 ? btnList(item, scope.row)
@@ -91,15 +99,6 @@
               @click="btnClick(btns, scope.row)"
             >
               {{ btns.label }}
-            </el-button>
-            <el-button
-              v-if="!item.table.noDetail"
-              size="small"
-              type="default"
-              style="float: right; margin-right: 6px"
-              @click="cellDblclick(scope.row)"
-              icon="More"
-            >
             </el-button>
           </div>
         </template>
@@ -219,7 +218,7 @@ export default defineComponent({
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
         await btn.function(that, data);
-        this.$emit("search");
+        // this.$emit("search");
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
@@ -251,10 +250,10 @@ export default defineComponent({
   display: contents;
   float: left;
   user-select: text;
-  font-weight: 200;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
 }
 .noOverflow {
   overflow: hidden;
