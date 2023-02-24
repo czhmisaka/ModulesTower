@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-20 00:12:27
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
+ * @LastEditTime: 2023-02-25 00:24:38
+ * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
 import {
@@ -38,6 +38,7 @@ import { InfoCardBtnList } from "./InfoCardBtnList";
 import { setData } from "../../../components/basicComponents/grid/module/cardApi/index";
 import { dobuleCheckBtnMaker } from "../../userManage/component/searchTable/drawerForm";
 import { useUserStoreHook } from "@/store/modules/user";
+import { SearchCellStorage } from "../../userManage/component/searchTable/searchTable";
 
 let baseData = {} as { [key: string]: any };
 let lastFunc = -1;
@@ -201,6 +202,13 @@ export const mainDesktop = async () => {
       label: x.name,
     };
   });
+  const user = useUserStoreHook().getOptions();
+
+  const storage = new SearchCellStorage(
+    Object.keys(user).map((x) => {
+      return tableCellTemplateMaker(x, x);
+    })
+  );
 
   return [
     gridCellMaker(
@@ -314,6 +322,32 @@ export const mainDesktop = async () => {
       .setPosition(2, 1)
       .setSize(8, 11),
     gridCellMaker(
+      "userInfo",
+      "用户信息卡片",
+      {},
+      {
+        name: "userManage_userInfoCard",
+        type: cardComponentType.componentList,
+      },
+      {
+        props: {
+          showTemplate: storage.getAll(),
+          userInfo: async () => {
+            return {
+              ...user,
+              name: user.username,
+              mobile: user.email,
+              icon: "/imageserver/i.php?/upload/2023/01/04/20230104223508-585754b4-sm.jpg",
+            };
+          },
+          btnList: [],
+        },
+        isSettingTool: false,
+      }
+    )
+      .setPosition(10, 0)
+      .setSize(2, 1),
+    gridCellMaker(
       "InfoCard",
       "图片信息",
       {},
@@ -328,8 +362,8 @@ export const mainDesktop = async () => {
         },
       }
     )
-      .setPosition(10, 0)
-      .setSize(2, 12),
+      .setPosition(10, 1)
+      .setSize(2, 11),
     gridCellMaker(
       "icon",
       "返回按钮",

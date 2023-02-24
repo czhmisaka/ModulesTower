@@ -17,6 +17,8 @@ import { ElIcon } from "element-plus";
 import { componentLists } from "./module/componentLists";
 import { deviceDetection, useDark, useGlobal } from "@pureadmin/utils";
 
+import { hightLightComponent } from "@/components/basicComponents/grid/module/cardApi/index";
+
 export default defineComponent({
   name: "gridCardBox",
   emits: ["onChange", "openComponentsList"],
@@ -78,6 +80,12 @@ export default defineComponent({
           : true;
       return back;
     };
+
+    // 测试用全局高亮
+    const highLight = ref(true);
+    const delay = ref(500);
+    let timeoutIn = null as any;
+    let timeoutOut = null as any;
 
     return () => [
       h(
