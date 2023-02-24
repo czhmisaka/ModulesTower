@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-23 22:03:20
+ * @LastEditTime: 2023-02-24 14:38:41
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userInfo.tsx
  */
 
@@ -313,7 +313,7 @@ export const userInfoCard = async (userInfo) => {
   ]
 
   /**
-  * @name: 打开编辑弹窗
+  * @name: 打开编辑弹窗p-=
   * @description: waitForWriting
   * @authors: CZH
   * @Date: 2022-12-09 17:50:58
