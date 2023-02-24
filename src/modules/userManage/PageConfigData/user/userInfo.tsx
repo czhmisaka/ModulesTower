@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-24 14:38:41
+ * @LastEditTime: 2023-02-24 17:38:22
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/user/userInfo.tsx
  */
 
@@ -223,6 +223,7 @@ const 编辑部门按钮 = btnMaker('编辑', btnActionTemplate.Function, {
   function: async (that, data) => {
     openDrawerFormEasy(that, {
       queryItemTemplate: departmentManage.getByKeyArr(['name', 'jobName', 'officeAddress']),
+      btnList: [提交部门编辑或者新增],
       data,
       title: '编辑部门'
     })
@@ -233,7 +234,9 @@ const 新增部门按钮 = btnMaker('新增', btnActionTemplate.Function, {
   function: async (that, data) => {
     console.log(that, data, 'qwe')
     openDrawerFormEasy(that, {
-      ...editDrawProps, title: '新增绑定部门', data: {
+      ...editDrawProps,
+      title: '新增绑定部门',
+      data: {
         uid: that.query.uids[0]
       },
     })
@@ -304,12 +307,13 @@ export const userInfoCard = async (userInfo) => {
       ...JSON.parse(res.data.ext)
     }
   }
+  const userFieldTemplate = await (await userFieldStorage()).getAll()
   const userTemplate = [...userTableCellStorage.getByKeyArr([
     "name",
     "icon",
     "mobile"
   ]),
-  ... await (await userFieldStorage()).getAll()
+  ...userFieldTemplate
   ]
 
   /**
@@ -349,7 +353,7 @@ export const userInfoCard = async (userInfo) => {
       },
       {
         props: {
-          showTemplate: userTemplate,
+          showTemplate: userFieldTemplate,
           userInfo: userInfoWithExt,
           btnList: [editUserModel]
         },
@@ -359,31 +363,12 @@ export const userInfoCard = async (userInfo) => {
       .setPosition(0, 0)
       .setSize(4, 2),
     gridCellMaker(
-      "userInfo1",
-      "用户信息卡片",
-      {},
-      {
-        name: "userManage_userInfoCard",
-        type: cardComponentType.componentList,
-      },
-      {
-        props: {
-          showTemplate: userTemplate,
-          userInfo: userInfoWithExt,
-          btnList: [editUserModel]
-        },
-        isSettingTool: false,
-      }
-    )
-      .setPosition(4, 0)
-      .setSize(2, 1),
-    gridCellMaker(
       'departmentBindManager', "角色部门管理列表", {}, {
       name: 'userManage_searchTable',
       type: cardComponentType.componentList
     }, {
       props: {
-        showItemTemplate: departmentManage.getAll(),
+        showItemTemplate: departmentManage.getAll(['unitId']),
         autoSearch: true,
         defaultQuery: { uids: [userInfo.id] },
         searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
