@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-20 16:48:27
- * @FilePath: /configforpagedemo/src/modules/Graph/PageConfigData/index.ts
+ * @LastEditTime: 2023-02-26 10:42:35
+ * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/PageConfigData/index.ts
  */
 
 import { mainDesktop } from "./main";
@@ -21,10 +21,10 @@ const base = {
 };
 
 const pageConfig = {
-  main: {
-    desktopData: mainDesktop,
-    ...base,
-  },
+  // main: {
+  //   desktopData: mainDesktop,
+  //   ...base,
+  // },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

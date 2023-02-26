@@ -22,10 +22,10 @@ const base = {
 };
 
 const pageConfig = {
-  main: {
-    desktopData: mainDesktop,
-    ...base,
-  },
+  // main: {
+  //   desktopData: mainDesktop,
+  //   ...base,
+  // },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {
