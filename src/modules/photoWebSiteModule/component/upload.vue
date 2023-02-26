@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-10-20 21:59:36
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-28 00:18:52
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/upload.vue
+ * @LastEditTime: 2023-02-26 13:52:44
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/upload.vue
 -->
 <template>
   <cardBg>
@@ -16,6 +16,7 @@
             ? action
             : '/api/upload/?category_id=' + (baseData?.category?.id || 3) + '&user_id=1'
         "
+        :data="{}"
         :on-success="success"
         multiple
       >
