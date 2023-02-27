@@ -12,6 +12,7 @@ import { bg, avatar, illustration } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import { useModuleHook } from "@/store/modules/module";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
@@ -51,6 +52,8 @@ const onLogin = async (formEl: FormInstance | undefined) => {
               // 获取后端路由
               initRouter().then(() => {
                 message.success("登录成功");
+                // 获取访问路径的页面 同时切换模块 ， 或者进入模块首页 @Todo
+                const module = useModuleHook();
                 router.push("/");
               });
             }

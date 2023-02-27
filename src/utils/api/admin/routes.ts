@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 15:26:14
+ * @LastEditTime: 2023-02-27 17:16:45
  * @FilePath: /configforpagedemo/src/utils/api/admin/routes.ts
  */
 import { useModuleHook } from "@/store/modules/module";
@@ -22,10 +22,6 @@ export const getAsyncRoutes = async (noRefresh: boolean = false) => {
   } else {
     let data = [];
     let res = await post("/web/usc/menu/list/role", {});
-    // res.data.map((x) => {
-    //   data.push(dealAsyncMenuList(x));
-    // });
-    // data.filter(Boolean);
     module.init(res.data);
     return {
       data: module.nowModule.children || [],

@@ -232,7 +232,6 @@ const 编辑部门按钮 = btnMaker('编辑', btnActionTemplate.Function, {
 const 新增部门按钮 = btnMaker('新增', btnActionTemplate.Function, {
   elType: 'primary',
   function: async (that, data) => {
-    console.log(that, data, 'qwe')
     openDrawerFormEasy(that, {
       ...editDrawProps,
       title: '新增绑定部门',

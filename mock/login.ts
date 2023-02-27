@@ -13,7 +13,6 @@ export default [
   //   url: "/web/usc/login",
   //   method: "post",
   //   response: (req) => {
-  //     console.log(req, "qwe");
   //     const {lcdp} = req.body;
   //     if (lcdp.username === "15700197842") {
   //       return {

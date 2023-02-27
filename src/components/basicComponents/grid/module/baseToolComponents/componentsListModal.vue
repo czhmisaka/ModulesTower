@@ -62,7 +62,6 @@ export default defineComponent({
   },
   methods: {
     open() {
-      console.log("fuckisOpen");
       this.modalStatus.isOpen = true;
     },
 

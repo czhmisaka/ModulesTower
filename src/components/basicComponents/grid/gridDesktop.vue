@@ -514,7 +514,6 @@ export default defineComponent({
         width: width,
         height: height,
       };
-      // console.log(width, height, that.idRandom, "asd");
     }, 500);
   },
 

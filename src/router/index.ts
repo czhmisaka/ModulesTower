@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-24 17:56:58
+ * @LastEditTime: 2023-02-27 21:44:36
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -96,7 +96,7 @@ export function resetRouter() {
 
 /** 路由白名单 */
 const whiteList = [
-  router
+  ...router
     .getRoutes()
     .filter((x) => x.meta["allPeopleCanSee"])
     .map((x) => x.path),
@@ -190,29 +190,28 @@ router.afterEach(() => {
   NProgress.done();
 });
 
-const module = useModuleHook();
+let interval = null;
 
 // 路由守卫
 // 控制默认到index界面执行匹配
 router.beforeEach(async (to, from, next) => {
-  // console.log(to.matched, "匹配项目", to);
   let meta = {} as { [key: string]: any };
   if (to.matched && to.matched.length > 1) {
     meta = to.matched[1].meta;
-    module.checkPage(to.matched[1].meta);
+    useModuleHook().checkPage(to.matched[1].meta);
   } else if (to.matched.length == 0) {
-    next("/welcome");
+    if (decodeURI(to.path).split("/").length > 0) {
+      const routes = router.getRoutes();
+      const path = decodeURI(to.path);
+      if (routes.map((x) => x.path).indexOf(path) != -1)
+        routes.map((cell) => {
+          if (cell.path == path) next(cell);
+        });
+      else {
+        await useModuleHook().searchToPage(path);
+      }
+    }
   }
-
-  // // 特殊显示需求处理
-  // if ("Fullscreen" in meta && meta.Fullscreen == true) {
-  //   console.log(meta, "meta ");
-  //   // const { onContentFullScreen } = useTags();
-  //   // onContentFullScreen(true);
-  // } else {
-  //   // const { onContentFullScreen } = useTags();
-  //   // onContentFullScreen(false);
-  // }
   next();
 });
 

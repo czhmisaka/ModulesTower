@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-08 16:28:14
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-10 13:47:32
+ * @LastEditTime: 2023-02-27 20:18:16
  * @FilePath: /configforpagedemo/src/modules/userManage/PageConfigData/dictManage.tsx
  */
 import {
@@ -123,7 +123,6 @@ const 查看字典数据 = btnMaker('数据', btnActionTemplate.Function, {
                 }
             }
         }
-        console.log('start', drawerProps)
         that.$modules.getModuleApi()["userManage_openDrawerForm"](that, drawerProps);
     }
 }, [], '查看字典数据列表')

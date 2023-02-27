@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 18:13:08
+ * @LastEditTime: 2023-02-27 21:15:13
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -61,7 +61,7 @@ export interface drawerProps {
  * @Date: 2023-02-09 14:55:34
  */
 export interface desktopDataTemplate {
-  desktopData?: () => Promise<gridCellTemplate[]>;
+  desktopData?: () => Promise<gridCellTemplate[]> | gridCellTemplate[];
   gridColNum?: number;
   cusStyle?: {
     wholeScreen: boolean;

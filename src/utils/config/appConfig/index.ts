@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-04 18:33:26
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 17:17:53
+ * @LastEditTime: 2023-02-27 20:18:43
  * @FilePath: /configforpagedemo/src/utils/config/appConfig/index.ts
  */
 import { App } from "vue";
@@ -42,7 +42,6 @@ export const getServerConfig = async (app: App): Promise<undefined> => {
     url: `${VITE_PUBLIC_PATH}serverConfig.json`,
   })
     .then(({ data: config }) => {
-      console.log(config, "asdasdasd");
       let $config = app.config.globalProperties.$config;
       // 自动注入项目配置
       if (app && $config && typeof config === "object") {

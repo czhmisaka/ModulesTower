@@ -10,6 +10,8 @@ import { handleAliveRoute, delAliveRoutes } from "@/router/utils";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { useResizeObserver, useDebounceFn, useFullscreen } from "@vueuse/core";
 import { useGlobal } from "@pureadmin/utils";
+import { useModuleHook } from "@/store/modules/module";
+import { flatChildrenArr } from "@/router/util";
 const { $storage } = useGlobal<GlobalPropertiesApi>();
 
 const {
@@ -468,20 +470,6 @@ function storageConfigureChange<T>(key: string, val: T): void {
 
 watch([route], () => {
   activeIndex.value = -1;
-  // const { meta } = route;
-  // if ("Fullscreen" in meta && meta.Fullscreen == true) {
-  //   console.log(meta, "meta ");
-  //   const { onContentFullScreen } = useTags();
-  //   onContentFullScreen(true);
-  //   storageConfigureChange("hideTabs", true);
-  //   emitter.emit("tagViewsChange", (true as unknown) as string);
-  // } else {
-  //   const { onContentFullScreen } = useTags();
-  //   storageConfigureChange("hideTabs", false);
-  //   emitter.emit("tagViewsChange", (false as unknown) as string);
-
-  //   onContentFullScreen(false);
-  // }
   dynamicTagView();
 });
 
@@ -493,6 +481,12 @@ onMounted(() => {
     }, 200)
   );
 });
+
+const { nowModule } = useModuleHook();
+const list = flatChildrenArr(nowModule.children);
+// tagList = tagList.filter((x) => {
+//   return list.map((c) => c.path).indexOf(x.path) > 0;
+// });
 </script>
 
 <template>
@@ -516,6 +510,7 @@ onMounted(() => {
           @mouseleave.prevent="onMouseleave(index)"
           @click="tagOnClick(item)"
         >
+          <!-- <span v-if="list.map((x) => x.path).indexOf(item.path) > -1"> -->
           <router-link
             :to="item.path"
             class="dark:!text-text_color_primary dark:hover:!text-primary"

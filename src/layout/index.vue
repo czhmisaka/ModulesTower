@@ -31,8 +31,6 @@ const set: setType = reactive({
   }),
 
   fixedHeader: computed(() => {
-    console.log(pureSetting.fixedHeader, "asd");
-    // return pureSetting.fixedHeader || true;
     return pureSetting.fixedHeader;
   }),
 

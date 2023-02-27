@@ -16,6 +16,8 @@ import { useRoute, useRouter } from "vue-router";
 import { useSettingStoreHook } from "@/store/modules/settings";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { storageLocal, toggleClass, hasClass } from "@pureadmin/utils";
+import { useModuleHook } from "@/store/modules/module";
+import { flatChildrenArr } from "../../router/util";
 
 export function useTags() {
   const route = useRoute();
@@ -42,7 +44,8 @@ export function useTags() {
       storageLocal.getItem<StorageConfigs>("responsive-configure")?.hideTabs
     ) ?? ref("false");
   const multiTags: any = computed(() => {
-    return useMultiTagsStoreHook().multiTags;
+    let tagList = useMultiTagsStoreHook().multiTags as any[];
+    return tagList;
   });
 
   const tagsViews = reactive<Array<tagsViewsType>>([
@@ -57,7 +60,7 @@ export function useTags() {
       icon: "close",
       text: "关闭当前标签页",
       divided: false,
-      disabled: multiTags.value.length > 1 ? false : true,
+      disabled: multiTags.value.length > 0 ? false : true,
       show: true,
     },
     {
