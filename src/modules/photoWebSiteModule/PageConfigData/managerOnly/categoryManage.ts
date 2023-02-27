@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 19:29:19
+ * @LastEditTime: 2023-02-26 14:09:32
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/categoryManage.ts
  */
 import {
@@ -111,13 +111,66 @@ export const categoryManage = async () => {
     },
   });
 
+  const 打开相册预览 = btnMaker("预览图片", btnActionTemplate.Function, {
+    elType: "success",
+    icon: "Position",
+    function: async (that, data) => {
+      const getCategory = async (that, dataa) => {
+        let { limit, offset, query } = dataa;
+        let res = await post(
+          `/images?offset=${offset}&limit=${limit}${"&catrgory=" + data.id}`,
+          {}
+        );
+        return res.data.list.map((x) => {
+          let path = x.path.replace("./", "/");
+          return {
+            ...x,
+            url: `/imageserver/i.php?` + path.replace(".", "-sm.") + "",
+          };
+        });
+      };
+      let drawerProps = {
+        gridDesktop: true,
+        gridDesktopConfig: {
+          gridColNum: 12,
+          cusStyle: {
+            wholeScreen: true,
+            maxRows: 8,
+            margin: 6,
+          },
+          desktopData: async () => {
+            return [
+              gridCellMaker(
+                "waterFall",
+                "瀑布流图片展示功能",
+                {},
+                {
+                  name: "photoWebSiteModule_waterfall",
+                  type: cardComponentType.componentList,
+                },
+                {
+                  props: {
+                    getFunc: getCategory,
+                    startSearch: true,
+                  },
+                }
+              )
+                .setPosition(0, 0)
+                .setSize(12, 8),
+            ];
+          },
+        },
+      } as drawerProps;
+      openDrawerFormEasy(that, drawerProps);
+    },
+  });
+
   categorysStorage.push(
     tableCellTemplateMaker(
       "操作",
       "asd",
-      actionCell([新增相册, 编辑相册, 删除相册], {
+      actionCell([新增相册, 打开相册预览, 编辑相册, 删除相册], {
         fixed: "right",
-        noDetail: true,
       })
     )
   );
@@ -160,7 +213,7 @@ export const categoryManage = async () => {
                 "name",
                 "comment",
               ]),
-              btnList: [新增相册, 编辑相册, 删除相册],
+              btnList: [新增相册, 编辑相册, 删除相册, 打开相册预览],
               data: data,
               noEdit: true,
             };

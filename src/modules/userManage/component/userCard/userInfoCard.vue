@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-02-13 10:25:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 17:18:56
- * @FilePath: /configforpagedemo/src/modules/userManage/component/userCard/userInfoCard.vue
+ * @LastEditTime: 2023-02-26 14:17:17
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/userCard/userInfoCard.vue
 -->
 <template>
   <cardBg
