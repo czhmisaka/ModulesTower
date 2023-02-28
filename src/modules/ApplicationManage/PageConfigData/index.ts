@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-20 16:48:27
- * @FilePath: /configforpagedemo/src/modules/Graph/PageConfigData/index.ts
+ * @LastEditTime: 2023-02-28 10:56:48
+ * @FilePath: /configforpagedemo/src/modules/ApplicationManage/PageConfigData/index.ts
  */
 
 import { mainDesktop } from "./main";

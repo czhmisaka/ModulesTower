@@ -61,6 +61,8 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { useModuleHook } from "@/store/modules/module";
 import { btnCellTemplate } from "../types";
 import { dobuleCheckBtnMaker } from "../component/searchTable/drawerForm";
+import { dobuleCheckBtnMaker } from "../component/searchTable/drawerForm";
+import { repBackMessageShow } from "@/modules/userManage/component/searchTable/drawerForm";
 
 const typeToModule = {
   1: "模块",
@@ -418,6 +420,43 @@ const 删除按钮 = btnMaker(
   "删除按钮"
 );
 
+const 批量删除按钮权限 = btnMaker(
+  "批量删除按钮",
+  btnActionTemplate.Function,
+  {
+    icon: "Delete",
+    elType: "danger",
+    isShow: (data) => {
+      const { _selectedList: list } = data;
+      if (list && list.length > 0) {
+        const btnlist = list.filter((x) => x.type == 4);
+        return btnlist.length > 0;
+      } else return false;
+    },
+    function: async (that, data) => {
+      const { selectedList: list } = that;
+      const btnlist = list.filter((x) => x.type == 4);
+      if (
+        await dobuleCheckBtnMaker(
+          "批量删除按钮",
+          `【${btnlist.map((x) => x.name).join("】【")}】`,
+          {
+            icon: "Delete",
+            type: "danger",
+          }
+        ).catch(() => false)
+      ) {
+        let res = await post("/web/usc/menu/deleteBatch", {
+          ids: btnlist.map((x) => x.id),
+        });
+        repBackMessageShow(that, res);
+      }
+    },
+  },
+  ["/web/usc/menu/deleteBatch"],
+  "批量删除按钮"
+);
+
 const 自动生成按钮 = btnMaker(
   "生成权限",
   btnActionTemplate.Function,
@@ -488,9 +527,10 @@ pageConfigDataTableCellStorage.push(
 
 const SearchTemplate = pageConfigDataTableCellStorage.getByKeyArr(["name"]);
 
-const btnList = [新增模块按钮];
+const btnList = [新增模块按钮, 批量删除按钮权限];
 
 export const menuManageBtnList = [
+  批量删除按钮权限,
   新增按钮,
   新增模块按钮,
   自动生成按钮,

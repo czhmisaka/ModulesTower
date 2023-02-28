@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 16:13:11
+ * @LastEditTime: 2023-02-28 14:32:44
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -53,7 +53,9 @@
           >
           <div
             v-for="item in (btnList || []).filter((btn) =>
-              btn && btn.isShow ? btn.isShow(formData, btn) : true
+              btn && btn.isShow
+                ? btn.isShow({ ...formData, _selectedList: selectedList }, btn)
+                : true
             )"
             class="floatLeft"
           >
@@ -103,7 +105,14 @@ import {
 let interval = null;
 export default defineComponent({
   name: "表单组件",
-  props: ["query", "queryItemTemplate", "queryItemConfig", "btnList", "autoSearch"],
+  props: [
+    "query",
+    "queryItemTemplate",
+    "queryItemConfig",
+    "btnList",
+    "autoSearch",
+    "selectedList",
+  ],
   watch: {
     query: {
       handler(val) {
