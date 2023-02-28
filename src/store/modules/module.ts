@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-27 22:36:59
+ * @LastEditTime: 2023-02-28 09:35:10
  * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -227,7 +227,6 @@ export const moduleStore = defineStore({
           });
         }, 100);
       }
-      console.log(path, "qweqwe");
       initRouter(true).then(async (router) => {
         if (router && path != "/") {
           if (

@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-27 21:44:36
+ * @LastEditTime: 2023-02-28 09:42:56
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -117,7 +117,9 @@ router.beforeEach((to: toRouteType, _from, next) => {
       handleAliveRoute(newMatched);
     }
   }
-  const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey);
+  const userInfo =
+    storageSession.getItem<DataInfo<number>>(sessionKey) ||
+    JSON.parse(localStorage.getItem("user-info"));
   NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {

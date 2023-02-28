@@ -78,7 +78,10 @@ function isOneOfArray(a: Array<string>, b: Array<string>) {
 /** 从sessionStorage里取出当前登陆用户的角色roles，过滤无权限的菜单 */
 function filterNoPermissionTree(data: RouteComponent[]) {
   const currentRoles =
-    storageSession.getItem<DataInfo<number>>(sessionKey).roles ?? [];
+    (
+      storageSession.getItem<DataInfo<number>>(sessionKey) ||
+      JSON.parse(localStorage.getItem("user-info"))
+    ).roles ?? [];
   const newTree = cloneDeep(data).filter((v: any) =>
     isOneOfArray(v.meta?.roles, currentRoles)
   );

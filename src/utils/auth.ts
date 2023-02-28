@@ -46,7 +46,7 @@ export function setToken(data: DataInfo<Date>) {
 
   expires > 0
     ? Cookies.set(TokenKey, cookieString, {
-        expires: (expires - Date.now()) / 86400000
+        expires: (expires - Date.now()) / 86400000,
       })
     : Cookies.set(TokenKey, cookieString);
 
@@ -57,7 +57,7 @@ export function setToken(data: DataInfo<Date>) {
       refreshToken,
       expires,
       username,
-      roles
+      roles,
     });
   }
 
@@ -66,7 +66,8 @@ export function setToken(data: DataInfo<Date>) {
     setSessionKey(username, roles);
   } else {
     const { username, roles } =
-      storageSession.getItem<DataInfo<number>>(sessionKey);
+      storageSession.getItem<DataInfo<number>>(sessionKey) ||
+      JSON.parse(localStorage.getItem("user-info"));
     setSessionKey(username, roles);
   }
 }

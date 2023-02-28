@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 10:01:22
+ * @LastEditTime: 2023-02-28 09:44:01
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -29,9 +29,16 @@ export const useUserStore = defineStore({
   state: (): userType => ({
     // 用户名
     username:
-      storageSession.getItem<DataInfo<number>>(sessionKey)?.username ?? "",
+      (
+        storageSession.getItem<DataInfo<number>>(sessionKey) ||
+        JSON.parse(localStorage.getItem("user-info"))
+      )?.username ?? "",
     // 页面级别权限
-    roles: storageSession.getItem<DataInfo<number>>(sessionKey)?.roles ?? [],
+    roles:
+      (
+        storageSession.getItem<DataInfo<number>>(sessionKey) ||
+        JSON.parse(localStorage.getItem("user-info"))
+      )?.roles ?? [],
     // 前端生成的验证码（按实际需求替换）
     verifyCode: "",
     // 判断登录页面显示哪个组件（0：登录（默认）、1：手机登录、2：二维码登录、3：注册、4：忘记密码）
@@ -72,6 +79,7 @@ export const useUserStore = defineStore({
           this.options = data;
           this.isAdminFlag = res.data.loginAdminFlag;
           setToken(data);
+          localStorage.setItem("user-info", JSON.stringify(data));
           resolve(data);
         }
       });
@@ -85,6 +93,7 @@ export const useUserStore = defineStore({
       removeToken();
       router.push(loginPage);
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
+      localStorage.setItem("user-info", "");
       resetRouter();
     },
 
