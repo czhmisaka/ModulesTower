@@ -40,7 +40,6 @@ export const useMultiTagsStore = defineStore({
       value?: T | multiType,
       position?: positionType
     ): T {
-      console.log(mode, "sdqweqwe");
       switch (mode) {
         case "equal":
           this.multiTags = value;
@@ -105,7 +104,6 @@ export const useMultiTagsStore = defineStore({
               this.multiTags.splice(position?.startIndex, position?.length);
           }
           this.tagsCache(this.multiTags);
-          console.log(this.multiTags);
           return this.multiTags;
         case "slice":
           return this.multiTags.slice(-1);

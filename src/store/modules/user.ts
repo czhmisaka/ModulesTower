@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 09:44:01
+ * @LastEditTime: 2023-02-28 16:01:37
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -31,13 +31,13 @@ export const useUserStore = defineStore({
     username:
       (
         storageSession.getItem<DataInfo<number>>(sessionKey) ||
-        JSON.parse(localStorage.getItem("user-info"))
+        JSON.parse(localStorage.getItem("user-info") || "{}")
       )?.username ?? "",
     // 页面级别权限
     roles:
       (
         storageSession.getItem<DataInfo<number>>(sessionKey) ||
-        JSON.parse(localStorage.getItem("user-info"))
+        JSON.parse(localStorage.getItem("user-info") || "{}")
       )?.roles ?? [],
     // 前端生成的验证码（按实际需求替换）
     verifyCode: "",

@@ -1,11 +1,13 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-27 21:15:13
+ * @LastEditTime: 2023-02-28 15:40:48
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
+import * as Icons from "@element-plus/icons-vue";
+type iconType = keyof typeof Icons;
 
 export interface stringAnyObj {
   [key: string]: any;
@@ -86,7 +88,7 @@ export interface btnCellTemplate extends stringAnyObj {
   isDisable: (data: stringAnyObj) => boolean;
   label: string;
   type: btnActionTemplate;
-  icon?: string;
+  icon?: iconType;
   elType?: "success" | "danger" | "primary" | "warning";
   drawerDetail?: drawerProps;
   function?: (that: stringAnyObj, data?: stringAnyObj) => void;

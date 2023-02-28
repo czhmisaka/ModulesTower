@@ -61,7 +61,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { useModuleHook } from "@/store/modules/module";
 import { btnCellTemplate } from "../types";
 import { dobuleCheckBtnMaker } from "../component/searchTable/drawerForm";
-import { dobuleCheckBtnMaker } from "../component/searchTable/drawerForm";
 import { repBackMessageShow } from "@/modules/userManage/component/searchTable/drawerForm";
 
 const typeToModule = {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 15:33:45
+ * @LastEditTime: 2023-02-27 20:18:10
  * @FilePath: /configforpagedemo/src/modules/userManage/Index.vue
 -->
 
@@ -43,21 +43,21 @@ export default defineComponent({
   methods: {
     async init() {
       if (this.$route) {
-        let PageName = String(
-          this.$route.path.split("/")[this.$route.path.split("/").length - 1]
-        );
+        let PageName = "";
+        if (this.$route.meta && this.$route.meta.PageName) {
+          PageName = this.$route.meta.PageName.split("/")[
+            this.$route.meta.PageName.split("/").length - 1
+          ];
+          PageName = PageName.toUpperCase();
+        } else {
+          PageName = String(
+            this.$route.path.split("/")[this.$route.path.split("/").length - 1]
+          );
+        }
         if (Object.keys(PageConfig).indexOf(PageName) > -1) {
           let res = PageConfig[PageName];
           this.desktopData = res;
           this.desktopDataList = await this.desktopData.desktopData();
-        } else {
-          this.$message("没找到对应的页面呢,已前往模块首页");
-          this.$router.push({
-            ...this.route,
-            params: {
-              PageName: Object.keys(PageConfig)[0],
-            },
-          });
         }
       }
     },

@@ -67,7 +67,7 @@ export function setToken(data: DataInfo<Date>) {
   } else {
     const { username, roles } =
       storageSession.getItem<DataInfo<number>>(sessionKey) ||
-      JSON.parse(localStorage.getItem("user-info"));
+      JSON.parse(localStorage.getItem("user-info") || "{}");
     setSessionKey(username, roles);
   }
 }

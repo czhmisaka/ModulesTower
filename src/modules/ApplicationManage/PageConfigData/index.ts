@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 10:56:48
+ * @LastEditTime: 2023-02-28 16:58:54
  * @FilePath: /configforpagedemo/src/modules/ApplicationManage/PageConfigData/index.ts
  */
 
@@ -24,6 +24,10 @@ const pageConfig = {
   main: {
     desktopData: mainDesktop,
     ...base,
+    cusStyle: {
+      ...base.cusStyle,
+      Fullscreen: true,
+    },
   },
 } as { [key: string]: desktopDataTemplate };
 

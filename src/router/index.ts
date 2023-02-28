@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 09:42:56
+ * @LastEditTime: 2023-02-28 16:52:40
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -119,7 +119,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
   }
   const userInfo =
     storageSession.getItem<DataInfo<number>>(sessionKey) ||
-    JSON.parse(localStorage.getItem("user-info"));
+    JSON.parse(localStorage.getItem("user-info") || "{}");
   NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {
@@ -198,6 +198,7 @@ let interval = null;
 // 控制默认到index界面执行匹配
 router.beforeEach(async (to, from, next) => {
   let meta = {} as { [key: string]: any };
+  console.log("qwe", to.matched, to);
   if (to.matched && to.matched.length > 1) {
     meta = to.matched[1].meta;
     useModuleHook().checkPage(to.matched[1].meta);

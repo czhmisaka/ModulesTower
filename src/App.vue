@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-27 20:17:10
+ * @LastEditTime: 2023-02-28 16:51:34
  * @FilePath: /configforpagedemo/src/App.vue
 -->
 <template>
@@ -49,7 +49,12 @@ export default defineComponent({
     },
   },
   async created() {},
-  mounted() {},
+  mounted() {
+    // const that = this;
+    // setInterval(() => {
+    //   console.log(that.$router.getRoutes());
+    // }, 3000);
+  },
   methods: {},
 });
 </script>
