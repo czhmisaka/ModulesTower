@@ -22,19 +22,6 @@ import {
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
 
 export default defineComponent({
-  componentInfo: {
-    labelNameCn: "菜单组件（侧边）",
-    key: "sideMenu",
-    description: "通过注入menuMaker构建菜单",
-    gridInfo: {
-      middle: gridSizeMaker(2, 8),
-    },
-  } as componentInfo,
-
-  propsDetail: {} as propInfo,
-
-  baseProps: {},
-
   components: { cardBg },
   props: [],
 

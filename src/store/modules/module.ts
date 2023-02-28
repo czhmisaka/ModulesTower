@@ -18,6 +18,7 @@ import {
 import { RouteConfigsTable, routerMeta } from "../../../types";
 import { get } from "@/utils/api/requests";
 import { useMultiTagsStoreHook } from "./multiTags";
+import { useUserStoreHook } from "@/store/modules/user";
 
 let licenseMap = {};
 let showAbleKeyMap = {};
@@ -169,12 +170,10 @@ export const moduleStore = defineStore({
     isLoading: false,
   }),
   actions: {
-    init(resData) {
+    async init(resData) {
       this.isLoading = false;
       let moduleList = [];
-      get("/web/usc/user/select/loginUser", {}).then((res) => {
-        this.userInfo = res.data;
-      });
+      this.userInfo = await useUserStoreHook().getOptions();
 
       // 注入各个模块的展示界面
       this.initRouterBackup();
@@ -263,6 +262,7 @@ export const moduleStore = defineStore({
       }
       if (targetModuleIndex != -1)
         await this.checkModule(targetModuleIndex, pagePath);
+      console.log(pagePath, "asdsd");
       return;
     },
 

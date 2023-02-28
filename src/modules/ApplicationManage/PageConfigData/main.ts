@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 10:59:22
+ * @LastEditTime: 2023-02-28 18:06:41
  * @FilePath: /configforpagedemo/src/modules/ApplicationManage/PageConfigData/main.ts
  */
 
@@ -62,5 +62,20 @@ export const mainDesktop = async () => {
     )
       .setPosition(0, 0)
       .setSize(1, 1),
+    gridCellMaker(
+      "sideMenu",
+      "侧边菜单",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "ApplicationManage_sideMenu",
+      },
+      {
+        isSettingTool: true,
+        props: {},
+      }
+    )
+      .setPosition(0, 1)
+      .setSize(2, 7),
   ] as gridCellTemplate[];
 };

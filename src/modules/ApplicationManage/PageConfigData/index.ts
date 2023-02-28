@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 16:58:54
+ * @LastEditTime: 2023-02-28 18:24:25
  * @FilePath: /configforpagedemo/src/modules/ApplicationManage/PageConfigData/index.ts
  */
 
@@ -10,6 +10,8 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 
 import { desktopDataTemplate } from "@/modules/userManage/types";
+
+import { ApplicationManage } from "@/modules/ApplicationManage/PageConfigData/ApplicationManage";
 
 const base = {
   gridColNum: 12,
@@ -28,6 +30,10 @@ const pageConfig = {
       ...base.cusStyle,
       Fullscreen: true,
     },
+  },
+  集成应用管理界面: {
+    desktopData: ApplicationManage,
+    ...base,
   },
 } as { [key: string]: desktopDataTemplate };
 

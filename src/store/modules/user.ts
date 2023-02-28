@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 16:01:37
+ * @LastEditTime: 2023-02-28 17:56:47
  * @FilePath: /configforpagedemo/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -20,6 +20,7 @@ import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
 import { stringAnyObj } from "@/modules/userManage/types";
 import { menuInfoTemplate } from "@/components/menu/menuConfigTemplate";
+import { get } from "@/utils/api/requests";
 
 import { loginPage } from "@/router/index";
 
@@ -98,7 +99,18 @@ export const useUserStore = defineStore({
     },
 
     /** 获取用户详情 */
-    getOptions() {
+    async getOptions() {
+      if (Object.keys(this.options).length == 0) {
+        let res = await get("/web/usc/user/select/loginUser", {});
+        this.options = {
+          ...res.data,
+          accessToken: res.data.token,
+          refreshToken: res.data.token,
+          username: res.data.username,
+          roles: ["admin"],
+          expires: new Date(new Date().getTime() + 19999999).getTime(),
+        };
+      }
       return this.options;
     },
 
