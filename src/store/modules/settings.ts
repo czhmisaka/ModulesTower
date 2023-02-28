@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-04 18:33:26
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 17:23:52
+ * @LastEditTime: 2023-02-27 20:18:36
  * @FilePath: /configforpagedemo/src/store/modules/settings.ts
  */
 import { defineStore } from "pinia";
@@ -35,8 +35,6 @@ export const useSettingStore = defineStore({
       }
     },
     changeSetting(data) {
-      // console.log(this.fixedHeader, getConfig(), "asdd");
-
       this.CHANGE_SETTING(data);
     },
   },

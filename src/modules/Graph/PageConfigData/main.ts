@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-23 17:57:25
+ * @LastEditTime: 2023-02-27 20:17:56
  * @FilePath: /configforpagedemo/src/modules/Graph/PageConfigData/main.ts
  */
 
@@ -149,18 +149,12 @@ export const mainDesktop = async () => {
       人才: "rgb(148,215,246)",
     };
 
-    console.log(
-      type,
-      back[Object.keys(back).filter((x) => type.indexOf(x) > -1)[0] || "1"] ||
-        "#333"
-    );
     return (
       back[Object.keys(back).filter((x) => type.indexOf(x) > -1)[0] || "1"] ||
       "rgb(246,199,148)"
     );
   }
 
-  console.log(nodes[0]);
   function getFuckNodeAndLinkForFuckNothing(index) {
     let nodess = nodes[index].map((x, id) => {
       return {

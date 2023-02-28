@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-08 19:53:30
+ * @LastEditTime: 2023-02-27 21:13:44
  * @FilePath: /configforpagedemo/src/modules/main/PageConfigData/main.ts
  */
 
@@ -20,7 +20,7 @@ import {
 import { setSize } from "../../../components/basicComponents/grid/module/util";
 
 let fucker = true;
-export const mainDesktop = [
+export const mainDesktop = () => [
   gridCellMaker(
     "editable",
     "编辑",

@@ -15,12 +15,12 @@ export const useMultiTagsStore = defineStore({
       ? storageLocal.getItem<StorageConfigs>("responsive-tags")
       : [...routerArrays],
     multiTagsCache: storageLocal.getItem<StorageConfigs>("responsive-configure")
-      .multiTagsCache
+      .multiTagsCache,
   }),
   getters: {
     getMultiTagsCache() {
       return this.multiTagsCache;
-    }
+    },
   },
   actions: {
     multiTagsCacheChange(multiTagsCache: boolean) {
@@ -53,20 +53,22 @@ export const useMultiTagsStore = defineStore({
             // 如果是外链无需添加信息到标签页
             if (isUrl(tagVal?.name)) return;
             // 如果title为空拒绝添加空信息到标签页
+            if (tagVal?.meta?.title == "首页" || tagVal?.meta?.title == "404")
+              return;
             if (tagVal?.meta?.title.length === 0) return;
             const tagPath = tagVal.path;
             // 判断tag是否已存在
-            const tagHasExits = this.multiTags.some(tag => {
+            const tagHasExits = this.multiTags.some((tag) => {
               return tag.path === tagPath;
             });
 
             // 判断tag中的query键值是否相等
-            const tagQueryHasExits = this.multiTags.some(tag => {
+            const tagQueryHasExits = this.multiTags.some((tag) => {
               return isEqual(tag?.query, tagVal?.query);
             });
 
             // 判断tag中的params键值是否相等
-            const tagParamsHasExits = this.multiTags.some(tag => {
+            const tagParamsHasExits = this.multiTags.some((tag) => {
               return isEqual(tag?.params, tagVal?.params);
             });
 
@@ -76,12 +78,12 @@ export const useMultiTagsStore = defineStore({
             const dynamicLevel = tagVal?.meta?.dynamicLevel ?? -1;
             if (dynamicLevel > 0) {
               if (
-                this.multiTags.filter(e => e?.path === tagPath).length >=
+                this.multiTags.filter((e) => e?.path === tagPath).length >=
                 dynamicLevel
               ) {
                 // 如果当前已打开的动态路由数大于dynamicLevel，替换第一个动态路由标签
                 const index = this.multiTags.findIndex(
-                  item => item?.path === tagPath
+                  (item) => item?.path === tagPath
                 );
                 index !== -1 && this.multiTags.splice(index, 1);
               }
@@ -92,19 +94,22 @@ export const useMultiTagsStore = defineStore({
           break;
         case "splice":
           if (!position) {
-            const index = this.multiTags.findIndex(v => v.path === value);
+            const index = this.multiTags.findIndex((v) => v.path === value);
             if (index === -1) return;
             this.multiTags.splice(index, 1);
           } else {
-            this.multiTags.splice(position?.startIndex, position?.length);
+            if (position?.startIndex == -1) {
+              this.multiTags.splice(1, this.multiTags.length);
+            } else
+              this.multiTags.splice(position?.startIndex, position?.length);
           }
           this.tagsCache(this.multiTags);
           return this.multiTags;
         case "slice":
           return this.multiTags.slice(-1);
       }
-    }
-  }
+    },
+  },
 });
 
 export function useMultiTagsStoreHook() {

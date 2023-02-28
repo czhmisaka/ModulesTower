@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 06:43:44
- * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
+ * @LastEditTime: 2023-02-28 20:33:47
+ * @FilePath: /configforpagedemo/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
@@ -18,6 +18,7 @@ import {
 } from "@/router/util";
 import { RouteConfigsTable, routerMeta } from "../../../types";
 import { get } from "@/utils/api/requests";
+import { useMultiTagsStoreHook } from "./multiTags";
 import { useUserStoreHook } from "@/store/modules/user";
 
 let licenseMap = {};
@@ -41,6 +42,21 @@ interface moduleTemplate {
     loginAdminFlag: boolean;
     [key: string]: any;
   };
+  isLoading: boolean;
+}
+
+function getFatherNameList(list, id) {
+  let nameList = [];
+  let searchId = id;
+  while (searchId > 0) {
+    list.map((x) => {
+      if (x.id == searchId) {
+        nameList = [x.name].concat(nameList);
+        searchId = x.parentId;
+      }
+    });
+  }
+  return nameList;
 }
 
 /**
@@ -49,9 +65,9 @@ interface moduleTemplate {
  * @authors: CZH
  * @Date: 2022-12-19 09:35:30
  */
-function dealAsyncMenuList(cell, routerBackup) {
+function dealAsyncMenuList(cell, routerBackup, wholeCell) {
   // cell.type：1-模块，2-目录，3-菜单，4-按钮
-
+  const wholeCellList = flatChildrenArr(wholeCell);
   // 排除按钮
   if (cell.type == 4) {
     const pageId = "page_" + cell.parentId;
@@ -70,7 +86,7 @@ function dealAsyncMenuList(cell, routerBackup) {
   // 判断是否需要处理子节点
   if (cell.children && cell.children.length > 0)
     cell.children = cell.children
-      .map((x) => dealAsyncMenuList(x, routerBackup))
+      .map((x) => dealAsyncMenuList(x, routerBackup, wholeCell))
       .filter(Boolean)
       .sort((a, b) => a.orderNumber - b.orderNumber);
 
@@ -114,12 +130,18 @@ function dealAsyncMenuList(cell, routerBackup) {
     if (cell.type == 3) {
       for (let i = 0; i < routerBackup.length; i++) {
         if (routerBackup[i].path == cell.path) {
+          // 获取目标路由
           let backup = routerBackup[i];
-          // 补充基本组件信息
+
+          // 补充基本信息
+          let nameList = getFatherNameList(wholeCellList, cell.parentId);
           cell.component = backup.component;
+          cell.path = "/" + nameList.join("/") + "/" + cell.name;
+
           cell.meta = {
             ...backup.meta,
             ...cell.meta,
+            PageName: cell.urls[0],
             showLink: cell.showLink,
           };
           break;
@@ -146,31 +168,35 @@ export const moduleStore = defineStore({
     userInfo: {
       loginAdminFlag: false,
     },
+    isLoading: false,
   }),
   actions: {
     async init(resData) {
+      this.isLoading = false;
       let moduleList = [];
-      // get("/web/usc/user/select/loginUser", {}).then((res) => {
-      //   this.userInfo = res.data;
-      // });
-
-      const user = useUserStoreHook();
-      await user.loadOption();
+      this.userInfo = await useUserStoreHook().getOptions();
 
       // 注入各个模块的展示界面
       this.initRouterBackup();
 
       // 预处理
       resData.map((x) => {
-        moduleList.push(dealAsyncMenuList(x, this.routerBackup));
+        moduleList.push(dealAsyncMenuList(x, this.routerBackup, resData));
       });
 
       this.moduleList = moduleList
         .filter(Boolean)
         .sort((a, b) => a.orderNumber - b.orderNumber);
-      // this.nowModule = this.moduleList[0];
+
+      // 默认加载第一个模块
+      if (this.moduleList.length > 0) {
+        this.nowModule = this.moduleList[0];
+      }
       this.nowModule = { children: this.routerBackup };
+      this.isLoading = true;
     },
+
+    checkWhichIsNowModule() {},
 
     initRouterBackup() {
       // 注入各个模块的展示界面
@@ -189,16 +215,56 @@ export const moduleStore = defineStore({
     },
 
     // 切换moduleList
-    checkModule(number: number = 0) {
+    async checkModule(number: number = 0, path = "/") {
       if (number > this.moduleList.length - 1)
         number = this.moduleList.length - 1;
       this.nowModule = this.moduleList[number];
-      initRouter(true).then(() => {
-        const router = useRouter();
-        router.push("/");
-        // router.push(this.nowModule[0]);
+      const { multiTags } = useMultiTagsStoreHook();
+      if (multiTags && multiTags["length"] > 0) {
+        setTimeout(() => {
+          useMultiTagsStoreHook().handleTags("splice", "", {
+            startIndex: 1,
+            length: multiTags["length"],
+          });
+        }, 100);
+      }
+      initRouter(true).then(async (router) => {
+        if (router && path != "/") {
+          if (
+            router
+              .getRoutes()
+              .map((x) => x.path)
+              .indexOf(path)
+          ) {
+            router.replace(
+              router.getRoutes()[
+                router
+                  .getRoutes()
+                  .map((x) => x.path)
+                  .indexOf(path)
+              ]
+            );
+          }
+        } else {
+          router.replace(this.nowModule.children[0].children[0]);
+        }
       });
       return this.nowModule;
+    },
+
+    async searchToPage(pagePath: string) {
+      let targetModuleIndex = -1;
+      for (let i = 0; i < this.moduleList.length; i++) {
+        const pageList = flatChildrenArr(this.moduleList[i].children);
+        pageList.map((x) => {
+          if (x.path == pagePath) {
+            targetModuleIndex = i;
+          }
+        });
+      }
+      if (targetModuleIndex != -1)
+        // await this.checkModule(targetModuleIndex, pagePath);
+        return;
     },
 
     // 切换路由需要记录

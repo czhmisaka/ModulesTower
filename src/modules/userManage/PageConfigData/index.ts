@@ -8,14 +8,6 @@
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { isValidKey } from "@/utils/index";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
-import { mainDesktop, userManage } from "./main";
-import { actionLogManage } from "./actionLogManage";
-import { adminManage, adminManageBtnList } from "./adminManage";
-import { stringAnyObj } from "@/modules/userManage/types";
-import { btnCellTemplate } from "../types";
-import { dictManageBtnList, dictManage } from "./dictManage";
-
-import { userFieldList } from "./user/userValueManage";
 import { desktopDataTemplate } from "@/modules/userManage/types";
 const base = {
   gridColNum: 12,

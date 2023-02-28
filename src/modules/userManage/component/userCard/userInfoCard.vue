@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-02-13 10:25:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-26 14:17:17
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/userCard/userInfoCard.vue
+ * @LastEditTime: 2023-02-28 17:49:08
+ * @FilePath: /configforpagedemo/src/modules/userManage/component/userCard/userInfoCard.vue
 -->
 <template>
   <cardBg
@@ -119,6 +119,7 @@ import {
   changeVisible,
   hightLightComponent,
 } from "@/components/basicComponents/grid/module/cardApi/index";
+import { useUserStoreHook } from "@/store/modules/user";
 
 import {
   btnActionTemplate,
@@ -141,14 +142,24 @@ export default defineComponent({
   propsDetail: {
     userInfo: {
       label: "用户信息",
-      type: inputType.obj,
+      type: inputType.functionEditor,
     },
     showTemplate: {
       label: "可用展示模板函数",
       description: "需要输出SearchStorage构建的对象",
-      type: inputType.functionEditor,
+      type: inputType.array,
+    },
+    btnList: {
+      label: "按钮列表",
+      type: inputType.array,
     },
   } as propInfo,
+
+  baseProps: {
+    userInfo: async () => {
+      return await useUserStoreHook().getOptions();
+    },
+  },
 
   props: [
     "btnList",
@@ -215,7 +226,10 @@ export default defineComponent({
 
   async mounted() {
     this.$emit("ready", true);
-    if (this.userInfo) this.userInfoData = await this.userInfo();
+    if (this.userInfo) {
+      this.userInfoData = await this.userInfo();
+      console.log(this.userInfoData);
+    }
     this.$emit("ready");
   },
   setup(props, context) {

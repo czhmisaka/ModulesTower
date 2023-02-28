@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-26 14:13:39
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
+ * @LastEditTime: 2023-02-28 20:46:10
+ * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
 import {
@@ -261,9 +261,10 @@ export const mainDesktop = async () => {
         props: {
           treeDataFunc: async (that) => {
             const user = useUserStoreHook();
+            let options = JSON.parse(JSON.stringify(await user.getOptions()));
             let col = await piwigoMethod({
               method: "pwg.collections.getList",
-              user_id: user.getOptions().id,
+              user_id: options.id,
             });
             return col.result.collections;
           },
@@ -333,6 +334,7 @@ export const mainDesktop = async () => {
         props: {
           showTemplate: storage.getByKeyArr(["username", "status", "roles"]),
           userInfo: async () => {
+            const user = await useUserStoreHook().getOptions();
             return {
               ...user,
               name: user.username,

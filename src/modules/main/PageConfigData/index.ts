@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 22:51:16
+ * @LastEditTime: 2023-02-28 19:55:34
  * @FilePath: /configforpagedemo/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
@@ -10,15 +10,7 @@ import { ChenYi } from "./ChenYi";
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { isValidKey } from "@/utils/index";
 
-export interface desktopDataTemplate {
-  desktopData?: gridCellTemplate[];
-  gridColNum?: number;
-  cusStyle?: {
-    wholeScreen: boolean;
-    maxRows: number;
-    margin: number;
-  };
-}
+import { desktopDataTemplate } from "@/modules/userManage/types";
 
 let pageConfig = {
   // MAIN: { desktopData: mainDesktop, gridColNum: 12 },

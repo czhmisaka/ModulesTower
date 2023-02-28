@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 06:07:39
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
+ * @LastEditTime: 2023-02-28 20:45:34
+ * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
   btnMaker,
@@ -47,12 +47,15 @@ export const 收藏按钮 = btnMaker("收藏", btnActionTemplate.Function, {
                 multiple: false,
               };
               const user = useUserStoreHook();
-
               attr["remoteMethod"] = async (query) => {
+                const user = useUserStoreHook();
+                let options = JSON.parse(
+                  JSON.stringify(await user.getOptions())
+                );
                 let res = await piwigoMethod({
                   method: "pwg.collections.getList",
                   name: query,
-                  user_id: user.getOptions().id,
+                  user_id: options.id,
                 });
                 return res.result.collections.map((x) => {
                   return {

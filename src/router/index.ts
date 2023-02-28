@@ -1,7 +1,11 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-24 23:41:09
+<<<<<<< HEAD
+ * @LastEditTime: 2023-02-28 20:23:31
+=======
+ * @LastEditTime: 2023-02-28 16:52:40
+>>>>>>> add_vuePureAdmin
  * @FilePath: /configforpagedemo/src/router/index.ts
  */
 
@@ -115,7 +119,9 @@ router.beforeEach((to: toRouteType, _from, next) => {
       handleAliveRoute(newMatched);
     }
   }
-  const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey);
+  const userInfo =
+    storageSession.getItem<DataInfo<number>>(sessionKey) ||
+    JSON.parse(localStorage.getItem("user-info") || "{}");
   NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {
@@ -180,7 +186,6 @@ router.beforeEach((to: toRouteType, _from, next) => {
       }
     } else {
       next();
-      h;
     }
   }
 });
@@ -189,19 +194,30 @@ router.afterEach(() => {
   NProgress.done();
 });
 
-const module = useModuleHook();
+let interval = null;
 
 // 路由守卫
 // 控制默认到index界面执行匹配
-// router.beforeEach((to, from, next) => {
+// router.beforeEach(async (to, from, next) => {
 //   let meta = {} as { [key: string]: any };
 //   if (to.matched && to.matched.length > 1) {
 //     meta = to.matched[1].meta;
-//     module.checkPage(to.matched[1].meta);
-//     next(to.matched[1]);
+//     useModuleHook().checkPage(to.matched[1].meta);
 //   } else if (to.matched.length == 0) {
-//     next("/");
-//   } else next();
+//     if (decodeURI(to.path).split("/").length > 0) {
+//       const routes = router.getRoutes();
+//       const path = decodeURI(to.path);
+//       if (routes.map((x) => x.path).indexOf(path) != -1)
+//         routes.map((cell) => {
+//           if (cell.path == path) next(cell);
+//         });
+//       else {
+//         next();
+//         // await useModuleHook().searchToPage(path);
+//       }
+//     }
+//   }
+//   next();
 // });
 
 export default router;

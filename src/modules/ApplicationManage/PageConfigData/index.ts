@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-26 10:42:35
- * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/PageConfigData/index.ts
+ * @LastEditTime: 2023-02-28 19:55:14
+ * @FilePath: /configforpagedemo/src/modules/ApplicationManage/PageConfigData/index.ts
  */
 
 import { mainDesktop } from "./main";
@@ -10,6 +10,8 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 
 import { desktopDataTemplate } from "@/modules/userManage/types";
+
+import { ApplicationManage } from "@/modules/ApplicationManage/PageConfigData/ApplicationManage";
 
 const base = {
   gridColNum: 12,

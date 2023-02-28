@@ -5,6 +5,7 @@ import {
   createWebHistory,
   createWebHashHistory,
   RouteRecordNormalized,
+  Router,
 } from "vue-router";
 import { router } from "./index";
 import { isProxy, toRaw } from "vue";
@@ -77,7 +78,10 @@ function isOneOfArray(a: Array<string>, b: Array<string>) {
 /** 从sessionStorage里取出当前登陆用户的角色roles，过滤无权限的菜单 */
 function filterNoPermissionTree(data: RouteComponent[]) {
   const currentRoles =
-    storageSession.getItem<DataInfo<number>>(sessionKey).roles ?? [];
+    (
+      storageSession.getItem<DataInfo<number>>(sessionKey) ||
+      JSON.parse(localStorage.getItem("user-info") || "{}")
+    ).roles ?? [];
   const newTree = cloneDeep(data).filter((v: any) =>
     isOneOfArray(v.meta?.roles, currentRoles)
   );
@@ -155,10 +159,9 @@ function addPathMatch() {
 }
 
 /** 初始化路由 */
-function initRouter(noRefresh: boolean = false) {
+function initRouter(noRefresh: boolean = false): Promise<Router> {
   return new Promise(async (resolve) => {
     getAsyncRoutes(noRefresh).then(async ({ data }) => {
-      console.log(data, "data");
       if (data.length === 0) {
         await usePermissionStoreHook().handleWholeMenus(data);
         resolve(router);
@@ -190,6 +193,7 @@ function initRouter(noRefresh: boolean = false) {
         await usePermissionStoreHook().handleWholeMenus(data);
       }
       addPathMatch();
+      resolve(router);
     });
   });
 }
@@ -280,7 +284,6 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
     if (v.meta?.frameSrc) {
       v.component = IFrame;
     } else if (v.component) {
-      // console.log('我被执行了')
     } else {
       // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会跟path保持一致）
       const index = v?.component

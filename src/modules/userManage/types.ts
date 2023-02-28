@@ -1,11 +1,13 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 20:41:46
+ * @LastEditTime: 2023-02-28 19:55:41
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
+import * as Icons from "@element-plus/icons-vue";
+export type iconType = keyof typeof Icons;
 
 export interface stringAnyObj {
   [key: string]: any;
@@ -61,7 +63,7 @@ export interface drawerProps {
  * @Date: 2023-02-09 14:55:34
  */
 export interface desktopDataTemplate {
-  desktopData?: () => Promise<gridCellTemplate[]>;
+  desktopData?: () => Promise<gridCellTemplate[]> | gridCellTemplate[];
   gridColNum?: number;
   cusStyle?: {
     wholeScreen: boolean;
@@ -86,7 +88,7 @@ export interface btnCellTemplate extends stringAnyObj {
   isDisable: (data: stringAnyObj) => boolean;
   label: string;
   type: btnActionTemplate;
-  icon?: string;
+  icon?: iconType;
   elType?: "success" | "danger" | "primary" | "warning";
   drawerDetail?: drawerProps;
   function?: (that: stringAnyObj, data?: stringAnyObj) => void;

@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-27 09:40:46
- * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
+ * @LastEditTime: 2023-02-28 19:54:57
+ * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
 <template>
@@ -515,7 +515,6 @@ export default defineComponent({
         width: width,
         height: height,
       };
-      // console.log(width, height, that.idRandom, "asd");
     }, 500);
   },
 

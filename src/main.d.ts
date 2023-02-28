@@ -5,10 +5,9 @@
  * @FilePath: /configforpagedemo/src/main.d.ts
  */
 
-
-declare module '@element-plus/icons-vue' {
-    const Icons: object;
-    export = Icons;
+declare module "@element-plus/icons-vue" {
+  const Icons: {
+    [key: string]: any;
+  };
+  export = Icons;
 }
-
-

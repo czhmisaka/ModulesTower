@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-09-22 20:05:21
  * @LastEditors: CZH
- * @LastEditTime: 2022-09-23 00:40:18
+ * @LastEditTime: 2023-02-27 20:17:20
  * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/DynamicIsland.vue
 -->
 
@@ -152,9 +152,7 @@ export default defineComponent({
       },
     },
     "context.message": {
-      handler(val) {
-        // console.log("asd", val);
-      },
+      handler(val) {},
     },
     "context.info": {
       handler(val) {

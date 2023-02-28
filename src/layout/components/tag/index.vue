@@ -10,6 +10,8 @@ import { handleAliveRoute, delAliveRoutes } from "@/router/utils";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { useResizeObserver, useDebounceFn, useFullscreen } from "@vueuse/core";
 import { useGlobal } from "@pureadmin/utils";
+import { useModuleHook } from "@/store/modules/module";
+import { flatChildrenArr } from "@/router/util";
 const { $storage } = useGlobal<GlobalPropertiesApi>();
 
 const {
@@ -468,20 +470,6 @@ function storageConfigureChange<T>(key: string, val: T): void {
 
 watch([route], () => {
   activeIndex.value = -1;
-  // const { meta } = route;
-  // if ("Fullscreen" in meta && meta.Fullscreen == true) {
-  //   console.log(meta, "meta ");
-  //   const { onContentFullScreen } = useTags();
-  //   onContentFullScreen(true);
-  //   storageConfigureChange("hideTabs", true);
-  //   emitter.emit("tagViewsChange", (true as unknown) as string);
-  // } else {
-  //   const { onContentFullScreen } = useTags();
-  //   storageConfigureChange("hideTabs", false);
-  //   emitter.emit("tagViewsChange", (false as unknown) as string);
-
-  //   onContentFullScreen(false);
-  // }
   dynamicTagView();
 });
 
