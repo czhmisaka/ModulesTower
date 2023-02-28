@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 15:40:17
+ * @LastEditTime: 2023-02-28 19:46:42
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -20,6 +20,7 @@ import {
   closeType,
   btnActionTemplate,
   btnCellTemplate,
+  iconType,
 } from "@/modules/userManage/types";
 import { useModuleHook } from "@/store/modules/module";
 import { isShallow } from "vue";
@@ -42,7 +43,7 @@ export const btnMaker = (
     drawerProps?: drawerProps;
     function?: (that: stringAnyObj, data?: stringAnyObj) => void;
     url?: string;
-    icon?: string;
+    icon?: iconType;
     elType?: "success" | "danger" | "primary" | "warning";
     [key: string]: any;
   },
@@ -94,6 +95,9 @@ export const dobuleCheckBtnMaker = (
       title,
       message,
       type: "warning",
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      showCancelButton: true,
       callback: async (action) => {
         if (action == "confirm") {
           res(true);

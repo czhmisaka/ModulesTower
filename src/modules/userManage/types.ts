@@ -1,13 +1,13 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 15:40:48
+ * @LastEditTime: 2023-02-28 19:27:54
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import * as Icons from "@element-plus/icons-vue";
-type iconType = keyof typeof Icons;
+export type iconType = keyof typeof Icons;
 
 export interface stringAnyObj {
   [key: string]: any;
