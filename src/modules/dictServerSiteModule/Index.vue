@@ -1,14 +1,14 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-03-02 23:17:40
- * @FilePath: \ConfigForDesktopPage\src\modules\photoWebSiteModule\Index.vue
+ * @LastEditTime: 2023-03-02 23:53:01
+ * @FilePath: \ConfigForDesktopPage\src\modules\dictServerSiteModule\Index.vue
 -->
 
 <template>
   <div
     :style="{
-      width: 'calc(100% - 24px)',
+      width: 'calc(100% )',
       height: 'calc(100%)',
       background: 'rgba(0,0,0,0)',
       overflow: 'hidden',
@@ -18,6 +18,7 @@
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopDataList"
       :component-lists="component"
+      :cus-style="desktopData?.cusStyle"
     />
   </div>
 </template>
@@ -26,6 +27,7 @@
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
+import component from "@/modules/userManage/component";
 
 export default defineComponent({
   components: {
@@ -34,7 +36,7 @@ export default defineComponent({
 
   computed: {
     component() {
-      return this.$modules.getAllComponents();
+      return component;
     },
   },
   methods: {

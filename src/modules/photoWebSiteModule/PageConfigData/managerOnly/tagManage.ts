@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-02-18 19:50:20
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 05:19:12
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/tagManage.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-03-02 23:02:12
+ * @FilePath: \ConfigForDesktopPage\src\modules\photoWebSiteModule\PageConfigData\managerOnly\tagManage.ts
  */
 import {
   btnMaker,
@@ -40,7 +40,7 @@ export const tagManage = async () => {
 
   const 查看图片 = btnMaker("查看图片", btnActionTemplate.Function, {
     elType: "success",
-    icon: "Detail",
+    icon: "More",
     function: async (that, dataa) => {
       const getFunc = async (that, data) => {
         let { limit, offset } = data;
