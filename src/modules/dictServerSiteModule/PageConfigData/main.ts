@@ -39,6 +39,30 @@ export const mainDictDesktop = async () => {
         tableCellTemplateMaker('value', 'value'),
         tableCellTemplateMaker('label', 'label'),
     ])
+
+    const submit = btnMaker('提交', btnActionTemplate.Function, {
+        function: async (that, data) => {
+
+        }
+    })
+    const editBtn = btnMaker('编辑', btnActionTemplate.Function, {
+        icon: 'Edit',
+        function: async (that, data) => {
+            let drawerProps = {
+                title: '编辑',
+                queryItemTemplate: dictStorage.getAll(['as']),
+                btnList: [
+                    submit
+                ]
+            } as drawerProps;
+            openDrawerFormEasy(that, drawerProps)
+        }
+    })
+    dictStorage.push(tableCellTemplateMaker('操作','as',actionCell([
+        editBtn
+    ],{
+        fixed:"right",
+    })))
     const remoteStorage = RemoteStorage.getInstance()
     await remoteStorage.login()
     // const 
@@ -57,11 +81,11 @@ export const mainDictDesktop = async () => {
                     showItemTemplate: dictStorage.getAll(),
                     searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
                         let res = await remoteStorage.getAllKey()
-                        return res.data.map((x,i)=>{
+                        return res.data.map((x, i) => {
                             return {
                                 ...x,
-                                label:'label'+x.key,
-                                id:i,
+                                label: 'label' + x.key,
+                                id: i,
                             }
                         });
                     },
