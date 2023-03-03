@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 20:44:26
- * @FilePath: /configforpagedemo/src/store/modules/user.ts
+ * @LastEditTime: 2023-03-04 06:10:23
+ * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
@@ -20,7 +20,7 @@ import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
 import { stringAnyObj } from "@/modules/userManage/types";
 import { menuInfoTemplate } from "@/components/menu/menuConfigTemplate";
-import { get, piwigoMethod } from "@/utils/api/requests";
+import { get, piwigoMethod, post } from "@/utils/api/requests";
 
 import { loginPage } from "@/router/index";
 
@@ -116,13 +116,17 @@ export const useUserStore = defineStore({
             roles: ["admin"],
             expires: new Date(new Date().getTime() + 19999999),
           };
-          let res_userInfo = await piwigoMethod({
-            method: "pwg.users.getList",
-            username: data.username,
-          });
+          console.log('data',data)
+          let res_userInfo1 = await post('/user-info?username='+data.username,{})
+          // let res_userInfo = await piwigoMethod({
+          //   method: "pwg.users.getList",
+          //   username: data.username,
+          // });
           this.options = {
             ...data,
-            ...res_userInfo.result.users[0],
+            ...res_userInfo1.data[0],
+
+            // ...res_userInfo.result.users[0],
           };
           this.isAdminFlag = res.data.loginAdminFlag;
           setToken(this.options);

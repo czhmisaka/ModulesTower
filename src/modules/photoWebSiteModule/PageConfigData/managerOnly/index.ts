@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 18:05:04
+ * @LastEditTime: 2023-03-04 04:48:33
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/index.ts
  */
 
@@ -9,6 +9,7 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 import { tagManage } from "./tagManage";
 import { categoryManage } from "./categoryManage";
+import { userManage } from './userManage';
 
 export interface desktopDataTemplate {
   name: string;
@@ -43,6 +44,17 @@ const pageConfig = {
       margin: 6,
     },
   },
+
+  userManage:{
+    name:'用户管理',
+    desktopData:userManage,
+    gridColNum: 12,
+    cusStyle: {
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6,
+    },
+  }
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

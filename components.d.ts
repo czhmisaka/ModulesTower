@@ -14,7 +14,6 @@ declare module 'vue' {
     ComponentsListModal: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue')['default']
     DynamicIsland: typeof import('./src/components/basicComponents/cell/info/DynamicIsland.vue')['default']
     Editable: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/editable.vue')['default']
-    ElAside: typeof import("element-plus/es")["ElAside"];
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElBadge: typeof import('element-plus/es')['ElBadge']
@@ -22,10 +21,8 @@ declare module 'vue' {
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
-    ElCheckbox: typeof import("element-plus/es")["ElCheckbox"];
     ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
-    ElContainer: typeof import("element-plus/es")["ElContainer"];
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
     ElDescriptionsItem: typeof import('element-plus/es')['ElDescriptionsItem']
@@ -38,16 +35,12 @@ declare module 'vue' {
     ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
-    ElHeader: typeof import("element-plus/es")["ElHeader"];
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
-    ElMain: typeof import("element-plus/es")["ElMain"];
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
-    ElMenuItemGroup: typeof import("element-plus/es")["ElMenuItemGroup"];
     ElOption: typeof import('element-plus/es')['ElOption']
-    ElOptions: typeof import("element-plus/es")["ElOptions"];
     ElPagination: typeof import('element-plus/es')['ElPagination']
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElRadio: typeof import('element-plus/es')['ElRadio']
@@ -57,7 +50,7 @@ declare module 'vue' {
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSlider: typeof import('element-plus/es')['ElSlider']
-    ElSpace: typeof import("element-plus/es")["ElSpace"];
+    ElSpace: typeof import('element-plus/es')['ElSpace']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
@@ -65,7 +58,6 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
-    ElTreeSelect: typeof import("element-plus/es")["ElTreeSelect"];
     ElUpload: typeof import('element-plus/es')['ElUpload']
     FuncComponentLoader: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/funcComponentLoader.vue')['default']
     GridDesktop: typeof import('./src/components/basicComponents/grid/gridDesktop.vue')['default']
