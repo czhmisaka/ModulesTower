@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 17:56:48
- * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
+ * @LastEditTime: 2023-03-07 15:00:46
+ * @FilePath: /configforpagedemo/src/utils/api/requests.ts
  */
 
 import axios from "axios";
@@ -165,6 +165,7 @@ interface piwigoParams extends stringAnyObj {
 export async function piwigoMethod(piwigoParams: piwigoParams) {
   return await piwigoPost("/piwigo/ws.php?format=json", piwigoParams);
 }
+
 export function piwigoPost(url: string, params: object) {
   let fd = new FormData();
   for (let x in params) {
