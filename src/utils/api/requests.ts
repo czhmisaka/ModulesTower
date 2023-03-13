@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 17:56:48
+ * @LastEditTime: 2023-03-12 23:06:30
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -115,7 +115,7 @@ request.interceptors.response.use(
         type: "warning",
       });
       useUserStoreHook().logOut();
-    } else if ("err" in res && res.err == 401) {
+    } else if ("err" in res && (res.err == 401||res.err == 403)) {
       // 未登录状态
       ElMessage({
         message: "登录过期啦",

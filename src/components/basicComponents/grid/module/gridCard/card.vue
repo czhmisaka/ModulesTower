@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-27 00:01:54
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
+ * @LastEditTime: 2023-03-13 01:17:54
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
 import cardBox from "./module/cardBox.vue";
@@ -80,12 +80,6 @@ export default defineComponent({
           : true;
       return back;
     };
-
-    // 测试用全局高亮
-    const highLight = ref(true);
-    const delay = ref(500);
-    let timeoutIn = null as any;
-    let timeoutOut = null as any;
 
     return () => [
       h(

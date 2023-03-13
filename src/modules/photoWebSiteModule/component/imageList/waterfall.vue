@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 05:08:08
+ * @LastEditTime: 2023-03-13 01:43:36
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -231,7 +231,6 @@ export default defineComponent({
       isInit = true;
       const that = this;
       if (fuck) clearInterval(fuck);
-
       fuck = setInterval(() => {
         fuckk(that);
       }, 200);

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-04 06:10:23
+ * @LastEditTime: 2023-03-12 23:04:42
  * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -77,11 +77,16 @@ export const useUserStore = defineStore({
     },
 
     /** 前端登出（不调用接口） */
-    logOut() {
+    async logOut() {
       this.username = "";
       this.roles = [];
       this.menuList = [];
+      await piwigoMethod({
+        method: "pwg.session.logout",
+      });
       removeToken();
+      localStorage.clear();
+      sessionStorage.clear();
       router.push(loginPage);
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       localStorage.setItem("user-info", "");
@@ -116,8 +121,11 @@ export const useUserStore = defineStore({
             roles: ["admin"],
             expires: new Date(new Date().getTime() + 19999999),
           };
-          console.log('data',data)
-          let res_userInfo1 = await post('/user-info?username='+data.username,{})
+          console.log("data", data);
+          let res_userInfo1 = await post(
+            "/user-info?username=" + data.username,
+            {}
+          );
           // let res_userInfo = await piwigoMethod({
           //   method: "pwg.users.getList",
           //   username: data.username,

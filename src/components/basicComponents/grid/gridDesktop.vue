@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 19:54:57
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
+ * @LastEditTime: 2023-03-13 15:04:04
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
 <template>
@@ -209,7 +209,7 @@ export default defineComponent({
     return {
       cardOnChangeType,
       // 渲染用组件列表
-      gridList: [],
+      gridList: [] as gridCellTemplate[],
       // 更新组件用
       updateTimes: 0,
 
@@ -383,7 +383,17 @@ export default defineComponent({
           await this.$nextTick();
           this.$refs?.cardEdit?.open();
         } else if (type == cardOnChangeType.cardDelete) {
-          this.gridList.splice(index, 1);
+          console.log(value, "asd");
+          if (Object.keys(value).length > 0) {
+            let deleteList = this.gridList
+              .map((x, i) => {
+                return { label: x.label, i };
+              })
+              .filter((x) => Object.keys(value).indexOf(x));
+            deleteList.map((x) => {
+              this.gridList.splice(x.i, 1);
+            });
+          } else this.gridList.splice(index, 1);
         } else if (type == cardOnChangeType.openComponentsList) {
           this.$refs.componentsListModal.open();
         } else if (type == cardOnChangeType.moduleApi) {

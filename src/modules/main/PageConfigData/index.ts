@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 19:55:34
- * @FilePath: /configforpagedemo/src/modules/main/PageConfigData/index.ts
+ * @LastEditTime: 2023-03-13 02:09:32
+ * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
 import { mobileDesktop } from "./mobile/mobile";
