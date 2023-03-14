@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-13 16:58:55
+ * @LastEditTime: 2023-03-14 10:26:48
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -22,6 +22,7 @@ import {
   changeCardSize,
   changeCardPosition,
   changeCardProperties,
+  addGridCell,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { get, piwigoMethod, post } from "@/utils/api/requests";
 import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
@@ -39,6 +40,7 @@ import { setData } from "../../../components/basicComponents/grid/module/cardApi
 import { dobuleCheckBtnMaker } from "../../userManage/component/searchTable/drawerForm";
 import { useUserStoreHook } from "@/store/modules/user";
 import { SearchCellStorage } from "../../userManage/component/searchTable/searchTable";
+import { collapseItemProps } from "element-plus";
 
 const gridDesktop = {
   width: 24,
@@ -74,6 +76,10 @@ const elementKey = (
 // 计算桌面碰撞
 export class Desktop {
   map = [] as boolean[][];
+  len_x = 0;
+  len_y = 0;
+  randomTryTime = 500;
+
   constructor(x: number, y: number) {
     for (let i = 0; i < x; i++) {
       this.map.push([]);
@@ -81,6 +87,8 @@ export class Desktop {
         this.map[i].push(false);
       }
     }
+    this.len_x = x;
+    this.len_y = y;
   }
 
   async initByGridList(gridList: gridCellTemplate[]) {
@@ -91,17 +99,16 @@ export class Desktop {
       const { width: w, height: h } = gridCell.gridInfo.default.size;
       this.set(x, y, w, h);
     }
-    console.log(this.map, "asd");
   }
 
-  async check(x, y, w, h) {
+  check(x, y, w = 1, h = 1) {
     if (x < 0 || y < 0 || w < 1 || h < 1) return false;
-    if (this.map.length < x + w) return false;
-    if (this.map[0].length < y + h) return false;
+    if (this.map.length < x + w - 1) return false;
+    if (this.map[0].length < y + h - 1) return false;
     let canSet = true;
-    for (x; x < x + w; x++) {
-      for (y; y < y + h; y++) {
-        if (this.get(x, y)) {
+    for (let x1 = x; x1 < x + w; x1++) {
+      for (let y1 = y; y1 < y + h; y1++) {
+        if (this.get({ x: x1, y: y1 })) {
           canSet = false;
           break;
         }
@@ -112,23 +119,49 @@ export class Desktop {
 
   async set(x, y, w = 1, h = 1) {
     if (!this.check(x, y, w, h)) return false;
-    for (x; x < x + w; x++) {
-      for (y; y < y + h; y++) {
-        this.map[x][y] = true;
+    for (let x1 = x; x1 < x + w; x1++) {
+      for (let y1 = y; y1 < y + h; y1++) {
+        this.map[x1][y1] = true;
       }
     }
   }
 
-  async get(x, y) {
+  get({ x, y }) {
     return this.map[x][y];
   }
 
-  async randomSet(list: { w: number; h: number; item: stringAnyObj }[]) {
+  getRandomXy(width = 1, height = 1) {
+    return {
+      x: Math.floor(Math.random() * (this.len_x - width + 1)),
+      y: Math.floor(Math.random() * (this.len_y - height + 1)),
+    };
+  }
+
+  async randomSet(
+    list: { w: number; h: number; data: stringAnyObj }[],
+    callBack: (x, y, data) => void
+  ) {
     for (let i = 0; i < list.length; i++) {
-      const { w, h, item } = list[i];
-      let x = 0,
-        y = 0;
-      let rate = Math.floor(w / h);
+      const { w, h } = list[i];
+      let scaleRate = Math.floor(Math.random() * 5);
+      let width = (w > h ? Math.round(w / h) : 1) * scaleRate,
+        height = (h > w ? Math.round(h / w) : 1) * scaleRate;
+      // try random x first
+      for (let time = 0; time < this.randomTryTime; time++) {
+        let randomXy = this.getRandomXy(width, height);
+        if (this.check(randomXy.x, randomXy.y, width, height)) {
+          this.set(randomXy.x, randomXy.y, width, height);
+          callBack(
+            {
+              w: width,
+              h: height,
+            },
+            { x: randomXy.x, y: randomXy.y },
+            list[i].data
+          );
+          break;
+        }
+      }
     }
   }
 }
@@ -138,7 +171,7 @@ export const chosSearch = async () => {
     let { result } = await piwigoMethod({
       method: "pwg.images.search",
       query: query,
-      per_page: 50,
+      per_page: 30,
     });
     let list = result.images.map((x) => {
       return {
@@ -149,12 +182,113 @@ export const chosSearch = async () => {
     });
 
     let desktop = new Desktop(24, 16);
-    console.log(desktop, that.gridList, that.gridList.length);
-    // desktop.initByGridList(that.gridList);
-
+    desktop.initByGridList(that.gridList);
+    desktop.randomSet(
+      list.map((x) => {
+        return { w: x.width, h: x.height, data: x };
+      }),
+      (wh, xy, data) => {
+        addGridCell(
+          that,
+          elementKey(
+            {
+              isBlack: false,
+              title: "",
+              content: "",
+              img: data.element_url,
+            },
+            wh,
+            xy
+          )
+        );
+      }
+    );
     let interval = setInterval(() => {}, 100);
   };
+  return [
+    gridCellMaker(
+      "searchInfo",
+      "输入框",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_searchInfoChosSearch",
+      },
+      {
+        props: {
+          searchFunc: (that, data) => {
+            let time = 0;
+            setTimeout(() => chosSearchFunc(that, data), 0);
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
+          },
+        },
+      }
+    )
+      .setPosition(8, 4)
+      .setSize(8, 1),
+  ];
+};
 
+export const chosSearchForMobile = async () => {
+  const chosSearchFunc = async (that, query) => {
+    let { result } = await piwigoMethod({
+      method: "pwg.images.search",
+      query: query,
+      per_page: 30,
+    });
+    let list = result.images.map((x) => {
+      return {
+        ...x,
+        ...x.derivatives,
+        derivatives: null,
+      };
+    });
+
+    let desktop = new Desktop(4, 10);
+    desktop.initByGridList(that.gridList);
+    console.log(list);
+    desktop.randomSet(
+      list.map((x) => {
+        return { w: x.width, h: x.height, data: x };
+      }),
+      (wh, xy, data) => {
+        addGridCell(
+          that,
+          elementKey(
+            {
+              isBlack: false,
+              title: "",
+              content: "",
+              img: data.element_url,
+            },
+            wh,
+            xy
+          )
+        );
+      }
+    );
+    console.log(desktop);
+    let interval = setInterval(() => {}, 100);
+  };
   return [
     gridCellMaker(
       "searchInfo",
@@ -170,7 +304,7 @@ export const chosSearch = async () => {
         },
       }
     )
-      .setPosition(8, 2)
-      .setSize(8, 1),
+      .setPosition(0, 4)
+      .setSize(4, 1),
   ];
 };

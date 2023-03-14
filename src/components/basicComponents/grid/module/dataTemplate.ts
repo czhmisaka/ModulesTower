@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-22 09:29:30
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
+ * @LastEditTime: 2023-03-14 00:42:42
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 import { cardUtil } from "./util";
@@ -18,6 +18,7 @@ export enum cardOnChangeType {
   cardConfigChange = "cardConfigChange",
   cardEdit = "cardEdit",
   cardDelete = "cardDelete",
+  cardAdd = "cardAdd",
   openComponentsList = "openComponentsList",
   moduleApi = "moduleApi",
   hightLightCard = "hightLightCard",

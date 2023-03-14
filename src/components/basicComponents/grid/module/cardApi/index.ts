@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-23 18:38:48
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
+ * @LastEditTime: 2023-03-14 00:48:45
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
 import {
@@ -12,6 +12,7 @@ import {
   gridSizeCell,
 } from "../dataTemplate";
 import { deepClone } from "./deepClone";
+import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 
 /**
  * @name: checkContext
@@ -248,6 +249,27 @@ export const hightLightComponent = (
     let func = content["$emit"] ? "$emit" : "emit";
     content[func]("onChange", value, {
       type: [cardOnChangeType.hightLightCard],
+    });
+  } catch (err) {
+    console.error("hightLightComponent 错误:", err, content, value);
+  }
+};
+
+/**
+ * @name: addGridCell
+ * @description: 添加一个组件
+ * @authors: CZH
+ * @Date: 2022-12-05 19:32:21
+ */
+export const addGridCell = (
+  content: { [key: string]: any },
+  value: gridCellTemplate
+) => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    content[func]("onChange", value, {
+      type: [cardOnChangeType.cardAdd],
     });
   } catch (err) {
     console.error("hightLightComponent 错误:", err, content, value);

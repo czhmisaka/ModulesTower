@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-12 23:47:37
+ * @LastEditTime: 2023-03-14 01:44:15
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -10,7 +10,7 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 
 import { PageConfig as ManageOnlyPageConfig } from "./managerOnly";
-import { chosSearch } from "./chosSearch";
+import { chosSearch,chosSearchForMobile } from "./chosSearch";
 export interface desktopDataTemplate {
   name: string;
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -49,8 +49,19 @@ const pageConfig = {
     desktopData: chosSearch,
     gridColNum: 24,
     cusStyle: {
-      wholeScreen: false,
+      wholeScreen: true,
       maxRows: 16,
+      margin: 6,
+      Fullscreen: true,
+    },
+  },
+  chosSearchMobile: {
+    name: "手机端",
+    desktopData: chosSearchForMobile,
+    gridColNum: 4,
+    cusStyle: {
+      wholeScreen: true,
+      maxRows: 10,
       margin: 6,
       Fullscreen: true,
     },

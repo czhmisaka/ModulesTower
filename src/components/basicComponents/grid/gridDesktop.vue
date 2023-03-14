@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-13 15:04:04
+ * @LastEditTime: 2023-03-14 01:27:26
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -327,12 +327,6 @@ export default defineComponent({
           await this.$nextTick();
           this.forceUpdateGridList();
           this.$forceUpdate();
-        } else if (type == cardOnChangeType.gridCardListonChange) {
-          if (index != -1) {
-            this.gridList[index] = value[index];
-          } else {
-            this.gridList = [...value];
-          }
         } else if (type == cardOnChangeType.cardConfigChange) {
           if (typeof value == "object") {
             const changeList = Object.keys(value);
@@ -382,8 +376,18 @@ export default defineComponent({
           this.baseData._componentIndex = index;
           await this.$nextTick();
           this.$refs?.cardEdit?.open();
+        } else if (type == cardOnChangeType.gridCardListonChange) {
+          if (index != -1) {
+            this.gridList[index] = value[index];
+          } else {
+            this.gridList = [...value];
+          }
+        } else if (type == cardOnChangeType.cardAdd) {
+          // 这里写的尽量简单了，后期优化
+          if (value) {
+            this.gridList = this.gridList.concat([value]);
+          }
         } else if (type == cardOnChangeType.cardDelete) {
-          console.log(value, "asd");
           if (Object.keys(value).length > 0) {
             let deleteList = this.gridList
               .map((x, i) => {
