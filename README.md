@@ -5,7 +5,7 @@
  * @FilePath: /configforpagedemo/README.md
 -->
 
-# configForDesktopPage
+# ModulesTower
 
 这是一款针对web团队协作开发用的组件，可以有效的复用代码，开发的同时产出组件的使用说明和文档。
 通过引入GridDesktop组件，输入组件配置列表，即可使用组件构建出一个简单的界面。
