@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 23:18:59
+ * @LastEditTime: 2023-03-15 23:29:29
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -252,20 +252,6 @@ export const chosSearch = async () => {
     );
   };
   return [
-    gridCellMaker(
-      "editable",
-      "编辑",
-      {},
-      {
-        name: "setting_editable",
-        type: cardComponentType.componentList,
-      },
-      {
-        isSettingTool: true,
-      }
-    )
-      .setPosition(1, 0)
-      .setSize(1, 1),
     gridCellMaker(
       "InfoCard",
       "图片信息",
