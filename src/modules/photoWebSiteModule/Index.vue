@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 13:03:16
+ * @LastEditTime: 2023-03-15 22:59:34
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/Index.vue
 -->
 
@@ -19,7 +19,6 @@
       :desktopData="desktopDataList"
       :component-lists="component"
       :cus-style="desktopData?.cusStyle"
-      :fastMode="false"
     />
   </div>
 </template>

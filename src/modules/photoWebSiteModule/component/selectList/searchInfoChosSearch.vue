@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-12 23:09:15
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-14 01:46:36
+ * @LastEditTime: 2023-03-15 20:03:23
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfoChosSearch.vue
 -->
 <template>
@@ -77,7 +77,7 @@ export default defineComponent({
   props: ["baseData", "sizeUnit", "onClickFunc", "searchFunc", "gridList"],
   data: () => {
     return {
-      searchString: "dwed",
+      searchString: "test",
       loading: false,
     };
   },

@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 03:09:48
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/component/imageList/waterFallItem.vue
+ * @LastEditTime: 2023-03-15 21:04:26
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterFallItem.vue
 -->
 
 <script lang="ts">
@@ -10,9 +10,17 @@ import { defineComponent, h, ref, onMounted, watch } from "vue";
 import { useDark } from "@pureadmin/utils";
 import { ElImage, ElLoading } from "element-plus";
 
+import {
+  componentInfo,
+  inputType,
+  propInfo,
+  gridSizeMaker,
+} from "@/components/basicComponents/grid/module/dataTemplate";
+
 export default defineComponent({
   name: "waterFallItem",
   props: ["url", "width", "height", "cusStyle", "item", "noPreview", "fit"],
+
   setup(props, context) {
     const { isDark } = useDark();
     const isLoading = ref(true);

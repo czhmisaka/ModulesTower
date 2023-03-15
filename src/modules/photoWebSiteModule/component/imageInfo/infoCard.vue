@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-18 20:05:52
+ * @LastEditTime: 2023-03-15 23:12:33
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -249,10 +249,10 @@ export default defineComponent({
         },
       });
       changeCardSize(that, {
-        InfoCard: {
-          width: 2,
-          height: 10,
-        },
+        // InfoCard: {
+        //   width: 2,
+        //   height: 10,
+        // },
         waterFall: {
           width: 10,
           height: 12,

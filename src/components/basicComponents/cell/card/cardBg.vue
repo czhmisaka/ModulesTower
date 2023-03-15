@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-18 23:06:49
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 12:53:33
+ * @LastEditTime: 2023-03-15 21:53:34
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/cell/card/cardBg.vue
 -->
 
@@ -25,7 +25,6 @@ export default defineComponent({
   setup(props, context) {
     const { slots } = context;
     const { isDark } = useDark();
-
     return () =>
       h(
         "div",

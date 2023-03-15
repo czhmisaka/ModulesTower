@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-14 15:15:50
+ * @LastEditTime: 2023-03-15 23:18:59
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -22,6 +22,7 @@ import {
   changeCardSize,
   changeCardPosition,
   changeCardProperties,
+  hightLightComponent,
   addGridCell,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { get, piwigoMethod, post } from "@/utils/api/requests";
@@ -41,26 +42,66 @@ import { dobuleCheckBtnMaker } from "../../userManage/component/searchTable/draw
 import { useUserStoreHook } from "@/store/modules/user";
 import { SearchCellStorage } from "../../userManage/component/searchTable/searchTable";
 import { collapseItemProps } from "element-plus";
+import { fa } from "element-plus/es/locale";
 
 const gridDesktop = {
   width: 24,
 };
 
+let gridCelldefault = {
+  label: "",
+  size: { width: 1, height: 1 },
+  position: { x: 0, y: 0 },
+};
+
 const elementKey = (
-  props: { isBlack?: boolean; title: string; content?: string; img: string },
+  props: stringAnyObj,
   size: { w: number; h: number },
-  position: { x: number; y: number }
+  position: { x: number; y: number },
+  name: string | number = 1
 ) => {
   return gridCellMaker(
-    "image",
-    "图片",
+    "image" + name,
+    "图片_" + name,
     {},
     {
-      name: "elcard",
+      name: "photoWebSiteModule_lazyImage",
       type: cardComponentType.componentList,
     },
     {
-      props,
+      props: {
+        ...props,
+        clickFunc: ({ props, context }) => {
+          gridCelldefault = {
+            label: props.detail.label,
+            ...props.detail.gridInfo.default,
+          };
+          setData(context, {
+            image: props.item,
+          });
+          hightLightComponent(context, [
+            props.detail.label,
+            "InfoCard",
+            "icons",
+          ]);
+          changeVisible(context, {
+            InfoCard: true,
+            icons: true,
+          });
+          let pos = {};
+          pos[props.detail.label] = {
+            x: 1,
+            y: 1,
+          };
+          let size = {};
+          size[props.detail.label] = {
+            width: 18,
+            height: 14,
+          };
+          changeCardPosition(context, pos);
+          setTimeout(() => changeCardSize(context, size), 300);
+        },
+      },
     }
   )
     .setSize(size.w, size.h)
@@ -89,9 +130,10 @@ export class Desktop {
     if (!gridList) return false;
     for (let i = 0; i < gridList.length; i++) {
       const gridCell = gridList[i];
+      if (!gridCell.options.showInGridDesktop) continue;
       const { x, y } = gridCell.gridInfo.default.position;
       const { width: w, height: h } = gridCell.gridInfo.default.size;
-      this.set(x, y, w, h);
+      this.set(x, y, w, h, true);
     }
   }
 
@@ -111,8 +153,8 @@ export class Desktop {
     return canSet;
   }
 
-  async set(x, y, w = 1, h = 1) {
-    if (!this.check(x, y, w, h)) return false;
+  set(x, y, w = 1, h = 1, dontCheck = false) {
+    if (!dontCheck && !this.check(x, y, w, h)) return false;
     for (let x1 = x; x1 < x + w; x1++) {
       for (let y1 = y; y1 < y + h; y1++) {
         this.map[x1][y1] = true;
@@ -133,15 +175,23 @@ export class Desktop {
 
   async randomSet(
     list: { w: number; h: number; data: stringAnyObj }[],
-    callBack: (x, y, data) => void
+    callBack: (x, y, data, i) => void
   ) {
     for (let i = 0; i < list.length; i++) {
       const { w, h } = list[i];
-      let scaleRate = Math.floor(Math.random() * 5);
-      let width = (w > h ? Math.round(w / h) : 1) * scaleRate,
-        height = (h > w ? Math.round(h / w) : 1) * scaleRate;
       // try random x first
       for (let time = 0; time < this.randomTryTime; time++) {
+        let width = 1,
+          height = 1;
+        if (time < this.randomTryTime * 0.5) {
+          let scaleRate = Math.floor(Math.random() * 10 + 3);
+          width = (w > h ? Math.round(w / h) : 1) * scaleRate;
+          height = (h > w ? Math.round(h / w) : 1) * scaleRate;
+        } else if (time < this.randomTryTime * 0.7) {
+          let scaleRate = Math.floor(Math.random() * 5 + 1);
+          width = (w > h ? Math.round(w / h) : 1) * scaleRate;
+          height = (h > w ? Math.round(h / w) : 1) * scaleRate;
+        }
         let randomXy = this.getRandomXy(width, height);
         if (this.check(randomXy.x, randomXy.y, width, height)) {
           this.set(randomXy.x, randomXy.y, width, height);
@@ -151,7 +201,8 @@ export class Desktop {
               h: height,
             },
             { x: randomXy.x, y: randomXy.y },
-            list[i].data
+            list[i].data,
+            i
           );
           break;
         }
@@ -165,41 +216,107 @@ export const chosSearch = async () => {
     let { result } = await piwigoMethod({
       method: "pwg.images.search",
       query: query,
-      per_page: 30,
+      per_page: 100,
     });
     let list = result.images.map((x) => {
       return {
         ...x,
         ...x.derivatives,
+        ...x.derivatives["2small"],
         derivatives: null,
       };
     });
 
     let desktop = new Desktop(24, 16);
     desktop.initByGridList(that.gridList);
+    console.log(desktop, "desktop");
     desktop.randomSet(
       list.map((x) => {
         return { w: x.width, h: x.height, data: x };
       }),
-      (wh, xy, data) => {
+      (wh, xy, data, i) => {
         addGridCell(
           that,
           elementKey(
             {
-              isBlack: false,
-              title: "",
-              content: "",
-              img: data.element_url,
+              fit: "cover",
+              noPreview: "true",
+              item: data,
             },
             wh,
-            xy
+            xy,
+            i
           )
         );
       }
     );
-    let interval = setInterval(() => {}, 100);
   };
   return [
+    gridCellMaker(
+      "editable",
+      "编辑",
+      {},
+      {
+        name: "setting_editable",
+        type: cardComponentType.componentList,
+      },
+      {
+        isSettingTool: true,
+      }
+    )
+      .setPosition(1, 0)
+      .setSize(1, 1),
+    gridCellMaker(
+      "InfoCard",
+      "图片信息",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_infoCard",
+      },
+      {
+        showInGridDesktop: false,
+        props: {
+          btnList: InfoCardBtnList,
+          watchKeyForCategory: "category",
+        },
+      }
+    )
+      .setPosition(19, 1)
+      .setSize(4, 12),
+    gridCellMaker(
+      "icons",
+      "返回按钮",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "icon",
+      },
+      {
+        showInGridDesktop: false,
+        props: {
+          name: "Close",
+          onClickFunc: ({ props, context, e }) => {
+            let label = gridCelldefault.label;
+            let size = {},
+              pos = {};
+            size[label] = gridCelldefault.size;
+            pos[label] = gridCelldefault.position;
+            changeCardSize(context, size);
+            changeCardPosition(context, pos);
+            changeVisible(context, {
+              InfoCard: false,
+              icons: false,
+            });
+            setTimeout(() => {
+              hightLightComponent(context, []);
+            }, 400);
+          },
+        },
+      }
+    )
+      .setPosition(19, 13)
+      .setSize(4, 2),
     gridCellMaker(
       "searchInfo",
       "输入框",
@@ -213,26 +330,6 @@ export const chosSearch = async () => {
           searchFunc: (that, data) => {
             let time = 0;
             setTimeout(() => chosSearchFunc(that, data), 0);
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
-            setTimeout(() => chosSearchFunc(that, data), (time += 1000));
           },
         },
       }
@@ -259,7 +356,6 @@ export const chosSearchForMobile = async () => {
 
     let desktop = new Desktop(4, 10);
     desktop.initByGridList(that.gridList);
-    console.log(list);
     desktop.randomSet(
       list.map((x) => {
         return { w: x.width, h: x.height, data: x };
@@ -280,7 +376,6 @@ export const chosSearchForMobile = async () => {
         );
       }
     );
-    console.log(desktop);
     let interval = setInterval(() => {}, 100);
   };
   return [
