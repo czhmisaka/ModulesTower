@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 19:57:43
- * @FilePath: /configforpagedemo/src/utils/api/admin/routes.ts
+ * @LastEditTime: 2023-03-15 23:39:37
+ * @FilePath: /ConfigForDesktopPage/src/utils/api/admin/routes.ts
  */
 import { useModuleHook } from "@/store/modules/module";
 import { http } from "../../http";
@@ -27,25 +27,7 @@ export const getAsyncRoutes = async (noRefresh: boolean = false) => {
     // });
     // data.filter(Boolean);
     const module = useModuleHook();
-    await module.init([
-      {
-        name: "fuck",
-        path: "fuck",
-        children: [
-          {
-            name: "fuck",
-            path: "fuck",
-            children: [
-              {
-                name: "fuck",
-                path: "fuck",
-                children: [],
-              },
-            ],
-          },
-        ],
-      },
-    ]);
+    await module.init([]);
     return {
       data: module.nowModule.children || [],
     };
