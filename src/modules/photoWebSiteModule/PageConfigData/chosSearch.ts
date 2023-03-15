@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-16 00:18:41
+ * @LastEditTime: 2023-03-16 00:21:58
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -298,6 +298,7 @@ export const chosSearch = async () => {
             setTimeout(() => {
               hightLightComponent(context, []);
             }, 400);
+            gridCelldefault.label = "";
           },
         },
       }
