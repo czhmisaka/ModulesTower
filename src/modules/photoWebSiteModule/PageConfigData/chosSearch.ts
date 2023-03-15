@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-16 00:21:58
+ * @LastEditTime: 2023-03-16 00:25:56
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -53,6 +53,7 @@ let gridCelldefault = {
   size: { width: 1, height: 1 },
   position: { x: 0, y: 0 },
 };
+let num = 0;
 
 const elementKey = (
   props: stringAnyObj,
@@ -60,9 +61,10 @@ const elementKey = (
   position: { x: number; y: number },
   name: string | number = 1
 ) => {
+  num++;
   return gridCellMaker(
-    "image" + name,
-    "图片_" + name,
+    "image" + name + "_" + num,
+    "图片_" + name + "_" + num,
     {},
     {
       name: "photoWebSiteModule_lazyImage",
