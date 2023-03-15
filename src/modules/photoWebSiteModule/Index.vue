@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 12:55:13
+ * @LastEditTime: 2023-03-15 13:03:16
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/Index.vue
 -->
 
@@ -12,7 +12,7 @@
       height: 'calc(100% )',
       background: 'rgba(0,0,0,0)',
       overflow: 'hidden',
-    }"·
+    }"
   >
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"

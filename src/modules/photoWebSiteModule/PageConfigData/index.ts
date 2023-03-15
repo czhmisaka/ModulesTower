@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-14 01:44:15
+ * @LastEditTime: 2023-03-15 13:03:31
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -51,17 +51,6 @@ const pageConfig = {
     cusStyle: {
       wholeScreen: true,
       maxRows: 16,
-      margin: 6,
-      Fullscreen: true,
-    },
-  },
-  chosSearchMobile: {
-    name: "手机端",
-    desktopData: chosSearchForMobile,
-    gridColNum: 4,
-    cusStyle: {
-      wholeScreen: true,
-      maxRows: 10,
       margin: 6,
       Fullscreen: true,
     },
