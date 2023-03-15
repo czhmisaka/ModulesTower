@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-21 20:45:52
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/Index.vue
+ * @LastEditTime: 2023-03-15 12:55:13
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/Index.vue
 -->
 
 <template>
@@ -12,13 +12,14 @@
       height: 'calc(100% )',
       background: 'rgba(0,0,0,0)',
       overflow: 'hidden',
-    }"
+    }"·
   >
     <gridDesktop
       :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopDataList"
       :component-lists="component"
       :cus-style="desktopData?.cusStyle"
+      :fastMode="false"
     />
   </div>
 </template>

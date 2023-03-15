@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-14 10:26:48
+ * @LastEditTime: 2023-03-14 15:15:50
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -60,13 +60,7 @@ const elementKey = (
       type: cardComponentType.componentList,
     },
     {
-      props: {
-        isBlack: true,
-        title: "壁纸",
-        content: "--来自鬼刀大佬",
-        img: "https://pic1.zhimg.com/80/v2-b8e48ee4c2efb2813c42c3778743a2c4_1440w.jpg",
-        ...props,
-      },
+      props,
     }
   )
     .setSize(size.w, size.h)

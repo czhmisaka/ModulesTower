@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-05-22 16:57:40
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:16:03
- * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/infoCard.vue
+ * @LastEditTime: 2023-03-14 15:17:29
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/cell/info/infoCard.vue
 -->
 <script lang="ts">
 import { defineComponent, h, toRefs } from "vue";
