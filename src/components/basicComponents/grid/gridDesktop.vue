@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 22:59:45
+ * @LastEditTime: 2023-03-16 00:09:28
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -53,7 +53,7 @@
               ? 'max-width 0.4s, width 0.3s , height 0.3s'
               : ''
             : fastMode
-            ? 'max-width 0.4s, transform 0.4s , width 0.3s , height 0.3s'
+            ? 'max-width 0.4s, transform 0.5s ease-in-out , width 0.3s , height 0.3s'
             : '',
         }"
       >
