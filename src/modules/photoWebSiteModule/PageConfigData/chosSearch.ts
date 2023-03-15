@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-16 00:05:29
+ * @LastEditTime: 2023-03-16 00:18:41
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -72,6 +72,7 @@ const elementKey = (
       props: {
         ...props,
         clickFunc: ({ props, context }) => {
+          if (gridCelldefault.label == props.detail.label) return;
           gridCelldefault = {
             label: props.detail.label,
             ...props.detail.gridInfo.default,
