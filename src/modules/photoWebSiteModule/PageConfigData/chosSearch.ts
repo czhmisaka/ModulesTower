@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-16 00:25:56
+ * @LastEditTime: 2023-03-16 17:19:55
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -59,7 +59,8 @@ const elementKey = (
   props: stringAnyObj,
   size: { w: number; h: number },
   position: { x: number; y: number },
-  name: string | number = 1
+  name: string | number = 1,
+  desktop: Desktop = new Desktop(24, 16)
 ) => {
   num++;
   return gridCellMaker(
@@ -98,8 +99,8 @@ const elementKey = (
           };
           let size = {};
           size[props.detail.label] = {
-            width: 18,
-            height: 14,
+            width: (desktop.len_x * 5) / 6 - 2,
+            height: desktop.len_y - 2,
           };
           changeCardPosition(context, pos);
           setTimeout(() => changeCardSize(context, size), 300);
@@ -329,46 +330,100 @@ export const chosSearch = async () => {
   ];
 };
 
-export const chosSearchForMobile = async () => {
+export const chosSearch_low = async () => {
   const chosSearchFunc = async (that, query) => {
     let { result } = await piwigoMethod({
       method: "pwg.images.search",
       query: query,
-      per_page: 30,
+      per_page: 100,
     });
     let list = result.images.map((x) => {
       return {
         ...x,
         ...x.derivatives,
+        ...x.derivatives["2small"],
         derivatives: null,
       };
     });
 
-    let desktop = new Desktop(4, 10);
+    let desktop = new Desktop(18, 12);
     desktop.initByGridList(that.gridList);
+    console.log(desktop, "desktop");
     desktop.randomSet(
       list.map((x) => {
         return { w: x.width, h: x.height, data: x };
       }),
-      (wh, xy, data) => {
+      (wh, xy, data, i) => {
         addGridCell(
           that,
           elementKey(
             {
-              isBlack: false,
-              title: "",
-              content: "",
-              img: data.element_url,
+              fit: "cover",
+              noPreview: "true",
+              item: data,
             },
             wh,
-            xy
+            xy,
+            i,
+            desktop
           )
         );
       }
     );
-    let interval = setInterval(() => {}, 100);
   };
   return [
+    gridCellMaker(
+      "InfoCard",
+      "图片信息",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_infoCard",
+      },
+      {
+        showInGridDesktop: false,
+        props: {
+          btnList: InfoCardBtnList,
+          watchKeyForCategory: "category",
+        },
+      }
+    )
+      .setPosition(14, 1)
+      .setSize(3, 9),
+    gridCellMaker(
+      "icons",
+      "返回按钮",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "icon",
+      },
+      {
+        showInGridDesktop: false,
+        props: {
+          name: "Close",
+          onClickFunc: ({ props, context, e }) => {
+            let label = gridCelldefault.label;
+            let size = {},
+              pos = {};
+            size[label] = gridCelldefault.size;
+            pos[label] = gridCelldefault.position;
+            changeCardSize(context, size);
+            changeCardPosition(context, pos);
+            changeVisible(context, {
+              InfoCard: false,
+              icons: false,
+            });
+            setTimeout(() => {
+              hightLightComponent(context, []);
+            }, 400);
+            gridCelldefault.label = "";
+          },
+        },
+      }
+    )
+      .setPosition(14, 10)
+      .setSize(3, 1),
     gridCellMaker(
       "searchInfo",
       "输入框",
@@ -379,11 +434,14 @@ export const chosSearchForMobile = async () => {
       },
       {
         props: {
-          searchFunc: chosSearchFunc,
+          searchFunc: (that, data) => {
+            let time = 0;
+            setTimeout(() => chosSearchFunc(that, data), 0);
+          },
         },
       }
     )
-      .setPosition(0, 4)
+      .setPosition(4, 1)
       .setSize(4, 1),
   ];
 };

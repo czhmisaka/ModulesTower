@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 13:03:31
+ * @LastEditTime: 2023-03-16 17:17:08
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -10,7 +10,7 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 
 import { PageConfig as ManageOnlyPageConfig } from "./managerOnly";
-import { chosSearch,chosSearchForMobile } from "./chosSearch";
+import { chosSearch, chosSearch_low } from "./chosSearch";
 export interface desktopDataTemplate {
   name: string;
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -51,6 +51,17 @@ const pageConfig = {
     cusStyle: {
       wholeScreen: true,
       maxRows: 16,
+      margin: 6,
+      Fullscreen: true,
+    },
+  },
+  chosSearch_low: {
+    name: "搜索图片_低配版本",
+    desktopData: chosSearch_low,
+    gridColNum: 18,
+    cusStyle: {
+      wholeScreen: true,
+      maxRows: 12,
       margin: 6,
       Fullscreen: true,
     },

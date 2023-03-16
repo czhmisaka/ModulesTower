@@ -1,6 +1,6 @@
 {
-  "Version": "3.6.3",
-  "Title": "Photo Manager",
+  "Version": "1.0.0",
+  "Title": "土地储备前置管理系统",
   "FixedHeader": true,
   "HiddenSideBar": false,
   "MultiTagsCache": false,
