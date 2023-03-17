@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-18 03:20:50
+ * @LastEditTime: 2023-03-18 03:26:33
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -270,13 +270,15 @@ export const chosSearch = async () => {
         );
       }
     );
-    let num1 = showKeyArr.length;
-    let interval = setInterval(() => {
-      if (num1 < 0) clearInterval(interval);
-      let data = {};
-      data[showKeyArr[num1--]] = true;
-      changeVisible(that, data);
-    }, 20);
+    let num1 = 0;
+    setTimeout(() => {
+      let interval = setInterval(() => {
+        if (num1 > showKeyArr.length) clearInterval(interval);
+        let data = {};
+        data[showKeyArr[num1++]] = true;
+        changeVisible(that, data);
+      }, 40);
+    }, 300);
   };
   return [
     gridCellMaker(
