@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 23:56:36
- * @FilePath: /configforpagedemo/vite.config.js
+ * @LastEditTime: 2023-03-16 23:11:22
+ * @FilePath: /ConfigForDesktopPage/vite.config.js
  */
 import { loadEnv } from "vite";
 import pkg from "./package.json";
