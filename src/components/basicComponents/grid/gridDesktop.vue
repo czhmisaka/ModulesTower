@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-16 00:09:28
+ * @LastEditTime: 2023-03-18 03:12:49
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -388,14 +388,9 @@ export default defineComponent({
             this.gridList = this.gridList.concat([value]);
           }
         } else if (type == cardOnChangeType.cardDelete) {
-          if (Object.keys(value).length > 0) {
-            let deleteList = this.gridList
-              .map((x, i) => {
-                return { label: x.label, i };
-              })
-              .filter((x) => Object.keys(value).indexOf(x));
-            deleteList.map((x) => {
-              this.gridList.splice(x.i, 1);
+          if (value.length > 0) {
+            this.gridList = this.gridList.filter((x) => {
+              return value.indexOf(x.label) == -1;
             });
           } else this.gridList.splice(index, 1);
         } else if (type == cardOnChangeType.openComponentsList) {

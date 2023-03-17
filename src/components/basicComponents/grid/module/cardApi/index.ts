@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-14 00:48:45
+ * @LastEditTime: 2023-03-18 03:03:35
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -270,6 +270,27 @@ export const addGridCell = (
     let func = content["$emit"] ? "$emit" : "emit";
     content[func]("onChange", value, {
       type: [cardOnChangeType.cardAdd],
+    });
+  } catch (err) {
+    console.error("hightLightComponent 错误:", err, content, value);
+  }
+};
+
+/**
+ * @name: delGridCell
+ * @description: 删除一个组件
+ * @authors: CZH
+ * @Date: 2022-12-05 19:32:21
+ */
+export const delGridCell = (
+  content: { [key: string]: any },
+  value: string[]
+) => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    content[func]("onChange", value, {
+      type: [cardOnChangeType.cardDelete],
     });
   } catch (err) {
     console.error("hightLightComponent 错误:", err, content, value);

@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-18 01:54:37
+ * @LastEditTime: 2023-03-18 03:20:50
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -23,6 +23,7 @@ import {
   changeCardPosition,
   changeCardProperties,
   hightLightComponent,
+  delGridCell,
   addGridCell,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { get, piwigoMethod, post } from "@/utils/api/requests";
@@ -54,6 +55,7 @@ let gridCelldefault = {
   position: { x: 0, y: 0 },
 };
 let num = 0;
+let showKeyArr = [];
 
 const elementKey = (
   props: stringAnyObj,
@@ -63,6 +65,7 @@ const elementKey = (
   desktop: Desktop = new Desktop(24, 16)
 ) => {
   num++;
+  showKeyArr.push("image" + name + "_" + num);
   return gridCellMaker(
     "image" + name + "_" + num,
     "图片_" + name + "_" + num,
@@ -72,6 +75,7 @@ const elementKey = (
       type: cardComponentType.componentList,
     },
     {
+      showInGridDesktop: false,
       props: {
         ...props,
         clickFunc: ({ props, context }) => {
@@ -188,11 +192,15 @@ export class Desktop {
         let width = 1,
           height = 1;
         if (time < this.randomTryTime * 0.5) {
-          let scaleRate = Math.floor(Math.random() * 10 + 3);
+          let scaleRate = Math.floor(Math.random() * 6 + 3);
           width = (w > h ? Math.round(w / h) : 1) * scaleRate;
           height = (h > w ? Math.round(h / w) : 1) * scaleRate;
         } else if (time < this.randomTryTime * 0.7) {
-          let scaleRate = Math.floor(Math.random() * 5 + 1);
+          let scaleRate = Math.floor(Math.random() * 3 + 2);
+          width = (w > h ? Math.round(w / h) : 1) * scaleRate;
+          height = (h > w ? Math.round(h / w) : 1) * scaleRate;
+        } else if (time < this.randomTryTime * 0.9) {
+          let scaleRate = Math.floor(Math.random() * 3);
           width = (w > h ? Math.round(w / h) : 1) * scaleRate;
           height = (h > w ? Math.round(h / w) : 1) * scaleRate;
         }
@@ -217,6 +225,15 @@ export class Desktop {
 
 export const chosSearch = async () => {
   const chosSearchFunc = async (that, query) => {
+    if (showKeyArr.length > 0) {
+      let obj = {};
+      for (let x in showKeyArr) obj[showKeyArr[x]] = false;
+      changeVisible(that, obj);
+      setTimeout(() => {
+        delGridCell(that, showKeyArr);
+        showKeyArr = [];
+      }, 200);
+    }
     let { result } = await piwigoMethod({
       method: "pwg.images.search",
       query: query,
@@ -233,7 +250,6 @@ export const chosSearch = async () => {
 
     let desktop = new Desktop(24, 16);
     desktop.initByGridList(that.gridList);
-    console.log(desktop, "desktop");
     desktop.randomSet(
       list.map((x) => {
         return { w: x.width, h: x.height, data: x };
@@ -254,6 +270,13 @@ export const chosSearch = async () => {
         );
       }
     );
+    let num1 = showKeyArr.length;
+    let interval = setInterval(() => {
+      if (num1 < 0) clearInterval(interval);
+      let data = {};
+      data[showKeyArr[num1--]] = true;
+      changeVisible(that, data);
+    }, 20);
   };
   return [
     gridCellMaker(
@@ -327,121 +350,5 @@ export const chosSearch = async () => {
     )
       .setPosition(8, 4)
       .setSize(8, 1),
-  ];
-};
-
-export const chosSearch_low = async () => {
-  const chosSearchFunc = async (that, query) => {
-    let { result } = await piwigoMethod({
-      method: "pwg.images.search",
-      query: query,
-      per_page: 100,
-    });
-    let list = result.images.map((x) => {
-      return {
-        ...x,
-        ...x.derivatives,
-        ...x.derivatives["2small"],
-        derivatives: null,
-      };
-    });
-
-    let desktop = new Desktop(18, 12);
-    desktop.initByGridList(that.gridList);
-    console.log(desktop, "desktop");
-    desktop.randomSet(
-      list.map((x) => {
-        return { w: x.width, h: x.height, data: x };
-      }),
-      (wh, xy, data, i) => {
-        addGridCell(
-          that,
-          elementKey(
-            {
-              fit: "cover",
-              noPreview: "true",
-              item: data,
-            },
-            wh,
-            xy,
-            i,
-            desktop
-          )
-        );
-      }
-    );
-  };
-  return [
-    gridCellMaker(
-      "InfoCard",
-      "图片信息",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "photoWebSiteModule_infoCard",
-      },
-      {
-        showInGridDesktop: false,
-        props: {
-          btnList: InfoCardBtnList,
-          watchKeyForCategory: "category",
-        },
-      }
-    )
-      .setPosition(14, 1)
-      .setSize(3, 9),
-    gridCellMaker(
-      "icons",
-      "返回按钮",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "icon",
-      },
-      {
-        showInGridDesktop: false,
-        props: {
-          name: "Close",
-          onClickFunc: ({ props, context, e }) => {
-            let label = gridCelldefault.label;
-            let size = {},
-              pos = {};
-            size[label] = gridCelldefault.size;
-            pos[label] = gridCelldefault.position;
-            changeCardSize(context, size);
-            changeCardPosition(context, pos);
-            changeVisible(context, {
-              InfoCard: false,
-              icons: false,
-            });
-            setTimeout(() => {
-              hightLightComponent(context, []);
-            }, 400);
-            gridCelldefault.label = "";
-          },
-        },
-      }
-    )
-      .setPosition(14, 10)
-      .setSize(3, 1),
-    gridCellMaker(
-      "searchInfo",
-      "输入框",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "photoWebSiteModule_searchInfoChosSearch",
-      },
-      {
-        props: {
-          searchFunc: (that, data) => {
-            let time = 0;
-            setTimeout(() => chosSearchFunc(that, data), 0);
-          },
-        },
-      }
-    )
-      .setPosition(4, 1)
-      .setSize(4, 1),
   ];
 };

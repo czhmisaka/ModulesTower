@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-16 17:17:08
+ * @LastEditTime: 2023-03-18 03:23:48
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -51,17 +51,6 @@ const pageConfig = {
     cusStyle: {
       wholeScreen: true,
       maxRows: 16,
-      margin: 6,
-      Fullscreen: true,
-    },
-  },
-  chosSearch_low: {
-    name: "搜索图片_低配版本",
-    desktopData: chosSearch_low,
-    gridColNum: 18,
-    cusStyle: {
-      wholeScreen: true,
-      maxRows: 12,
       margin: 6,
       Fullscreen: true,
     },
