@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-07 14:57:20
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
+ * @LastEditTime: 2023-03-18 01:58:56
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
   btnMaker,
@@ -70,7 +70,7 @@ export const 收藏按钮 = btnMaker("收藏", btnActionTemplate.Function, {
         ),
       ],
       data: {
-        image_ids:[data.id,1],
+        image_ids: [data.id, 1],
       },
       btnList: [提交],
     } as drawerProps;
