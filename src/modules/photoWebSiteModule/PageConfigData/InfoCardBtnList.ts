@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-20 07:10:10
+ * @LastEditTime: 2023-03-20 08:45:44
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -23,10 +23,19 @@ const 提交 = btnMaker("确定", btnActionTemplate.Function, {
   elType: "primary",
   icon: "Position",
   function: async (that, data) => {
-    let res = await piwigoMethod({
-      method: "pwg.collections.addImages",
-      ...data,
-    });
+    // let res = await piwigoMethod({
+    //   method: "pwg.collections.addImages",
+    //   ...data,
+    //   image_ids: new Array(data.image_ids),
+    // });
+    let res = {};
+    for (let x in data.image_ids) {
+      res = await piwigoMethod({
+        method: "pwg.collections.addImages",
+        ...data,
+        image_ids: data.image_ids[x],
+      });
+    }
     repBackMessageShow(that, res);
   },
 });
