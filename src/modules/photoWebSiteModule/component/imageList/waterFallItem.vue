@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 21:04:26
+ * @LastEditTime: 2023-03-20 06:57:52
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterFallItem.vue
 -->
 
@@ -19,7 +19,7 @@ import {
 
 export default defineComponent({
   name: "waterFallItem",
-  props: ["url", "width", "height", "cusStyle", "item", "noPreview", "fit"],
+  props: ["url", "width", "height", "cusStyle", "item", "noPreview", "fit", "noTitle"],
 
   setup(props, context) {
     const { isDark } = useDark();
@@ -46,7 +46,12 @@ export default defineComponent({
         },
         [
           h(ElImage, {
-            style: { width: "100%", height: "100%", borderRadius: "3px" },
+            style: {
+              width: "100%",
+              height: "100%",
+              borderRadius: "3px",
+            },
+            draggable: false,
             src: props.url,
             teleported: true,
             fit: props.fit ? props.fit : "cover",
@@ -60,50 +65,52 @@ export default defineComponent({
               }
             },
           }),
-          h(
-            "div",
-            {
-              style: {
-                height: "40px",
-                width: "calc(100% - 12px)",
-                position: "relative",
-                marginTop: "-8px",
-                color: isDark.value ? "white" : "#333",
-                padding: "0px 6px ",
-              },
-            },
-            [
-              h(
+          !props.noTitle
+            ? h(
                 "div",
                 {
                   style: {
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  },
-                },
-                props.item.file
-              ),
-              h(
-                "div",
-                {
-                  style: {
-                    color: "#666",
-                    lineHeight: "12px",
-                    fontSize: "10px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
+                    height: "40px",
+                    width: "calc(100% - 12px)",
+                    position: "relative",
+                    marginTop: "-8px",
+                    color: isDark.value ? "white" : "#333",
+                    padding: "0px 6px ",
                   },
                 },
                 [
-                  props.item?.origin
-                    ? `${props.item.origin.width}px * ${props.item.origin.height}px`
-                    : "",
+                  h(
+                    "div",
+                    {
+                      style: {
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      },
+                    },
+                    props.item.file
+                  ),
+                  h(
+                    "div",
+                    {
+                      style: {
+                        color: "#666",
+                        lineHeight: "12px",
+                        fontSize: "10px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      },
+                    },
+                    [
+                      props.item?.origin
+                        ? `${props.item.origin.width}px * ${props.item.origin.height}px`
+                        : "",
+                    ]
+                  ),
                 ]
-              ),
-            ]
-          ),
+              )
+            : [],
         ]
       );
   },

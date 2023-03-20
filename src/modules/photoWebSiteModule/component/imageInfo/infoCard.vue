@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 23:12:33
+ * @LastEditTime: 2023-03-20 07:06:03
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -10,75 +10,106 @@
       overflow: 'scroll',
     }"
   >
-    <el-card
-      :style="elCardInfo.style"
-      :body-style="{
-        padding: '0px',
-        paddingBottom: '-5px',
-      }"
-    >
-      <waterFallItem
-        v-if="baseData['image']"
-        :url="baseData['image'].url"
-        :item="baseData['image']"
-        :cus-style="{
-          width: 'calc(100%)',
-          borderRadius: '6px',
-          height: '150px',
+    <span v-if="baseData.image && baseData.image.length && baseData.image.length > 0">
+      <el-card
+        :style="{
+          ...elCardInfo.style,
+          height: baseData.image.length > 5 ? '200px' : '160px',
         }"
-        :noPreview="true"
-      ></waterFallItem>
-    </el-card>
-    <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="颜色">
-      <div class="flexBox">
-        <div
-          class="tag"
-          v-for="color in colorList"
-          :style="{
-            backgroundColor: color,
-          }"
-          @click="colorClick(color)"
-        ></div>
-      </div>
-    </el-card>
-    <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="评分">
-      <el-rate
-        v-model="imageInfo.rate"
-        :colors="['#F7BA2A', '#FF9900', '#ff0000']"
-        @change="rate"
-      />
-    </el-card>
-    <el-card
-      title="基本信息"
-      :style="elCardInfo.style"
-      :body-style="elCardInfo.bodyStyle"
-    >
-      <el-descriptions :column="1" size="small" v-if="baseData['image']" border>
-        <el-descriptions-item
-          v-for="item in Object.keys(imageInfo)"
-          :align="'left'"
-          :label="item"
-          label-align="left"
-        >
-          {{ imageInfo[item] }}
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
-    <el-card
-      v-if="categoryInfo.length > 0"
-      title="相册信息"
-      :style="elCardInfo.style"
-      :body-style="elCardInfo.bodyStyle"
-    >
-      <el-tag class="floatTag" v-for="item in categoryInfo" effect="dark" type="info"
-        >相册【{{ item.name }}】</el-tag
+        :body-style="{
+          padding: '0px',
+          paddingBottom: '-5px',
+        }"
       >
-    </el-card>
+        <waterFallItem
+          v-for="(image, index) in baseData['image']"
+          :url="image.url"
+          :item="image"
+          :cus-style="{
+            width: 'calc(100%)',
+            borderRadius: '6px',
+            height: '150px',
+            position: 'absolute',
+            transform: `translateX(-50%) translateY(${
+              baseData.image.length > 5 ? '20px' : '0px'
+            }) scale(${0.8}) rotate(${index * 27}deg)`,
+          }"
+          :noPreview="true"
+          :noTitle="true"
+        ></waterFallItem>
+      </el-card>
+    </span>
+    <span v-else>
+      <el-card
+        :style="elCardInfo.style"
+        :body-style="{
+          padding: '0px',
+          paddingBottom: '-5px',
+        }"
+      >
+        <waterFallItem
+          v-if="baseData['image']"
+          :url="baseData['image'].url"
+          :item="baseData['image']"
+          :cus-style="{
+            width: 'calc(100%)',
+            borderRadius: '6px',
+            height: '150px',
+          }"
+          :noPreview="true"
+        ></waterFallItem>
+      </el-card>
+      <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="颜色">
+        <div class="flexBox">
+          <div
+            class="tag"
+            v-for="color in colorList"
+            :style="{
+              backgroundColor: color,
+            }"
+            @click="colorClick(color)"
+          ></div>
+        </div>
+      </el-card>
+      <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="评分">
+        <el-rate
+          v-model="imageInfo.rate"
+          :colors="['#F7BA2A', '#FF9900', '#ff0000']"
+          @change="rate"
+        />
+      </el-card>
+      <el-card
+        title="基本信息"
+        :style="elCardInfo.style"
+        :body-style="elCardInfo.bodyStyle"
+      >
+        <el-descriptions :column="1" size="small" v-if="baseData['image']" border>
+          <el-descriptions-item
+            v-for="item in Object.keys(imageInfo)"
+            :align="'left'"
+            :label="item"
+            label-align="left"
+          >
+            {{ imageInfo[item] }}
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-card>
+      <el-card
+        v-if="categoryInfo.length > 0"
+        title="相册信息"
+        :style="elCardInfo.style"
+        :body-style="elCardInfo.bodyStyle"
+      >
+        <el-tag class="floatTag" v-for="item in categoryInfo" effect="dark" type="info"
+          >相册【{{ item.name }}】</el-tag
+        >
+      </el-card>
+    </span>
     <el-card
       title="操作"
       :style="elCardInfo.style"
       :body-style="{ ...elCardInfo.bodyStyle, padding: '0px' }"
-      v-if="imageInfo['尺寸']"
+      v-if="baseData.image"
     >
       <div v-for="item in btnList" class="floatTag" style="margin: 3px; margin-top: 2px">
         <el-button
@@ -135,10 +166,6 @@ export default defineComponent({
   } as componentInfo,
 
   propsDetail: {
-    image: {
-      label: "图片信息",
-      type: inputType.obj,
-    },
     watchKeyForCategory: {
       label: "baseData监听key(相册key)",
       type: inputType.text,
@@ -196,28 +223,31 @@ export default defineComponent({
       });
     },
     async initImageInfo(image) {
-      if (!image || !image.id) return;
-      let res = await get("/image-info?id=" + image.id, {});
-      if (!res || !res.data) return;
-      const { tagList, color } = res.data;
-      const info = res.data.info[0];
-      this.colorList = color;
-      this.tagList = tagList;
-      this.imageInfo = {
-        尺寸: `${info.width}px × ${info.height}px`,
-        文件大小: `${info.filesize} Kb`,
-        格式: info.file.split(".")[1],
-        创建日期: new Date(info.date_available.replace("T", " ")).toLocaleString(),
-        修改日期: new Date(info.lastmodified.replace("T", " ")).toLocaleString(),
-        rate: 0,
-      };
-      let resInfo = await piwigoPost("/piwigo/ws.php?format=json", {
-        method: "pwg.images.getInfo",
-        image_id: this.baseData.image.id,
-      });
-      this.data = resInfo.result;
-      this.imageInfo.rate = resInfo.result.rates.count;
-      this.categoryInfo = resInfo.result.categories;
+      if (typeof image == "object" && !Array.isArray(image)) {
+        if (!image || !image.id) return;
+        let res = await get("/image-info?id=" + image.id, {});
+        if (!res || !res.data) return;
+        const { tagList, color } = res.data;
+        const info = res.data.info[0];
+        this.colorList = color;
+        this.tagList = tagList;
+        this.imageInfo = {
+          尺寸: `${info.width}px × ${info.height}px`,
+          文件大小: `${info.filesize} Kb`,
+          格式: info.file.split(".")[1],
+          创建日期: new Date(info.date_available.replace("T", " ")).toLocaleString(),
+          修改日期: new Date(info.lastmodified.replace("T", " ")).toLocaleString(),
+          rate: 0,
+        };
+        let resInfo = await piwigoPost("/piwigo/ws.php?format=json", {
+          method: "pwg.images.getInfo",
+          image_id: this.baseData.image.id,
+        });
+        this.data = resInfo.result;
+        this.imageInfo.rate = resInfo.result.rates.count;
+        this.categoryInfo = resInfo.result.categories;
+      } else if (Array.isArray(image)) {
+      }
     },
 
     /**
@@ -233,7 +263,7 @@ export default defineComponent({
         this.$refs["drawer"].open();
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
-        await btn.function(that, this.data);
+        await btn.function(that, this.baseData.image);
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-13 01:43:36
+ * @LastEditTime: 2023-03-20 07:00:39
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -11,7 +11,6 @@
         :id="'scroll_' + MathRandom"
         :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'"
       >
-        <div style="position: fixed; top: 0px; left: 0px; z-index: 100000"></div>
         <div
           class="row"
           v-for="(imgList, rowIndex) in rowList"
@@ -26,12 +25,17 @@
             :cusStyle="{
               margin: row.margin + 'px',
             }"
-            :class="selected.id == item.id ? ' normal selectedIn' : 'normal'"
+            :class="
+              selected.id == item.id || selecteds.map((x) => x.id).indexOf(item.id) > -1
+                ? ' normal selectedIn'
+                : 'normal'
+            "
             @click="
               selected.id == item.id
                 ? (nowShowType = showType.list)
                 : setImage(item, rowIndex, colIndex)
             "
+            @mouseover="setImages(item)"
             @dblclick="nowShowType = showType.list"
             :noPreview="true"
           ></waterFallItem>
@@ -54,7 +58,6 @@
           :item="selected.data"
           :noPreview="true"
         ></waterFallItem>
-        <div class="bottomActionBtn"></div>
       </div>
     </div>
   </cardBg>
@@ -211,6 +214,8 @@ export default defineComponent({
         colIndex: -1,
         rowIndex: -1,
       },
+      selecteds: [],
+      muiltSelected: false,
       row: {
         height: 100,
         rowIndexSize: 2,
@@ -221,7 +226,6 @@ export default defineComponent({
       preData: "",
       nowShowType: showType.waterFall as showType,
       showType,
-
       isLoading: false,
     };
   },
@@ -252,6 +256,31 @@ export default defineComponent({
           }, 500);
         }
       });
+      this.createBoxSelectEvent();
+    },
+
+    /**
+     * @name: boxSelectEvent
+     * @description: 注册框选事件
+     * @authors: CZH
+     * @Date: 2023-03-20 00:16:51
+     */
+    createBoxSelectEvent() {
+      const bodyEl = document.getElementById("scroll_" + this.MathRandom);
+      bodyEl.onmousedown = (e) => {
+        if (!e) return;
+        this.muiltSelected = true;
+        this.selecteds = [];
+        this.selected = {
+          id: -1,
+          data: {} as stringAnyObj,
+          colIndex: -1,
+          rowIndex: -1,
+        };
+      };
+      window.onmouseup = () => {
+        this.muiltSelected = false;
+      };
     },
 
     // 选中图片
@@ -262,6 +291,14 @@ export default defineComponent({
       this.selected.rowIndex = rowIndex;
       this.selected.colIndex = colIndex;
       setData(this, { image: data });
+    },
+
+    // 批量选中图片
+    setImages(item) {
+      if (!this.muiltSelected) return;
+      if (this.selecteds.map((x) => x.id).indexOf(item.id) > -1) return;
+      this.selecteds.push(item);
+      setData(this, { image: this.selecteds });
     },
 
     // 键盘事件
@@ -503,5 +540,16 @@ export default defineComponent({
     transform: translateX(30px);
     backdrop-filter: blur(10px);
   }
+}
+
+.selectBox {
+  position: absolute;
+  transform-origin: 0% 0%;
+  background: rgba(0, 0, 0, 0.1);
+  width: 1px;
+  height: 1px;
+  top: 0px;
+  left: 0px;
+  z-index: 100000000;
 }
 </style>

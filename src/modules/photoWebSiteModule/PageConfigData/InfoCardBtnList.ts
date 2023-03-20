@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-18 01:58:56
+ * @LastEditTime: 2023-03-20 07:10:10
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -46,7 +46,6 @@ export const 收藏按钮 = btnMaker("收藏", btnActionTemplate.Function, {
               let attr = {
                 multiple: false,
               };
-              const user = useUserStoreHook();
               attr["remoteMethod"] = async (query) => {
                 const user = useUserStoreHook();
                 let options = JSON.parse(
@@ -70,7 +69,7 @@ export const 收藏按钮 = btnMaker("收藏", btnActionTemplate.Function, {
         ),
       ],
       data: {
-        image_ids: [data.id, 1],
+        image_ids: data.id ? [data.id] : data.map((x) => x.id),
       },
       btnList: [提交],
     } as drawerProps;
