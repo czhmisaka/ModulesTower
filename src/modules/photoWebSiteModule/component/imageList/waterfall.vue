@@ -1,12 +1,29 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-20 07:00:39
+ * @LastEditTime: 2023-03-22 01:38:21
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
   <cardBg>
     <div class="wholeScreen" :id="'waterfall_' + MathRandom">
+      <div
+        :style="{
+          position: 'fixed',
+          background: '#fff',
+          color: '#000',
+          zIndex: 10000000,
+          width: 'auto',
+        }"
+      >
+        {{
+          rowList
+            .map((x) => {
+              return x.length;
+            })
+            .reduce((a, b) => a + b)
+        }}
+      </div>
       <div
         :id="'scroll_' + MathRandom"
         :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'"

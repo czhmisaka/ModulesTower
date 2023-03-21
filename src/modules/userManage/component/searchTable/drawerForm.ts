@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-21 18:11:30
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.ts
+ * @LastEditTime: 2023-03-22 01:01:57
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
 export const OpenDrawerBtn = () => {};
@@ -151,8 +151,8 @@ export const openDrawerForm = (
  * @param {*} res
  */
 export const repBackMessageShow = (that, res) => {
-  if (res["message"] == "成功") {
-    that.$message.success(res["message"]);
+  if (res["message"] == "成功" || res.stat == "ok") {
+    that.$message.success(res["message"] || "成功");
     setTimeout(() => {
       that.close ? that.close() : refreshDesktop(that);
     }, 500);

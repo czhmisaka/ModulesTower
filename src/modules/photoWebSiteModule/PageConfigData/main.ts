@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 20:46:10
- * @FilePath: /configforpagedemo/src/modules/photoWebSiteModule/PageConfigData/main.ts
+ * @LastEditTime: 2023-03-22 01:34:28
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
 import {
@@ -194,7 +194,7 @@ const 删除收藏夹 = btnMaker("删除", btnActionTemplate.Function, {
 
 export const mainDesktop = async () => {
   let res = await piwigoMethod({
-    method: "pwg.tags.getList",
+    method: "pwg.tags.getAdminList",
   });
   let tagList = res.result.tags.map((x) => {
     return {
@@ -323,33 +323,6 @@ export const mainDesktop = async () => {
       .setPosition(2, 1)
       .setSize(8, 11),
     gridCellMaker(
-      "userInfo",
-      "用户信息卡片",
-      {},
-      {
-        name: "userManage_userInfoCard",
-        type: cardComponentType.componentList,
-      },
-      {
-        props: {
-          showTemplate: storage.getByKeyArr(["username", "status", "roles"]),
-          userInfo: async () => {
-            const user = await useUserStoreHook().getOptions();
-            return {
-              ...user,
-              name: user.username,
-              mobile: user.email,
-              icon: "/imageserver/i.php?/upload/2023/01/04/20230104223508-585754b4-sm.jpg",
-            };
-          },
-          btnList: [],
-        },
-        isSettingTool: false,
-      }
-    )
-      .setPosition(10, 0)
-      .setSize(2, 1),
-    gridCellMaker(
       "InfoCard",
       "图片信息",
       {},
@@ -364,8 +337,8 @@ export const mainDesktop = async () => {
         },
       }
     )
-      .setPosition(10, 1)
-      .setSize(2, 11),
+      .setPosition(10, 0)
+      .setSize(2, 12),
     gridCellMaker(
       "icon",
       "返回按钮",

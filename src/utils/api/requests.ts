@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 00:52:37
+ * @LastEditTime: 2023-03-22 00:56:41
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -176,11 +176,9 @@ export function piwigoPost(url: string, params: object) {
       params[x].length > 1 &&
       typeof params[x] != "string"
     ) {
-      for (let z in params[x]) {
-        fd.append(x + "[]", z);
+      for (let z = 0; z < params[x].length; z++) {
+        fd.append(x + "[" + z + "]", params[x][z]);
       }
-      // fd.append(x + "[]", JSON.stringify(params[x]));
-      // fd.append(x, params[x]);
     } else fd.append(x, params[x]);
   }
   return request.post(VITE_PROXY_DOMAIN_REAL + url, fd) as stringAnyObj;

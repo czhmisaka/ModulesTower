@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-20 08:45:44
+ * @LastEditTime: 2023-03-22 02:56:39
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -23,19 +23,11 @@ const 提交 = btnMaker("确定", btnActionTemplate.Function, {
   elType: "primary",
   icon: "Position",
   function: async (that, data) => {
-    // let res = await piwigoMethod({
-    //   method: "pwg.collections.addImages",
-    //   ...data,
-    //   image_ids: new Array(data.image_ids),
-    // });
-    let res = {};
-    for (let x in data.image_ids) {
-      res = await piwigoMethod({
-        method: "pwg.collections.addImages",
-        ...data,
-        image_ids: data.image_ids[x],
-      });
-    }
+    let res = await piwigoMethod({
+      method: "pwg.collections.addImages",
+      ...data,
+      image_ids: data.image_ids,
+    });
     repBackMessageShow(that, res);
   },
 });
@@ -86,4 +78,79 @@ export const 收藏按钮 = btnMaker("收藏", btnActionTemplate.Function, {
   },
 });
 
-export const InfoCardBtnList = [收藏按钮];
+const 提交标签绑定 = btnMaker("提交", btnActionTemplate.Function, {
+  icon: "Position",
+  elType: "primary",
+  function: async (that, data) => {
+    let { tag_ids } = data;
+    let map = [];
+
+    data.image_ids.map((x) => {
+      map.push(
+        piwigoMethod({
+          method: "pwg.images.setInfo",
+          tag_ids,
+          image_id: x,
+        })
+      );
+    });
+    Promise.all([map]).then((res) => {
+      repBackMessageShow(that, {
+        stat: "ok",
+      });
+    });
+  },
+});
+
+export const 添加标签按钮 = btnMaker("添加标签", btnActionTemplate.Function, {
+  function: async (that, data) => {
+    let drawerProps = {
+      title: "选择标签",
+      queryItemTemplate: [
+        tableCellTemplateMaker(
+          "标签",
+          "tag_ids",
+          searchCell(formInputType.searchList, {
+            funcInputOptionsLoader: async (that) => {
+              const res = await await piwigoMethod({
+                method: "pwg.tags.getAdminList",
+              });
+              const tags = res.result.tags;
+              let attr = {
+                multiple: false,
+                remoteMethod: async (data) => {
+                  if (!data)
+                    return tags.map((x) => {
+                      return {
+                        ...x,
+                        value: x.id + "",
+                        label: x.name,
+                      };
+                    });
+                  else
+                    return tags
+                      .filter((x) => x.name.indexOf(data) > -1)
+                      .map((x) => {
+                        return {
+                          ...x,
+                          value: x.id + "",
+                          label: x.name,
+                        };
+                      });
+                },
+              };
+              return attr;
+            },
+          })
+        ),
+      ],
+      data: {
+        image_ids: data.id ? [data.id] : data.map((x) => x.id),
+      },
+      btnList: [提交标签绑定],
+    } as drawerProps;
+    openDrawerFormEasy(that, drawerProps);
+  },
+});
+
+export const InfoCardBtnList = [收藏按钮, 添加标签按钮];

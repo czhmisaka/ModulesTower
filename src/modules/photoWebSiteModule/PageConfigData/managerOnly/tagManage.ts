@@ -154,7 +154,7 @@ export const tagManage = async () => {
           searchItemTemplate: [],
           showItemTemplate: tagsStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            let res = await piwigoMethod({ method: "pwg.tags.getList" });
+            let res = await piwigoMethod({ method: "pwg.tags.getAdminList" });
             return res && res.result ? res.result.tags : [];
           },
           btnList: [添加标签],
