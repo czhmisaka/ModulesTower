@@ -58,6 +58,7 @@ export default ({ mode, command }) => {
     root,
     resolve: {
       alias: {
+        'vue': 'vue/dist/vue.esm-bundler.js',
         "@": pathResolve("src"),
         "@build": pathResolve("build"),
         fs: require.resolve("rollup-plugin-node-builtins/src/es6/util.js"),

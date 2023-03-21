@@ -74,7 +74,6 @@ declare module 'vue' {
     InfoList: typeof import('./src/components/basicComponents/list/info/infoList.vue')['default']
     InputCell: typeof import('./src/components/basicComponents/cell/input/inputCell.vue')['default']
     InputList: typeof import('./src/components/basicComponents/list/input/inputList.vue')['default']
-    Layout: typeof import('./src/components/basicComponents/basicComponents/layout/index.vue')['default']
     LessIcon: typeof import('./src/components/basicComponents/cell/icon/lessIcon.vue')['default']
     LineSlideExchange: typeof import('./src/components/animate/lineSlideExchange.vue')['default']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
