@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-21 21:02:27
+ * @LastEditTime: 2023-03-22 00:52:37
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -9,7 +9,7 @@ import axios from "axios";
 import { clearCookie, getCookie } from "./config/cookie";
 import { getHeaders } from "./user/header";
 export const CancelToken: any = axios.CancelToken; // axios 的取消请求
-import { ElMessage } from "element-plus";
+import { ElLoading, ElMessage } from "element-plus";
 import { useUserStoreHook } from "@/store/modules/user";
 import { stringAnyObj } from "@/modules/userManage/types";
 import { saveAs } from "file-saver";
@@ -186,6 +186,17 @@ export function piwigoPost(url: string, params: object) {
   return request.post(VITE_PROXY_DOMAIN_REAL + url, fd) as stringAnyObj;
 }
 
+// 验证是否为blob格式
+export async function blobValidate(data) {
+  try {
+    const text = await data.text();
+    JSON.parse(text);
+    return false;
+  } catch (error) {
+    return true;
+  }
+}
+
 // 通用下载方法
 export function download(
   url,
@@ -211,9 +222,9 @@ export function download(
     ...config,
   };
   return request
-    .post(url, params, { ...data })
+    .post(url, params, { ...(data as any) })
     .then(async (data) => {
-      const isLogin = await blobValidate(data);
+      const isLogin = await blobValidate(data as any);
       if (isLogin) {
         const blob = new Blob([data as any]);
         saveAs(blob, filename);
