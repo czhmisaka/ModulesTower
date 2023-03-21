@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 00:10:11
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
+ * @LastEditTime: 2023-02-14 15:14:08
+ * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
 -->
 <template>
   <cardBg
@@ -11,7 +11,7 @@
     }"
   >
     <div :class="`menuBox box_${random}`">
-      <div class="searchBar" v-if="!noSearch">
+      <div class="searchBar">
         <el-input
           :style="{
             width: '100%',
@@ -42,11 +42,7 @@
       </div>
 
       <!-- 这里展示的是搜索结果 -->
-      <div
-        class="content"
-        :style="noSearch ? 'max-height: calc(100%)' : 'max-height: calc(100% - 40px)'"
-        v-if="searchResult.length != 0 && selectedKey"
-      >
+      <div class="content" v-if="searchResult.length != 0 && selectedKey">
         <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
@@ -64,11 +60,7 @@
       </div>
 
       <!-- 这里展示的是默认树形结构 -->
-      <div
-        class="content"
-        :style="noSearch ? 'max-height: calc(100%)' : 'max-height: calc(100% - 40px)'"
-        v-if="searchResult.length == 0 && selectedKey == ''"
-      >
+      <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
         <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
@@ -133,10 +125,6 @@ export default defineComponent({
       description: "参考文档：https://element-plus.org/zh-CN/component/tree.html#props",
       type: inputType.obj,
     },
-    noSearch: {
-      label: "不展示搜索框",
-      type: inputType.boolean,
-    },
     clickItemDetailFunc: {
       label: "点击元素详情事件",
       description: "一般用于展示元素弹窗等",
@@ -178,7 +166,6 @@ export default defineComponent({
     "outputKey",
     "defaultProps",
     "treeDataFunc",
-    "noSearch",
     "clickItemDetailFunc",
     "searchBtn",
   ],
@@ -302,8 +289,8 @@ export default defineComponent({
   }
   .content {
     width: 100%;
-    min-height: 100%;
     height: auto;
+    max-height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
     .searchItem {

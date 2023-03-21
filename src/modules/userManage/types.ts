@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 19:55:41
+ * @LastEditTime: 2023-03-20 17:59:31
  * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
  */
 
@@ -154,9 +154,6 @@ export enum showType {
   funcComponent,
   dataKey,
   btnList,
-
-  image,
-  link,
 }
 
 /**
@@ -193,6 +190,7 @@ export enum formInputType {
   radio = "radio",
   upload = "upload",
   uploadImage = "uploadImage",
+  uploadFileList = "uploadFileList",
   mobile = "mobile",
   idCard = "idCard",
   treeSelect = "treeSelect",
@@ -203,6 +201,8 @@ export enum formInputType {
   searchTable = "searchTable",
   component = "component",
   remoteDictSelect = "remoteDictSelect",
+  textarea = "textarea",
+  richTextArea = "richTextArea",
 }
 
 /**

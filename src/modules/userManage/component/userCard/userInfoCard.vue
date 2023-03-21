@@ -57,7 +57,7 @@
               <span class="name">
                 {{ userInfoData["name"] }}
                 <br />
-                <span class="mobile">{{ userInfoData["mobile"] }}</span>
+                <span class="mobile">手机号：{{ userInfoData["mobile"] }}</span>
               </span>
             </div>
           </div>
@@ -116,7 +116,6 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import {
   setData,
-  changeVisible,
   hightLightComponent,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { useUserStoreHook } from "@/store/modules/user";

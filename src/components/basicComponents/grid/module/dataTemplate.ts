@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-14 00:42:42
- * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/dataTemplate.ts
+ * @LastEditTime: 2023-03-16 15:05:27
+ * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 import { cardUtil } from "./util";

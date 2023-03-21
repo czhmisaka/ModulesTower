@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-22 15:28:18
+ * @LastEditTime: 2023-03-21 17:25:10
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -9,7 +9,7 @@ import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import inputElement, { globalBaseCellDeal } from "./inputElement";
 import { useModuleHook } from "@/store/modules/module";
 import { useRemoteDictHook } from "@/store/modules/remoteDict";
-
+import { defineComponent, h } from "vue";
 import {
   btnCellTemplate,
   stringAnyObj,
@@ -20,6 +20,7 @@ import {
   tableCellTemplate,
   formInputType,
 } from "@/modules/userManage/types";
+import { compile, VNode } from "vue";
 
 const baseShowFunc = (data, key) => {
   if (data[key] != undefined) return data[key] + "";
@@ -58,10 +59,10 @@ export class SearchCellStorage {
    * @Date: 2022-11-30 15:35:47
    * @param {string} labelArr
    */
-  getByLabelArr(labelArr: string[]) {
+  getByLabelArr(labelArr: string[], options: tableCellOptions = {}) {
     let back = [];
     for (let key in labelArr) {
-      back.push(this.getByLabel(labelArr[key]));
+      back.push(this.getByLabel(labelArr[key], options));
     }
     return back.filter(Boolean);
   }
@@ -95,10 +96,10 @@ export class SearchCellStorage {
    * @Date: 2022-11-30 15:36:15
    * @param {string} keyArr
    */
-  getByKeyArr(keyArr: string[]) {
+  getByKeyArr(keyArr: string[], options: tableCellOptions = {}) {
     let back = [];
     for (let key in keyArr) {
-      back.push(this.getByKey(keyArr[key]));
+      back.push(this.getByKey(keyArr[key], options));
     }
     return back.filter(Boolean);
   }
@@ -110,12 +111,13 @@ export class SearchCellStorage {
    * @Date: 2022-12-06 15:48:39
    * @param {string} keyArr
    */
-  getAll(expectKeyArr: string[] = []) {
+  getAll(expectKeyArr: string[] = [], options: tableCellOptions = {}) {
+    let allGetKey = this.storage.map((x) => x.key);
     if (expectKeyArr && expectKeyArr.length > 0)
-      return this.storage.filter((cell) => {
-        return expectKeyArr.indexOf(cell.key) == -1;
+      allGetKey = allGetKey.filter((x) => {
+        return expectKeyArr.indexOf(x) == -1;
       });
-    else return this.storage;
+    return this.getByKeyArr(allGetKey, options);
   }
 
   /**
@@ -137,14 +139,17 @@ export class SearchCellStorage {
  * @Date: 2022-11-29 14:52:10
  * @param {stringAnyObj} options
  */
-export const DateCell = (options: stringAnyObj = {}): tableCellOptions => {
+export const DateCell = (
+  options: stringAnyObj = {},
+  inputOptions: stringAnyObj = {}
+): tableCellOptions => {
   return {
     ...showCell(showType.func, {
       showFunc: (data: any, key: string) =>
         data[key] ? new Date(data[key]).toLocaleString() : " ",
       ...options,
     }),
-    ...searchCell(formInputType.datePicker),
+    ...searchCell(formInputType.datePicker, inputOptions),
   };
 };
 
@@ -278,6 +283,37 @@ export const actionCell = (
     ...options,
   };
   return tableCellOption;
+};
+
+// 禁止操作cell
+export const disabledCell = () => {
+  return {
+    propertiesOption: {
+      "ui:options": {
+        disabled: true,
+      },
+    },
+  };
+};
+
+export const richTextCell = (
+  inputProperties?: tableCellOptionsInputPropertiesTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
+  return {
+    ...searchCell(formInputType.richTextArea, {
+      ...inputProperties,
+    }),
+    ...showCell(showType.funcComponent, {
+      showFunc: (data, key) =>
+        defineComponent({
+          setup() {
+            return () => h(compile(data[key]));
+          },
+        }),
+      ...showOptions,
+    }),
+  };
 };
 
 /**

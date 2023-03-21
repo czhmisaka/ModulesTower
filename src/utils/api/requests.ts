@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-20 07:25:58
+ * @LastEditTime: 2023-03-21 21:02:27
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -12,6 +12,7 @@ export const CancelToken: any = axios.CancelToken; // axios 的取消请求
 import { ElMessage } from "element-plus";
 import { useUserStoreHook } from "@/store/modules/user";
 import { stringAnyObj } from "@/modules/userManage/types";
+import { saveAs } from "file-saver";
 
 // development , production
 const Env = import.meta.env.VITE_MODE;
@@ -183,4 +184,46 @@ export function piwigoPost(url: string, params: object) {
     } else fd.append(x, params[x]);
   }
   return request.post(VITE_PROXY_DOMAIN_REAL + url, fd) as stringAnyObj;
+}
+
+// 通用下载方法
+export function download(
+  url,
+  filename = "6",
+  params = {},
+  config = {},
+  noTran = false
+) {
+  const downloadLoadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在下载数据，请稍候",
+    spinner: "el-icon-loading",
+    background: "rgba(0, 0, 0, 0.7)",
+  });
+  let data = {
+    headers: {
+      ...getHeaders(),
+      "Content-Type": !noTran
+        ? "application/x-www-form-urlencoded"
+        : "application/json;charset=UTF-8",
+    },
+    responseType: "blob",
+    ...config,
+  };
+  return request
+    .post(url, params, { ...data })
+    .then(async (data) => {
+      const isLogin = await blobValidate(data);
+      if (isLogin) {
+        const blob = new Blob([data as any]);
+        saveAs(blob, filename);
+      } else {
+        ElMessage.error("下载出错，请联系管理员");
+      }
+      downloadLoadingInstance.close();
+    })
+    .catch((r) => {
+      ElMessage.error("下载出错，请联系管理员");
+      downloadLoadingInstance.close();
+    });
 }

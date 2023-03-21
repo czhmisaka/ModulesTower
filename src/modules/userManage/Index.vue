@@ -27,7 +27,8 @@
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
-import component from "@/modules/userManage/component";
+import { isValidKey } from "@/utils/index";
+import { GetAllUser } from "@/utils/api/user/user";
 
 export default defineComponent({
   components: {
@@ -36,7 +37,7 @@ export default defineComponent({
 
   computed: {
     component() {
-      return component;
+      return this.$modules.getAllComponents();
     },
   },
   methods: {

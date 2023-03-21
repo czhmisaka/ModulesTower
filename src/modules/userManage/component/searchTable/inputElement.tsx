@@ -1,9 +1,14 @@
+/*
+ * @Date: 2023-02-06 08:57:34
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-03-21 13:10:02
+ */
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import { ElOption, ElScrollbar, ElSelect, ElTreeSelect } from "element-plus";
 import { defineComponent, h, ref, shallowRef, watchEffect } from "vue";
 import { inputElementTemplate, formInputType, stringAnyObj } from "../../types";
-
-
+import editor from "@/components/basicComponents/grid/module/baseToolComponents/editor.vue";
+import uploadFileList from "./uploadFileList.vue";
 function base(cell) {
   return {
     // title: cell.label,
@@ -15,18 +20,22 @@ function base(cell) {
   } as stringAnyObj;
 }
 
-export const globalBaseCellDeal = (cell, cellProperties: stringAnyObj | Promise<stringAnyObj>, needTitle: boolean = false): stringAnyObj | Promise<stringAnyObj> => {
+export const globalBaseCellDeal = (
+  cell,
+  cellProperties: stringAnyObj | Promise<stringAnyObj>,
+  needTitle: boolean = false
+): stringAnyObj | Promise<stringAnyObj> => {
   const globalBaseCell = {
     "ui:options": {
-      title: needTitle ? cell.label : '',
+      title: needTitle ? cell.label : "",
       placeholder: "请输入" + cell.label,
       style: {
-        width: needTitle ? '360px' : '100%'
-      }
+        width: needTitle ? "360px" : "100%",
+      },
     },
-  }
-  return deepMerge(globalBaseCell, cellProperties)
-}
+  };
+  return deepMerge(cellProperties, globalBaseCell);
+};
 
 let inputElement = {} as {
   [key: string]: inputElementTemplate;
@@ -48,7 +57,6 @@ inputElement[formInputType.mobile] = {
   },
 };
 
-
 inputElement[formInputType.number] = {
   properties: (that, cell) => {
     return {
@@ -58,7 +66,17 @@ inputElement[formInputType.number] = {
   },
 };
 
-
+inputElement[formInputType.textarea] = {
+  properties: (that, cell) => {
+    return {
+      title: cell.label,
+      type: "string",
+      "ui:options": {
+        type: "textarea",
+      },
+    };
+  },
+};
 
 inputElement[formInputType.datePicker] = {
   properties: (that, cell) => {
@@ -75,20 +93,20 @@ inputElement[formInputType.upload] = {
       ...base(cell),
       "ui:widget": "UploadWidget",
       "ui:options": {
-        "action": cell.input.action || '/api/web/file/upload',
+        action: cell.input.action || "/api/web/file/upload",
       },
-    }
+    };
     let attrs = {
       responseFileUrl: (res) => {
-        return (res ? (res.data) : '')
+        return res ? res.data : "";
       },
-    }
+    };
     Object.keys(attrs).map((x) => {
       properties["ui:" + x] = attrs[x];
-    })
-    return properties
-  }
-}
+    });
+    return properties;
+  },
+};
 
 inputElement[formInputType.uploadImage] = {
   properties: (that, cell) => {
@@ -96,32 +114,32 @@ inputElement[formInputType.uploadImage] = {
       ...base(cell),
       "ui:widget": "UploadWidget",
       "ui:options": {
-        "action": cell.input.action || '/api/web/file/upload',
+        action: cell.input.action || "/api/web/file/upload",
       },
-    }
+    };
     let attrs = {
       responseFileUrl: (res) => {
-        return (res ? (res.data) : '')
+        return res ? res.data : "";
       },
-    }
+    };
     Object.keys(attrs).map((x) => {
       properties["ui:" + x] = attrs[x];
-    })
-    return properties
-  }
-}
+    });
+    return properties;
+  },
+};
 
 inputElement[formInputType.datePickerRanger] = {
   properties: (that, cell) => {
     return {
-      "type": "array",
-      "format": "date",
-      "items": {
-        "type": "number"
-      }
-    }
-  }
-}
+      type: "array",
+      format: "date",
+      items: {
+        type: "number",
+      },
+    };
+  },
+};
 
 inputElement[formInputType.radio] = {
   properties: (that, cell) => {
@@ -130,15 +148,12 @@ inputElement[formInputType.radio] = {
       "ui:widget": "SelectWidget",
       "ui:options": {
         placeholder: cell.label + "开关",
-        enum: ['true', 'false'],
-        enumNames: ['开', '关']
+        enum: ["true", "false"],
+        enumNames: ["开", "关"],
       },
     };
   },
 };
-
-
-
 
 inputElement[formInputType.idCard] = {
   properties: (that, cell) => {
@@ -165,9 +180,7 @@ inputElement[formInputType.select] = {
       properties = {
         ...properties,
         enum: Object.keys(input.inputOptions),
-        enumNames: Object.keys(input.inputOptions).map(
-          (x) => input.inputOptions[x]
-        ),
+        enumNames: Object.keys(input.inputOptions).map((x) => input.inputOptions[x]),
       };
     }
     if (input.funcInputOptionsLoader) {
@@ -214,9 +227,7 @@ inputElement[formInputType.inputList] = {
       properties.items = {
         ...properties.items,
         enum: Object.keys(input.inputOptions),
-        enumNames: Object.keys(input.inputOptions).map(
-          (x) => input.inputOptions[x]
-        ),
+        enumNames: Object.keys(input.inputOptions).map((x) => input.inputOptions[x]),
       };
     }
     if (input.funcInputOptionsLoader) {
@@ -297,7 +308,7 @@ inputElement[formInputType.treeSelect] = {
 
     Object.keys(attrs).map((x) => {
       properties["ui:" + x] = attrs[x];
-    })
+    });
     return properties;
   },
 };
@@ -320,19 +331,19 @@ inputElement[formInputType.searchList] = {
           "reserveKeyword",
           "remoteMethod",
           "modelValue",
-          "placeholder"
+          "placeholder",
         ],
         setup(props, context) {
           let options = ref([]);
-          props["remoteMethod"]('').then(res => {
+          props["remoteMethod"]("").then((res) => {
             options.value = res;
-          })
+          });
           return () => [
             h(
               ElSelect,
               {
                 ...props,
-                placeholder: props.placeholder.replace('输入', '选择'),
+                placeholder: props.placeholder.replace("输入", "选择"),
                 remoteMethod: async (query) => {
                   let res = await props["remoteMethod"](query);
                   options.value = res;
@@ -369,8 +380,6 @@ inputElement[formInputType.searchList] = {
   },
 };
 
-
-
 /**
  * @name: indexListForSwitch
  * @description: 使用elscrollbar控制外部样式，支持使用customRender渲染内部,建议使用之前详细阅读源码
@@ -385,39 +394,39 @@ inputElement[formInputType.indexListForSwitch] = {
       type: "string",
       "ui:widget": defineComponent({
         props: [
-          'height',
-          'maxHeight',
-          'native',
-          'always',
-          'minSize',
-          'noresize',
-          'scroll',
+          "height",
+          "maxHeight",
+          "native",
+          "always",
+          "minSize",
+          "noresize",
+          "scroll",
           "style",
           "class",
           "modelValue",
-          "customRender"
+          "customRender",
         ],
         setup(props, context) {
           return () => [
             <ElScrollbar {...props}>
-              {
-                props.modelValue && props.modelValue.length > 0 ? props.modelValue.map(x => {
+              {props.modelValue && props.modelValue.length > 0
+                ? props.modelValue.map((x) => {
                   return props.customRender(x, that);
-                }) : ''
-              }
-            </ElScrollbar>
-          ]
+                })
+                : ""}
+            </ElScrollbar>,
+          ];
         },
       }),
       "ui:options": {
         style: {
-          width: '100%',
-          fontWeight: '900'
+          width: "100%",
+          fontWeight: "900",
         },
-      }
+      },
     } as stringAnyObj;
     let attrs = {
-      maxHeight: '400px'
+      maxHeight: "400px",
     };
     if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
     if (input.funcInputOptionsLoader)
@@ -428,8 +437,6 @@ inputElement[formInputType.indexListForSwitch] = {
     return properties;
   },
 };
-
-
 
 /**
  * @name: botton
@@ -444,33 +451,29 @@ inputElement[formInputType.botton] = {
       ...base(cell),
       type: "string",
       "ui:widget": defineComponent({
-        props: [
-          'type',
-          'size',
-          'icon',
-          'buttonName',
-          'callBack'
-        ],
+        props: ["type", "size", "icon", "buttonName", "callBack"],
         setup(props, context) {
           return () => [
-            <el-button {...props} onClick={(event) => {
-              if (props.callBack)
-                props.callBack(that.formData)
-            }}>
+            <el-button
+              {...props}
+              onClick={(event) => {
+                if (props.callBack) props.callBack(that.formData);
+              }}
+            >
               {props.buttonName}
-            </el-button>
-          ]
+            </el-button>,
+          ];
         },
       }),
       "ui:options": {
         style: {
-          width: '100%',
-          fontWeight: '900'
+          width: "100%",
+          fontWeight: "900",
         },
-      }
+      },
     } as stringAnyObj;
     let attrs = {
-      maxHeight: '400px'
+      maxHeight: "400px",
     };
     if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
     if (input.funcInputOptionsLoader)
@@ -486,9 +489,9 @@ inputElement[formInputType.remoteDictSelect] = {
   properties: async (that, cell) => {
     const { dictKey } = cell.input;
     const { getByKey } = useRemoteDictHook();
-    let inputOptions = await getByKey(dictKey) as {
-      [key: string]: any
-    }
+    let inputOptions = (await getByKey(dictKey)) as {
+      [key: string]: any;
+    };
     let properties = {
       ...base(cell),
       type: "string",
@@ -500,25 +503,71 @@ inputElement[formInputType.remoteDictSelect] = {
         },
       },
       enum: Object.keys(inputOptions),
-      enumNames: Object.keys(inputOptions).map(
-        (x) => inputOptions[x]
-      ),
-    }
+      enumNames: Object.keys(inputOptions).map((x) => inputOptions[x]),
+    };
     return properties;
-  }
-}
+  },
+};
 
+inputElement[formInputType.uploadFileList] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": uploadFileList,
+      "ui:options": {
+        style: {
+          width: "100%",
+          fontWeight: "900",
+        },
+      },
+    } as stringAnyObj;
+    let attrs = {};
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+};
 
-
+inputElement[formInputType.richTextArea] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": editor,
+      "ui:options": {
+        style: {
+          width: "100%",
+          fontWeight: "900",
+        },
+      },
+    } as stringAnyObj;
+    let attrs = {
+      maxHeight: "400px",
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+};
 
 // 预计接入 griddesktop 展示部分数据
-import gridDesktop from '@/components/basicComponents/grid/index';
-import { useRemoteDictHook } from '@/store/modules/remoteDict';
+import gridDesktop from "@/components/basicComponents/grid/index";
+import { useRemoteDictHook } from "@/store/modules/remoteDict";
 inputElement[formInputType.component] = {
   properties: async (that, cell) => {
     const { input } = cell;
-
-  }
-}
+  },
+};
 
 export default inputElement;

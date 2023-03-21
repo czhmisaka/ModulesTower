@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 18:37:38
+ * @LastEditTime: 2023-03-03 10:12:14
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -83,10 +83,11 @@
     >
       <el-divider></el-divider>
       <div
-        v-for="item in plugInData.btnList.filter((btn) =>
+        v-for="(item, index) in plugInData.btnList.filter((btn) =>
           btn && btn.isShow ? btn.isShow(formData, JSON.parse(JSON.stringify(btn))) : true
         )"
         style="float: left; margin-right: 6px"
+        :key="index + 'btnlistitem'"
       >
         <el-button
           :loading="item.isLoading"
@@ -151,9 +152,7 @@ export default defineComponent({
       isOpen: false,
       formData: {},
       uiSchema: {},
-
       isMobile,
-
       isReady: false,
 
       showType,
@@ -237,7 +236,6 @@ export default defineComponent({
         window.open(btn.url);
       }
     },
-
     /**
      * @name: close
      * @description: 关闭弹窗界面

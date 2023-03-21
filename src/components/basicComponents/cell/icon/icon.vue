@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-29 11:25:08
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 23:26:09
+ * @LastEditTime: 2023-03-21 21:08:27
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/cell/icon/icon.vue
 -->
 <script lang="ts">
@@ -20,15 +20,7 @@ export default defineComponent({
       h(
         cardBg,
         {
-          ondblclick: (e: any) => {
-            if (typeof onClickFunc.value == "function")
-              onClickFunc.value({ props, context, e });
-            else if (typeof onClickFunc.value == "string") {
-              const func = eval(`()=>` + onClickFunc.value);
-              func()({ props, context, e });
-            }
-          },
-          onClick: (e: any) => {
+          onclick: (e: any) => {
             if (typeof onClickFunc.value == "function")
               onClickFunc.value({ props, context, e });
             else if (typeof onClickFunc.value == "string") {

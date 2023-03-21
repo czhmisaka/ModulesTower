@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 16:47:31
- * @FilePath: /configforpagedemo/src/utils/api/user/header.ts
+ * @LastEditTime: 2023-03-21 21:03:02
+ * @FilePath: /ConfigForDesktopPage/src/utils/api/user/header.ts
  */
 
 import { getCookie } from "./cookie";
@@ -82,5 +82,21 @@ export const getPureRequestHeaders = (
   if (back["ddm-parameter-encrypt"] == true) {
     delete back["ddm-parameter-encrypt"];
   }
+  return back;
+};
+
+export const getDownLoadRequestHeaders = (
+  options: {
+    [key: string]: any;
+  } = {}
+) => {
+  let DataInfo = getToken() || {};
+  const menuId = localStorage.getItem("menuId");
+  const equipment = isMobile();
+  let back = {
+    route: window.location.href.split("#")[1],
+    token: DataInfo["accessToken"], // 向后台发送的token
+    ...options,
+  };
   return back;
 };
