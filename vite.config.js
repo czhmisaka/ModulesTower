@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 03:43:15
+ * @LastEditTime: 2023-03-27 00:41:38
  * @FilePath: /ConfigForDesktopPage/vite.config.js
  */
 import { loadEnv } from "vite";
@@ -90,7 +90,7 @@ export default ({ mode, command }) => {
       exclude: ["@pureadmin/theme/dist/browser-utils"],
     },
     build: {
-      sourcemap: true,
+      sourcemap: false,
       target: "esnext",
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 10000,
