@@ -1,0 +1,1 @@
+import{m as u}from"./index-b5229559.js";const e=u({name:"Welcome"}),o=u({...e,setup(t){return(F,_)=>"\u9996\u9875\uFF0C\u540E\u671F\u505A\u6570\u636E\u9762\u677F\uFF0C\u5C55\u793A\u56FE\u7247\u4F7F\u7528\u548C\u6D4F\u89C8\u6570\u636E\u7B49"}});export{o as default};
