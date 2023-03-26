@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 20:17:23
- * @FilePath: /configforpagedemo/src/router/util.ts
+ * @LastEditTime: 2023-03-27 00:28:56
+ * @FilePath: /ConfigForDesktopPage/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
 import { CardComponentTemplate } from "../components/basicComponents/grid/module/dataTemplate";
@@ -72,12 +72,12 @@ export const routerCellMaker = (
     meta: {
       title: name,
       icon: "bxs:package",
-      ...options["meta"],
       // 这里的false可能需要根据用户的登录身份修改
       showLink: true,
 
       // 这个属性用于标注这个路由的来源 ，只有超级管理员能保持一直可见
       moduleBackUpRouter: true,
+      ...options["meta"],
     },
     ...options["router"],
   };

@@ -1,13 +1,13 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 01:38:21
+ * @LastEditTime: 2023-03-27 00:32:27
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
   <cardBg>
     <div class="wholeScreen" :id="'waterfall_' + MathRandom">
-      <div
+      <!-- <div
         :style="{
           position: 'fixed',
           background: '#fff',
@@ -23,7 +23,7 @@
             })
             .reduce((a, b) => a + b)
         }}
-      </div>
+      </div> -->
       <div
         :id="'scroll_' + MathRandom"
         :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'"
@@ -221,7 +221,7 @@ export default defineComponent({
         [key: string]: any;
       }[][],
       data: {
-        limit: 50,
+        limit: 100,
         offset: 0,
       } as { [key: string]: number },
       open: false,

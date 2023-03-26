@@ -1,9 +1,16 @@
+<!--
+ * @Date: 2023-02-14 17:29:00
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-03-27 00:31:02
+ * @FilePath: /ConfigForDesktopPage/src/layout/components/search/index.vue
+-->
 <script lang="ts" setup>
 import { SearchModal } from "./components";
 import { useBoolean } from "../../hooks/useBoolean";
 const { bool: show, toggle } = useBoolean();
 function handleSearch() {
-  toggle();
+  // toggle();
+  window.open("/#/photoWebSiteModule/CHOSSEARCH");
 }
 </script>
 

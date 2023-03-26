@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-03-21 20:57:17
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-03-27 00:17:19
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/router/index.ts
+ */
 import type { RouteConfigsTable } from "/#/index";
 import { defineAsyncComponent } from "vue";
 
@@ -36,15 +42,4 @@ export const routerCellMaker = (
   return routerCell;
 };
 
-export default [
-  routerCellMaker(
-    "/testPath",
-    "f_test",
-    defineAsyncComponent(() => import("@/views/welcome/index.vue")),
-    {
-      meta: {
-        Fullscreen: true,
-      },
-    }
-  ),
-];
+export default [];
