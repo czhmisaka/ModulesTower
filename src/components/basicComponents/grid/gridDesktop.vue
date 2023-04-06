@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-18 03:12:49
+ * @LastEditTime: 2023-04-07 01:49:06
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -541,14 +541,19 @@ export default defineComponent({
   position: relative;
 }
 .grayBg {
-  transition: background-color 0.3s;
-  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.3s, background-image 0.3s, background-size 0.3s,
+    backdrop-filter 0.3s;
   position: fixed;
   top: 0px;
   left: 0px;
+  background-image: radial-gradient(transparent 2px, var(--el-text-color-disabled) 2px);
+  background-size: 0px 0px;
+  backdrop-filter: saturate(0%) blur(0px);
 }
 .grayBg_Active {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.3);
+  background-size: 4px 4px;
+  backdrop-filter: saturate(50%) blur(4px);
 }
 @keyframes hoverFadeInOut {
   0% {
