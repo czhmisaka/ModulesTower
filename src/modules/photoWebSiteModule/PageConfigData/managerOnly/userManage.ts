@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-04 05:00:19
+ * @LastEditTime: 2023-05-08 04:47:17
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/userManage.ts
  */
 import {
@@ -49,18 +49,31 @@ export const userManage = async () => {
     icon: "Position",
     elType: "primary",
     function: async (that, data) => {
-      let user = useUserStoreHook();
-      let options = await user.getOptions();
-      const password = "123456user";
-      let res = await piwigoMethod({
-        method: "pwg.users.add",
-        ...data,
-        password,
-        password_confirm: password,
-        pwg_token: options.token,
-      });
-      await dobuleCheckBtnMaker('初始密码：',password)
-      repBackMessageShow(that,res)
+      if (
+        await dobuleCheckBtnMaker(
+          "确认新建用户",
+          "【" + data.username + "】"
+        ).catch(() => false)
+      ) {
+        let user = useUserStoreHook();
+        let options = await user.getOptions();
+        const password = "123456user";
+        let res = await piwigoMethod({
+          method: "pwg.users.add",
+          ...data,
+          password,
+          password_confirm: password,
+          pwg_token: options.token,
+        });
+        let res1 = await piwigoMethod({
+          method: "pwg.users.setInfo",
+          user_id: res.result.users[0].id,
+          status: "admin",
+          pwg_token: options.token,
+        });
+        await dobuleCheckBtnMaker("初始密码：", password);
+        repBackMessageShow(that, res);
+      }
     },
   });
 
@@ -70,6 +83,7 @@ export const userManage = async () => {
     drawerProps: {
       title: "新建用户",
       queryItemTemplate: userStorage.getByKeyArr(["username", "email"]),
+      data: { email: "test@11.com" },
       btnList: [提交创建用户],
     },
   });
@@ -93,11 +107,63 @@ export const userManage = async () => {
     },
   });
 
+  let user = useUserStoreHook();
+  let options = await user.getOptions();
+  console.log(options.status, options.token, "asd");
+  const 修改密码 = btnMaker("修改密码", btnActionTemplate.Function, {
+    icon: "Edit",
+    elType: "warning",
+    isShow: (data) => {
+      return options.status == "webmaster";
+    },
+    function: async (that, data) => {
+      openDrawerFormEasy(that, {
+        title: "修改密码",
+        queryItemTemplate: [
+          tableCellTemplateMaker(
+            "新密码",
+            "password",
+            searchCell(formInputType.password)
+          ),
+          tableCellTemplateMaker(
+            "确认密码",
+            "confirm_password",
+            searchCell(formInputType.password)
+          ),
+        ],
+        data,
+        btnList: [
+          btnMaker("确认修改", btnActionTemplate.Function, {
+            icon: "Edit",
+            elType: "primary",
+            function: async (that_confirm, data_confirm) => {
+              if (
+                await dobuleCheckBtnMaker(
+                  "确认修改密码",
+                  data.username + "的密码将被修改"
+                ).catch(() => false)
+              ) {
+                let user = useUserStoreHook();
+                let options = await user.getOptions();
+                let res = await piwigoMethod({
+                  method: "pwg.users.setInfo",
+                  user_id: data_confirm.id,
+                  password: data_confirm.password,
+                  pwg_token: options.token,
+                });
+              }
+            },
+          }),
+        ],
+      });
+    },
+  });
+
   userStorage.push(
     tableCellTemplateMaker(
       "操作",
       "asd",
-      actionCell([删除用户], {
+      actionCell([删除用户, 修改密码], {
         fixed: "right",
         noDetail: true,
       })

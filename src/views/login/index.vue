@@ -52,7 +52,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
                 message.success("登录成功");
                 // 获取访问路径的页面 同时切换模块 ， 或者进入模块首页 @Todo
                 const module = useModuleHook();
-                router.push("/");
+                location.href = location.href.split("/#")[0] + "/";
               });
             }
           });

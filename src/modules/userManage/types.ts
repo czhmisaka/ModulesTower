@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-20 17:59:31
- * @FilePath: /configforpagedemo/src/modules/userManage/types.ts
+ * @LastEditTime: 2023-05-08 03:58:21
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/types.ts
  */
 
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -175,6 +175,7 @@ export interface tableCellTemplate extends tableCellOptions {
  * @Date: 2022-11-15 14:15:58
  */
 export enum formInputType {
+  password = "password",
   customSelect = "customSelect",
   select = "select",
   selects = "selects",

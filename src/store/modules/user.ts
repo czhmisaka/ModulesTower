@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-12 23:04:42
+ * @LastEditTime: 2023-05-08 04:44:39
  * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -81,6 +81,7 @@ export const useUserStore = defineStore({
       this.username = "";
       this.roles = [];
       this.menuList = [];
+      this.options = {};
       await piwigoMethod({
         method: "pwg.session.logout",
       });

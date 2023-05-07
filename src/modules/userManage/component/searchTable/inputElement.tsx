@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-06 08:57:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-21 13:10:02
+ * @LastEditTime: 2023-05-08 04:08:28
  */
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import { ElOption, ElScrollbar, ElSelect, ElTreeSelect } from "element-plus";
@@ -86,6 +86,18 @@ inputElement[formInputType.datePicker] = {
     };
   },
 };
+
+inputElement[formInputType.password] = {
+  properties: (that, cell) => {
+    return {
+      type: 'string',
+      "ui:options": {
+        "placeholder": "请输入" + cell.label,
+        "showPassword": true
+      }
+    }
+  }
+}
 
 inputElement[formInputType.upload] = {
   properties: (that, cell) => {
