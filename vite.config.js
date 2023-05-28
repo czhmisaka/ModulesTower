@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-27 00:41:38
+ * @LastEditTime: 2023-05-15 21:58:17
  * @FilePath: /ConfigForDesktopPage/vite.config.js
  */
 import { loadEnv } from "vite";
@@ -110,6 +110,16 @@ export default ({ mode, command }) => {
       strictPort: false,
       port: 9050,
       proxy: {
+        // 本地测试文档服务器用的
+        "/api/docMaker/": {
+          name: "dev",
+          target: 'http://127.0.0.1:4900/',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => {
+            return path.replace(/^\/api/, "")
+          }
+        },
         "/api/piwigo": {
           name: 'dev31',
           target: 'http://42.192.134.238:1200/',

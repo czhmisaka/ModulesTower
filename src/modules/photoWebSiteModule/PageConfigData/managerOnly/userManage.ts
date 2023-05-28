@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-05-08 04:47:17
+ * @LastEditTime: 2023-05-15 21:57:54
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/userManage.ts
  */
 import {
@@ -109,7 +109,6 @@ export const userManage = async () => {
 
   let user = useUserStoreHook();
   let options = await user.getOptions();
-  console.log(options.status, options.token, "asd");
   const 修改密码 = btnMaker("修改密码", btnActionTemplate.Function, {
     icon: "Edit",
     elType: "warning",
