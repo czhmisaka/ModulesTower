@@ -1,14 +1,13 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 19:55:27
- * @FilePath: /configforpagedemo/src/modules/main/Index.vue
+ * @LastEditTime: 2023-06-17 12:00:07
+ * @FilePath: /ConfigForDesktopPage/src/modules/main/Index.vue
 -->
 
 <template>
   <div
     :style="{
-      width: 'calc(100% - 24px)',
       height: 'calc(100%)',
       background: 'rgba(0,0,0,0)',
       overflow: 'hidden',

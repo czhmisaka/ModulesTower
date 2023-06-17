@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-12 23:09:15
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-18 03:28:58
+ * @LastEditTime: 2023-06-17 12:15:47
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfoChosSearch.vue
 -->
 <template>
@@ -17,7 +17,7 @@
           height: size(0.6),
           transition: 'width 0.3s',
           width:
-            searchString && searchString.length > 1
+            searchString && searchString.length > 0
               ? `calc(80% - ${size(0.2)})`
               : `calc(100%)`,
         }"
@@ -29,15 +29,15 @@
         :style="{
           transition: 'all 0.5s',
           height: size(0.6),
-          width: searchString && searchString.length > 1 ? `calc(20%)` : `calc(0%)`,
+          width: searchString && searchString.length > 0 ? `calc(20%)` : `calc(0%)`,
           marginLeft: size(0.2),
-          opacity: searchString && searchString.length > 1 ? 1 : 0.2,
+          opacity: searchString && searchString.length > 0 ? 1 : 0.2,
         }"
         :loading="loading"
         @click="search"
         type="primary"
       >
-        搜索
+        {{ btnName ? btnName : "搜索" }}
       </el-button>
     </div>
   </cardBg>
@@ -74,7 +74,7 @@ export default defineComponent({
   baseProps: {},
   components: { cardBg },
 
-  props: ["baseData", "sizeUnit", "onClickFunc", "searchFunc", "gridList"],
+  props: ["baseData", "sizeUnit", "onClickFunc", "searchFunc", "gridList", "btnName"],
   data: () => {
     return {
       searchString: "v2",
@@ -105,6 +105,7 @@ export default defineComponent({
           this.loading = true;
           await this.searchFunc(this, searchString);
           this.loading = false;
+          this.searchString = "";
         } catch {
           this.$message.warning("搜索函数出问题啦！");
         }

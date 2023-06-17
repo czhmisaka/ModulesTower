@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 22:54:58
+ * @LastEditTime: 2023-06-17 12:04:14
  * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
@@ -11,10 +11,20 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 
 import { desktopDataTemplate } from "@/modules/userManage/types";
+import { eat } from "./eat";
 
 let pageConfig = {
-  // MAIN: { desktopData: mainDesktop, gridColNum: 12 },
-  // MAIN2: { desktopData: mainDesktop, gridColNum: 14 },
+  MAIN: {
+    desktopData: eat,
+    gridColNum: 8,
+    cusStyle: {
+      maxRows: 12,
+      wholeScreen: true,
+      margin: 6,
+      Fullscreen: true,
+    },
+  },
+  MAIN2: { desktopData: mainDesktop, gridColNum: 14 },
   // MOBILE: { desktopData: mobileDesktop, gridColNum: 4 },
   // CHENYI: { desktopData: ChenYi, gridColNum: 4 }
 } as { [key: string]: desktopDataTemplate };
