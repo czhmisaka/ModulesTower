@@ -1,12 +1,12 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-27 00:32:27
+ * @LastEditTime: 2023-06-16 11:25:56
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
   <cardBg>
-    <div class="wholeScreen" :id="'waterfall_' + MathRandom">
+    <div class="wholeScreen" :id="'waterfall_' + MathRandom" v-loading="isLoading">
       <!-- <div
         :style="{
           position: 'fixed',

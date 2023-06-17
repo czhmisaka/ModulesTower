@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-05-15 21:57:54
+ * @LastEditTime: 2023-06-16 11:06:08
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/userManage.ts
  */
 import {
@@ -44,6 +44,14 @@ export const userManage = async () => {
     tableCellTemplateMaker("上次访问时间", "last_visit"),
     tableCellTemplateMaker("离线时间", "last_visit_since"),
   ]);
+
+  const 查看用户详情 = btnMaker("详情", btnActionTemplate.Function, {
+    icon: "InfoFilled",
+    type: "info",
+    function: async (that, data) => {},
+  });
+
+  const 编辑用户详情 = btnMaker("编辑详情", btnActionTemplate.Function, {});
 
   const 提交创建用户 = btnMaker("提交", btnActionTemplate.Function, {
     icon: "Position",
@@ -168,6 +176,7 @@ export const userManage = async () => {
       })
     )
   );
+
   return [
     gridCellMaker(
       "searchTable",
