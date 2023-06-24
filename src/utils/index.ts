@@ -1,11 +1,10 @@
 /*
  * @Date: 2021-12-30 15:11:39
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-09 18:40:09
- * @FilePath: /configforpagedemo/src/utils/index.ts
+ * @LastEditTime: 2023-06-19 16:03:40
+ * @FilePath: /ConfigForDesktopPage/src/utils/index.ts
  */
 import { cellMakerOptions, templateCellOptions } from "./cellClass";
-import * as Icons from '@element-plus/icons-vue'
 import { h, createApp, Component } from "vue";
 import { get, post } from './api/requests'
 
@@ -14,6 +13,8 @@ import { get, post } from './api/requests'
 export function isValidKey(key: string | number | symbol, object: object): key is keyof typeof object {
     return key in object;
 }
+
+import * as Icons from "@element-plus/icons-vue";
 
 // 获取Icon 对象
 export function getIcon(name: string) {

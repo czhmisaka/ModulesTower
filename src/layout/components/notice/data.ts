@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-01-30 12:55:07
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-31 21:12:58
- * @FilePath: /configforpagedemo/src/layout/components/notice/data.ts
+ * @LastEditTime: 2023-06-20 23:19:18
+ * @FilePath: /ConfigForDesktopPage/src/layout/components/notice/data.ts
  */
 export interface ListItem {
   avatar: string;

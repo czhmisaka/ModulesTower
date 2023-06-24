@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-05-08 04:44:39
+ * @LastEditTime: 2023-06-20 23:50:02
  * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -120,7 +120,7 @@ export const useUserStore = defineStore({
             accessToken: res.data.token,
             refreshToken: res.data.token,
             roles: ["admin"],
-            expires: new Date(new Date().getTime() + 19999999),
+            expires: new Date(new Date().getTime() * 1.1),
           };
           console.log("data", data);
           let res_userInfo1 = await post(

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 01:34:28
+ * @LastEditTime: 2023-06-21 00:42:11
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -79,7 +79,7 @@ const getFunc = async function (that, data) {
         `/images?offset=${offset}&limit=${limit}${
           Object.keys(query).length == 0 && data.category?.id
             ? "&catrgory=" + data.category?.id
-            : "&catrgory=1"
+            : ""
         }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}${
           file_size_max ? "&file_size_max=" + file_size_max : ""
         }${

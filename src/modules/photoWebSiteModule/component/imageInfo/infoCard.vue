@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-27 00:03:30
+ * @LastEditTime: 2023-06-21 13:47:21
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -104,6 +104,22 @@
           >相册【{{ item.name }}】</el-tag
         >
       </el-card>
+      <el-card
+        title="标签信息"
+        :style="elCardInfo.style"
+        :body-style="{ ...elCardInfo.bodyStyle, padding: '0px' }"
+        v-if="tagList && tagList.length > 0"
+      >
+        <div
+          v-for="item in tagList"
+          class="floatTag"
+          style="margin: 3px; margin-top: 2px"
+        >
+          <el-button size="small" type="info">
+            {{ item.name }}
+          </el-button>
+        </div>
+      </el-card>
     </span>
     <el-card
       title="操作"
@@ -201,7 +217,6 @@ export default defineComponent({
         rate: 0,
       },
       categoryInfo: [] as any[],
-
       elCardInfo: {
         style: {
           margin: "6px",
@@ -214,6 +229,7 @@ export default defineComponent({
       },
     };
   },
+
   methods: {
     async rate(e) {
       await piwigoPost("/piwigo/ws.php?format=json", {
@@ -231,6 +247,7 @@ export default defineComponent({
         const info = res.data.info[0];
         this.colorList = color;
         this.tagList = tagList;
+        console.log(this.tagList, "asd");
         this.imageInfo = {
           尺寸: `${info.width}px × ${info.height}px`,
           文件大小: `${info.filesize} Kb`,

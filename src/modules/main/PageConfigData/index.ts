@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-17 12:04:14
+ * @LastEditTime: 2023-06-20 01:00:04
  * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
@@ -22,9 +22,9 @@ let pageConfig = {
       wholeScreen: true,
       margin: 6,
       Fullscreen: true,
+      showLink: false,
     },
   },
-  MAIN2: { desktopData: mainDesktop, gridColNum: 14 },
   // MOBILE: { desktopData: mobileDesktop, gridColNum: 4 },
   // CHENYI: { desktopData: ChenYi, gridColNum: 4 }
 } as { [key: string]: desktopDataTemplate };

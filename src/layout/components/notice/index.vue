@@ -4,15 +4,14 @@ import { noticesData } from "./data";
 import NoticeList from "./noticeList.vue";
 import { templateRef } from "@vueuse/core";
 import { Tabs, TabPane } from "@pureadmin/components";
+import { useCartHook } from "@/store/modules/cart";
 
 const dropdownDom = templateRef<ElRef | null>("dropdownDom", null);
 const activeName = ref(noticesData[0] ? noticesData[0].name : "");
-const notices = ref(noticesData);
 
-let noticesNum = ref(0);
-notices.value.forEach((notice) => {
-  noticesNum.value += notice.list.length;
-});
+const cart = useCartHook();
+cart.getCart();
+let noticesNum = cart.count;
 
 function tabClick() {
   (dropdownDom as any).value.handleOpen();
@@ -22,13 +21,18 @@ function tabClick() {
 <template>
   <el-dropdown ref="dropdownDom" trigger="click" placement="bottom-end">
     <span class="dropdown-badge navbar-bg-hover select-none">
-      <el-badge :value="noticesNum" :max="99">
+      <el-badge v-if="useCartHook().count > 0" :value="useCartHook().count" :max="99">
         <span class="header-notice-icon">
-          <IconifyIconOffline icon="bell" />
+          <!-- <IconifyIconOffline icon="cart" /> -->
+          <el-icon><ShoppingCart /></el-icon>
         </span>
       </el-badge>
+      <span class="header-notice-icon" v-else>
+        <!-- <IconifyIconOffline icon="cart" /> -->
+        <el-icon><ShoppingCart /></el-icon>
+      </span>
     </span>
-    <template #dropdown>
+    <!-- <template #dropdown>
       <el-dropdown-menu>
         <Tabs
           centered
@@ -47,7 +51,7 @@ function tabClick() {
           </template>
         </Tabs>
       </el-dropdown-menu>
-    </template>
+    </template> -->
   </el-dropdown>
 </template>
 

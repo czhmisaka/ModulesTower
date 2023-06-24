@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 02:56:39
+ * @LastEditTime: 2023-06-22 23:53:42
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -18,6 +18,7 @@ import { searchCell } from "../../userManage/component/searchTable/searchTable";
 import { piwigoMethod } from "@/utils/api/requests";
 import { openDrawerFormEasy } from "../../userManage/component/searchTable/drawerForm";
 import { useUserStoreHook } from "@/store/modules/user";
+import { useCartHook } from "@/store/modules/cart";
 
 const 提交 = btnMaker("确定", btnActionTemplate.Function, {
   elType: "primary",
@@ -153,4 +154,20 @@ export const 添加标签按钮 = btnMaker("添加标签", btnActionTemplate.Fun
   },
 });
 
-export const InfoCardBtnList = [收藏按钮, 添加标签按钮];
+const cart = useCartHook();
+export const 添加到处理区 = btnMaker(
+  "添加到处理区",
+  btnActionTemplate.Function,
+  {
+    icon: "Plus",
+    elType: "primary",
+    function: async (that, data) => {
+      console.log(that, typeof data, "asd");
+      const cart = useCartHook();
+      if (data.length && data.length > 0) cart.setCart(data.map((x) => x.id));
+      else cart.setCart([data.id]);
+    },
+  }
+);
+
+export const InfoCardBtnList = [收藏按钮, 添加标签按钮, 添加到处理区];
