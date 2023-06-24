@@ -5,6 +5,8 @@ import NoticeList from "./noticeList.vue";
 import { templateRef } from "@vueuse/core";
 import { Tabs, TabPane } from "@pureadmin/components";
 import { useCartHook } from "@/store/modules/cart";
+import { useRouter } from "vue-router";
+import { useTags } from "@/layout/hooks/useTag";
 
 const dropdownDom = templateRef<ElRef | null>("dropdownDom", null);
 const activeName = ref(noticesData[0] ? noticesData[0].name : "");
@@ -16,11 +18,16 @@ let noticesNum = cart.count;
 function tabClick() {
   (dropdownDom as any).value.handleOpen();
 }
+const { router } = useTags();
+
+function toCart() {
+  router.push({ path: "/photoWebSiteModule/MYPICTURE" });
+}
 </script>
 
 <template>
   <el-dropdown ref="dropdownDom" trigger="click" placement="bottom-end">
-    <span class="dropdown-badge navbar-bg-hover select-none">
+    <span class="dropdown-badge navbar-bg-hover select-none" @click="toCart">
       <el-badge v-if="useCartHook().count > 0" :value="useCartHook().count" :max="99">
         <span class="header-notice-icon">
           <!-- <IconifyIconOffline icon="cart" /> -->

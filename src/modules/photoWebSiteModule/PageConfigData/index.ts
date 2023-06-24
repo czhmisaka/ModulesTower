@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-13 10:03:41
+ * @LastEditTime: 2023-06-25 01:50:47
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -11,6 +11,7 @@ import { isValidKey } from "@/utils/index";
 
 import { PageConfig as ManageOnlyPageConfig } from "./managerOnly";
 import { chosSearch } from "./chosSearch";
+import { myPicture } from "./myPicture";
 export interface desktopDataTemplate {
   name: string;
   desktopData?: () => Promise<gridCellTemplate[]>;
@@ -45,6 +46,18 @@ const pageConfig = {
   //     Fullscreen: true,
   //   },
   // },
+  myPicture: {
+    name: "暂存区",
+    desktopData: myPicture,
+    gridColNum: 12,
+    cusStyle: {
+      showLink: false,
+      wholeScreen: true,
+      Fullscreen: false,
+      maxRows: 12,
+      margin: 6,
+    },
+  },
   chosSearch: {
     name: "搜索图片",
     desktopData: chosSearch,

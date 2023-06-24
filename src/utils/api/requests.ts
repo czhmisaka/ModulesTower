@@ -180,6 +180,7 @@ export function piwigoPost(url: string, params: object) {
         fd.append(x + "[" + z + "]", params[x][z]);
       }
     } else fd.append(x, params[x]);
+    // fd.append(x, params[x]);
   }
   return request.post(VITE_PROXY_DOMAIN_REAL + url, fd) as stringAnyObj;
 }

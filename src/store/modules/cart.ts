@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-24 01:09:19
+ * @LastEditTime: 2023-06-25 01:40:08
  * @FilePath: /ConfigForDesktopPage/src/store/modules/cart.ts
  */
 import { defineStore } from "pinia";
@@ -16,7 +16,7 @@ import {
   modulesCellTemplate,
 } from "@/router/util";
 import { RouteConfigsTable, routerMeta } from "../../../types";
-import { get } from "@/utils/api/requests";
+import { get, piwigoMethod } from "@/utils/api/requests";
 import { post } from "@/utils/api/requests";
 import { useUserStoreHook } from "./user";
 import { ElMessage } from "element-plus";
@@ -50,8 +50,38 @@ export const cartStore = defineStore({
       this.image_id = res.data.map((x) => x.image_id);
     },
 
+    // 获取暂存区域的图片列表
+    async getCartImage(offset = 0, limit = 100) {
+      await this.getCart();
+      const options = await useUserStoreHook().getOptions();
+      let image_id = JSON.parse(JSON.stringify(this.image_id));
+      const res = await post("/my/picture/images", {
+        user_id: options.id,
+        image_id,
+        offset,
+        limit,
+      });
+      return res;
+    },
+
     // 删除暂存区图片
-    async deleteCart(data: string[] = []) {},
+    async deleteCart(data: string[] = []) {
+      const options = await useUserStoreHook().getOptions();
+      const res = await post("/my/picture/delete", {
+        user_id: options.id,
+        image_id: data,
+      });
+      await this.getCart();
+      ElMessage.success("删除成功");
+    },
+
+    // 清空暂存区的所有图片
+    async clearCart() {
+      const options = await useUserStoreHook().getOptions();
+      let res = await post("/my/picture/clear", { user_id: options.id });
+      await this.getCart();
+      ElMessage.success("清空成功");
+    },
 
     // 添加图片到暂存区
     async setCart(data: string[] = []) {
