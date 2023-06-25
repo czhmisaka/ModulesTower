@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-25 01:50:47
+ * @LastEditTime: 2023-06-25 15:11:29
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -31,7 +31,7 @@ const pageConfig = {
     cusStyle: {
       wholeScreen: true,
       maxRows: 12,
-      margin: 12,
+      margin: 6,
     },
   },
   // main1: {

@@ -14,7 +14,6 @@ const activeName = ref(noticesData[0] ? noticesData[0].name : "");
 const cart = useCartHook();
 cart.getCart();
 let noticesNum = cart.count;
-
 function tabClick() {
   (dropdownDom as any).value.handleOpen();
 }
