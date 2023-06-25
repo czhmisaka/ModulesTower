@@ -15,7 +15,6 @@ declare module 'vue' {
     DynamicIsland: typeof import('./src/components/basicComponents/cell/info/DynamicIsland.vue')['default']
     Editable: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/editable.vue')['default']
     Editor: typeof import('./src/components/basicComponents/grid/module/baseToolComponents/editor.vue')['default']
-    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElBadge: typeof import('element-plus/es')['ElBadge']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
