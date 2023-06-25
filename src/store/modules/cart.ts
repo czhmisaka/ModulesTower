@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-25 01:40:08
+ * @LastEditTime: 2023-06-25 10:59:32
  * @FilePath: /ConfigForDesktopPage/src/store/modules/cart.ts
  */
 import { defineStore } from "pinia";

@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-22 23:53:42
+ * @LastEditTime: 2023-06-25 14:11:23
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -84,20 +84,32 @@ const 提交标签绑定 = btnMaker("提交", btnActionTemplate.Function, {
   elType: "primary",
   function: async (that, data) => {
     let { tag_ids } = data;
-    let map = [];
-
-    data.image_ids.map((x) => {
-      map.push(
-        piwigoMethod({
-          method: "pwg.images.setInfo",
-          tag_ids,
-          image_id: x,
-        })
-      );
+    let needCreate = tag_ids.filter((x) => !(x * 1));
+    let fuckCreate = needCreate.map((x) => {
+      return piwigoMethod({
+        method: "pwg.tags.add",
+        name: x,
+      });
     });
-    Promise.all([map]).then((res) => {
-      repBackMessageShow(that, {
-        stat: "ok",
+    Promise.all(fuckCreate).then((res) => {
+      let map = [];
+      let ids = [
+        ...tag_ids.filter((x) => x * 1),
+        ...res.map((x) => x.result.id),
+      ];
+      data.image_ids.map((x) => {
+        map.push(
+          piwigoMethod({
+            method: "pwg.images.setInfo",
+            tag_ids: ids.join(","),
+            image_id: x,
+          })
+        );
+      });
+      Promise.all([map]).then((res) => {
+        repBackMessageShow(that, {
+          stat: "ok",
+        });
       });
     });
   },
@@ -116,9 +128,10 @@ export const 添加标签按钮 = btnMaker("添加标签", btnActionTemplate.Fun
               const res = await await piwigoMethod({
                 method: "pwg.tags.getAdminList",
               });
-              const tags = res.result.tags;
+              let tags = res.result.tags;
               let attr = {
-                multiple: false,
+                multiple: true,
+                "default-first-option": true,
                 remoteMethod: async (data) => {
                   if (!data)
                     return tags.map((x) => {
@@ -129,15 +142,21 @@ export const 添加标签按钮 = btnMaker("添加标签", btnActionTemplate.Fun
                       };
                     });
                   else
-                    return tags
-                      .filter((x) => x.name.indexOf(data) > -1)
-                      .map((x) => {
-                        return {
-                          ...x,
-                          value: x.id + "",
-                          label: x.name,
-                        };
-                      });
+                    return [
+                      {
+                        value: data,
+                        label: data,
+                      },
+                      ...tags
+                        .filter((x) => x.name.indexOf(data) > -1)
+                        .map((x) => {
+                          return {
+                            ...x,
+                            value: x.id + "",
+                            label: x.name,
+                          };
+                        }),
+                    ];
                 },
               };
               return attr;
