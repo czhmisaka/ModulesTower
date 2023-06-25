@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-13 17:16:09
+ * @LastEditTime: 2023-06-25 15:34:40
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/index.ts
  */
 
@@ -10,6 +10,7 @@ import { isValidKey } from "@/utils/index";
 import { tagManage } from "./tagManage";
 import { categoryManage } from "./categoryManage";
 import { userManage } from "./userManage";
+import { collectionManage } from "./collectionManage";
 
 export interface desktopDataTemplate {
   name: string;
@@ -58,7 +59,7 @@ const pageConfig = {
 
   collectionManage: {
     name: "收藏夹管理",
-    desktopData: categoryManage,
+    desktopData: collectionManage,
     gridColNum: 12,
     cusStyle: {
       wholeScreen: true,

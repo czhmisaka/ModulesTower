@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-15 18:12:39
+ * @LastEditTime: 2023-06-25 15:34:31
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/collectionManage.ts
  */
 import {
@@ -31,7 +31,7 @@ import {
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 
-export const categoryManage = async () => {
+export const collectionManage = async () => {
   const categorysStorage = new SearchCellStorage([
     tableCellTemplateMaker("相册名", "name"),
     tableCellTemplateMaker("描述", "comment"),
@@ -99,15 +99,16 @@ export const categoryManage = async () => {
     elType: "danger",
     icon: "Delete",
     function: async (that, data) => {
-      if (await dobuleCheckBtnMaker("删除", data.name).catch(() => false))
+      if (await dobuleCheckBtnMaker("删除", data.name).catch(() => false)) {
         repBackMessageShow(
           that,
           await piwigoMethod({
             method: "pwg.categories.delete",
             category_id: data.id,
-            pwg_token: useUserStoreHook().getOptions()["token"],
+            pwg_token: (await useUserStoreHook().getOptions())["pwg_token"],
           })
         );
+      }
     },
   });
 

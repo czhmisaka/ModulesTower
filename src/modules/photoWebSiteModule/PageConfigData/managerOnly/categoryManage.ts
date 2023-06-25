@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 00:51:35
+ * @LastEditTime: 2023-06-25 15:36:02
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/categoryManage.ts
  */
 import {
@@ -105,7 +105,7 @@ export const categoryManage = async () => {
           await piwigoMethod({
             method: "pwg.categories.delete",
             category_id: data.id,
-            pwg_token: useUserStoreHook().getOptions()["token"],
+            pwg_token: (await useUserStoreHook().getOptions())["pwg_token"],
           })
         );
     },

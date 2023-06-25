@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 00:51:46
+ * @LastEditTime: 2023-06-25 15:36:34
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/tagManage.ts
  */
 import {
@@ -125,7 +125,7 @@ export const tagManage = async () => {
           await piwigoMethod({
             method: "pwg.tags.delete",
             tag_id: data.id,
-            pwg_token: user.getOptions()["token"],
+            pwg_token: (await useUserStoreHook().getOptions())["pwg_token"],
           })
         );
     },
