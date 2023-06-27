@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-21 00:42:11
+ * @LastEditTime: 2023-06-27 22:24:19
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -39,6 +39,7 @@ import { setData } from "../../../components/basicComponents/grid/module/cardApi
 import { dobuleCheckBtnMaker } from "../../userManage/component/searchTable/drawerForm";
 import { useUserStoreHook } from "@/store/modules/user";
 import { SearchCellStorage } from "../../userManage/component/searchTable/searchTable";
+import { DataInfo } from "../../../utils/auth";
 
 let baseData = {} as { [key: string]: any };
 let lastFunc = -1;
@@ -48,16 +49,54 @@ let dataBe = {};
 const getFunc = async function (that, data) {
   let res = {} as stringAnyObj;
   const getColorList = async (data) => {
-    let res = await get(
-      `/palette?colors=${data.query.color
-        .replaceAll(" ", "")
-        .replace("rgb(", "")
-        .replace(")", "")}&offset=${data.offset}&limit=${data.limit}`,
-      {}
-    );
-    return {
-      data: { list: res.data },
-    };
+    // let res = await get(
+    //   `/palette?colors=${data.query.color
+    //     .replaceAll(" ", "")
+    //     .replace("rgb(", "")
+    //     .replace(")", "")}&offset=${data.offset}&limit=${data.limit}`,
+    //   {}
+    // );
+    // return {
+    //   data: { list: res.data },
+    // };
+    console.log(data);
+    const { limit, offset } = data;
+    const {
+      width_min,
+      width_max,
+      height_min,
+      height_max,
+      catrgory,
+      tags,
+      name,
+      file_size_max,
+      file_size_min,
+      color,
+    } = data.query;
+    let colors = color
+      .replace("rgb(", "")
+      .replace(")", "")
+      .split(",")
+      .map((x) => x.replace(" ", "") * 1);
+    let res = await post("/mainSearch", {
+      limit: limit,
+      offset: offset,
+      width_min: width_min,
+      width_max: width_max,
+      height_min: height_min,
+      height_max: height_max,
+      catrgory: catrgory?.id,
+      tags: tags,
+      name: name,
+      file_size_min: file_size_min,
+      file_size_max: file_size_max,
+      colorR: colors[0],
+      colorG: colors[1],
+      colorB: colors[2],
+      date_available_start: data?.date_available_start,
+      date_available_end: data?.date_available_end,
+    });
+    return res;
   };
   const getCategory = async (data) => {
     let { limit, offset, query } = data;
