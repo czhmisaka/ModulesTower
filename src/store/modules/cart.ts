@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-25 10:59:32
+ * @LastEditTime: 2023-06-27 08:52:39
  * @FilePath: /ConfigForDesktopPage/src/store/modules/cart.ts
  */
 import { defineStore } from "pinia";
@@ -51,17 +51,24 @@ export const cartStore = defineStore({
     },
 
     // 获取暂存区域的图片列表
-    async getCartImage(offset = 0, limit = 100) {
+    async getCartImage(offset = 0, limit = 100, image_id = []) {
       await this.getCart();
       const options = await useUserStoreHook().getOptions();
-      let image_id = JSON.parse(JSON.stringify(this.image_id));
+      if (image_id.length == 0)
+        image_id = JSON.parse(JSON.stringify(this.image_id));
       const res = await post("/my/picture/images", {
         user_id: options.id,
         image_id,
         offset,
         limit,
       });
-      return res;
+      return res.data.list.map((x) => {
+        let path = x.path.replace("./", "/");
+        return {
+          ...x,
+          url: `/imageserver/i.php?` + path.replace(".", "-sm.") + "",
+        };
+      });
     },
 
     // 删除暂存区图片

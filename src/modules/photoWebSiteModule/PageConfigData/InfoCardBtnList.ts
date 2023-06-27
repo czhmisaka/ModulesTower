@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-25 14:49:31
+ * @LastEditTime: 2023-06-27 09:50:12
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -19,6 +19,15 @@ import { piwigoMethod } from "@/utils/api/requests";
 import { openDrawerFormEasy } from "../../userManage/component/searchTable/drawerForm";
 import { useUserStoreHook } from "@/store/modules/user";
 import { useCartHook } from "@/store/modules/cart";
+import axios from "axios";
+import FileSaver from "file-saver";
+import JSZip from "jszip";
+import { ElMessage } from "element-plus";
+import { path } from "path";
+import {
+  changeCardProperties,
+  changeVisible,
+} from "@/components/basicComponents/grid/module/cardApi";
 
 const 提交 = btnMaker("确定", btnActionTemplate.Function, {
   elType: "primary",
@@ -173,7 +182,6 @@ export const 添加标签按钮 = btnMaker("添加标签", btnActionTemplate.Fun
   },
 });
 
-const cart = useCartHook();
 export const 添加到处理区 = btnMaker(
   "添加到处理区",
   btnActionTemplate.Function,
@@ -181,7 +189,6 @@ export const 添加到处理区 = btnMaker(
     icon: "Plus",
     elType: "primary",
     function: async (that, data) => {
-      console.log(that, typeof data, "asd");
       const cart = useCartHook();
       if (data.length && data.length > 0) cart.setCart(data.map((x) => x.id));
       else cart.setCart([data.id]);
@@ -190,3 +197,95 @@ export const 添加到处理区 = btnMaker(
 );
 
 export const InfoCardBtnList = [收藏按钮, 添加标签按钮, 添加到处理区];
+
+function download(currentChooseImgList, that: any) {
+  if (currentChooseImgList.length === 0) {
+    this.$message.warning("请先右键勾选下载数据!");
+    return;
+  }
+  //多张图片下载成压缩包
+  const zip = new JSZip();
+  const promises = [];
+  const cache = {};
+  let num = 0;
+  for (const item of currentChooseImgList) {
+    const promise = getFile(item.pictureUrl).then((data) => {
+      // 下载文件, 并存成ArrayBuffer对象
+      // const file_name = item.realName // 获取文件名
+      zip.file(item.pictureName + ".png", data, { binary: true }); // 逐个添加文件，需要加后缀".png"
+      cache[item.pictureName] = data;
+      num++;
+      changeCardProperties(that, {
+        loadingProgress: {
+          percentage: Math.round((num / currentChooseImgList.length) * 99),
+        },
+      });
+    });
+    promises.push(promise);
+  }
+  changeVisible(that, { loadingProgress: true });
+  changeCardProperties(that, { loadingProgress: { percentage: 0 } });
+  Promise.all(promises)
+    .then(() => {
+      zip.generateAsync({ type: "blob" }).then((content) => {
+        // 生成二进制流
+        FileSaver.saveAs(content, "图片"); // 利用file-saver保存文件  自定义文件名
+        changeCardProperties(that, { loadingProgress: { percentage: 100 } });
+        ElMessage.success("图片下载完成");
+        changeVisible(that, { loadingProgress: false });
+        setTimeout(() => {
+          changeCardProperties(that, { loadingProgress: { percentage: 0 } });
+        }, 299);
+      });
+    })
+    .catch((res) => {
+      ElMessage.warning("文件下载失败!");
+    });
+}
+//批量
+function getFile(url) {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "get",
+      url,
+      responseType: "blob",
+    })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error.toString());
+      });
+  });
+}
+
+export const 批量下载 = btnMaker("打包下载", btnActionTemplate.Function, {
+  icon: "Download",
+  elType: "primary",
+  function: async (that, data) => {
+    let needDownload = [];
+    if (!data.length) {
+      needDownload = JSON.parse(JSON.stringify(useCartHook().image_id));
+    } else {
+      needDownload = data.map((x) => x.id);
+    }
+    let res = await useCartHook().getCartImage(0, 10000, needDownload);
+    let downloadList = res.map((x, i) => {
+      return {
+        pictureUrl: `/imageserver/` + x.path,
+        pictureName: x.file,
+      };
+    });
+    download(downloadList, that);
+  },
+});
+
+export const 批量添加标签 = btnMaker(
+  "批量添加标签",
+  btnActionTemplate.Function,
+  {
+    icon: "PriceTag",
+    elType: "primary",
+    function: async (that, data) => {},
+  }
+);

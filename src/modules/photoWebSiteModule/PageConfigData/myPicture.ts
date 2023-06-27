@@ -1,15 +1,16 @@
 /*
  * @Date: 2023-06-20 16:46:31
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-25 01:49:11
+ * @LastEditTime: 2023-06-27 09:37:04
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/myPicture.ts
  */
 import {
   cardComponentType,
+  cardOnChangeType,
   gridCellMaker,
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
-import { InfoCardBtnList } from "./InfoCardBtnList";
+import { InfoCardBtnList, 批量下载 } from "./InfoCardBtnList";
 import { post } from "@/utils/api/requests";
 import { useCartHook } from "@/store/modules/cart";
 import { setPosition } from "@/components/basicComponents/grid/module/util";
@@ -19,25 +20,6 @@ import { setData } from "@/components/basicComponents/grid/module/cardApi";
 export const myPicture = async () => {
   const cart = useCartHook();
   return [
-    // gridCellMaker(
-    //   "刷新",
-    //   "打开组件菜单",
-    //   {},
-    //   {
-    //     type: cardComponentType.componentList,
-    //     name: "icon",
-    //   },
-    //   {
-    //     isSettingTool: true,
-    //     props: {
-    //       name: "Refresh",
-    //       onClickFunc: async ({ props, context, e }) => {
-    //       },
-    //     },
-    //   }
-    // )
-    //   .setPosition(0, 0)
-    //   .setSize(1, 1),
     gridCellMaker(
       "waterFall",
       "瀑布流图片展示功能",
@@ -53,13 +35,7 @@ export const myPicture = async () => {
           getFunc: async (that, data) => {
             const { offset, limit } = data;
             let res = await useCartHook().getCartImage(offset, limit);
-            return res.data.list.map((x) => {
-              let path = x.path.replace("./", "/");
-              return {
-                ...x,
-                url: `/imageserver/i.php?` + path.replace(".", "-sm.") + "",
-              };
-            });
+            return res;
           },
         },
       }
@@ -88,6 +64,23 @@ export const myPicture = async () => {
       .setSize(1, 1)
       .setPosition(10, 0),
     gridCellMaker(
+      "loadingProgress",
+      "下载进度条",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_loadingProgress",
+      },
+      {
+        showInGridDesktop: false,
+        props: {
+          percentage: 10,
+        },
+      }
+    )
+      .setSize(1, 1)
+      .setPosition(11, 0),
+    gridCellMaker(
       "InfoCard",
       "图片信息",
       {},
@@ -97,7 +90,7 @@ export const myPicture = async () => {
       },
       {
         props: {
-          btnList: InfoCardBtnList,
+          btnList: [批量下载],
           watchKeyForCategory: "category",
         },
       }

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-21 13:47:21
+ * @LastEditTime: 2023-06-25 20:48:46
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -335,7 +335,7 @@ export default defineComponent({
                 ...x,
                 url:
                   `/imageserver/i.php?` +
-                  x.path.replace("./", "/").replace(".", "-sm.") +
+                  (x.path || "").replace("./", "/").replace(".", "-sm.") +
                   "",
               };
             });
