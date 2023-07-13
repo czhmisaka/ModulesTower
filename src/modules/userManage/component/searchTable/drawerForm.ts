@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 01:01:57
+ * @LastEditTime: 2023-06-28 02:15:01
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -44,7 +44,7 @@ export const btnMaker = (
     function?: (that: stringAnyObj, data?: stringAnyObj) => void;
     url?: string;
     icon?: iconType;
-    elType?: "success" | "danger" | "primary" | "warning";
+    elType?: "success" | "danger" | "primary" | "warning" | "default" | "Info";
     [key: string]: any;
   },
   apiList: string[] = [],
@@ -95,6 +95,7 @@ export const dobuleCheckBtnMaker = (
       title,
       message,
       type: "warning",
+      icon: "Warning",
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       showCancelButton: true,

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 00:56:41
+ * @LastEditTime: 2023-07-08 12:26:52
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -103,7 +103,7 @@ request.interceptors.response.use(
     removeQueue(response.config);
     const res = response.data;
     if (
-      (res.code === 200 && res.type != "error") ||
+      ((res.code === 200 || res.code === 1000) && res.type != "error") ||
       res.type == "success" ||
       res.code == 0 ||
       res.stat == "ok"

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-05-15 21:58:17
+ * @LastEditTime: 2023-07-08 12:21:48
  * @FilePath: /ConfigForDesktopPage/vite.config.js
  */
 import { loadEnv } from "vite";
@@ -110,6 +110,15 @@ export default ({ mode, command }) => {
       strictPort: false,
       port: 9050,
       proxy: {
+        "/api_api_xcb/": {
+          name: "dev",
+          target: 'http://192.168.174.99:8001/',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => {
+            return path.replace(/^\/api_api_xcb/, "")
+          }
+        },
         // 本地测试文档服务器用的
         "/api/docMaker/": {
           name: "dev",

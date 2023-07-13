@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-27 22:24:19
+ * @LastEditTime: 2023-06-28 01:56:09
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -40,6 +40,7 @@ import { dobuleCheckBtnMaker } from "../../userManage/component/searchTable/draw
 import { useUserStoreHook } from "@/store/modules/user";
 import { SearchCellStorage } from "../../userManage/component/searchTable/searchTable";
 import { DataInfo } from "../../../utils/auth";
+import { 新增收藏夹, 删除收藏夹 } from "./managerOnly/collectionManage";
 
 let baseData = {} as { [key: string]: any };
 let lastFunc = -1;
@@ -49,17 +50,6 @@ let dataBe = {};
 const getFunc = async function (that, data) {
   let res = {} as stringAnyObj;
   const getColorList = async (data) => {
-    // let res = await get(
-    //   `/palette?colors=${data.query.color
-    //     .replaceAll(" ", "")
-    //     .replace("rgb(", "")
-    //     .replace(")", "")}&offset=${data.offset}&limit=${data.limit}`,
-    //   {}
-    // );
-    // return {
-    //   data: { list: res.data },
-    // };
-    console.log(data);
     const { limit, offset } = data;
     const {
       width_min,
@@ -195,42 +185,6 @@ const getFunc = async function (that, data) {
   });
 };
 
-const 新增收藏夹 = btnMaker("新增收藏夹", btnActionTemplate.OpenDrawer, {
-  elType: "primary",
-  drawerProps: {
-    title: "新增收藏夹",
-    queryItemTemplate: [
-      tableCellTemplateMaker("收藏夹名", "name"),
-      tableCellTemplateMaker("comment", "comment"),
-    ],
-    btnList: [
-      btnMaker("提交", btnActionTemplate.Function, {
-        function: async (that, data) => {
-          let res = await piwigoMethod({
-            method: "pwg.collections.create",
-            ...data,
-          });
-          repBackMessageShow(that, res);
-        },
-      }),
-    ],
-  },
-});
-
-const 删除收藏夹 = btnMaker("删除", btnActionTemplate.Function, {
-  elType: "danger",
-  icon: "Delete",
-  function: async (that, data) => {
-    if (await dobuleCheckBtnMaker("删除收藏夹", data.name).catch(() => false)) {
-      let res = await piwigoMethod({
-        method: "pwg.collections.delete",
-        col_id: data.id,
-      });
-      repBackMessageShow(that, res);
-    }
-  },
-});
-
 export const mainDesktop = async () => {
   let res = await piwigoMethod({
     method: "pwg.tags.getAdminList",
@@ -241,14 +195,6 @@ export const mainDesktop = async () => {
       label: x.name,
     };
   });
-  const user = useUserStoreHook().getOptions();
-
-  const storage = new SearchCellStorage(
-    Object.keys(user).map((x) => {
-      return tableCellTemplateMaker(x, x);
-    })
-  );
-
   return [
     gridCellMaker(
       "upload",

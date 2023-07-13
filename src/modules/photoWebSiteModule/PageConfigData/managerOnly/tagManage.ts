@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-27 08:50:16
+ * @LastEditTime: 2023-06-28 10:47:25
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/tagManage.ts
  */
 import {
@@ -154,7 +154,7 @@ export const tagManage = async () => {
           searchItemTemplate: [],
           showItemTemplate: tagsStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            let res = await piwigoMethod({ method: "pwg.tags.getAdminList" });
+            let res = await piwigoMethod({ method: "pwg.tags.getList" });
             return res && res.result ? res.result.tags : [];
           },
           btnList: [添加标签],

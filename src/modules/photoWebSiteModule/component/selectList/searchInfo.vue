@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-21 11:01:28
+ * @LastEditTime: 2023-06-28 11:08:00
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -198,7 +198,7 @@
         v-if="Object.keys(query).length > 0"
         :style="{ margin: `${(sizeUnit.blockSize - 30) / 2}px 0px`, float: 'right' }"
         @click="clear"
-        >清空</el-button
+        >重置</el-button
       >
     </div>
   </cardBg>

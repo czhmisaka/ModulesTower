@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-27 10:24:58
+ * @LastEditTime: 2023-06-28 16:01:44
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -23,7 +23,6 @@ import axios from "axios";
 import FileSaver from "file-saver";
 import JSZip from "jszip";
 import { ElMessage } from "element-plus";
-import { path } from "path";
 import {
   changeCardProperties,
   changeVisible,
@@ -124,55 +123,55 @@ const 提交标签绑定 = btnMaker("提交", btnActionTemplate.Function, {
   },
 });
 
+const 标签混选cell = tableCellTemplateMaker(
+  "标签",
+  "tag_ids",
+  searchCell(formInputType.searchList, {
+    funcInputOptionsLoader: async (that) => {
+      const res = await await piwigoMethod({
+        method: "pwg.tags.getAdminList",
+      });
+      let tags = res.result.tags;
+      let attr = {
+        multiple: true,
+        "default-first-option": true,
+        remoteMethod: async (data) => {
+          if (!data)
+            return tags.map((x) => {
+              return {
+                ...x,
+                value: x.id + "",
+                label: x.name,
+              };
+            });
+          else
+            return [
+              {
+                value: data,
+                label: data,
+              },
+              ...tags
+                .filter((x) => x.name.indexOf(data) > -1)
+                .map((x) => {
+                  return {
+                    ...x,
+                    value: x.id + "",
+                    label: x.name,
+                  };
+                }),
+            ];
+        },
+      };
+      return attr;
+    },
+  })
+);
+
 export const 添加标签按钮 = btnMaker("添加标签", btnActionTemplate.Function, {
   function: async (that, data) => {
     let drawerProps = {
       title: "选择标签",
-      queryItemTemplate: [
-        tableCellTemplateMaker(
-          "标签",
-          "tag_ids",
-          searchCell(formInputType.searchList, {
-            funcInputOptionsLoader: async (that) => {
-              const res = await await piwigoMethod({
-                method: "pwg.tags.getAdminList",
-              });
-              let tags = res.result.tags;
-              let attr = {
-                multiple: true,
-                "default-first-option": true,
-                remoteMethod: async (data) => {
-                  if (!data)
-                    return tags.map((x) => {
-                      return {
-                        ...x,
-                        value: x.id + "",
-                        label: x.name,
-                      };
-                    });
-                  else
-                    return [
-                      {
-                        value: data,
-                        label: data,
-                      },
-                      ...tags
-                        .filter((x) => x.name.indexOf(data) > -1)
-                        .map((x) => {
-                          return {
-                            ...x,
-                            value: x.id + "",
-                            label: x.name,
-                          };
-                        }),
-                    ];
-                },
-              };
-              return attr;
-            },
-          })
-        ),
-      ],
+      queryItemTemplate: [标签混选cell],
       data: {
         image_ids: data.id ? [data.id] : data.map((x) => x.id),
       },
@@ -198,71 +197,74 @@ export const 添加到处理区 = btnMaker(
 
 export const InfoCardBtnList = [收藏按钮, 添加标签按钮, 添加到处理区];
 
-function download(currentChooseImgList, that: any) {
-  if (currentChooseImgList.length === 0) {
-    this.$message.warning("请先右键勾选下载数据!");
-    return;
-  }
-  //多张图片下载成压缩包
-  const zip = new JSZip();
-  const promises = [];
-  const cache = {};
-  let num = 0;
-  for (const item of currentChooseImgList) {
-    const promise = getFile(item.pictureUrl).then((data) => {
-      // 下载文件, 并存成ArrayBuffer对象
-      // const file_name = item.realName // 获取文件名
-      zip.file(item.pictureName + ".png", data, { binary: true }); // 逐个添加文件，需要加后缀".png"
-      cache[item.pictureName] = data;
-      num++;
-      changeCardProperties(that, {
-        loadingProgress: {
-          percentage: Math.round((num / currentChooseImgList.length) * 99),
-        },
-      });
-    });
-    promises.push(promise);
-  }
-  changeVisible(that, { loadingProgress: true });
-  changeCardProperties(that, { loadingProgress: { percentage: 0 } });
-  Promise.all(promises)
-    .then(() => {
-      zip.generateAsync({ type: "blob" }).then((content) => {
-        // 生成二进制流
-        FileSaver.saveAs(content, "图片"); // 利用file-saver保存文件  自定义文件名
-        changeCardProperties(that, { loadingProgress: { percentage: 100 } });
-        ElMessage.success("图片下载完成");
-        changeVisible(that, { loadingProgress: false });
-        setTimeout(() => {
-          changeCardProperties(that, { loadingProgress: { percentage: 0 } });
-        }, 299);
-      });
-    })
-    .catch((res) => {
-      ElMessage.warning("文件下载失败!");
-    });
-}
-//批量
-function getFile(url) {
-  return new Promise((resolve, reject) => {
-    axios({
-      method: "get",
-      url,
-      responseType: "blob",
-    })
-      .then((response) => {
-        resolve(response.data);
-      })
-      .catch((error) => {
-        reject(error.toString());
-      });
-  });
-}
-
 export const 批量下载 = btnMaker("打包下载", btnActionTemplate.Function, {
   icon: "Download",
   elType: "primary",
   function: async (that, data) => {
+    function download(currentChooseImgList, that: any) {
+      if (currentChooseImgList.length === 0) {
+        this.$message.warning("请先右键勾选下载数据!");
+        return;
+      }
+      //多张图片下载成压缩包
+      const zip = new JSZip();
+      const promises = [];
+      const cache = {};
+      let num = 0;
+      for (const item of currentChooseImgList) {
+        const promise = getFile(item.pictureUrl).then((data) => {
+          // 下载文件, 并存成ArrayBuffer对象
+          // const file_name = item.realName // 获取文件名
+          zip.file(item.pictureName, data, { binary: true }); // 逐个添加文件，需要加后缀".png"
+          cache[item.pictureName] = data;
+          num++;
+          changeCardProperties(that, {
+            loadingProgress: {
+              percentage: Math.round((num / currentChooseImgList.length) * 99),
+            },
+          });
+        });
+        promises.push(promise);
+      }
+      changeVisible(that, { loadingProgress: true });
+      changeCardProperties(that, { loadingProgress: { percentage: 0 } });
+      Promise.all(promises)
+        .then(() => {
+          zip.generateAsync({ type: "blob" }).then((content) => {
+            // 生成二进制流
+            FileSaver.saveAs(content, "图片"); // 利用file-saver保存文件  自定义文件名
+            changeCardProperties(that, {
+              loadingProgress: { percentage: 100 },
+            });
+            ElMessage.success("图片下载完成");
+            changeVisible(that, { loadingProgress: false });
+            setTimeout(() => {
+              changeCardProperties(that, {
+                loadingProgress: { percentage: 0 },
+              });
+            }, 299);
+          });
+        })
+        .catch((res) => {
+          ElMessage.warning("文件下载失败!");
+        });
+    }
+    //批量
+    function getFile(url) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "get",
+          url,
+          responseType: "blob",
+        })
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error.toString());
+          });
+      });
+    }
     let needDownload = [];
     if (!data.length) {
       needDownload = JSON.parse(JSON.stringify(useCartHook().image_id));
@@ -273,7 +275,7 @@ export const 批量下载 = btnMaker("打包下载", btnActionTemplate.Function,
     let downloadList = res.map((x, i) => {
       return {
         pictureUrl: `/imageserver/` + x.path,
-        pictureName: x.file,
+        pictureName: i + 1 + "_" + x.file,
       };
     });
     download(downloadList, that);
@@ -286,6 +288,24 @@ export const 批量添加标签 = btnMaker(
   {
     icon: "PriceTag",
     elType: "primary",
-    function: async (that, data) => {},
+    function: async (that, data) => {
+      let needDeal = [];
+      if (!data.length) {
+        needDeal = JSON.parse(JSON.stringify(useCartHook().image_id));
+      } else {
+        needDeal = data.map((x) => x.id);
+      }
+      let drawerProps = {
+        title: "选择标签",
+        queryItemTemplate: [标签混选cell],
+        data: {
+          image_ids: needDeal,
+        },
+        btnList: [提交标签绑定],
+      } as drawerProps;
+      openDrawerFormEasy(that, drawerProps);
+
+      // let res = await useCartHook().getCartImage(0, 10000, needDeal);
+    },
   }
 );

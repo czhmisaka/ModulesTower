@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-17 11:39:54
+ * @LastEditTime: 2023-06-28 03:24:26
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -130,12 +130,13 @@ function getBaseDataByWatchKey(baseData: stringAnyObj, watchKey: string | string
   if (typeof watchKey == "string") watchKey = [watchKey];
   let backData = {};
   let num = 0;
-  watchKey.map((x) => {
-    if (Object.keys(baseData).indexOf(x) > -1) {
-      num++;
-      backData[x] = baseData[x];
-    }
-  });
+  if (watchKey && watchKey.length > 0)
+    watchKey.map((x) => {
+      if (Object.keys(baseData).indexOf(x) > -1) {
+        num++;
+        backData[x] = baseData[x];
+      }
+    });
   return num > 0 ? backData : false;
 }
 
@@ -324,7 +325,6 @@ export default defineComponent({
         ["Space", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown"].indexOf(e.code) != -1
       )
         e.preventDefault();
-
       let { rowIndex, colIndex } = this.selected;
       if (colIndex == -1) return;
       const row = this.rowList[rowIndex];

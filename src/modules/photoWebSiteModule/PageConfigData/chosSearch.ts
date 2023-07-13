@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-18 03:26:33
+ * @LastEditTime: 2023-07-08 13:00:19
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -102,9 +102,14 @@ const elementKey = (
             y: 1,
           };
           let size = {};
+          console.log(desktop);
           size[props.detail.label] = {
             width: (desktop.len_x * 5) / 6 - 2,
-            height: desktop.len_y - 2,
+            height:
+              location.hash == "#/photoWebSiteModule/CHOSSEARCHS"
+                ? 9
+                : desktop.len_y - 2,
+            // height: desktop.len_y - 2,
           };
           changeCardPosition(context, pos);
           setTimeout(() => changeCardSize(context, size), 300);
@@ -352,5 +357,137 @@ export const chosSearch = async () => {
     )
       .setPosition(8, 4)
       .setSize(8, 1),
+  ];
+};
+
+export const chosSearchMobile = async () => {
+  const chosSearchFunc = async (that, query) => {
+    if (showKeyArr.length > 0) {
+      let obj = {};
+      for (let x in showKeyArr) obj[showKeyArr[x]] = false;
+      changeVisible(that, obj);
+      setTimeout(() => {
+        delGridCell(that, showKeyArr);
+        showKeyArr = [];
+      }, 200);
+    }
+    let { result } = await piwigoMethod({
+      method: "pwg.images.search",
+      query: query,
+      per_page: 100,
+    });
+    let list = result.images.map((x) => {
+      return {
+        ...x,
+        ...x.derivatives,
+        ...x.derivatives["2small"],
+        derivatives: null,
+      };
+    });
+
+    let desktop = new Desktop(8, 16);
+    desktop.initByGridList(that.gridList);
+    desktop.randomSet(
+      list.map((x) => {
+        return { w: x.width, h: x.height, data: x };
+      }),
+      (wh, xy, data, i) => {
+        addGridCell(
+          that,
+          elementKey(
+            {
+              fit: "cover",
+              noPreview: "true",
+              item: data,
+            },
+            wh,
+            xy,
+            i
+          )
+        );
+      }
+    );
+    let num1 = 0;
+    setTimeout(() => {
+      let interval = setInterval(() => {
+        if (num1 > showKeyArr.length) clearInterval(interval);
+        let data = {};
+        data[showKeyArr[num1++]] = true;
+        changeVisible(that, data);
+      }, 40);
+    }, 300);
+  };
+  return [
+    gridCellMaker(
+      "InfoCard",
+      "图片信息",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_infoCard",
+      },
+      {
+        showInGridDesktop: false,
+        props: {
+          btnList: InfoCardBtnList,
+          watchKeyForCategory: "category",
+        },
+      }
+    )
+      .setPosition(0, 10)
+      .setSize(8, 5),
+    gridCellMaker(
+      "icons",
+      "返回按钮",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "icon",
+      },
+      {
+        showInGridDesktop: false,
+        props: {
+          name: "Close",
+          onClickFunc: ({ props, context, e }) => {
+            let label = gridCelldefault.label;
+            let size = {},
+              pos = {};
+            size[label] = gridCelldefault.size;
+            pos[label] = gridCelldefault.position;
+            changeCardSize(context, size);
+            changeCardPosition(context, pos);
+            changeVisible(context, {
+              InfoCard: false,
+              icons: false,
+            });
+            setTimeout(() => {
+              hightLightComponent(context, []);
+            }, 400);
+            gridCelldefault.label = "";
+          },
+        },
+      }
+    )
+      .setPosition(0, 15)
+      .setSize(8, 1),
+    gridCellMaker(
+      "searchInfo",
+      "输入框",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "photoWebSiteModule_searchInfoChosSearch",
+      },
+      {
+        props: {
+          searchFunc: (that, data) => {
+            let time = 0;
+            setTimeout(() => chosSearchFunc(that, data), 0);
+          },
+        },
+      }
+    )
+      .setPosition(1, 4)
+      .setSize(6, 1),
   ];
 };

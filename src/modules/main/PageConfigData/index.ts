@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-20 01:00:04
+ * @LastEditTime: 2023-07-08 14:13:03
  * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
@@ -15,7 +15,8 @@ import { eat } from "./eat";
 
 let pageConfig = {
   MAIN: {
-    desktopData: eat,
+    name: "asd",
+    desktopData: mainDesktop,
     gridColNum: 8,
     cusStyle: {
       maxRows: 12,
