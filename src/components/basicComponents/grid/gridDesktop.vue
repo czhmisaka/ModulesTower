@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 21:55:33
+ * @LastEditTime: 2023-07-16 22:20:12
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -11,6 +11,9 @@
     :id="'screenId_' + idRandom"
     :style="{
       overflow: cusStyle.wholeScreen ? '' : '',
+      transform: cusStyle.testProps
+        ? 'rotateX(60deg) rotateZ(-30deg) scale(0.7) translateX(-10vw)'
+        : '',
     }"
     class="baseGrid"
   >
@@ -539,7 +542,6 @@ export default defineComponent({
   height: 100%;
   display: block;
   position: relative;
-  transform: rotateX(60deg) rotateZ(-30deg) scale(0.7) translateX(-10vw);
 }
 .grayBg {
   transition: background-color 0.3s, background-image 0.3s, background-size 0.3s,

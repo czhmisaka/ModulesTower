@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 21:59:24
+ * @LastEditTime: 2023-07-16 22:24:08
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/lazyImage.vue
 -->
 
@@ -20,7 +20,16 @@ import {
 
 export default defineComponent({
   name: "lazyImage",
-  props: ["baseData", "gridList", "sizeUnit", "detail", "cusStyle", "item", "clickFunc"],
+  props: [
+    "baseData",
+    "gridList",
+    "sizeUnit",
+    "detail",
+    "cusStyle",
+    "item",
+    "clickFunc",
+    "testProps",
+  ],
 
   propsDetail: {
     cusStyle: { label: "自定义样式", type: inputType.text },
@@ -75,7 +84,6 @@ export default defineComponent({
 
     onMounted(() => {
       context.emit("ready");
-      console.log("asd", props.detail);
       load.value = ElLoading.service({
         target: "." + randomClass,
       });
@@ -88,7 +96,9 @@ export default defineComponent({
             if (props.clickFunc) props.clickFunc({ props, context });
           },
           cusStyle: {
-            transform: `rotateX(10deg) skew(327deg) translate(calc(100 / 24 / 3.3 * ${props.detail.gridInfo.default.size.width}vh), 0%)`,
+            transform: props.testProps
+              ? `rotateX(10deg) skew(327deg) translate(calc(100 / 24 / 3.3 * ${props.detail.gridInfo.default.size.width}vh), 0%)`
+              : "",
           },
           onmouseover: (e: any) => {
             console.log(e, "onmouseover");

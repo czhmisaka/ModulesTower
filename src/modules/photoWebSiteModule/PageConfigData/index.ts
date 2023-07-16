@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 20:55:19
+ * @LastEditTime: 2023-07-16 22:21:18
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -75,6 +75,7 @@ const pageConfig = {
     desktopData: chosSearchTest,
     gridColNum: 8,
     cusStyle: {
+      testProps: true,
       showLink: false,
       wholeScreen: true,
       maxRows: 16,

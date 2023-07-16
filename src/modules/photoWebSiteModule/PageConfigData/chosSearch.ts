@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 20:55:30
+ * @LastEditTime: 2023-07-16 22:25:05
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -531,6 +531,7 @@ export const chosSearchTest = async () => {
               fit: "cover",
               noPreview: "true",
               item: data,
+              testProps: true,
             },
             wh,
             xy,
