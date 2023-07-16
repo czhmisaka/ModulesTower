@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-15 23:25:23
+ * @LastEditTime: 2023-07-16 20:19:29
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/lazyImage.vue
 -->
 
@@ -34,7 +34,7 @@ export default defineComponent({
   componentInfo: {
     labelNameCn: "懒加载图片",
     key: "lazyImages",
-    description: "懒加载图片",
+    description: "懒加载图片,如果处于桌面模式，则鼠标悬浮时展示详细信息。",
     gridInfo: {
       middle: gridSizeMaker(1, 1),
     },
@@ -45,7 +45,6 @@ export default defineComponent({
     const isLoading = ref(true);
     const randomClass = "asd" + Math.floor(Math.random() * 100000000000000) + "_";
     let load = ref(null);
-
     const sizeMap = ["xxlarge", "large", "medium", "small", "2small"];
     const rate = computed({
       get: () => {
@@ -86,6 +85,12 @@ export default defineComponent({
         {
           onClick: (e: any) => {
             if (props.clickFunc) props.clickFunc({ props, context });
+          },
+          onmouseover: (e: any) => {
+            console.log(e, "onmouseover");
+          },
+          onmouseleave: (e: any) => {
+            console.log(e, "onmouseleave");
           },
         },
         () => [
