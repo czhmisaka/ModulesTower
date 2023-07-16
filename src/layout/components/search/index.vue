@@ -1,16 +1,21 @@
 <!--
  * @Date: 2023-02-14 17:29:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-27 00:31:02
+ * @LastEditTime: 2023-07-16 20:54:58
  * @FilePath: /ConfigForDesktopPage/src/layout/components/search/index.vue
 -->
 <script lang="ts" setup>
 import { SearchModal } from "./components";
 import { useBoolean } from "../../hooks/useBoolean";
+import { isMobile } from "@/utils/Env";
 const { bool: show, toggle } = useBoolean();
 function handleSearch() {
   // toggle();
-  window.open("/#/photoWebSiteModule/CHOSSEARCH");
+  if (isMobile()) {
+    window.open("/#/photoWebSiteModule/CHOSSEARCHS");
+  } else {
+    window.open("/#/photoWebSiteModule/CHOSSEARCH");
+  }
 }
 </script>
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-08 20:58:43
+ * @LastEditTime: 2023-07-16 20:53:17
  * @FilePath: /ConfigForDesktopPage/src/modules/dailyTask/PageConfigData/index.ts
  */
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -35,7 +35,8 @@ let Page = {
       maxRows: 8,
       wholeScreen: true,
       margin: 8,
-      Fullscreen: true,
+      Fullscreen: false,
+      showLink: false,
     },
   },
 } as {

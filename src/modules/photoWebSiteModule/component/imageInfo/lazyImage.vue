@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 20:19:29
+ * @LastEditTime: 2023-07-16 21:59:24
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/lazyImage.vue
 -->
 
@@ -75,6 +75,7 @@ export default defineComponent({
 
     onMounted(() => {
       context.emit("ready");
+      console.log("asd", props.detail);
       load.value = ElLoading.service({
         target: "." + randomClass,
       });
@@ -86,12 +87,16 @@ export default defineComponent({
           onClick: (e: any) => {
             if (props.clickFunc) props.clickFunc({ props, context });
           },
+          cusStyle: {
+            transform: `rotateX(10deg) skew(327deg) translate(calc(100 / 24 / 3.3 * ${props.detail.gridInfo.default.size.width}vh), 0%)`,
+          },
           onmouseover: (e: any) => {
             console.log(e, "onmouseover");
           },
           onmouseleave: (e: any) => {
             console.log(e, "onmouseleave");
           },
+          class: "transform",
         },
         () => [
           h(ElImage, {
@@ -112,4 +117,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.transform {
+  transition: all 0.5s;
+}
+.transform:hover {
+  z-index: 10000;
+}
+</style>
