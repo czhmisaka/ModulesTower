@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-18 20:31:24
+ * @LastEditTime: 2023-07-18 21:57:01
  * @FilePath: /ConfigForDesktopPage/src/modules/Fake3dPlace/PageConfigData/index.ts
  */
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-28 01:56:09
+ * @LastEditTime: 2023-07-18 22:04:48
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -148,7 +148,7 @@ const getFunc = async function (that, data) {
         list: resp.result.images.map((x) => {
           return {
             ...x,
-            path: x.element_url.replace("http://42.192.134.238:1200", "."),
+            path: "/" + x.element_url.split(":1200/")[1],
           };
         }),
       },
