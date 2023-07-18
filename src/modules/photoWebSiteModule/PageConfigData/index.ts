@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 22:21:18
+ * @LastEditTime: 2023-07-17 17:07:35
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -73,13 +73,13 @@ const pageConfig = {
   chosSearch_test: {
     name: "测试页面",
     desktopData: chosSearchTest,
-    gridColNum: 8,
+    gridColNum: 120,
     cusStyle: {
-      testProps: true,
+      // testProps: true,
       showLink: false,
       wholeScreen: true,
-      maxRows: 16,
-      margin: 6,
+      maxRows: 80,
+      margin: 3,
       Fullscreen: true,
     },
   },

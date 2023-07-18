@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 22:25:05
+ * @LastEditTime: 2023-07-17 18:03:26
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -62,7 +62,7 @@ const elementKey = (
   size: { w: number; h: number },
   position: { x: number; y: number },
   name: string | number = 1,
-  desktop: Desktop = new Desktop(24, 16)
+  desktop: Desktop
 ) => {
   num++;
   showKeyArr.push("image" + name + "_" + num);
@@ -102,14 +102,13 @@ const elementKey = (
             y: 1,
           };
           let size = {};
-          console.log(desktop);
+          console.log(desktop, "desktopFucker");
           size[props.detail.label] = {
             width: (desktop.len_x * 5) / 6 - 2,
             height:
               location.hash == "#/photoWebSiteModule/CHOSSEARCHS"
                 ? 9
                 : desktop.len_y - 2,
-            // height: desktop.len_y - 2,
           };
           changeCardPosition(context, pos);
           setTimeout(() => changeCardSize(context, size), 300);
@@ -126,7 +125,7 @@ export class Desktop {
   map = [] as boolean[][];
   len_x = 0;
   len_y = 0;
-  randomTryTime = 500;
+  randomTryTime = 2500;
 
   constructor(x: number, y: number) {
     for (let i = 0; i < x; i++) {
@@ -197,15 +196,19 @@ export class Desktop {
         let width = 1,
           height = 1;
         if (time < this.randomTryTime * 0.5) {
-          let scaleRate = Math.floor(Math.random() * 6 + 3);
+          let scaleRate = Math.floor(
+            Math.random() * (this.len_x / 2) + this.len_x / 10
+          );
           width = (w > h ? Math.round(w / h) : 1) * scaleRate;
           height = (h > w ? Math.round(h / w) : 1) * scaleRate;
         } else if (time < this.randomTryTime * 0.7) {
-          let scaleRate = Math.floor(Math.random() * 3 + 2);
+          let scaleRate = Math.floor(
+            Math.random() * (this.len_x / 4) + this.len_x / 14
+          );
           width = (w > h ? Math.round(w / h) : 1) * scaleRate;
           height = (h > w ? Math.round(h / w) : 1) * scaleRate;
         } else if (time < this.randomTryTime * 0.9) {
-          let scaleRate = Math.floor(Math.random() * 3);
+          let scaleRate = Math.floor(Math.random() * (this.len_x / 8));
           width = (w > h ? Math.round(w / h) : 1) * scaleRate;
           height = (h > w ? Math.round(h / w) : 1) * scaleRate;
         }
@@ -270,7 +273,8 @@ export const chosSearch = async () => {
             },
             wh,
             xy,
-            i
+            i,
+            desktop
           )
         );
       }
@@ -402,7 +406,8 @@ export const chosSearchMobile = async () => {
             },
             wh,
             xy,
-            i
+            i,
+            desktop
           )
         );
       }
@@ -506,7 +511,7 @@ export const chosSearchTest = async () => {
     let { result } = await piwigoMethod({
       method: "pwg.images.search",
       query: query,
-      per_page: 100,
+      per_page: 1000,
     });
     let list = result.images.map((x) => {
       return {
@@ -517,7 +522,7 @@ export const chosSearchTest = async () => {
       };
     });
 
-    let desktop = new Desktop(8, 16);
+    let desktop = new Desktop(120, 80);
     desktop.initByGridList(that.gridList);
     desktop.randomSet(
       list.map((x) => {
@@ -531,11 +536,11 @@ export const chosSearchTest = async () => {
               fit: "cover",
               noPreview: "true",
               item: data,
-              testProps: true,
             },
             wh,
             xy,
-            i
+            i,
+            desktop
           )
         );
       }
@@ -547,7 +552,7 @@ export const chosSearchTest = async () => {
         let data = {};
         data[showKeyArr[num1++]] = true;
         changeVisible(that, data);
-      }, 40);
+      }, 0);
     }, 300);
   };
   return [
@@ -567,8 +572,8 @@ export const chosSearchTest = async () => {
         },
       }
     )
-      .setPosition(0, 10)
-      .setSize(8, 5),
+      .setPosition(95, 5)
+      .setSize(20, 60),
     gridCellMaker(
       "icons",
       "返回按钮",
@@ -601,8 +606,8 @@ export const chosSearchTest = async () => {
         },
       }
     )
-      .setPosition(0, 15)
-      .setSize(8, 1),
+      .setPosition(95, 65)
+      .setSize(20, 10),
     gridCellMaker(
       "searchInfo",
       "输入框",
@@ -620,7 +625,7 @@ export const chosSearchTest = async () => {
         },
       }
     )
-      .setPosition(1, 4)
-      .setSize(6, 1),
+      .setPosition(40, 20)
+      .setSize(40, 5),
   ];
 };
