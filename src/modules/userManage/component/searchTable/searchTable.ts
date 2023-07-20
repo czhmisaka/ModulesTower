@@ -1,14 +1,19 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-21 17:25:10
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
+ * @LastEditTime: 2023-07-13 18:16:53
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import inputElement, { globalBaseCellDeal } from "./inputElement";
 import { useModuleHook } from "@/store/modules/module";
 import { useRemoteDictHook } from "@/store/modules/remoteDict";
+import { defineEmits } from "vue";
+import {
+  desktopDataTemplate,
+  gridDesktopPropsTemplate,
+} from "@/modules/userManage/types";
 import { defineComponent, h } from "vue";
 import {
   btnCellTemplate,
@@ -21,10 +26,14 @@ import {
   formInputType,
 } from "@/modules/userManage/types";
 import { compile, VNode } from "vue";
+import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
+import { deepClone } from "@/utils";
+import { ElDrawer, ElDivider, ElButton } from "element-plus";
+import { customComponent } from "@/modules/userManage/types";
 
 const baseShowFunc = (data, key) => {
   if (data[key] != undefined) return data[key] + "";
-  else return "无数据";
+  else return "";
 };
 
 /**
@@ -35,16 +44,25 @@ const baseShowFunc = (data, key) => {
  */
 export class SearchCellStorage {
   storage = [] as tableCellTemplate[];
+  labels = [] as string[];
+  keys = [] as string[];
   constructor(storage: tableCellTemplate[]) {
     this.storage = storage;
+    this.labels = storage.map((x) => {
+      return x.label;
+    });
+    this.keys = storage.map((x) => {
+      return x.key;
+    });
   }
-  getByLabel(label: string, options?: tableCellOptions) {
+
+  getByLabel(label: string, options: tableCellOptions = {}) {
     let back = {} as { [key: string]: any };
     this.storage.map((cell) => {
       if (label && label == cell.label) back = cell;
     });
     if (!back.label) return false;
-    if (options) return { ...back, ...options };
+    if (options) return deepMerge(options, back);
     else
       return {
         input: { type: formInputType.input },
@@ -62,7 +80,7 @@ export class SearchCellStorage {
   getByLabelArr(labelArr: string[], options: tableCellOptions = {}) {
     let back = [];
     for (let key in labelArr) {
-      back.push(this.getByLabel(labelArr[key], options));
+      back.push(this.getByLabel(labelArr[key], deepClone(options)));
     }
     return back.filter(Boolean);
   }
@@ -81,7 +99,7 @@ export class SearchCellStorage {
       if (key && key == cell.key) back = cell;
     });
     if (!back.key) return false;
-    if (options) return { ...back, ...options };
+    if (options) return deepMerge(options, back);
     else
       return {
         input: { type: formInputType.input },
@@ -99,7 +117,7 @@ export class SearchCellStorage {
   getByKeyArr(keyArr: string[], options: tableCellOptions = {}) {
     let back = [];
     for (let key in keyArr) {
-      back.push(this.getByKey(keyArr[key], options));
+      back.push(this.getByKey(keyArr[key], deepClone(options)));
     }
     return back.filter(Boolean);
   }
@@ -117,7 +135,7 @@ export class SearchCellStorage {
       allGetKey = allGetKey.filter((x) => {
         return expectKeyArr.indexOf(x) == -1;
       });
-    return this.getByKeyArr(allGetKey, options);
+    return this.getByKeyArr(allGetKey, deepClone(options));
   }
 
   /**
@@ -146,7 +164,7 @@ export const DateCell = (
   return {
     ...showCell(showType.func, {
       showFunc: (data: any, key: string) =>
-        data[key] ? new Date(data[key]).toLocaleString() : " ",
+        data[key] ? new Date(data[key] * 1).toLocaleString() : " ",
       ...options,
     }),
     ...searchCell(formInputType.datePicker, inputOptions),
@@ -221,8 +239,8 @@ export const searchCell = (
 };
 
 /**
- * @name: 函数名
- * @description: waitForWriting
+ * @name: 在线字典构建
+ * @description: remoteDictSelectSearchCell
  * @authors: CZH
  * @Date: 2023-02-13 18:06:59
  */
@@ -242,6 +260,15 @@ export const remoteDictSelectSearchCell = (dictKey: string) => {
     }),
   } as tableCellOptions;
   return back;
+};
+
+export const colorfulIconCell = (
+  inputOptions?: tableCellOptionsInputPropertiesTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
+  return {
+    // ...searchCell(),
+  };
 };
 
 /**
@@ -296,6 +323,61 @@ export const disabledCell = () => {
   };
 };
 
+export const gridCell = (
+  girdCell: gridCellTemplate,
+  inputProperties?: tableCellOptionsInputPropertiesTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
+  return {
+    ...searchCell(formInputType.gridCellMaker, {
+      funcInputOptionsLoader: async () => {
+        return;
+      },
+    }),
+    ...showCell(showType.funcComponent, {
+      showFunc: (data, key) =>
+        defineComponent({
+          setup() {
+            return () => h(compile(data[key]));
+          },
+        }),
+      ...showOptions,
+    }),
+  };
+};
+
+export const gridDesktopCell = (
+  desktopDataTemplate: (
+    that: stringAnyObj
+  ) => Promise<gridDesktopPropsTemplate> | gridDesktopPropsTemplate,
+  options: stringAnyObj = {}
+) => {
+  return {
+    ...searchCell(formInputType.gridDesktop, {
+      inputOptions: {
+        style: {
+          height: "50vh",
+          maxHeight: "50vh",
+        },
+        ...options,
+      },
+      funcInputOptionsLoader: async (that) => {
+        let data = await desktopDataTemplate(that);
+        return {
+          ...data,
+          desktopData: await data.desktopData(),
+        };
+      },
+    }),
+  };
+};
+
+/**
+ * @name: richTextCell
+ * @description: 富文本编辑匹配展示和输入的cell生成
+ * @authors: CZH
+ * @Date: 2023-04-25 10:18:19
+ */
 export const richTextCell = (
   inputProperties?: tableCellOptionsInputPropertiesTemplate,
   showOptions?: tableCellOptionsTableTemplate
@@ -314,6 +396,50 @@ export const richTextCell = (
       ...showOptions,
     }),
   };
+};
+
+/**
+ * @name: htmlLinkCell
+ * @description: 只是让外观变得像是一个html链接，实际操作是一个按钮事件,不能用于输入表单的展示
+ * @authors: CZH
+ * @Date: 2023-04-25 10:34:31
+ */
+export const htmlLinkCell = (
+  btnCell: btnCellTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
+  return {
+    ...showCell(showType.funcComponent, {
+      showFunc: (data, key) =>
+        defineComponent({
+          setup(props, { emit }) {
+            return () =>
+              h(
+                ElButton,
+                {
+                  type: "primary",
+                  link: true,
+                  onClick: () => {
+                    emit("click", btnCell);
+                  },
+                },
+                data[key]
+              );
+          },
+        }),
+      ...showOptions,
+    }),
+  };
+};
+
+export const customComponentMakerForSearchCell = (
+  customComponent: customComponent,
+  inputProperties?: tableCellOptionsInputPropertiesTemplate
+) => {
+  return searchCell(formInputType.customComponent, {
+    customComponent,
+    ...inputProperties,
+  });
 };
 
 /**
@@ -382,8 +508,8 @@ export const propertiesMaker = async (
     }
     if (input && input.propertiesOption) {
       properties[cell.key] = deepMerge(
-        properties[cell.key],
-        input.propertiesOption
+        input.propertiesOption,
+        properties[cell.key]
       );
     }
     if (properties[cell.key])

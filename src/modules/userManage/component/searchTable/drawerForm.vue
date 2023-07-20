@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-03 10:12:14
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/drawerForm.vue
+ * @LastEditTime: 2023-07-17 11:21:38
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
   <el-drawer
@@ -14,6 +14,7 @@
     :append-to-body="true"
     :close-on-click-modal="true"
     :show-close="true"
+    @close="fuckClose"
   >
     <div
       :class="
@@ -31,6 +32,7 @@
         }"
       >
         <gridDesktop
+          ref="gridDesktop"
           :grid-col-num="plugInData['gridDesktopConfig'].gridColNum"
           :desktopData="desktopDataList"
           :preBaseData="plugInData['gridDesktopConfig'].preBaseData"
@@ -56,6 +58,7 @@
           </VueForm>
         </el-card>
       </el-scrollbar>
+      {{ formData }}
     </div>
     <div class="formBody" v-else-if="isOpen">
       <el-form ref="form" v-on:submit.prevent :label-position="'left'" size="small">
@@ -206,11 +209,21 @@ export default defineComponent({
           this.queryItemTemplate.map(async (cell) => {
             if (cell.key == key && cell.input && cell.input.onChangeFunc) {
               // 如有返回则可以重置表单的输入方案
+              const that = this;
               const queryItemTemplate = await cell.input.onChangeFunc(
-                this,
+                that,
                 this.formData
               );
-              if (queryItemTemplate) this.initForm(queryItemTemplate);
+              if (
+                queryItemTemplate &&
+                queryItemTemplate.length &&
+                queryItemTemplate[0].key
+              )
+                this.initForm(queryItemTemplate);
+              else if (queryItemTemplate) {
+                this.formData = queryItemTemplate;
+                this.$forceUpdate();
+              }
             }
           });
           formDataForCheck[key] = val[key];
@@ -230,8 +243,10 @@ export default defineComponent({
         this.drawerData = btn.drawerProps;
         this.$refs["drawer"].open();
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
-        let that = this;
-        await btn.function(that, this.formData);
+        if (this.plugInData["gridDesktop"]) {
+          let Data = this.$refs["gridDesktop"].baseData;
+          await btn.function(this, Data);
+        } else await btn.function(this, this.formData);
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
@@ -248,6 +263,10 @@ export default defineComponent({
       this.$emit("onChange", {}, { type: [cardOnChangeType.forceRefresh] });
     },
 
+    fuckClose() {
+      localStorage.setItem("fuckThePJ", "true");
+    },
+
     /**
      * @name: open
      * @description: 打开弹窗见面
@@ -259,10 +278,16 @@ export default defineComponent({
       await this.$nextTick();
       if (this.plugInData["gridDesktop"] && this.plugInData["gridDesktopConfig"]) {
         this.desktopDataList = await this.plugInData["gridDesktopConfig"].desktopData();
-      } else if (this.plugInData["queryItemTemplate"])
+      } else if (this.plugInData["queryItemTemplate"]) {
         this.queryItemTemplate = this.plugInData["queryItemTemplate"]
           ? this.plugInData.queryItemTemplate
           : [];
+        if (this.plugInData["formProps"])
+          this.formProps = {
+            ...this.formProps,
+            ...this.plugInData["formProps"],
+          };
+      }
       await this.initForm(this.queryItemTemplate);
       this.isReady = true;
       if (this.plugInData["data"]) this.formData = this.plugInData["data"];
@@ -274,6 +299,17 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+.genFromComponent .genFormItemRequired:before {
+  content: "" !important;
+}
+.genFromComponent .genFormItemRequired:after {
+  content: "*" !important;
+  color: #f56c6c;
+  margin-left: 4px;
+}
+</style>
 
 <style lang="scss" scoped>
 .formBody {

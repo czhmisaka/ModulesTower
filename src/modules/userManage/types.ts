@@ -1,12 +1,21 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-05-08 03:58:21
+ * @LastEditTime: 2023-07-18 23:06:11
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/types.ts
  */
 
-import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
+import {
+  CardComponentTemplate,
+  gridCellTemplate,
+} from "@/components/basicComponents/grid/module/dataTemplate";
 import * as Icons from "@element-plus/icons-vue";
+import { gridCellMaker } from "../../components/basicComponents/grid/module/dataTemplate";
+import { searchCell } from "@/modules/userManage/component/searchTable/searchTable";
+import { tableCellTemplateMaker } from "@/modules/userManage/component/searchTable/searchTable";
+import { Props } from "@vueuse/motion";
+import { ComponentPropsOptions, PropType } from "vue";
+import defineComponent from "../../views/login/utils/motion";
 export type iconType = keyof typeof Icons;
 
 export interface stringAnyObj {
@@ -37,10 +46,14 @@ export enum btnActionTemplate {
  * @Date: 2022-11-23 22:49:56
  */
 export interface drawerProps {
-  title: string;
+  title?: string;
   size?: number;
 
-  schema?: stringAnyObj;
+  schema?: {
+    required: string[];
+    [key: string]: any;
+  };
+  formProps?: stringAnyObj;
   data?: stringAnyObj;
   //  true 纯数据展示模式
   noEdit?: boolean;
@@ -56,6 +69,14 @@ export interface drawerProps {
   afterFunction?: (closeType: closeType, that: stringAnyObj) => void;
 }
 
+export interface cusStyle {
+  wholeScreen: boolean;
+  maxRows: number;
+  margin: number;
+  Fullscreen?: boolean;
+  showLink?: boolean;
+}
+
 /**
  * @name: gridDesktopConfigTemplate
  * @description: 调起完整桌面服务的配置
@@ -63,18 +84,24 @@ export interface drawerProps {
  * @Date: 2023-02-09 14:55:34
  */
 export interface desktopDataTemplate {
+  [key: string]: any;
   desktopData?: () => Promise<gridCellTemplate[]> | gridCellTemplate[];
   gridColNum?: number;
-  cusStyle?: {
-    wholeScreen: boolean;
-    maxRows: number;
-    margin: number;
-  };
+  cusStyle?: cusStyle;
   preBaseData?: stringAnyObj;
   permission?: stringAnyObj[];
   dataPermission?: stringAnyObj[];
   btnList?: btnCellTemplate[];
   Fullscreen?: boolean;
+}
+
+export interface gridDesktopPropsTemplate extends desktopDataTemplate {
+  componentLists?: {
+    [key: string]: CardComponentTemplate;
+  };
+  fastMode?: boolean;
+  noAnimate?: boolean;
+  preBaseData: stringAnyObj;
 }
 
 /**
@@ -86,14 +113,23 @@ export interface desktopDataTemplate {
 export interface btnCellTemplate extends stringAnyObj {
   isShow: (data: stringAnyObj, btn: btnCellTemplate) => boolean;
   isDisable: (data: stringAnyObj) => boolean;
+  // 按钮名称
   label: string;
+  // 按钮类型
   type: btnActionTemplate;
+  // 按钮icon
   icon?: iconType;
+  // 主题色
   elType?: "success" | "danger" | "primary" | "warning";
+  // 表单按钮详情
   drawerDetail?: drawerProps;
+  // 函数按钮详情
   function?: (that: stringAnyObj, data?: stringAnyObj) => void;
+  // 跳转按钮地址
   url?: string;
+  // 按钮使用到的接口权限key
   apiList: string[];
+  // 按钮key
   showAbleKey: string;
 }
 
@@ -122,8 +158,23 @@ export interface tableCellOptionsInputPropertiesTemplate {
   ) => Promise<tableCellOptions[] | void> | tableCellOptions[] | void;
   // 一些style
   style?: stringAnyObj;
+  customComponent?: customComponent;
   [key: string]: any;
 }
+
+// 自定义组件渲染方案
+export interface customComponent<P = {}> extends stringAnyObj {
+  isLocalComponent?: Boolean;
+  component: {
+    setup?: (props, context) => any;
+    props?: ComponentPropsOptions<P>;
+    emits?: string[];
+
+    name?: string;
+    [key: string]: any;
+  };
+}
+
 export interface tableCellOptionsInputTemplate
   extends tableCellOptionsInputPropertiesTemplate {
   type: formInputType;
@@ -175,7 +226,8 @@ export interface tableCellTemplate extends tableCellOptions {
  * @Date: 2022-11-15 14:15:58
  */
 export enum formInputType {
-  password = "password",
+  customComponent = "customComponent",
+  tabSelect = "tabSelect",
   customSelect = "customSelect",
   select = "select",
   selects = "selects",
@@ -191,19 +243,21 @@ export enum formInputType {
   radio = "radio",
   upload = "upload",
   uploadImage = "uploadImage",
-  uploadFileList = "uploadFileList",
   mobile = "mobile",
   idCard = "idCard",
   treeSelect = "treeSelect",
   treeSelectRemote = "treeSelectRemote",
   searchList = "searchList",
   indexListForSwitch = "indexListForSwitch",
-  botton = "botton",
+  button = "button",
   searchTable = "searchTable",
-  component = "component",
+  gridDesktop = "gridDesktop",
   remoteDictSelect = "remoteDictSelect",
   textarea = "textarea",
   richTextArea = "richTextArea",
+  underLine = "underLine",
+  gridCellMaker = "gridCellMaker",
+  cascader = "cascader",
 }
 
 /**

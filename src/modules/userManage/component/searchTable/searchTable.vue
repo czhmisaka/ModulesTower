@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 15:01:56
+ * @LastEditTime: 2023-04-08 19:48:57
  * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
@@ -25,7 +25,7 @@
     />
     <infoTable
       :template="showItemTemplate"
-      :data-list="PageData.data || PageData.list"
+      :data-list="PageData.data"
       :loading="isLoading"
       @search="search"
       @refresh="refresh"
@@ -44,7 +44,7 @@
       v-if="PageData.total"
       v-model:current-page="PageData.pageNumber"
       v-model:page-size="PageData.pageSize"
-      :page-sizes="[10, 20, 30, 40, 100]"
+      :page-sizes="[2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 100]"
       :small="true"
       :background="true"
       layout="total, sizes, prev, pager, next, jumper"
@@ -262,7 +262,6 @@ export default defineComponent({
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
         await btn.function(that, data);
-        // this.$emit("onSearch");
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
@@ -289,12 +288,15 @@ export default defineComponent({
         this.isLoading = true;
         try {
           let result = await this.searchFunc(this.query, this);
-          this.PageData = {};
-          if (result.total || result.total == 0) this.PageData = result;
-          else this.PageData.data = result;
+          this.PageData.data = [];
+          if (result.total || result.total == 0) {
+            const data = result.list;
+            this.PageData = { ...result, data };
+          } else this.PageData.data = result;
         } catch (e) {
           console.log("【searchTable】组件search事件报错", e);
         } finally {
+          console.log(this.PageData, "fuckOff");
           this.selectedChange([]);
           this.isLoading = false;
         }

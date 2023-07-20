@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 15:14:08
- * @FilePath: /configforpagedemo/src/modules/userManage/component/menuList.vue
+ * @LastEditTime: 2023-07-11 17:49:03
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuList.vue
 -->
 <template>
   <cardBg
@@ -26,6 +26,7 @@
           @click="search"
           :size="size"
           type="primary"
+          plain
         >
           搜索
         </el-button>
@@ -36,6 +37,7 @@
           :loading="searchBtn.isLoading"
           :type="searchBtn.elType"
           @click="btnClick(searchBtn)"
+          plain
         >
           {{ searchBtn.label }}
         </el-button>
@@ -43,7 +45,14 @@
 
       <!-- 这里展示的是搜索结果 -->
       <div class="content" v-if="searchResult.length != 0 && selectedKey">
-        <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick">
+        <el-tree
+          :data="searchResult"
+          :props="defaultProps"
+          @node-click="nodeClick"
+          :highlight-current="true"
+          node-key="id"
+          :default-expanded-keys="expandedKey"
+        >
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ data[defaultProps["label"]] }}</div>
@@ -61,7 +70,17 @@
 
       <!-- 这里展示的是默认树形结构 -->
       <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
-        <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick">
+        <el-tree
+          :data="treeData"
+          :props="defaultProps"
+          @node-click="nodeClick"
+          :highlight-current="true"
+          node-key="id"
+          ref="elTree"
+          @node-expand="nodeChangeOpen"
+          @node-collapse="nodeChangeClose"
+          :default-expanded-keys="expandedKey"
+        >
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ data[defaultProps["label"]] }}</div>
@@ -130,6 +149,11 @@ export default defineComponent({
       description: "一般用于展示元素弹窗等",
       type: inputType.functionEditor,
     },
+    clickItemFunc: {
+      label: "点击元素详情事件",
+      description: "一般用于展示元素弹窗等",
+      type: inputType.functionEditor,
+    },
     searchBtn: {
       label: "定制按钮1",
       type: inputType.obj,
@@ -167,7 +191,9 @@ export default defineComponent({
     "defaultProps",
     "treeDataFunc",
     "clickItemDetailFunc",
+    "clickItemFunc",
     "searchBtn",
+    "detail",
   ],
   components: { cardBg },
   watch: {
@@ -182,13 +208,34 @@ export default defineComponent({
       random,
       size: sizeTem.small,
       searchResult: [],
+      expandedKey: [],
     };
   },
   async mounted() {
     await this.init();
-    this.$emit("ready");
+    // 选中第一个
+    if (this.treeData && this.treeData[0] && this.treeData[0].children[0]) {
+      const node = this.treeData[0].children[0];
+      const that = this;
+      this.$nextTick(() => {
+        this.$refs.elTree.setCurrentKey(node.id);
+        this.clickItemFunc(that, node);
+      });
+    }
   },
   methods: {
+    nodeChangeOpen(node) {
+      const that = this;
+      // const tree = this.$refs["elTree"];
+      // console.log(tree, "tree");
+      that.expandedKey.push(node.id);
+      localStorage.setItem(location.hash, JSON.stringify(that.expandedKey));
+    },
+    nodeChangeClose(node) {
+      const that = this;
+      that.expandedKey = that.expandedKey.filter((x) => x != node.id);
+      localStorage.setItem(location.hash, JSON.stringify(that.expandedKey));
+    },
     /**
      * @name: nodeClick
      * @description: 点击上报事件
@@ -199,7 +246,14 @@ export default defineComponent({
     nodeClick(node) {
       let outputKey = this.outputKey || "menuList_output";
       let data = {};
+      const that = this;
       data[outputKey] = JSON.parse(JSON.stringify(node));
+      if (this.clickItemFunc) {
+        this.clickItemFunc(that, node);
+      }
+      // if (that.expandedKey.indexOf(node.id)) {
+      //   that.expandedKey = that.expandedKey.filter((x) => x != node.id);
+      // } else that.expandedKey.push(node.id);
       setData(this, data);
     },
 
@@ -212,12 +266,16 @@ export default defineComponent({
     async init() {
       if (this.treeDataFunc) {
         let that = this;
+        that.expandedKey = Array.from(
+          new Set(JSON.parse(localStorage.getItem(location.hash)))
+        );
         that.treeData = await that.treeDataFunc(that);
       }
       const that = this;
       setTimeout(() => {
         const el = document.querySelector(`.box_${that.random} .custom-tree-node`);
-        if (el && "click" in el) el["click"]();
+        // if (el && "click" in el) el["click"]();
+        that.$emit("ready");
       }, 100);
     },
 
@@ -318,11 +376,14 @@ export default defineComponent({
   font-size: 14px;
   padding-right: 8px;
   .text {
-    width: calc(100% - 40px);
+    width: 140px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: left;
   }
+}
+::v-deep .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  background-color: #99ccff;
 }
 </style>

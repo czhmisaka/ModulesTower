@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-28 02:15:01
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.ts
+ * @LastEditTime: 2023-07-18 16:10:38
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
 export const OpenDrawerBtn = () => {};
@@ -44,7 +44,16 @@ export const btnMaker = (
     function?: (that: stringAnyObj, data?: stringAnyObj) => void;
     url?: string;
     icon?: iconType;
-    elType?: "success" | "danger" | "primary" | "warning" | "default" | "Info";
+    elType?:
+      | "success"
+      | "danger"
+      | "primary"
+      | "warning"
+      | "info"
+      | ""
+      | ((
+          data: stringAnyObj
+        ) => "success" | "danger" | "primary" | "warning" | "info" | "");
     [key: string]: any;
   },
   apiList: string[] = [],
@@ -95,7 +104,7 @@ export const dobuleCheckBtnMaker = (
       title,
       message,
       type: "warning",
-      icon: "Warning",
+      icon: "warning",
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       showCancelButton: true,
@@ -144,6 +153,26 @@ export const openDrawerForm = (
 };
 
 /**
+ * @name: openDrawerForm
+ * @description: moduleApi，BtnMaker 制作出来的按钮 响应drawerForm事件.
+ * @authors: CZH
+ * @Date: 2022-11-23 19:52:33
+ */
+export const closeDrawerForm = (content: { [key: string]: any }) => {
+  if (!checkContext(content, { asd: 1 })) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    let data = {};
+    data[moduleName + drawerFormVue.name] = false;
+    content[func]("onChange", data, {
+      type: [cardOnChangeType.moduleApi],
+    });
+  } catch (err) {
+    console.error("openDrawerForm_数据上报错误:", err, content, false);
+  }
+};
+
+/**
  * @name: repBackMessageShow
  * @description: 请求回调简易弹窗
  * @authors: CZH
@@ -152,12 +181,13 @@ export const openDrawerForm = (
  * @param {*} res
  */
 export const repBackMessageShow = (that, res) => {
-  if (res["message"] == "成功" || res.stat == "ok") {
-    that.$message.success(res["message"] || "成功");
+  if (res["message"] == "成功") {
+    that.$message.success(res["message"]);
     setTimeout(() => {
       that.close ? that.close() : refreshDesktop(that);
     }, 500);
   } else {
+    console.log("错唔信息");
     // that.$message.error(res["message"]);
   }
 };
@@ -177,6 +207,18 @@ export const openDrawerFormEasy = (
   that.$modules.getModuleApi()["userManage_openDrawerForm"](that, drawerProps);
 };
 
+/**
+ * @name: openDrawerFormEasy
+ * @description: 快速弹窗调用
+ * @authors: CZH
+ * @Date: 2023-02-09 10:54:24
+ * @param {stringAnyObj} that
+ * @param {drawerProps} drawerProps
+ */
+export const closeDrawerFormEasy = (that: stringAnyObj) => {
+  that.$modules.getModuleApi()["userManage_closeDrawerForm"](that, false);
+};
+
 let component = {};
 let moduleName = "userManage_";
 component[drawerFormVue.name] = drawerFormVue;
@@ -186,6 +228,7 @@ export default {
     btnMaker,
     btnActionTemplate,
     openDrawerForm,
+    closeDrawerForm,
   },
   component,
 };

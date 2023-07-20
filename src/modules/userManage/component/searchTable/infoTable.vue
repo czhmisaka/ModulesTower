@@ -1,13 +1,14 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-21 11:23:28
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/infoTable.vue
+ * @LastEditTime: 2023-07-18 09:26:36
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
   <div ref="tableBox" class="tableBox">
     <ElTable
       ref="tableController"
+      :key="fuckKey"
       :header-cell-style="isDark ? tableHeaderDark : tableHeader"
       :data="dataList"
       @selection-change="selectPosition"
@@ -20,14 +21,18 @@
       :height="'100%'"
       row-key="id"
     >
-      <ElTableColumn type="selection" align="center" fixed="left"></ElTableColumn>
+      <ElTableColumn
+        :selectable="judgeSelect"
+        type="selection"
+        align="center"
+        fixed="left"
+      ></ElTableColumn>
       <ElTableColumn
         v-for="(item, index) in template"
-        :sortable="item.table.sortable"
         :sort-by="(row, index) => sortBy(row, index, item.key)"
         :label="item.label"
         :width="
-          item.table.type == showType.btnList ? '200px' : item.table?.width || 'auto'
+          item.table.type == showType.btnList ? 'auto' : item.table?.width || 'auto'
         "
         :prop="item.key"
         :fixed="item.table.type == showType.btnList ? 'right' : item.table.fixed"
@@ -52,7 +57,10 @@
             :style="item.table?.style"
             v-if="item.table.type == showType.funcComponent"
           >
-            <component :is="item.table.showFunc(scope.row, item.key)"></component>
+            <component
+              :is="item.table.showFunc(scope.row, item.key)"
+              @click="(btns) => btnClick(btns, scope.row)"
+            ></component>
           </div>
           <div
             class="flexBox"
@@ -86,17 +94,17 @@
               详情
             </el-button>
             <el-button
-              v-for="btns in (btnList(item, scope.row)
+              v-for="(btns, index) in (btnList(item, scope.row)
                 ? btnList(item, scope.row)
                 : []
               ).filter((x, i) => {
-                return i < 3;
+                return i < 10;
               })"
-              :loading="btns.isLoading"
+              :loading="loadingMap[btns.label + btns.showAbleKey + scope['$index']]"
               size="small"
               link
               type="primary"
-              @click="btnClick(btns, scope.row)"
+              @click="btnClick(btns, scope.row, scope)"
             >
               {{ btns.label }}
             </el-button>
@@ -118,14 +126,14 @@ import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataT
 export default defineComponent({
   components: { ElTable, ElTableColumn },
   props: ["template", "loading", "dataList", "baseData"],
-
   data() {
     return {
       showType,
+      fuckKey: Math.random() * 100000,
       selectedList: [] as any[],
+      loadingMap: {} as { [key: string]: boolean },
     };
   },
-
   computed: {
     tableHeader() {
       return {
@@ -144,6 +152,13 @@ export default defineComponent({
   },
 
   methods: {
+    judgeSelect(row, index) {
+      if (row.unshow) {
+        return false; // 返回true该行可选，返回false则不可选
+      } else {
+        return true;
+      }
+    },
     btnList(item, data) {
       if (!item.table.btnList) return false;
       const back = item.table.btnList.filter((x) => {
@@ -211,8 +226,8 @@ export default defineComponent({
      * @Date: 2022-12-02 09:27:05
      * @param {*} btn
      */
-    async btnClick(btn: btnCellTemplate, data?: stringAnyObj) {
-      btn["isLoading"] = true;
+    async btnClick(btn: btnCellTemplate, data?: stringAnyObj, index: any = {}) {
+      this.loadingMap[btn.label + btn.showAbleKey + index["$index"]] = true;
       if (btn.type == btnActionTemplate.OpenDrawer) {
         this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
       } else if (btn.type == btnActionTemplate.Function && btn.function) {
@@ -222,7 +237,7 @@ export default defineComponent({
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
-      btn["isLoading"] = false;
+      this.loadingMap[btn.label + btn.showAbleKey + index["$index"]] = false;
     },
 
     sortBy(row, index, key) {

@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 15:14:05
- * @FilePath: /configforpagedemo/src/modules/userManage/component/menuListRemote.vue
+ * @LastEditTime: 2023-07-11 17:49:11
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
   <cardBg
@@ -19,12 +19,14 @@
           }"
           v-model="selectedKey"
           :size="size"
+          @keydown.enter.prevent="searchFuncByName ? searchByName() : search()"
           clearable
         ></el-input>
         <el-button
           v-show="selectedKey && selectedKey.length > 0"
-          @click="search"
+          @click="searchFuncByName ? searchByName() : search()"
           :size="size"
+          plain
           type="primary"
         >
           搜索
@@ -35,6 +37,7 @@
           v-if="searchBtn && selectedKey.length == 0"
           :loading="searchBtn.isLoading"
           :type="searchBtn.elType"
+          plain
           @click="btnClick(searchBtn)"
         >
           {{ searchBtn.label }}
@@ -43,20 +46,35 @@
 
       <!-- 这里展示的是搜索结果 -->
       <div class="content" v-if="searchResult.length != 0 && selectedKey">
-        <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick">
-          <template #default="{ node, data }">
-            <div class="custom-tree-node">
-              <div class="text">{{ data[defaultProps["label"]] }}</div>
+        <div v-for="item in searchResult">
+          <cardBg
+            :title="item.label"
+            :title-icon="item.icon"
+            :cus-style="{
+              margin: '6px 3px',
+              width: 'calc(100% - 6px)',
+              borderRadius: '3px',
+              padding: '3px',
+            }"
+          >
+            <div v-for="it in item.data" class="flexItem">
+              <div>
+                {{ it.label }}
+              </div>
               <el-button
-                v-if="clickItemDetailFunc"
-                text
+                v-if="item.btn"
+                @click="btnClick(item.btn, it)"
+                :type="item.btn.elType"
+                :icon="item.btn.icon"
                 size="small"
-                icon="More"
-                @click.stop="clickItemDetail(data)"
-              ></el-button>
+                plain
+                text
+              >
+                {{ item.btn.label }}
+              </el-button>
             </div>
-          </template>
-        </el-tree>
+          </cardBg>
+        </div>
       </div>
 
       <!-- 这里展示的是默认树形结构 -->
@@ -96,8 +114,26 @@ import {
   propInfo,
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
-import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../types";
+import {
+  btnCellTemplate,
+  btnActionTemplate,
+  showType,
+  stringAnyObj,
+  tableCellTemplate,
+} from "../types";
+import * as Icons from "@element-plus/icons-vue";
 
+export type iconType = keyof typeof Icons;
+interface SearchResult {
+  label: string;
+  data: {
+    label: string;
+    [key: string]: any;
+  }[];
+  icon?: iconType;
+  detail?: tableCellTemplate[];
+  btn?: btnCellTemplate;
+}
 enum sizeTem {
   small = "small",
   large = "large",
@@ -134,6 +170,16 @@ export default defineComponent({
       description: "一般用于展示元素弹窗等",
       type: inputType.functionEditor,
     },
+    clickItemFunc: {
+      label: "点击元素详情事件",
+      description: "一般用于展示元素弹窗等",
+      type: inputType.functionEditor,
+    },
+    searchFuncByName: {
+      label: "搜索事件（名称）",
+      description: "一般用于复合搜索",
+      type: inputType.functionEditor,
+    },
     searchBtn: {
       label: "定制按钮1",
       type: inputType.obj,
@@ -155,7 +201,9 @@ export default defineComponent({
     "defaultProps",
     "treeDataFuncByLevel",
     "clickItemDetailFunc",
+    "clickItemFunc",
     "searchBtn",
+    "searchFuncByName",
   ],
   components: { cardBg },
   watch: {
@@ -187,7 +235,11 @@ export default defineComponent({
     nodeClick(node) {
       let outputKey = this.outputKey || "menuList_output";
       let data = {};
+      const that = this;
       data[outputKey] = JSON.parse(JSON.stringify(node));
+      if (this.clickItemFunc) {
+        this.clickItemFunc(that, node);
+      }
       setData(this, data);
     },
 
@@ -201,11 +253,11 @@ export default defineComponent({
       const that = this;
       setTimeout(() => {
         const el = document.querySelector(`.box_${that.random} .custom-tree-node`);
-        if ("click" in el) el["click"]();
+        if ("click" in el) ((el as unknown) as any)["click"]();
       }, 500);
     },
 
-    async search(e) {
+    async search() {
       const that = this;
       const resolve = (res) => {
         that.searchResult =
@@ -223,7 +275,6 @@ export default defineComponent({
               })
             : res;
       };
-
       this.treeDataFuncByLevel({}, resolve, this.selectedKey);
     },
 
@@ -258,6 +309,13 @@ export default defineComponent({
         window.open(btn.url);
       }
       btn["isLoading"] = false;
+    },
+
+    async searchByName() {
+      if (this.searchFuncByName) {
+        let res = await this.searchFuncByName(this.selectedKey);
+        this.searchResult = res as SearchResult[];
+      }
     },
   },
 });
@@ -312,5 +370,15 @@ export default defineComponent({
     white-space: nowrap;
     text-align: left;
   }
+}
+.flexItem {
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  height: 24px;
+  line-height: 24px;
+  justify-content: space-between;
+  width: 100%;
+  color: #666;
 }
 </style>

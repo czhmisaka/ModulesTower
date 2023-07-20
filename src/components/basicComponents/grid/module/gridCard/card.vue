@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2022-10-26 12:53:50
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
+ * @LastEditTime: 2023-07-19 20:59:53
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
 import cardBox from "./module/cardBox.vue";

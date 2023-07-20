@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 22:20:12
+ * @LastEditTime: 2023-07-19 22:53:59
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -14,6 +14,7 @@
       transform: cusStyle.testProps
         ? 'rotateX(60deg) rotateZ(-30deg) scale(0.7) translateX(-10vw)'
         : '',
+      ...cusStyleProps,
     }"
     class="baseGrid"
   >
@@ -243,6 +244,9 @@ export default defineComponent({
         show: false,
         timeOut: null,
       },
+
+      // 桌面组件配置
+      cusStyleProps: {} as { [key: string]: any },
     };
   },
   methods: {

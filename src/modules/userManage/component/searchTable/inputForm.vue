@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 14:32:44
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
+ * @LastEditTime: 2023-07-17 10:44:57
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
   <div
@@ -16,9 +16,14 @@
       ref="formBox"
       class="formBox"
       :cus-style="{
-        padding: '12px',
+        padding: '0px',
         height: 'auto',
         paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '12px' : '0px',
+        'border-radius': '6px',
+        border: '0px solid',
+        filter: 'none',
+        'box-shadow': 'none',
+        display: 'inline-block',
       }"
     >
       <VueForm
@@ -38,16 +43,19 @@
         >
           <el-button
             class="btn"
-            v-if="!autoSearch"
+            v-if="!autoSearch && queryItemTemplate.length > 0"
             @click="refreshData(-1)"
             icon="RefreshRight"
+            plain
             >重置</el-button
           >
           <el-button
             class="btn"
             v-if="!autoSearch"
+            plain
             type="primary"
             @click="handleSubmit(formData)"
+            style="margin-left: 0px"
             icon="Position"
             >搜索</el-button
           >
@@ -58,13 +66,28 @@
                 : true
             )"
             class="floatLeft"
+            :style="item.style ? item.style : ''"
           >
             <el-button
               :loading="item.isLoading"
               @click="btnClick(item)"
-              :type="item.elType"
+              :type="
+                item.elType
+                  ? typeof item.elType != 'string'
+                    ? item.elType(formData)
+                    : item.elType
+                  : ''
+              "
+              plain
               :icon="item.icon"
             >
+              <!-- :plain="
+                item.elType
+                  ? (typeof item.elType != 'string'
+                      ? item.elType(formData)
+                      : item.elType) == 'info'
+                  : 'info'
+              " -->
               {{ item.label }}
             </el-button>
           </div>
@@ -229,7 +252,8 @@ export default defineComponent({
       if (val === -1) {
         this.formData = {};
         this.$emit("inputChange", {});
-        this.$emit("refresh");
+        // 按照7月11号的要求，删除了重置直接导致的刷新
+        // this.$emit("refresh");
         this.$nextTick().then(() => {
           this.handleSubmit();
         });

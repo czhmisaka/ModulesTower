@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-13 10:32:55
+ * @LastEditTime: 2023-07-19 21:15:08
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
@@ -88,7 +88,7 @@ export const setData = (
 
 /**
  * @name: changeVisible
- * @description: 组件可视状态修改
+ * @description: 使用组件名称修改组件可视状态
  * @authors: CZH
  * @Date: 2022-08-17 20:07:07
  * @param {object} content
