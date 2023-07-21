@@ -1,11 +1,11 @@
 <!--
  * @Date: 2023-03-12 23:09:15
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-27 09:17:22
+ * @LastEditTime: 2023-07-21 00:28:21
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfoChosSearch.vue
 -->
 <template>
-  <cardBg>
+  <cardBg @mouseenter="changeVisiable(true)" @mouseleave="changeVisiable(false)">
     <div
       class="wholeBox"
       :style="{
@@ -16,10 +16,7 @@
         :style="{
           height: size(0.6),
           transition: 'width 0.3s',
-          width:
-            searchString && searchString.length > 0
-              ? `calc(80% - ${size(0.2)})`
-              : `calc(100%)`,
+          width: `calc(80% - ${size(0.2)})`,
         }"
         @keydown.enter.prevent="search"
         v-model="searchString"
@@ -29,7 +26,7 @@
         :style="{
           transition: 'all 0.5s',
           height: size(0.6),
-          width: searchString && searchString.length > 0 ? `calc(20%)` : `calc(0%)`,
+          width: `calc(20%)`,
           marginLeft: size(0.2),
           opacity: searchString && searchString.length > 0 ? 1 : 0.2,
         }"
@@ -39,6 +36,34 @@
       >
         {{ btnName ? btnName : "搜索" }}
       </el-button>
+    </div>
+    <div
+      class="tagBox"
+      :style="{
+        opacity: isOpen ? 1 : 0,
+      }"
+    >
+      <el-button
+        style="margin-left: 0px; margin-right: 3px; margin-bottom: 3px"
+        v-for="(item, i) in tags"
+        :color="item.color"
+        size="small"
+        @click="tagClick(item)"
+      >
+        {{ item.name }}
+      </el-button>
+      <el-upload
+        class="upload-demo"
+        limit="1"
+        action="/api/upload/?category_id=45"
+        drag
+        :data="{}"
+        :on-success="searchByImage"
+        multiple
+      >
+        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+        <div class="el-upload__text">以图搜图</div>
+      </el-upload>
     </div>
   </cardBg>
 </template>
@@ -57,7 +82,10 @@ import {
   changeCardPosition,
   changeCardProperties,
   setData,
+  hightLightComponent,
 } from "@/components/basicComponents/grid/module/cardApi/index";
+import { piwigoMethod } from "@/utils/api/requests";
+import { useUserStoreHook } from "@/store/modules/user";
 
 export default defineComponent({
   name: "searchInfoChosSearch",
@@ -74,14 +102,75 @@ export default defineComponent({
   baseProps: {},
   components: { cardBg },
 
-  props: ["baseData", "sizeUnit", "onClickFunc", "searchFunc", "gridList", "btnName"],
+  props: [
+    "baseData",
+    "sizeUnit",
+    "onClickFunc",
+    "searchFunc",
+    "gridList",
+    "btnName",
+    "showMoreProps",
+    "detail",
+  ],
   data: () => {
     return {
-      searchString: "v2",
+      searchString: "食物",
       loading: false,
+
+      preGridInfo: {},
+      isOpen: false,
+      closeBySearch: false,
+      tags: [],
+      userId: 0,
     };
   },
+  async mounted() {
+    this.userId = (await useUserStoreHook().getOptions())["id"];
+    let res = await piwigoMethod({ method: "pwg.tags.getList" });
+    this.tags = res.result.tags.splice(0, 20);
+  },
   methods: {
+    changeVisiable(isTrue: boolean) {
+      if (this.showMoreProps) {
+        let size = this.preGridInfo?.size || this.detail.gridInfo.default.size;
+        let position =
+          this.preGridInfo?.position || this.detail.gridInfo.default.position;
+        if (isTrue) {
+          this.preGridInfo = this.detail.gridInfo.default;
+          console.log(this.detail);
+          size = {
+            width: size.width,
+            height: size.height + 6,
+          };
+          // position = {
+          //   x: position.x - 1,
+          //   y: position.y,
+          // };
+          hightLightComponent(this, [this.detail.label]);
+        } else {
+          hightLightComponent(this, []);
+        }
+        if (isTrue || true) {
+          let posData = {};
+          posData[this.detail.label] = position;
+          changeCardPosition(this, posData);
+          let sizeData = {};
+          sizeData[this.detail.label] = size;
+          changeCardSize(this, sizeData);
+          this.isOpen = isTrue;
+        }
+      }
+    },
+
+    tagClick(item) {
+      this.searchString = item.name;
+      this.search();
+    },
+
+    searchByImage(e) {
+      console.log(e, "asd");
+    },
+
     /**
      * @name: size
      * @description: 基于sizeUnit.blocksize 计算
@@ -103,6 +192,7 @@ export default defineComponent({
       if (searchString && searchString.length > 1) {
         try {
           this.loading = true;
+          this.changeVisiable(false);
           await this.searchFunc(this, searchString);
           this.loading = false;
           this.searchString = "";
@@ -124,8 +214,23 @@ export default defineComponent({
 <style scoped>
 .wholeBox {
   width: calc(100%);
-  height: 100%;
   text-align: left;
   padding: 0px 12px;
+}
+.tagBox {
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: calc(100%);
+  padding: 6px;
+}
+.upload-demo {
+  width: 100%;
+  line-height: 30px;
+  border: 1px #ccc dotted;
+  height: 60px;
+  border-radius: 6px;
 }
 </style>

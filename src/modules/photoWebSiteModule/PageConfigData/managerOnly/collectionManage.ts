@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-28 03:21:30
+ * @LastEditTime: 2023-07-20 23:02:52
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/collectionManage.ts
  */
 import {
@@ -80,7 +80,7 @@ export const 新增收藏夹 = btnMaker("新增收藏夹", btnActionTemplate.Fun
 
 export const 编辑收藏夹 = btnMaker("编辑", btnActionTemplate.Function, {
   icon: "Edit",
-  elType: "Info",
+  elType: "info",
   function: async (that, data) => {
     const submit = btnMaker("提交", btnActionTemplate.Function, {
       function: async (that, data) => {

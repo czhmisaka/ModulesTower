@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-17 18:03:26
+ * @LastEditTime: 2023-07-20 19:58:02
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -352,6 +352,7 @@ export const chosSearch = async () => {
       },
       {
         props: {
+          showMoreProps: true,
           searchFunc: (that, data) => {
             let time = 0;
             setTimeout(() => chosSearchFunc(that, data), 0);
