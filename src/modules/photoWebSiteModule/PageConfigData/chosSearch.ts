@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-20 19:58:02
+ * @LastEditTime: 2023-07-22 01:24:31
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -232,7 +232,7 @@ export class Desktop {
 }
 
 export const chosSearch = async () => {
-  const chosSearchFunc = async (that, query) => {
+  const chosSearchFunc = async (that, query, data = []) => {
     if (showKeyArr.length > 0) {
       let obj = {};
       for (let x in showKeyArr) obj[showKeyArr[x]] = false;
@@ -242,19 +242,26 @@ export const chosSearch = async () => {
         showKeyArr = [];
       }, 200);
     }
-    let { result } = await piwigoMethod({
-      method: "pwg.images.search",
-      query: query,
-      per_page: 100,
-    });
-    let list = result.images.map((x) => {
+    let list = data.map((x) => {
       return {
         ...x,
-        ...x.derivatives,
-        ...x.derivatives["2small"],
-        derivatives: null,
       };
     });
+    if (list.length == 0) {
+      let { result } = await piwigoMethod({
+        method: "pwg.images.search",
+        query: query,
+        per_page: 100,
+      });
+      list = result.images.map((x) => {
+        return {
+          ...x,
+          ...x.derivatives,
+          ...x.derivatives["2small"],
+          derivatives: null,
+        };
+      });
+    }
 
     let desktop = new Desktop(24, 16);
     desktop.initByGridList(that.gridList);
@@ -356,6 +363,9 @@ export const chosSearch = async () => {
           searchFunc: (that, data) => {
             let time = 0;
             setTimeout(() => chosSearchFunc(that, data), 0);
+          },
+          updateSearch: (that, data) => {
+            setTimeout(() => chosSearchFunc(that, {}, data), 0);
           },
         },
       }

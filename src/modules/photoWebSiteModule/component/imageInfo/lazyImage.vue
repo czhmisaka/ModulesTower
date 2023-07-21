@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 22:24:08
+ * @LastEditTime: 2023-07-22 01:35:47
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/lazyImage.vue
 -->
 
@@ -77,7 +77,13 @@ export default defineComponent({
         if (rate > 0.2) a = 2;
         if (rate > 0.3) a = 1;
         if (rate > 0.4) a = 0;
-        return props.item[sizeMap[a]].url;
+        let url = "";
+        // try {
+        url = props.item[sizeMap[a]]?.url;
+        if (!url) url = `/imageserver/${props.item["path"].replace("./", "/")}`;
+        // } catch (e) {}
+        console.log("fuck", props.item, url);
+        return url;
       },
       set: () => {},
     });

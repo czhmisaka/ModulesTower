@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-12 23:09:15
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-21 00:28:21
+ * @LastEditTime: 2023-07-22 01:20:25
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfoChosSearch.vue
 -->
 <template>
@@ -55,7 +55,7 @@
       <el-upload
         class="upload-demo"
         limit="1"
-        action="/api/upload/?category_id=45"
+        :action="`/api/upload/searchImage?token=${token}`"
         drag
         :data="{}"
         :on-success="searchByImage"
@@ -111,6 +111,7 @@ export default defineComponent({
     "btnName",
     "showMoreProps",
     "detail",
+    "updateSearch",
   ],
   data: () => {
     return {
@@ -122,10 +123,12 @@ export default defineComponent({
       closeBySearch: false,
       tags: [],
       userId: 0,
+      token: "",
     };
   },
   async mounted() {
     this.userId = (await useUserStoreHook().getOptions())["id"];
+    this.token = (await useUserStoreHook().getOptions())["pwg_token"];
     let res = await piwigoMethod({ method: "pwg.tags.getList" });
     this.tags = res.result.tags.splice(0, 20);
   },
@@ -167,8 +170,12 @@ export default defineComponent({
       this.search();
     },
 
-    searchByImage(e) {
-      console.log(e, "asd");
+    searchByImage(data) {
+      // console.log(data, "asd");
+      // console.log(data.data.list);
+      if (this.updateSearch) {
+        this.updateSearch(this, data.data.list);
+      }
     },
 
     /**

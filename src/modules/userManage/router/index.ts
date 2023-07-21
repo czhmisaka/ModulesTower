@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-07-18 23:00:24
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-07-22 00:40:17
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/router/index.ts
+ */
 import type { RouteConfigsTable } from "/#/index";
 import { defineAsyncComponent } from "vue";
 
@@ -37,12 +43,12 @@ export const routerCellMaker = (
 };
 
 export default [
-  routerCellMaker(
-    "/testPath",
-    "f_test",
-    defineAsyncComponent(() => import("@/views/welcome/index.vue")),
-    {
-      meta: {},
-    }
-  ),
+  // routerCellMaker(
+  //   "/testPath",
+  //   "f_test",
+  //   defineAsyncComponent(() => import("@/views/welcome/index.vue")),
+  //   {
+  //     meta: {},
+  //   }
+  // ),
 ];

@@ -1,12 +1,8 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
-<<<<<<< HEAD
- * @LastEditTime: 2023-02-28 20:23:31
-=======
- * @LastEditTime: 2023-02-28 16:52:40
->>>>>>> add_vuePureAdmin
- * @FilePath: /configforpagedemo/src/router/index.ts
+ * @LastEditTime: 2023-07-21 10:44:33
+ * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
 import {
@@ -195,29 +191,5 @@ router.afterEach(() => {
 });
 
 let interval = null;
-
-// 路由守卫
-// 控制默认到index界面执行匹配
-// router.beforeEach(async (to, from, next) => {
-//   let meta = {} as { [key: string]: any };
-//   if (to.matched && to.matched.length > 1) {
-//     meta = to.matched[1].meta;
-//     useModuleHook().checkPage(to.matched[1].meta);
-//   } else if (to.matched.length == 0) {
-//     if (decodeURI(to.path).split("/").length > 0) {
-//       const routes = router.getRoutes();
-//       const path = decodeURI(to.path);
-//       if (routes.map((x) => x.path).indexOf(path) != -1)
-//         routes.map((cell) => {
-//           if (cell.path == path) next(cell);
-//         });
-//       else {
-//         next();
-//         // await useModuleHook().searchToPage(path);
-//       }
-//     }
-//   }
-//   next();
-// });
 
 export default router;

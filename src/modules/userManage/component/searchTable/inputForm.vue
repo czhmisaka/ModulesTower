@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-17 10:44:57
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/inputForm.vue
+ * @LastEditTime: 2023-07-21 10:28:01
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
   <div
@@ -18,7 +18,7 @@
       :cus-style="{
         padding: '0px',
         height: 'auto',
-        paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '12px' : '0px',
+        paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '6px' : '0px',
         'border-radius': '6px',
         border: '0px solid',
         filter: 'none',
