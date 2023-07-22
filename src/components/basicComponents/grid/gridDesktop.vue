@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-23 01:26:58
+ * @LastEditTime: 2023-07-23 03:49:11
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -11,7 +11,7 @@
     :id="'screenId_' + idRandom"
     :style="{
       overflow: cusStyle.wholeScreen ? '' : '',
-      transform: cusStyle.testProps ? 'rotateX(60deg) rotateZ(-30deg) scale(2) ' : '',
+      transform: cusStyle.testProps ? 'rotateX(60deg) rotateZ(-30deg) scale(1.2) ' : '',
       ...cusStyleProps,
     }"
     class="baseGrid"

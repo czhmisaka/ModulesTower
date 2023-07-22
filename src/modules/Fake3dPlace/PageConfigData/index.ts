@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-23 01:56:42
+ * @LastEditTime: 2023-07-23 05:21:11
  * @FilePath: /ConfigForDesktopPage/src/modules/Fake3dPlace/PageConfigData/index.ts
  */
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -12,18 +12,19 @@ import { Fake3dPlace } from "./fake3d";
 let pageConfig = {} as { [key: string]: desktopDataTemplate };
 
 let Page = {
-  // Fake3dPlace: {
-  //   name: "哦fuck",
-  //   desktopData: Fake3dPlace,
-  //   gridColNum: 24,
-  //   cusStyle: {
-  //     testProps: true,
-  //     wholeScreen: true,
-  //     maxRows: 16,
-  //     margin: 3,
-  //     Fullscreen: false,
-  //   },
-  // },
+  Fake3dPlace: {
+    name: "哦fuck",
+    desktopData: Fake3dPlace,
+    gridColNum: 24,
+    cusStyle: {
+      testProps: true,
+      wholeScreen: true,
+      showLink: false,
+      maxRows: 16,
+      margin: 0.1,
+      Fullscreen: false,
+    },
+  },
 } as {
   [key: string]: desktopDataTemplate;
 };
