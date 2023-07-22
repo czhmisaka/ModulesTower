@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-05-22 18:23:04
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-28 21:31:34
- * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/iframe.vue
+ * @LastEditTime: 2023-07-22 17:49:28
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/cell/info/iframe.vue
 -->
 <script lang="ts">
 import { defineComponent, ref, h, toRefs } from "vue";

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-18 22:04:48
+ * @LastEditTime: 2023-07-23 02:57:17
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -47,7 +47,7 @@ let lastFunc = -1;
 let dataBe = {};
 
 // 获取图片列表
-const getFunc = async function (that, data) {
+export const getFunc = async function (that, data) {
   let res = {} as stringAnyObj;
   const getColorList = async (data) => {
     const { limit, offset } = data;
@@ -285,6 +285,56 @@ export const mainDesktop = async () => {
         props: {
           outputKey: "query",
           tagList: tagList,
+          searchByImage: async (that, list) => {
+            changeCardPosition(that, {
+              waterFall: { x: 0, y: 1 },
+              searchInfo: { x: 0, y: 0 },
+            });
+            changeCardSize(that, {
+              waterFall: {
+                width: 10,
+                height: 11,
+              },
+              categoryList: {
+                width: 0,
+                height: 0,
+              },
+              collectionList: {
+                width: 0,
+                height: 0,
+              },
+              searchInfo: {
+                width: 10,
+                height: 1,
+              },
+              InfoCard: {
+                width: 2,
+                height: 10,
+              },
+            });
+            changeVisible(that, {
+              userManage_menuListRemote: false,
+              searchInfo: true,
+              upload: false,
+              icon: true,
+            });
+            changeCardProperties(that, {
+              waterFall: {
+                watchKey: ["category", "query", "collection", "fuck"],
+                getFunc: async () => {
+                  return list.map((x) => {
+                    let path = x.path.replace("./", "/");
+                    return {
+                      ...x,
+                      url:
+                        `/imageserver/i.php?` + path.replace(".", "-sm.") + "",
+                    };
+                  });
+                },
+              },
+            });
+            setData(that, { fuck: true });
+          },
         },
       }
     )

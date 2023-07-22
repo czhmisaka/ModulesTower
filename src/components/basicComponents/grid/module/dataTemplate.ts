@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-16 15:05:27
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
+ * @LastEditTime: 2023-07-22 15:08:27
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 import { cardUtil } from "./util";
@@ -22,6 +22,7 @@ export enum cardOnChangeType {
   openComponentsList = "openComponentsList",
   moduleApi = "moduleApi",
   hightLightCard = "hightLightCard",
+  changeDesktopProperties = "changeDesktopProperties",
 }
 
 export const gridSizeConfig = (

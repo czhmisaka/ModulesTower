@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-28 11:08:00
+ * @LastEditTime: 2023-07-23 02:52:11
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -25,6 +25,7 @@
           }"
         />
       </span>
+
       <el-input v-model="query['name']" placeholder="图片名字" class="item"></el-input>
       <el-select
         v-model="query['tags']"
@@ -37,6 +38,30 @@
       >
         <el-option v-for="tag in tagList" :value="tag.id" :label="tag.name"></el-option>
       </el-select>
+      <el-popover
+        v-if="canSearchByImage"
+        placement="bottom-start"
+        :width="200"
+        trigger="hover"
+      >
+        <template #reference>
+          <el-button icon="plus" type="primary" plain="true"> 以图搜图 </el-button>
+        </template>
+        <template #default>
+          <el-upload
+            class="upload-demo"
+            limit="1"
+            :action="`/api/upload/searchImage?token=${token}`"
+            drag
+            :data="{}"
+            :on-success="searchByImages"
+            multiple
+          >
+            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+            <div class="el-upload__text">以图搜图</div>
+          </el-upload>
+        </template>
+      </el-popover>
 
       <el-popover placement="top-start" :width="200" trigger="click">
         <template #reference>
@@ -220,6 +245,8 @@ import {
   changeCardProperties,
   setData,
 } from "@/components/basicComponents/grid/module/cardApi/index";
+import { useUserStoreHook } from "@/store/modules/user";
+import { post } from "@/utils/api/requests";
 
 const dateList = [] as {
   name: string;
@@ -238,12 +265,10 @@ dateList.push({
   name: "昨日",
   time: nowDay - oneDay,
 });
-
 dateList.push({
   name: "最近7日",
   time: nowDay - oneWeek,
 });
-
 dateList.push({
   name: "最近30日",
   time: nowDay - oneMounth,
@@ -252,7 +277,6 @@ dateList.push({
   name: "最近90日",
   time: nowDay - 3 * oneMounth,
 });
-
 dateList.push({
   name: "最近365日",
   time: nowDay - oneYear,
@@ -280,7 +304,6 @@ export default defineComponent({
       handler(val) {
         let value = JSON.parse(JSON.stringify(val));
         if (value.tags && value.tags.length == 0) delete value.tags;
-        console.log(value.name, "asd");
         if ("name" in value && value.name == "") delete value.name;
         let data = {};
         data[this.outputKey] = value;
@@ -346,22 +369,32 @@ export default defineComponent({
             category = null;
           }
         }
-
         setData(that, data);
       },
       deep: true,
     },
   },
-  props: ["baseData", "sizeUnit", "onClickFunc", "tagList", "outputKey"],
+  props: ["baseData", "sizeUnit", "onClickFunc", "tagList", "outputKey", "searchByImage"],
   data() {
     return {
       dateList,
 
       dataType: {},
       query: {},
+
+      token: "",
+      canSearchByImage: false,
     };
   },
-  mounted() {
+  async mounted() {
+    this.token = (await useUserStoreHook().getOptions())["pwg_token"];
+    let that = this;
+    setTimeout(async () => {
+      let res = await post("/resetRetImageStorage", {}).catch((x) => false);
+      // 修改if 内即可
+      if (!res) that.canSearchByImage = true;
+      else that.canSearchByImage = true;
+    }, 0);
     this.$emit("ready");
   },
 
@@ -377,6 +410,15 @@ export default defineComponent({
       });
       return back;
     },
+
+    searchByImages(e) {
+      const { list } = e.data;
+      const that = this;
+      if (this.searchByImage) {
+        this.searchByImage(that, list);
+      }
+    },
+
     clearQuery(arr) {
       let { query } = this;
       arr.map((x) => {

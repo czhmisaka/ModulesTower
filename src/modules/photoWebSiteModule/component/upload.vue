@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-10-20 21:59:36
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-26 13:55:19
+ * @LastEditTime: 2023-07-23 01:42:42
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/upload.vue
 -->
 <template>
@@ -37,6 +37,7 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import { ElMessage } from "element-plus";
+import { post } from "@/utils/api/requests";
 
 export default defineComponent({
   name: "upload",
@@ -65,6 +66,8 @@ export default defineComponent({
     return {
       Upload,
       fileList: [],
+
+      timeCheckToRestore: null,
     };
   },
   mounted() {
@@ -72,8 +75,13 @@ export default defineComponent({
   },
 
   methods: {
-    success(e) {
+    async success(e) {
       ElMessage.success("上传成功");
+      if (this.timeCheckToRestore) clearTimeout(this.timeCheckToRestore);
+      this.timeCheckToRestore = setTimeout(async () => {
+        let res = await post("/resetRetImageStorage", {});
+        console.log(res, "重载请求发送成功");
+      }, 1500);
     },
 
     handleChange(e) {
