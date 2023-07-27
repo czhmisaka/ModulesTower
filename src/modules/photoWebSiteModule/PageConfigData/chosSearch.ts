@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-27 20:39:18
+ * @LastEditTime: 2023-07-27 20:43:15
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
