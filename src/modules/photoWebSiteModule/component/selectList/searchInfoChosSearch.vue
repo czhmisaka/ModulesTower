@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-12 23:09:15
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-22 01:20:25
+ * @LastEditTime: 2023-07-27 20:42:24
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfoChosSearch.vue
 -->
 <template>
@@ -54,7 +54,6 @@
       </el-button>
       <el-upload
         class="upload-demo"
-        limit="1"
         :action="`/api/upload/searchImage?token=${token}`"
         drag
         :data="{}"
@@ -63,6 +62,7 @@
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">以图搜图</div>
+        <template #file></template>
       </el-upload>
     </div>
   </cardBg>
@@ -140,28 +140,23 @@ export default defineComponent({
           this.preGridInfo?.position || this.detail.gridInfo.default.position;
         if (isTrue) {
           this.preGridInfo = this.detail.gridInfo.default;
-          console.log(this.detail);
           size = {
             width: size.width,
             height: size.height + 6,
           };
-          // position = {
-          //   x: position.x - 1,
-          //   y: position.y,
-          // };
           hightLightComponent(this, [this.detail.label]);
         } else {
           hightLightComponent(this, []);
         }
-        if (isTrue || true) {
-          let posData = {};
-          posData[this.detail.label] = position;
-          changeCardPosition(this, posData);
-          let sizeData = {};
-          sizeData[this.detail.label] = size;
-          changeCardSize(this, sizeData);
-          this.isOpen = isTrue;
-        }
+        // if (isTrue) {
+        let posData = {};
+        posData[this.detail.label] = position;
+        changeCardPosition(this, posData);
+        let sizeData = {};
+        sizeData[this.detail.label] = size;
+        changeCardSize(this, sizeData);
+        this.isOpen = isTrue;
+        // }
       }
     },
 

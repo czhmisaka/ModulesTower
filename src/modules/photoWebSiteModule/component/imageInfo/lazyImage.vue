@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-22 01:35:47
+ * @LastEditTime: 2023-07-27 19:53:08
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/lazyImage.vue
 -->
 
@@ -78,11 +78,10 @@ export default defineComponent({
         if (rate > 0.3) a = 1;
         if (rate > 0.4) a = 0;
         let url = "";
-        // try {
-        url = props.item[sizeMap[a]]?.url;
-        if (!url) url = `/imageserver/${props.item["path"].replace("./", "/")}`;
-        // } catch (e) {}
-        console.log("fuck", props.item, url);
+        try {
+          url = props.item[sizeMap[a]]?.url;
+          if (!url) url = `/imageserver/${props.item["path"].replace("./", "/")}`;
+        } catch (e) {}
         return url;
       },
       set: () => {},
@@ -107,10 +106,10 @@ export default defineComponent({
               : "",
           },
           onmouseover: (e: any) => {
-            console.log(e, "onmouseover");
+            // console.log(e, "onmouseover");
           },
           onmouseleave: (e: any) => {
-            console.log(e, "onmouseleave");
+            // console.log(e, "onmouseleave");
           },
           class: "transform",
         },

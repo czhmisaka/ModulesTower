@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-22 01:24:31
+ * @LastEditTime: 2023-07-27 20:39:18
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/chosSearch.ts
  */
 
@@ -233,6 +233,7 @@ export class Desktop {
 
 export const chosSearch = async () => {
   const chosSearchFunc = async (that, query, data = []) => {
+    console.log(JSON.stringify(showKeyArr), "asdasd", data);
     if (showKeyArr.length > 0) {
       let obj = {};
       for (let x in showKeyArr) obj[showKeyArr[x]] = false;
@@ -265,36 +266,38 @@ export const chosSearch = async () => {
 
     let desktop = new Desktop(24, 16);
     desktop.initByGridList(that.gridList);
-    desktop.randomSet(
-      list.map((x) => {
-        return { w: x.width, h: x.height, data: x };
-      }),
-      (wh, xy, data, i) => {
-        addGridCell(
-          that,
-          elementKey(
-            {
-              fit: "cover",
-              noPreview: "true",
-              item: data,
-            },
-            wh,
-            xy,
-            i,
-            desktop
-          )
-        );
-      }
-    );
-    let num1 = 0;
     setTimeout(() => {
-      let interval = setInterval(() => {
-        if (num1 > showKeyArr.length) clearInterval(interval);
-        let data = {};
-        data[showKeyArr[num1++]] = true;
-        changeVisible(that, data);
-      }, 40);
-    }, 300);
+      desktop.randomSet(
+        list.map((x) => {
+          return { w: x.width, h: x.height, data: x };
+        }),
+        (wh, xy, data, i) => {
+          addGridCell(
+            that,
+            elementKey(
+              {
+                fit: "cover",
+                noPreview: "true",
+                item: data,
+              },
+              wh,
+              xy,
+              i,
+              desktop
+            )
+          );
+        }
+      );
+      let num1 = 0;
+      setTimeout(() => {
+        let interval = setInterval(() => {
+          if (num1 > showKeyArr.length) clearInterval(interval);
+          let data = {};
+          data[showKeyArr[num1++]] = true;
+          changeVisible(that, data);
+        }, 40);
+      }, 500);
+    }, 500);
   };
   return [
     gridCellMaker(

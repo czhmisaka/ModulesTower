@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-23 05:20:41
+ * @LastEditTime: 2023-07-23 21:20:42
  * @FilePath: /ConfigForDesktopPage/src/modules/Fake3dPlace/PageConfigData/fake3d.ts
  */
 import { changeCardPosition } from "@/components/basicComponents/grid/module/cardApi";
@@ -20,10 +20,11 @@ import {
   formInputType,
   stringAnyObj,
 } from "@/modules/userManage/types";
-const stone = require("@/modules/Fake3dPlace/assest/stone.png");
-const house1 = require("@/modules/Fake3dPlace/assest/house1.png");
-const house2 = require("@/modules/Fake3dPlace/assest/house2.png");
-const house3 = require("@/modules/Fake3dPlace/assest/house3.png");
+
+import stone from "@/modules/Fake3dPlace/assest/stone.png";
+import house1 from "@/modules/Fake3dPlace/assest/house1.png";
+import house2 from "@/modules/Fake3dPlace/assest/house2.png";
+import house3 from "@/modules/Fake3dPlace/assest/house3.png";
 
 let num = 0;
 const block = (transform, image = stone) =>
@@ -38,6 +39,7 @@ const block = (transform, image = stone) =>
     {
       props: {
         image: image,
+        fit: transform == "wall" ? "contain" : "cover",
         transform: transform,
         clickFunc: async (that) => {
           if (transform == "road") {
