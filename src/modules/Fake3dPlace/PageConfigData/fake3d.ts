@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-23 21:20:42
+ * @LastEditTime: 2023-07-28 10:10:39
  * @FilePath: /ConfigForDesktopPage/src/modules/Fake3dPlace/PageConfigData/fake3d.ts
  */
 import { changeCardPosition } from "@/components/basicComponents/grid/module/cardApi";
@@ -25,6 +25,8 @@ import stone from "@/modules/Fake3dPlace/assest/stone.png";
 import house1 from "@/modules/Fake3dPlace/assest/house1.png";
 import house2 from "@/modules/Fake3dPlace/assest/house2.png";
 import house3 from "@/modules/Fake3dPlace/assest/house3.png";
+import
+import { changeCard3DTransform } from "@/modules/Fake3dPlace/cardApi/changeCard3DTransform";
 
 let num = 0;
 const block = (transform, image = stone) =>
@@ -39,18 +41,10 @@ const block = (transform, image = stone) =>
     {
       props: {
         image: image,
-        fit: transform == "wall" ? "contain" : "cover",
+        fit: transform == "wall" ? "fill" : "fill",
         transform: transform,
         clickFunc: async (that) => {
           if (transform == "road") {
-            const { detail } = that;
-            console.log(detail);
-            let data = {};
-            data[detail.key] = {
-              ...detail.gridInfo.default.position,
-              x: detail.gridInfo.default.position.x + 1,
-            };
-            changeCardPosition(that, data);
           } else if (transform == "wall") {
             const getFunc = async (that, data) => {
               let { limit, offset } = data;
@@ -107,23 +101,51 @@ const block = (transform, image = stone) =>
   ).setSize(1, 1);
 
 export const Fake3dPlace = async () => {
-  let x = 24,
-    y = 16;
-  let list = [];
-  for (let i_x = 0; i_x < x; i_x++) {
-    for (let i_y = 0; i_y < y; i_y++) {
-      list.push(block("road").setPosition(i_x, i_y));
-    }
-  }
+  const road = [
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  ];
+  let roadMap = [];
+  road.map((x, iy) => {
+    return x.map((c, ix) => {
+      if (c != 0) {
+        roadMap.push(block("road", stone).setPosition(ix, iy));
+      } else {
+        return false;
+      }
+    });
+  });
+
+  const wall = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ];
+  let wallMap = [];
+  wall.map((x, iy) => {
+    return x.map((c, ix) => {
+      if (c != 0) {
+        wallMap.push(block("wall", house3).setPosition(ix, iy).setSize(1, 1.5));
+      } else {
+        return false;
+      }
+    });
+  });
+  let is3d = false;
   return [
-    ...list,
-    ...[1, 2, 3, 4, 5, 6, 7, 8, 10].map((x) => {
-      return block("wall", house2).setPosition(x, 3);
-    }),
-    ...[3, 4, 5, 6, 7, 8, 10].map((x) => {
-      return block("wall", house3).setPosition(x, 5);
-    }),
-    block("wall", house1).setPosition(10, 7).setSize(2, 2),
+    ...roadMap,
+    ...wallMap,
     gridCellMaker(
       "editable",
       "编辑",
@@ -136,7 +158,28 @@ export const Fake3dPlace = async () => {
         isSettingTool: true,
       }
     )
-      .setPosition(5, 5)
+      .setPosition(5, 0)
+      .setSize(1, 1),
+    gridCellMaker(
+      "showElcard1",
+      "显示elcard1",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "icon",
+      },
+      {
+        props: {
+          name: "View",
+          onClickFunc: (content: any) => {
+            const { context } = content;
+            is3d = !is3d;
+            changeCard3DTransform(context, is3d);
+          },
+        },
+      }
+    )
+      .setPosition(2, 4)
       .setSize(1, 1),
   ];
 };

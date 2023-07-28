@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-23 05:24:46
+ * @LastEditTime: 2023-07-27 22:15:03
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -10,8 +10,9 @@
     :ref="'screenId_' + idRandom"
     :id="'screenId_' + idRandom"
     :style="{
+      transition: 'transform 0.3s',
       overflow: cusStyle.wholeScreen ? '' : '',
-      transform: cusStyle.testProps ? 'rotateX(60deg) rotateZ(-30deg) scale(1.6) ' : '',
+      transform: cusStyle.testProps ? 'rotateX(60deg) rotateZ(-30deg) scale(1.3) ' : '',
       ...cusStyleProps,
     }"
     class="baseGrid"
@@ -149,7 +150,7 @@ export default defineComponent({
         return {
           wholeScreen: false,
           maxRows: 12,
-          margin: 10,
+          margin: 0,
         } as {
           // 全屏幕展示
           wholeScreen: false;
@@ -222,7 +223,7 @@ export default defineComponent({
 
       // 基础数据存放
       baseData: {
-        margin: 12,
+        margin: 0,
         editable: false,
         wholeScreen: false,
         _componentDetail: {},
@@ -439,7 +440,7 @@ export default defineComponent({
         unit: "vw",
         blockSize: 0, // px单位的 单个grid单元大小
         colSize: 0,
-        margin: this.cusStyle?.margin || 12,
+        margin: this.cusStyle?.margin || 0,
       };
       if (this.cusStyle.wholeScreen == true) {
         screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));

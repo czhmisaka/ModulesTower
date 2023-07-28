@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-23 21:21:48
+ * @LastEditTime: 2023-07-27 22:16:17
  * @FilePath: /ConfigForDesktopPage/src/modules/Fake3dPlace/PageConfigData/index.ts
  */
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -21,7 +21,7 @@ let Page = {
       wholeScreen: true,
       showLink: false,
       maxRows: 8,
-      margin: 0.1,
+      margin: 0,
       Fullscreen: true,
     },
   },
