@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-05-28 22:29:58
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-07-29 01:45:39
+ * @FilePath: /ConfigForDesktopPage/src/layout/hooks/useLayout.ts
+ */
 import { computed } from "vue";
 import { routerArrays } from "../types";
 import { useGlobal } from "@pureadmin/utils";
@@ -21,7 +27,7 @@ export function useLayout() {
         theme: $config?.Theme ?? "default",
         darkMode: $config?.DarkMode ?? false,
         sidebarStatus: $config?.SidebarStatus ?? true,
-        epThemeColor: $config?.EpThemeColor ?? "#409EFF"
+        epThemeColor: $config?.EpThemeColor ?? "#409EFF",
       };
     }
     /** 灰色模式、色弱模式、隐藏标签页 */
@@ -29,10 +35,10 @@ export function useLayout() {
       $storage.configure = {
         grey: $config?.Grey ?? false,
         weak: $config?.Weak ?? false,
-        hideTabs: $config?.HideTabs ?? false,
+        hideTabs: $config?.HideTabs ?? true,
         showLogo: $config?.ShowLogo ?? true,
         showModel: $config?.ShowModel ?? "smart",
-        multiTagsCache: $config?.MultiTagsCache ?? false
+        multiTagsCache: $config?.MultiTagsCache ?? false,
       };
     }
   };
@@ -49,6 +55,6 @@ export function useLayout() {
   return {
     layout,
     layoutTheme,
-    initStorage
+    initStorage,
   };
 }

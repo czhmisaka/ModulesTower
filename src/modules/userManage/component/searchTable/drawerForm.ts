@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-18 16:10:38
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/drawerForm.ts
+ * @LastEditTime: 2023-07-29 01:40:04
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
 export const OpenDrawerBtn = () => {};
@@ -181,8 +181,9 @@ export const closeDrawerForm = (content: { [key: string]: any }) => {
  * @param {*} res
  */
 export const repBackMessageShow = (that, res) => {
-  if (res["message"] == "成功") {
-    that.$message.success(res["message"]);
+  if (res["message"] == "成功" || res["stat"] == "ok") {
+    that.$message.success(res["message"] || "操作成功");
+    console.log(that, "stat");
     setTimeout(() => {
       that.close ? that.close() : refreshDesktop(that);
     }, 500);

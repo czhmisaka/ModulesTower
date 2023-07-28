@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-28 10:47:25
+ * @LastEditTime: 2023-07-29 00:51:50
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/tagManage.ts
  */
 import {
@@ -30,6 +30,7 @@ import {
   gridCellMaker,
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
+import { ElMessage } from "element-plus";
 
 export const tagManage = async () => {
   const tagsStorage = new SearchCellStorage([
@@ -118,7 +119,6 @@ export const tagManage = async () => {
     icon: "Delete",
     elType: "danger",
     function: async (that, data) => {
-      let user = useUserStoreHook();
       if (await dobuleCheckBtnMaker("删除标签", data.name).catch(() => false))
         repBackMessageShow(
           that,
@@ -140,6 +140,35 @@ export const tagManage = async () => {
       })
     )
   );
+
+  const 批量删除标签 = btnMaker("批量删除", btnActionTemplate.Function, {
+    icon: "Delete",
+    elType: "danger",
+    isShow: (data) => data["_selectedList"] && data._selectedList.length > 0,
+    function: async (that, data) => {
+      const { selectedList } = that;
+      if (!(selectedList && selectedList.length > 0))
+        ElMessage.error("请选择标签");
+      if (
+        await dobuleCheckBtnMaker(
+          "批量删除",
+          selectedList.map((x) => x.name).join(",")
+        ).catch(() => false)
+      ) {
+        let res = {};
+        for (let x in selectedList) {
+          const { id } = selectedList[x];
+          res = await piwigoMethod({
+            method: "pwg.tags.delete",
+            tag_id: id,
+            pwg_token: (await useUserStoreHook().getOptions())["pwg_token"],
+          });
+        }
+        repBackMessageShow(that, res);
+      }
+    },
+  });
+
   return [
     gridCellMaker(
       "searchTable",
@@ -157,8 +186,8 @@ export const tagManage = async () => {
             let res = await piwigoMethod({ method: "pwg.tags.getList" });
             return res && res.result ? res.result.tags : [];
           },
-          btnList: [添加标签],
-          autoSearch: false,
+          btnList: [添加标签, 批量删除标签],
+          autoSearch: true,
         },
         isSettingTool: false,
       }

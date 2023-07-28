@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2023-04-08 19:48:57
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
+ * @LastEditTime: 2023-07-29 00:54:05
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
   <cardBg
@@ -29,6 +29,7 @@
       :loading="isLoading"
       @search="search"
       @refresh="refresh"
+      :canSelect="canSelect"
       :style="{
         height: TableHeight + 'px',
       }"
@@ -160,6 +161,7 @@ export default defineComponent({
     "defaultQuery",
     "baseData",
     "sizeUnit",
+    "canSelect",
     "searchFunc",
     "showItemTemplate",
     "searchItemTemplate",

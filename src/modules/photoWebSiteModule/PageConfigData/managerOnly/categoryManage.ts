@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-28 02:39:13
+ * @LastEditTime: 2023-07-29 00:54:28
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/categoryManage.ts
  */
 import {
@@ -198,6 +198,7 @@ export const categoryManage = async () => {
           },
           btnList: [新增相册],
           autoSearch: true,
+          canSelect: false,
         },
         isSettingTool: false,
       }

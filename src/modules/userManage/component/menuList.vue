@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-11 17:49:03
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuList.vue
+ * @LastEditTime: 2023-07-29 02:15:08
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
 -->
 <template>
   <cardBg
@@ -382,8 +382,5 @@ export default defineComponent({
     white-space: nowrap;
     text-align: left;
   }
-}
-::v-deep .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
-  background-color: #99ccff;
 }
 </style>

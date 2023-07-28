@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-28 10:10:39
+ * @LastEditTime: 2023-07-28 22:14:23
  * @FilePath: /ConfigForDesktopPage/src/modules/Fake3dPlace/PageConfigData/fake3d.ts
  */
 import { changeCardPosition } from "@/components/basicComponents/grid/module/cardApi";
@@ -25,7 +25,6 @@ import stone from "@/modules/Fake3dPlace/assest/stone.png";
 import house1 from "@/modules/Fake3dPlace/assest/house1.png";
 import house2 from "@/modules/Fake3dPlace/assest/house2.png";
 import house3 from "@/modules/Fake3dPlace/assest/house3.png";
-import
 import { changeCard3DTransform } from "@/modules/Fake3dPlace/cardApi/changeCard3DTransform";
 
 let num = 0;

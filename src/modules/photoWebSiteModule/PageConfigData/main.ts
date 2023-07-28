@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-23 02:57:17
+ * @LastEditTime: 2023-07-29 02:09:32
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -430,6 +430,9 @@ export const mainDesktop = async () => {
                 watchKey: ["category", "query", "collection"],
                 getFunc: getFunc,
               },
+            });
+            setData(context, {
+              query: {},
             });
           },
         },

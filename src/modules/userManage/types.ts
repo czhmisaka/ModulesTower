@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-18 23:06:11
+ * @LastEditTime: 2023-07-29 01:14:31
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/types.ts
  */
 
@@ -233,6 +233,7 @@ export enum formInputType {
   selects = "selects",
   number = "number",
   inputList = "inputList",
+  password = "password",
   input = "input",
   areaCascader = "areaCascader",
   datePicker = "datePicker",

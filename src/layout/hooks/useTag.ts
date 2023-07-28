@@ -39,6 +39,7 @@ export function useTags() {
       "smart"
   );
   /** 是否隐藏标签页，默认显示 */
+  // storageLocal.l;
   const showTags =
     ref(
       storageLocal.getItem<StorageConfigs>("responsive-configure")?.hideTabs

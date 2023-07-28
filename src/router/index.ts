@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-21 10:44:33
+ * @LastEditTime: 2023-07-29 00:08:18
  * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
@@ -167,6 +167,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
               });
             }
           }
+          console.log(router);
           router.push(to.fullPath);
         });
       next();

@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-06 08:57:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-18 23:06:37
+ * @LastEditTime: 2023-07-29 01:14:59
  */
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import {
@@ -75,6 +75,18 @@ inputElement[formInputType.input] = {
     };
   },
 };
+
+inputElement[formInputType.password] = {
+  properties: (that, cell) => {
+    return {
+      type: "string",
+      "ui:options": {
+        "placeholder": "请输入",
+        "showPassword": true
+      }
+    };
+  },
+}
 
 inputElement[formInputType.mobile] = {
   properties: (that, cell) => {

@@ -1,3 +1,9 @@
+/*
+ * @Date: 2023-05-28 22:29:58
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-07-29 01:45:15
+ * @FilePath: /ConfigForDesktopPage/src/utils/responsive.ts
+ */
 // 响应式storage
 import { App } from "vue";
 import Storage from "responsive-storage";
@@ -14,21 +20,21 @@ export const injectResponsiveStorage = (app: App, config: ServerConfigs) => {
         theme: config.Theme ?? "default",
         darkMode: config.DarkMode ?? false,
         sidebarStatus: config.SidebarStatus ?? true,
-        epThemeColor: config.EpThemeColor ?? "#409EFF"
+        epThemeColor: config.EpThemeColor ?? "#409EFF",
       },
       configure: Storage.getData("configure", nameSpace) ?? {
         grey: config.Grey ?? false,
         weak: config.Weak ?? false,
-        hideTabs: config.HideTabs ?? false,
+        hideTabs: config.HideTabs ?? true,
         showLogo: config.ShowLogo ?? true,
         showModel: config.ShowModel ?? "smart",
-        multiTagsCache: config.MultiTagsCache ?? false
-      }
+        multiTagsCache: config.MultiTagsCache ?? false,
+      },
     },
     config.MultiTagsCache
       ? {
           // 默认显示首页tag
-          tags: Storage.getData("tags", nameSpace) ?? routerArrays
+          tags: Storage.getData("tags", nameSpace) ?? routerArrays,
         }
       : {}
   );

@@ -294,7 +294,7 @@ nextTick(() => {
       </li>
     </ul>
 
-    <el-divider>界面显示</el-divider>
+    <!-- <el-divider>界面显示</el-divider>
     <ul class="setting">
       <li>
         <span class="dark:text-white">灰色模式</span>
@@ -361,7 +361,7 @@ nextTick(() => {
           <el-radio label="smart">灵动</el-radio>
         </el-radio-group>
       </li>
-    </ul>
+    </ul> -->
 
     <el-divider />
     <el-button type="danger" style="width: 90%; margin: 24px 15px" @click="onReset">

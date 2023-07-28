@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-21 10:28:01
+ * @LastEditTime: 2023-07-29 00:42:31
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -12,10 +12,7 @@
       !autoSearch
     "
   >
-    <cardBg
-      ref="formBox"
-      class="formBox"
-      :cus-style="{
+    <!-- :cus-style="{
         padding: '0px',
         height: 'auto',
         paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '6px' : '0px',
@@ -24,7 +21,15 @@
         filter: 'none',
         'box-shadow': 'none',
         display: 'inline-block',
+      }" -->
+    <cardBg
+      ref="formBox"
+      :cus-style="{
+        padding: '6px',
+        paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '6px' : '0px',
+        'border-radius': '6px',
       }"
+      class="formBox"
     >
       <VueForm
         v-model="formData"

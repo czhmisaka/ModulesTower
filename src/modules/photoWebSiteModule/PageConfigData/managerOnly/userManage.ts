@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-16 11:06:08
+ * @LastEditTime: 2023-07-29 02:03:28
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/userManage.ts
  */
 import {
@@ -16,6 +16,7 @@ import {
 } from "@/modules/userManage/types";
 import {
   actionCell,
+  staticSelectCell,
   tableCellTemplateMaker,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import { searchCell } from "@/modules/userManage/component/searchTable/searchTable";
@@ -158,7 +159,52 @@ export const userManage = async () => {
                   password: data_confirm.password,
                   pwg_token: options.token,
                 });
+                repBackMessageShow(that, res);
               }
+            },
+          }),
+        ],
+      });
+    },
+  });
+
+  const 修改用户权限 = btnMaker("修改权限", btnActionTemplate.Function, {
+    icon: "Lock",
+    elType: "warning",
+    function: async (that, data) => {
+      let { result } = await piwigoMethod({
+        method: "pwg.groups.getList",
+      });
+      const { groups } = result;
+      let a = ["管理员", "普通用户"];
+      let selectData = {};
+      for (let i = 0; i < groups.length; i++) {
+        if (a.indexOf(groups[i].name) > -1)
+          selectData[groups[i].id] = groups[i].name;
+      }
+      openDrawerFormEasy(that, {
+        title: "设置用户权限",
+        queryItemTemplate: [
+          tableCellTemplateMaker(
+            "权限",
+            "group_id",
+            staticSelectCell(selectData)
+          ),
+        ],
+        data: {
+          pwg_token: (await useUserStoreHook().getOptions())["pwg_token"],
+          user_id: data.id,
+        },
+        btnList: [
+          btnMaker("确定", btnActionTemplate.Function, {
+            elType: "primary",
+            function: async (that, data) => {
+              let res = await piwigoMethod({
+                method: "pwg.users.setInfo",
+                ...data,
+                group_id: [data["group_id"]],
+              });
+              repBackMessageShow(that, res);
             },
           }),
         ],
@@ -170,7 +216,7 @@ export const userManage = async () => {
     tableCellTemplateMaker(
       "操作",
       "asd",
-      actionCell([删除用户, 修改密码], {
+      actionCell([删除用户, 修改密码, 修改用户权限], {
         fixed: "right",
         noDetail: true,
       })
@@ -206,6 +252,7 @@ export const userManage = async () => {
           },
           btnList: [创建用户],
           autoSearch: false,
+          canSelect: false,
         },
         isSettingTool: false,
       }

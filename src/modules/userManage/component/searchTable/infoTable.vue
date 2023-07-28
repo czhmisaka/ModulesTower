@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-18 09:26:36
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/infoTable.vue
+ * @LastEditTime: 2023-07-29 00:53:54
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
   <div ref="tableBox" class="tableBox">
@@ -22,6 +22,7 @@
       row-key="id"
     >
       <ElTableColumn
+        v-if="canSelect"
         :selectable="judgeSelect"
         type="selection"
         align="center"
@@ -125,7 +126,7 @@ import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../.
 import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
 export default defineComponent({
   components: { ElTable, ElTableColumn },
-  props: ["template", "loading", "dataList", "baseData"],
+  props: ["template", "loading", "dataList", "baseData", "canSelect"],
   data() {
     return {
       showType,

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-25 15:34:40
+ * @LastEditTime: 2023-07-29 01:23:44
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/index.ts
  */
 
@@ -43,6 +43,7 @@ const pageConfig = {
       wholeScreen: true,
       maxRows: 8,
       margin: 6,
+      needGroupName: "管理员",
     },
   },
 
@@ -54,6 +55,7 @@ const pageConfig = {
       wholeScreen: true,
       maxRows: 8,
       margin: 6,
+      needGroupName: "管理员",
     },
   },
 

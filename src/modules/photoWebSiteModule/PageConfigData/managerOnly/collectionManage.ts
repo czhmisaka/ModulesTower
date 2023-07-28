@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-20 23:02:52
+ * @LastEditTime: 2023-07-29 00:39:46
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/collectionManage.ts
  */
 import {
@@ -30,6 +30,7 @@ import {
   gridCellMaker,
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
+import { ElMessage } from "element-plus";
 
 const categorysStorage = new SearchCellStorage([
   tableCellTemplateMaker("收藏夹名", "name"),
@@ -110,6 +111,33 @@ categorysStorage.push(
   )
 );
 
+export const 批量删除收藏夹 = btnMaker("删除", btnActionTemplate.Function, {
+  icon: "Delete",
+  elType: "danger",
+  isShow: (data) => data["_selectedList"] && data._selectedList.length > 0,
+  function: async (that, data) => {
+    const { selectedList } = that;
+    if (!(selectedList && selectedList.length > 0))
+      ElMessage.error("请选择收藏夹");
+    if (
+      await dobuleCheckBtnMaker(
+        "批量删除",
+        selectedList.map((x) => x.name).join(",")
+      ).catch(() => false)
+    ) {
+      let res = {};
+      for (let x in selectedList) {
+        const { id } = selectedList[x];
+        res = await piwigoMethod({
+          method: "pwg.collections.delete",
+          col_id: id,
+        });
+      }
+      repBackMessageShow(that, res);
+    }
+  },
+});
+
 export const collectionManage = async () => {
   return [
     gridCellMaker(
@@ -132,7 +160,7 @@ export const collectionManage = async () => {
             let back = res.result.collections;
             return back;
           },
-          btnList: [新增收藏夹],
+          btnList: [新增收藏夹, 批量删除收藏夹],
           autoSearch: false,
         },
         isSettingTool: false,

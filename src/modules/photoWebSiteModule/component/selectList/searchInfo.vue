@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-27 20:43:27
+ * @LastEditTime: 2023-07-29 02:12:26
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -246,6 +246,7 @@ import {
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { useUserStoreHook } from "@/store/modules/user";
 import { post } from "@/utils/api/requests";
+import { getFunc } from "../../PageConfigData/main";
 
 const dateList = [] as {
   name: string;
@@ -399,7 +400,55 @@ export default defineComponent({
 
   methods: {
     clear() {
+      const context = this;
       this.query = {};
+      changeCardPosition(context, {
+        waterFall: {
+          x: 2,
+          y: 1,
+        },
+        searchInfo: { x: 2, y: 0 },
+      });
+      changeCardSize(context, {
+        InfoCard: {
+          width: 2,
+          height: 12,
+        },
+        waterFall: {
+          width: 8,
+          height: 11,
+        },
+        categoryList: {
+          width: 2,
+          height: 5,
+        },
+        collectionList: {
+          width: 2,
+          height: 5,
+        },
+        cate: {
+          width: 2,
+          height: 10,
+        },
+        searchInfo: {
+          width: 8,
+          height: 1,
+        },
+      });
+      changeVisible(context, {
+        upload: true,
+        icon: false,
+        searchInfo: true,
+      });
+      setData(context, {
+        query: {},
+      });
+      changeCardProperties(context, {
+        waterFall: {
+          watchKey: ["category", "query", "collection"],
+          getFunc: getFunc,
+        },
+      });
     },
 
     checkQuery(arr: string[]) {

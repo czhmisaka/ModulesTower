@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 20:33:47
- * @FilePath: /configforpagedemo/src/store/modules/module.ts
+ * @LastEditTime: 2023-07-29 02:02:17
+ * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
@@ -17,7 +17,7 @@ import {
   modulesCellTemplate,
 } from "@/router/util";
 import { RouteConfigsTable, routerMeta } from "../../../types";
-import { get } from "@/utils/api/requests";
+import { get, piwigoMethod } from "@/utils/api/requests";
 import { useMultiTagsStoreHook } from "./multiTags";
 import { useUserStoreHook } from "@/store/modules/user";
 
@@ -31,6 +31,7 @@ interface pageCellTemplate extends stringAnyObj {
 }
 
 interface moduleTemplate {
+  groups?: string[];
   nowModule: pageCellTemplate;
   moduleList: pageCellTemplate[];
   nowPage: pageCellTemplate;
@@ -137,7 +138,6 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
           let nameList = getFatherNameList(wholeCellList, cell.parentId);
           cell.component = backup.component;
           cell.path = "/" + nameList.join("/") + "/" + cell.name;
-
           cell.meta = {
             ...backup.meta,
             ...cell.meta,
@@ -157,6 +157,7 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
 export const moduleStore = defineStore({
   id: "module-info",
   state: (): moduleTemplate => ({
+    groups: [],
     moduleList: [],
     pageList: [],
     routerBackup: [],
@@ -175,7 +176,16 @@ export const moduleStore = defineStore({
       this.isLoading = false;
       let moduleList = [];
       this.userInfo = await useUserStoreHook().getOptions();
-
+      let res = await piwigoMethod({
+        method: "pwg.users.getList",
+        user_id: this.userInfo.id,
+      });
+      let ress = await piwigoMethod({
+        method: "pwg.groups.getList",
+      });
+      this.groups = res.result.users[0]["groups"].map((x) => {
+        return ress.result.groups.filter((c) => c.id == x)[0]["name"];
+      });
       // 注入各个模块的展示界面
       this.initRouterBackup();
 
@@ -198,7 +208,7 @@ export const moduleStore = defineStore({
 
     checkWhichIsNowModule() {},
 
-    initRouterBackup() {
+    initRouterBackup(groups = this.groups) {
       // 注入各个模块的展示界面
       const moduleList = getModuleFromView(true);
       let baseModuleRouterList = [] as RouteConfigsTable[];
@@ -206,7 +216,11 @@ export const moduleStore = defineStore({
         module.routers.map((route: RouteConfigsTable, i: number) => {
           route.children
             ? route.children.map((cell: RouteConfigsTable) => {
-                baseModuleRouterList.push(cell);
+                console.log(cell);
+                if (cell.meta && cell.meta["needGroupName"]) {
+                  if (groups.indexOf(cell.meta["needGroupName"]) > -1)
+                    baseModuleRouterList.push(cell);
+                } else baseModuleRouterList.push(cell);
               })
             : baseModuleRouterList.push(route);
         });
