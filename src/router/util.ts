@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-27 00:28:56
+ * @LastEditTime: 2023-07-30 23:13:08
  * @FilePath: /ConfigForDesktopPage/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -261,7 +261,6 @@ export const getModuleFromView = (init = false) => {
       const moduleName = getModuleName(fileName);
       moduleList.map((module: modulesCellTemplate) => {
         if (module.name == moduleName) {
-          console.log(fileName, "asd");
           module.components = requireModule(fileName).default;
         }
         return module;

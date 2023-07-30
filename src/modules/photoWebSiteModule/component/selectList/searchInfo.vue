@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 22:37:10
+ * @LastEditTime: 2023-07-30 23:35:11
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -304,76 +304,14 @@ export default defineComponent({
   watch: {
     query: {
       handler(val) {
-        let value = JSON.parse(JSON.stringify(val));
-        if (value.tags && value.tags.length == 0) delete value.tags;
-        if ("name" in value && value.name == "") delete value.name;
-        let data = {};
-        data[this.outputKey] = value;
+        if (this.amd_timeOut) clearTimeout(this.amd_timeOut);
         const that = this;
-        if (Object.keys(value).length != 0) {
-          changeCardPosition(that, {
-            waterFall: { x: 0, y: 1 },
-            searchInfo: { x: 0, y: 0 },
-          });
-          changeCardSize(that, {
-            waterFall: {
-              width: 10,
-              height: 11,
-            },
-            categoryList: {
-              width: 0,
-              height: 0,
-            },
-            collectionList: {
-              width: 0,
-              height: 0,
-            },
-            searchInfo: {
-              width: 10,
-              height: 1,
-            },
-          });
-          changeVisible(that, {
-            upload: false,
-          });
-          if (that.baseData.category)
-            category = JSON.parse(JSON.stringify(that.baseData.category));
-          data["category"] = null;
-        } else {
-          changeCardPosition(that, {
-            waterFall: { x: 2, y: 1 },
-            searchInfo: { x: 2, y: 0 },
-          });
-          changeCardSize(that, {
-            waterFall: {
-              width: 8,
-              height: 11,
-            },
-            categoryList: {
-              width: 2,
-              height: 5,
-            },
-            collectionList: {
-              width: 2,
-              height: 5,
-            },
-
-            searchInfo: {
-              width: 8,
-              height: 1,
-            },
-          });
-          changeVisible(that, {
-            upload: true,
-          });
-          if (category != null) {
-            data["category"] = category;
-            category = null;
-          }
-        }
-        setData(that, data);
+        this.amd_timeOut = setTimeout(() => {
+          that.amd(val);
+        }, 200);
       },
       deep: true,
+      immediate: true,
     },
   },
   props: ["baseData", "sizeUnit", "onClickFunc", "tagList", "outputKey", "searchByImage"],
@@ -386,6 +324,7 @@ export default defineComponent({
 
       token: "",
       canSearchByImage: false,
+      amd_timeOut: null,
     };
   },
   async mounted() {
@@ -401,6 +340,76 @@ export default defineComponent({
   },
 
   methods: {
+    amd(val) {
+      let value = JSON.parse(JSON.stringify(val));
+      if (value.tags && value.tags.length == 0) delete value.tags;
+      if ("name" in value && value.name == "") delete value.name;
+      let data = {};
+      data[this.outputKey] = value;
+      const that = this;
+      if (Object.keys(value).length != 0) {
+        changeCardPosition(that, {
+          waterFall: { x: 0, y: 1 },
+          searchInfo: { x: 0, y: 0 },
+        });
+        changeCardSize(that, {
+          waterFall: {
+            width: 10,
+            height: 11,
+          },
+          categoryList: {
+            width: 0,
+            height: 0,
+          },
+          collectionList: {
+            width: 0,
+            height: 0,
+          },
+          searchInfo: {
+            width: 10,
+            height: 1,
+          },
+        });
+        changeVisible(that, {
+          upload: false,
+        });
+        if (that.baseData.category)
+          category = JSON.parse(JSON.stringify(that.baseData.category));
+        data["category"] = null;
+      } else {
+        changeCardPosition(that, {
+          waterFall: { x: 2, y: 1 },
+          searchInfo: { x: 2, y: 0 },
+        });
+        changeCardSize(that, {
+          waterFall: {
+            width: 8,
+            height: 11,
+          },
+          categoryList: {
+            width: 2,
+            height: 5,
+          },
+          collectionList: {
+            width: 2,
+            height: 5,
+          },
+
+          searchInfo: {
+            width: 8,
+            height: 1,
+          },
+        });
+        changeVisible(that, {
+          upload: true,
+        });
+        if (category != null) {
+          data["category"] = category;
+          category = null;
+        }
+      }
+      setData(that, data);
+    },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpg";
       const isPng = file.type === "image/png";

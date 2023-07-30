@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 08:55:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 01:40:04
+ * @LastEditTime: 2023-07-30 23:15:07
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
@@ -183,7 +183,6 @@ export const closeDrawerForm = (content: { [key: string]: any }) => {
 export const repBackMessageShow = (that, res) => {
   if (res["message"] == "成功" || res["stat"] == "ok") {
     that.$message.success(res["message"] || "操作成功");
-    console.log(that, "stat");
     setTimeout(() => {
       that.close ? that.close() : refreshDesktop(that);
     }, 500);

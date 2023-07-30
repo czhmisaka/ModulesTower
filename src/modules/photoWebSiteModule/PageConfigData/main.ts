@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 22:48:40
+ * @LastEditTime: 2023-07-30 23:23:48
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -69,6 +69,27 @@ export const getFunc = async function (that, data) {
       .replace(")", "")
       .split(",")
       .map((x) => x.replace(" ", "") * 1);
+    console.log(
+      {
+        limit: limit,
+        offset: offset,
+        width_min: width_min,
+        width_max: width_max,
+        height_min: height_min,
+        height_max: height_max,
+        catrgory: catrgory?.id,
+        tags: tags,
+        name: name,
+        file_size_min: file_size_min,
+        file_size_max: file_size_max,
+        colorR: colors[0],
+        colorG: colors[1],
+        colorB: colors[2],
+        date_available_start: data?.date_available_start,
+        date_available_end: data?.date_available_end,
+      },
+      "asdads"
+    );
     let res = await post("/mainSearch", {
       limit: limit,
       offset: offset,
@@ -155,7 +176,6 @@ export const getFunc = async function (that, data) {
       },
     };
   };
-  console.log(baseData, "asd");
   if (
     JSON.stringify(baseData["category"]) !=
     JSON.stringify(that.baseData["category"])

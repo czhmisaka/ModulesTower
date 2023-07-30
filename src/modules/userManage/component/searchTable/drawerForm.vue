@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-21 11:06:14
+ * @LastEditTime: 2023-07-30 23:16:14
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -257,10 +257,11 @@ export default defineComponent({
      * @authors: CZH
      * @Date: 2022-12-02 09:27:52
      */
-    async close() {
+    async close(dontRefresh = false) {
       this.isOpen = false;
       this.formData = {};
-      this.$emit("onChange", {}, { type: [cardOnChangeType.forceRefresh] });
+      if (!dontRefresh)
+        this.$emit("onChange", {}, { type: [cardOnChangeType.forceRefresh] });
     },
 
     fuckClose() {

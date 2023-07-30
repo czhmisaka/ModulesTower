@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-28 16:01:44
+ * @LastEditTime: 2023-07-30 23:16:33
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -37,7 +37,11 @@ const 提交 = btnMaker("确定", btnActionTemplate.Function, {
       ...data,
       image_ids: data.image_ids,
     });
-    repBackMessageShow(that, res);
+    if (res["message"] == "成功" || res["stat"] == "ok") {
+      that.$message.success(res["message"] || "操作成功");
+      that.close(true);
+    }
+    // repBackMessageShow(that, res);
   },
 });
 
@@ -52,6 +56,9 @@ export const 收藏按钮 = btnMaker("收藏", btnActionTemplate.Function, {
           "收藏夹",
           "col_id",
           searchCell(formInputType.searchList, {
+            propertiesOption: {
+              type: "string",
+            },
             funcInputOptionsLoader: async (that) => {
               let attr = {
                 multiple: false,

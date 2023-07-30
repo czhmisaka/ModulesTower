@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-12 23:09:15
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-27 20:42:24
+ * @LastEditTime: 2023-07-30 23:12:55
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfoChosSearch.vue
 -->
 <template>
@@ -166,8 +166,6 @@ export default defineComponent({
     },
 
     searchByImage(data) {
-      // console.log(data, "asd");
-      // console.log(data.data.list);
       if (this.updateSearch) {
         this.updateSearch(this, data.data.list);
       }

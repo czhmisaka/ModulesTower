@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-25 20:48:46
+ * @LastEditTime: 2023-07-30 23:12:47
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -247,7 +247,6 @@ export default defineComponent({
         const info = res.data.info[0];
         this.colorList = color;
         this.tagList = tagList;
-        console.log(this.tagList, "asd");
         this.imageInfo = {
           尺寸: `${info.width}px × ${info.height}px`,
           文件大小: `${info.filesize} Kb`,
