@@ -231,7 +231,7 @@ nextTick(() => {
 
     <el-divider>导航栏模式</el-divider>
     <ul class="pure-theme">
-      <el-tooltip class="item" content="左侧模式" placement="bottom">
+      <!-- <el-tooltip class="item" content="左侧模式" placement="bottom">
         <li
           :class="layoutTheme.layout === 'vertical' ? $style.isSelect : ''"
           ref="verticalRef"
@@ -240,7 +240,7 @@ nextTick(() => {
           <div />
           <div />
         </li>
-      </el-tooltip>
+      </el-tooltip> -->
 
       <el-tooltip
         v-if="device !== 'mobile'"
@@ -258,7 +258,7 @@ nextTick(() => {
         </li>
       </el-tooltip>
 
-      <el-tooltip
+      <!-- <el-tooltip
         v-if="device !== 'mobile'"
         class="item"
         content="混合模式"
@@ -272,7 +272,7 @@ nextTick(() => {
           <div />
           <div />
         </li>
-      </el-tooltip>
+      </el-tooltip> -->
     </ul>
 
     <el-divider>主题色</el-divider>

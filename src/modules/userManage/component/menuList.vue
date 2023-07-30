@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 22:59:26
+ * @LastEditTime: 2023-07-31 00:03:27
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -11,7 +11,7 @@
     }"
   >
     <div :class="`menuBox box_${random}`">
-      <div class="searchBar">
+      <div class="searchBar" v-if="searchBtn">
         <el-input
           :style="{
             width: '100%',
@@ -20,6 +20,7 @@
           v-model="selectedKey"
           :size="size"
           clearable
+          v-if="false"
         ></el-input>
         <el-button
           v-if="selectedKey && selectedKey.length > 0"
@@ -44,7 +45,13 @@
       </div>
 
       <!-- 这里展示的是搜索结果 -->
-      <div class="content" v-if="searchResult.length != 0 && selectedKey">
+      <div
+        class="content"
+        :style="{
+          'max-height': searchBtn ? 'calc(100% - 40px)' : '100%',
+        }"
+        v-if="searchResult.length != 0 && selectedKey"
+      >
         <el-tree
           :data="searchResult"
           :props="defaultProps"
@@ -69,7 +76,13 @@
       </div>
 
       <!-- 这里展示的是默认树形结构 -->
-      <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
+      <div
+        class="content"
+        :style="{
+          'max-height': searchBtn ? 'calc(100% - 40px)' : '100%',
+        }"
+        v-if="searchResult.length == 0 && selectedKey == ''"
+      >
         <el-tree
           :data="treeData"
           :props="defaultProps"
@@ -346,7 +359,6 @@ export default defineComponent({
   .content {
     width: 100%;
     height: auto;
-    max-height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
     .searchItem {

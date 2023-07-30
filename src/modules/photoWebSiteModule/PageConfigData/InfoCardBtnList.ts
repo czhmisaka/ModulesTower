@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 23:16:33
+ * @LastEditTime: 2023-07-31 01:32:21
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -27,6 +27,71 @@ import {
   changeCardProperties,
   changeVisible,
 } from "@/components/basicComponents/grid/module/cardApi";
+
+//批量
+function getFile(url) {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "get",
+      url,
+      responseType: "blob",
+    })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error.toString());
+      });
+  });
+}
+function download(currentChooseImgList, that: any) {
+  if (currentChooseImgList.length === 0) {
+    this.$message.warning("请先右键勾选下载数据!");
+    return;
+  }
+  //多张图片下载成压缩包
+  const zip = new JSZip();
+  const promises = [];
+  const cache = {};
+  let num = 0;
+  for (const item of currentChooseImgList) {
+    const promise = getFile(item.pictureUrl).then((data) => {
+      // 下载文件, 并存成ArrayBuffer对象
+      // const file_name = item.realName // 获取文件名
+      zip.file(item.pictureName, data, { binary: true }); // 逐个添加文件，需要加后缀".png"
+      cache[item.pictureName] = data;
+      num++;
+      changeCardProperties(that, {
+        loadingProgress: {
+          percentage: Math.round((num / currentChooseImgList.length) * 99),
+        },
+      });
+    });
+    promises.push(promise);
+  }
+  changeVisible(that, { loadingProgress: true });
+  changeCardProperties(that, { loadingProgress: { percentage: 0 } });
+  Promise.all(promises)
+    .then(() => {
+      zip.generateAsync({ type: "blob" }).then((content) => {
+        // 生成二进制流
+        FileSaver.saveAs(content, "图片"); // 利用file-saver保存文件  自定义文件名
+        changeCardProperties(that, {
+          loadingProgress: { percentage: 100 },
+        });
+        ElMessage.success("图片下载完成");
+        changeVisible(that, { loadingProgress: false });
+        setTimeout(() => {
+          changeCardProperties(that, {
+            loadingProgress: { percentage: 0 },
+          });
+        }, 299);
+      });
+    })
+    .catch((res) => {
+      ElMessage.warning("文件下载失败!");
+    });
+}
 
 const 提交 = btnMaker("确定", btnActionTemplate.Function, {
   elType: "primary",
@@ -202,76 +267,29 @@ export const 添加到处理区 = btnMaker(
   }
 );
 
-export const InfoCardBtnList = [收藏按钮, 添加标签按钮, 添加到处理区];
+export const 下载单张 = btnMaker("下载", btnActionTemplate.Function, {
+  icon: "Download",
+  elType: "info",
+  function: async (that, data) => {
+    console.log(data);
+    download(
+      [
+        {
+          pictureUrl: `/imageserver/` + data.path,
+          pictureName: data.file,
+        },
+      ],
+      that
+    );
+  },
+});
+
+export const InfoCardBtnList = [收藏按钮, 添加标签按钮, 添加到处理区, 下载单张];
 
 export const 批量下载 = btnMaker("打包下载", btnActionTemplate.Function, {
   icon: "Download",
   elType: "primary",
   function: async (that, data) => {
-    function download(currentChooseImgList, that: any) {
-      if (currentChooseImgList.length === 0) {
-        this.$message.warning("请先右键勾选下载数据!");
-        return;
-      }
-      //多张图片下载成压缩包
-      const zip = new JSZip();
-      const promises = [];
-      const cache = {};
-      let num = 0;
-      for (const item of currentChooseImgList) {
-        const promise = getFile(item.pictureUrl).then((data) => {
-          // 下载文件, 并存成ArrayBuffer对象
-          // const file_name = item.realName // 获取文件名
-          zip.file(item.pictureName, data, { binary: true }); // 逐个添加文件，需要加后缀".png"
-          cache[item.pictureName] = data;
-          num++;
-          changeCardProperties(that, {
-            loadingProgress: {
-              percentage: Math.round((num / currentChooseImgList.length) * 99),
-            },
-          });
-        });
-        promises.push(promise);
-      }
-      changeVisible(that, { loadingProgress: true });
-      changeCardProperties(that, { loadingProgress: { percentage: 0 } });
-      Promise.all(promises)
-        .then(() => {
-          zip.generateAsync({ type: "blob" }).then((content) => {
-            // 生成二进制流
-            FileSaver.saveAs(content, "图片"); // 利用file-saver保存文件  自定义文件名
-            changeCardProperties(that, {
-              loadingProgress: { percentage: 100 },
-            });
-            ElMessage.success("图片下载完成");
-            changeVisible(that, { loadingProgress: false });
-            setTimeout(() => {
-              changeCardProperties(that, {
-                loadingProgress: { percentage: 0 },
-              });
-            }, 299);
-          });
-        })
-        .catch((res) => {
-          ElMessage.warning("文件下载失败!");
-        });
-    }
-    //批量
-    function getFile(url) {
-      return new Promise((resolve, reject) => {
-        axios({
-          method: "get",
-          url,
-          responseType: "blob",
-        })
-          .then((response) => {
-            resolve(response.data);
-          })
-          .catch((error) => {
-            reject(error.toString());
-          });
-      });
-    }
     let needDownload = [];
     if (!data.length) {
       needDownload = JSON.parse(JSON.stringify(useCartHook().image_id));

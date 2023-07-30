@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 23:12:47
+ * @LastEditTime: 2023-07-31 01:27:05
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -71,26 +71,41 @@
           ></div>
         </div>
       </el-card>
-      <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="评分">
+      <!-- <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="评分">
         <el-rate
           v-model="imageInfo.rate"
           :colors="['#F7BA2A', '#FF9900', '#ff0000']"
           @change="rate"
         />
-      </el-card>
+      </el-card> -->
       <el-card
         title="基本信息"
         :style="elCardInfo.style"
         :body-style="elCardInfo.bodyStyle"
       >
-        <el-descriptions :column="1" size="small" v-if="baseData['image']" border>
+        <el-descriptions
+          :column="1"
+          size="small"
+          v-if="baseData['image']"
+          border
+          :style="{
+            textWrap: 'nowrap',
+          }"
+        >
           <el-descriptions-item
             v-for="item in Object.keys(imageInfo)"
             :align="'left'"
             :label="item"
             label-align="left"
           >
-            {{ imageInfo[item] }}
+            <el-popover
+              placement="top-start"
+              :width="400"
+              trigger="hover"
+              :content="imageInfo[item]"
+            >
+              <template #reference>{{ imageInfo[item] }} </template>
+            </el-popover>
           </el-descriptions-item>
         </el-descriptions>
       </el-card>
@@ -214,7 +229,7 @@ export default defineComponent({
         格式尺寸: "",
         创建日期尺寸: "",
         修改日期尺寸: "",
-        rate: 0,
+        // rate: 0,
       },
       categoryInfo: [] as any[],
       elCardInfo: {
@@ -248,19 +263,20 @@ export default defineComponent({
         this.colorList = color;
         this.tagList = tagList;
         this.imageInfo = {
+          文件名称: info.file,
           尺寸: `${info.width}px × ${info.height}px`,
           文件大小: `${info.filesize} Kb`,
           格式: info.file.split(".")[1],
           创建日期: new Date(info.date_available.replace("T", " ")).toLocaleString(),
           修改日期: new Date(info.lastmodified.replace("T", " ")).toLocaleString(),
-          rate: 0,
+          // rate: 0,
         };
         let resInfo = await piwigoPost("/piwigo/ws.php?format=json", {
           method: "pwg.images.getInfo",
           image_id: this.baseData.image.id,
         });
         this.data = resInfo.result;
-        this.imageInfo.rate = resInfo.result.rates.count;
+        // this.imageInfo.rate = resInfo.result.rates.count;
         this.categoryInfo = resInfo.result.categories;
       } else if (Array.isArray(image)) {
       }
