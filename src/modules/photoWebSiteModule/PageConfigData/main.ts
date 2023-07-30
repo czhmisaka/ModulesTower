@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 02:09:32
+ * @LastEditTime: 2023-07-30 22:48:40
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -45,6 +45,7 @@ import { 新增收藏夹, 删除收藏夹 } from "./managerOnly/collectionManage
 let baseData = {} as { [key: string]: any };
 let lastFunc = -1;
 let dataBe = {};
+let fucknum = 0;
 
 // 获取图片列表
 export const getFunc = async function (that, data) {
@@ -154,7 +155,7 @@ export const getFunc = async function (that, data) {
       },
     };
   };
-
+  console.log(baseData, "asd");
   if (
     JSON.stringify(baseData["category"]) !=
     JSON.stringify(that.baseData["category"])
@@ -318,22 +319,28 @@ export const mainDesktop = async () => {
               upload: false,
               icon: true,
             });
+            setData(that, { fuck: fucknum++ });
+            let searchImageNum = 0;
             changeCardProperties(that, {
               waterFall: {
                 watchKey: ["category", "query", "collection", "fuck"],
                 getFunc: async () => {
-                  return list.map((x) => {
-                    let path = x.path.replace("./", "/");
-                    return {
-                      ...x,
-                      url:
-                        `/imageserver/i.php?` + path.replace(".", "-sm.") + "",
-                    };
-                  });
+                  searchImageNum++;
+                  return searchImageNum == 1
+                    ? list.map((x) => {
+                        let path = x.path.replace("./", "/");
+                        return {
+                          ...x,
+                          url:
+                            `/imageserver/i.php?` +
+                            path.replace(".", "-sm.") +
+                            "",
+                        };
+                      })
+                    : [];
                 },
               },
             });
-            setData(that, { fuck: true });
           },
         },
       }

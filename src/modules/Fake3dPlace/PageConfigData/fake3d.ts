@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-12 23:10:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-28 22:14:23
+ * @LastEditTime: 2023-07-29 11:15:03
  * @FilePath: /ConfigForDesktopPage/src/modules/Fake3dPlace/PageConfigData/fake3d.ts
  */
 import { changeCardPosition } from "@/components/basicComponents/grid/module/cardApi";
@@ -135,7 +135,7 @@ export const Fake3dPlace = async () => {
   wall.map((x, iy) => {
     return x.map((c, ix) => {
       if (c != 0) {
-        wallMap.push(block("wall", house3).setPosition(ix, iy).setSize(1, 1.5));
+        wallMap.push(block("wall", house3).setPosition(ix, iy).setSize(1, 1.3));
       } else {
         return false;
       }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 00:51:50
+ * @LastEditTime: 2023-07-30 14:49:48
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/tagManage.ts
  */
 import {
@@ -62,7 +62,7 @@ export const tagManage = async () => {
       };
       let drawerProps = {
         gridDesktop: true,
-        size: 80,
+        size: 60,
         gridDesktopConfig: {
           desktopData: async () => [
             gridCellMaker(

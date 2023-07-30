@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-28 03:24:26
+ * @LastEditTime: 2023-07-30 22:42:52
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -110,6 +110,7 @@ function fuckk(thatt) {
   if (that.nowShowType != showType.waterFall) return;
 
   const elw = document.getElementById("waterfall_" + that.MathRandom);
+  if (!elw) return;
   const offsetForScrollBar = 0;
   const rowIndexNumber = Math.floor(
     (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
@@ -195,21 +196,24 @@ export default defineComponent({
     isInit = false;
   },
   async mounted() {
-    this.open = true;
-    if (this.imageList && this.imageList.length > 0) {
-    }
-    this.$emit("ready");
-    await this.$nextTick();
-    this.init();
-    window.addEventListener("keydown", this.keyDown);
-    if (this.startSearch) {
-      fuck = null;
-      Index = {};
-      isInit = false;
-      imageListForReSize = [];
-      this.rowList = [[]];
-      await this.getImgList(this.baseData, true);
-    }
+    const that = this;
+    setTimeout(async () => {
+      that.open = true;
+      if (that.imageList && that.imageList.length > 0) {
+      }
+      that.$emit("ready");
+      await that.$nextTick();
+      that.init();
+      window.addEventListener("keydown", that.keyDown);
+      if (that.startSearch) {
+        fuck = null;
+        Index = {};
+        isInit = false;
+        imageListForReSize = [];
+        that.rowList = [[]];
+        await that.getImgList(that.baseData, true);
+      }
+    }, 1000);
   },
   data: () => {
     return {

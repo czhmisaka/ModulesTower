@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 02:12:26
+ * @LastEditTime: 2023-07-30 22:37:10
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -53,6 +53,7 @@
             :action="`/api/upload/searchImage?token=${token}`"
             drag
             :data="{}"
+            :before-upload="beforeAvatarUpload"
             :on-success="searchByImages"
             multiple
           >
@@ -247,6 +248,7 @@ import {
 import { useUserStoreHook } from "@/store/modules/user";
 import { post } from "@/utils/api/requests";
 import { getFunc } from "../../PageConfigData/main";
+import { ElMessage } from "element-plus";
 
 const dateList = [] as {
   name: string;
@@ -399,6 +401,28 @@ export default defineComponent({
   },
 
   methods: {
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpg";
+      const isPng = file.type === "image/png";
+      const isJpeg = file.type === "image/jpeg";
+
+      //1MB=1024*1024(1MB=1024KB 1KB=1024MB)
+      const is10M = file.size / 1024 / 1024 < 10;
+
+      //限制文件上传类型
+      if (!isJPG && !isPng && !isJpeg) {
+        ElMessage.error("上传图片只能是 png,jpg,jpeg 格式!");
+        return false;
+      }
+
+      //限制文件上传大小
+      if (!is10M) {
+        ElMessage.error("上传图片大小不能超过 10MB!");
+        return false;
+      }
+
+      return true;
+    },
     clear() {
       const context = this;
       this.query = {};

@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 02:03:28
+ * @LastEditTime: 2023-07-29 19:28:21
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/userManage.ts
  */
 import {
@@ -252,7 +252,7 @@ export const userManage = async () => {
           },
           btnList: [创建用户],
           autoSearch: false,
-          canSelect: false,
+          cantSelect: true,
         },
         isSettingTool: false,
       }

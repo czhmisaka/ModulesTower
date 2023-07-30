@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 02:15:08
+ * @LastEditTime: 2023-07-30 22:54:56
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -214,20 +214,20 @@ export default defineComponent({
   async mounted() {
     await this.init();
     // 选中第一个
-    if (this.treeData && this.treeData[0] && this.treeData[0].children[0]) {
-      const node = this.treeData[0].children[0];
-      const that = this;
-      this.$nextTick(() => {
-        this.$refs.elTree.setCurrentKey(node.id);
-        this.clickItemFunc(that, node);
-      });
-    }
   },
   methods: {
+    clickOne() {
+      if (this.treeData && this.treeData[0] && this.treeData[0].children[0]) {
+        const node = this.treeData[0].children[0];
+        const that = this;
+        this.$nextTick(() => {
+          this.$refs.elTree.setCurrentKey(node.id);
+          this.clickItemFunc(that, node);
+        });
+      }
+    },
     nodeChangeOpen(node) {
       const that = this;
-      // const tree = this.$refs["elTree"];
-      // console.log(tree, "tree");
       that.expandedKey.push(node.id);
       localStorage.setItem(location.hash, JSON.stringify(that.expandedKey));
     },
@@ -251,9 +251,6 @@ export default defineComponent({
       if (this.clickItemFunc) {
         this.clickItemFunc(that, node);
       }
-      // if (that.expandedKey.indexOf(node.id)) {
-      //   that.expandedKey = that.expandedKey.filter((x) => x != node.id);
-      // } else that.expandedKey.push(node.id);
       setData(this, data);
     },
 
@@ -276,6 +273,7 @@ export default defineComponent({
         const el = document.querySelector(`.box_${that.random} .custom-tree-node`);
         // if (el && "click" in el) el["click"]();
         that.$emit("ready");
+        this.clickOne();
       }, 100);
     },
 

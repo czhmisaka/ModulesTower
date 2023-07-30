@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-27 22:16:17
+ * @LastEditTime: 2023-07-29 11:18:40
  * @FilePath: /ConfigForDesktopPage/src/modules/Fake3dPlace/PageConfigData/index.ts
  */
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -18,9 +18,9 @@ let Page = {
     gridColNum: 12,
     cusStyle: {
       testProps: false,
-      wholeScreen: true,
+      wholeScreen: false,
       showLink: false,
-      maxRows: 8,
+      maxRows: 12,
       margin: 0,
       Fullscreen: true,
     },

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 00:53:54
+ * @LastEditTime: 2023-07-30 14:31:12
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -22,7 +22,7 @@
       row-key="id"
     >
       <ElTableColumn
-        v-if="canSelect"
+        v-if="!cantSelect"
         :selectable="judgeSelect"
         type="selection"
         align="center"
@@ -126,7 +126,7 @@ import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../.
 import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
 export default defineComponent({
   components: { ElTable, ElTableColumn },
-  props: ["template", "loading", "dataList", "baseData", "canSelect"],
+  props: ["template", "loading", "dataList", "baseData", "cantSelect"],
   data() {
     return {
       showType,
