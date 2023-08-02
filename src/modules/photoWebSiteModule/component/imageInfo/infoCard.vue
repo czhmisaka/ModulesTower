@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-31 01:27:05
+ * @LastEditTime: 2023-07-31 01:45:13
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -144,6 +144,7 @@
     >
       <div v-for="item in btnList" class="floatTag" style="margin: 3px; margin-top: 2px">
         <el-button
+          v-if="item.isShow(baseData.image, item)"
           :loading="item.isLoading"
           @click="btnClick(item)"
           :type="item.elType"

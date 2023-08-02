@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-31 01:32:21
+ * @LastEditTime: 2023-07-31 01:52:36
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -270,21 +270,73 @@ export const 添加到处理区 = btnMaker(
 export const 下载单张 = btnMaker("下载", btnActionTemplate.Function, {
   icon: "Download",
   elType: "info",
+  isShow: (data) => {
+    return data && data["path"];
+  },
+  function: async (that, data) => {
+    //单张图片下载
+    function downloadIamge(imgsrc, name) {
+      //下载图片地址和图片名
+      var image = new Image();
+      // 解决跨域 Canvas 污染问题
+      image.setAttribute("crossOrigin", "anonymous");
+      image.onload = function () {
+        var canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        var context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, image.width, image.height);
+        var url = canvas.toDataURL("image/png"); //得到图片的base64编码数据
+
+        var a = document.createElement("a"); // 生成一个a元素
+        var event = new MouseEvent("click"); // 创建一个单击事件
+        a.download = name || "photo"; // 设置图片名称
+        a.href = url; // 将生成的URL设置为a.href属性
+        a.dispatchEvent(event); // 触发a的单击事件
+      };
+      image.src = imgsrc;
+    }
+    downloadIamge(`/imageserver/` + data.path, data.file);
+    // window.open(`/imageserver/` + data.path);
+    // download(
+    //   [
+    //     {
+    //       pictureUrl: `/imageserver/` + data.path,
+    //       pictureName: data.file,
+    //     },
+    //   ],
+    //   that
+    // );
+  },
+});
+
+export const 下载多张 = btnMaker("下载", btnActionTemplate.Function, {
+  icon: "Download",
+  elType: "info",
+  isShow: (data) => {
+    return data && data["length"] && data["length"] > 0;
+  },
   function: async (that, data) => {
     console.log(data);
     download(
-      [
-        {
-          pictureUrl: `/imageserver/` + data.path,
-          pictureName: data.file,
-        },
-      ],
+      data.map((x) => {
+        return {
+          pictureUrl: `/imageserver/` + x.path,
+          pictureName: x.file,
+        };
+      }),
       that
     );
   },
 });
 
-export const InfoCardBtnList = [收藏按钮, 添加标签按钮, 添加到处理区, 下载单张];
+export const InfoCardBtnList = [
+  收藏按钮,
+  添加标签按钮,
+  添加到处理区,
+  下载单张,
+  下载多张,
+];
 
 export const 批量下载 = btnMaker("打包下载", btnActionTemplate.Function, {
   icon: "Download",

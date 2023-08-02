@@ -1,12 +1,12 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-27 19:53:08
+ * @LastEditTime: 2023-08-02 23:11:53
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/lazyImage.vue
 -->
 
 <script lang="ts">
-import { defineComponent, h, ref, onMounted, computed } from "vue";
+import { defineComponent, h, ref, onMounted, computed, toRefs } from "vue";
 import { useDark } from "@pureadmin/utils";
 import { ElImage, ElLoading } from "element-plus";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
@@ -52,7 +52,7 @@ export default defineComponent({
   setup(props, context) {
     const { isDark } = useDark();
     const isLoading = ref(true);
-    const randomClass = "asd" + Math.floor(Math.random() * 100000000000000) + "_";
+    const randomClass = "asd" + Math.floor(Math.random() * 100000000000000) + "_ asdImg";
     let load = ref(null);
     const sizeMap = ["xxlarge", "large", "medium", "small", "2small"];
     const rate = computed({
@@ -87,6 +87,17 @@ export default defineComponent({
       set: () => {},
     });
 
+    // 鼠标浮动事件
+    const { detail, sizeUnit } = toRefs(props);
+    const mouseTimeoutController = ref(null);
+    const mouseover = (e: any) => {
+      console.log(e, "onmouseover");
+    };
+    const mouseleave = (e: any) => {
+      console.log(e, "onmouseout");
+    };
+    // 鼠标浮动事件结束
+
     onMounted(() => {
       context.emit("ready");
       load.value = ElLoading.service({
@@ -105,13 +116,9 @@ export default defineComponent({
               ? `rotateX(10deg) skew(327deg) translate(calc(100 / 24 / 3.3 * ${props.detail.gridInfo.default.size.width}vh), 0%)`
               : "",
           },
-          onmouseover: (e: any) => {
-            // console.log(e, "onmouseover");
-          },
-          onmouseleave: (e: any) => {
-            // console.log(e, "onmouseleave");
-          },
-          class: "transform",
+          onmouseover: mouseover,
+          onmouseleave: mouseleave,
+          class: "transform hover",
         },
         () => [
           h(ElImage, {
@@ -132,11 +139,27 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .transform {
   transition: all 0.5s;
 }
 .transform:hover {
   z-index: 10000;
+}
+
+.hover {
+  box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0.3),
+    inset -0px -0px 0px rgba(255, 255, 255, 0.7), -0px -0px 0px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s;
+  z-index: 10000;
+}
+.hover:hover {
+  padding: 3px;
+  box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.3),
+    inset -3px -3px 3px rgba(255, 255, 255, 0.7), -3px -3px 12px rgba(0, 0, 0, 0.4);
+  .asdImg {
+    border-radius: 3px;
+    box-shadow: inset -3px -3px 3px rgba(255, 255, 255, 0.7);
+  }
 }
 </style>

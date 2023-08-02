@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-17 17:07:35
+ * @LastEditTime: 2023-08-02 22:30:51
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -10,7 +10,7 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import { isValidKey } from "@/utils/index";
 
 import { PageConfig as ManageOnlyPageConfig } from "./managerOnly";
-import { chosSearch, chosSearchMobile, chosSearchTest } from "./chosSearch";
+import { chosSearch, chosSearchMobile } from "./chosSearch";
 import { myPicture } from "./myPicture";
 export interface desktopDataTemplate {
   name: string;
@@ -54,7 +54,7 @@ const pageConfig = {
       showLink: false,
       wholeScreen: true,
       maxRows: 16,
-      margin: 6,
+      margin: 12,
       Fullscreen: true,
     },
   },
@@ -67,19 +67,6 @@ const pageConfig = {
       wholeScreen: true,
       maxRows: 16,
       margin: 6,
-      Fullscreen: true,
-    },
-  },
-  chosSearch_test: {
-    name: "测试页面",
-    desktopData: chosSearchTest,
-    gridColNum: 120,
-    cusStyle: {
-      // testProps: true,
-      showLink: false,
-      wholeScreen: true,
-      maxRows: 80,
-      margin: 3,
       Fullscreen: true,
     },
   },
