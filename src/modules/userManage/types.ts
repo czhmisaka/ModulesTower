@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 01:14:31
+ * @LastEditTime: 2023-08-23 23:24:11
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/types.ts
  */
 
@@ -37,6 +37,7 @@ export enum btnActionTemplate {
   OpenDrawer = "OpenDrawer",
   Function = "Function",
   Url = "Url",
+  UploadFunction = "UploadFunction",
 }
 
 /**
@@ -93,6 +94,7 @@ export interface desktopDataTemplate {
   dataPermission?: stringAnyObj[];
   btnList?: btnCellTemplate[];
   Fullscreen?: boolean;
+  InRouter?: boolean;
 }
 
 export interface gridDesktopPropsTemplate extends desktopDataTemplate {
@@ -155,7 +157,12 @@ export interface tableCellOptionsInputPropertiesTemplate {
   onChangeFunc?: (
     that: stringAnyObj,
     data: stringAnyObj
-  ) => Promise<tableCellOptions[] | void> | tableCellOptions[] | void;
+  ) =>
+    | Promise<tableCellOptions[] | void>
+    | tableCellOptions[]
+    | Promise<stringAnyObj>
+    | stringAnyObj
+    | void;
   // 一些style
   style?: stringAnyObj;
   customComponent?: customComponent;
@@ -181,10 +188,11 @@ export interface tableCellOptionsInputTemplate
 }
 export interface tableCellOptionsTableTemplate {
   fixed?: "left" | "none" | "right";
-  showFunc?: (data: any, key: string) => any;
+  showFunc?: (data: any, key: string, isPopover: boolean) => any;
   type: showType;
   style?: stringAnyObj;
   sortable?: boolean;
+  btnList?: btnCellTemplate[];
   [key: string]: any;
 }
 
@@ -244,6 +252,7 @@ export enum formInputType {
   radio = "radio",
   upload = "upload",
   uploadImage = "uploadImage",
+  uploadFileList = "uploadFileList",
   mobile = "mobile",
   idCard = "idCard",
   treeSelect = "treeSelect",
@@ -259,6 +268,8 @@ export enum formInputType {
   underLine = "underLine",
   gridCellMaker = "gridCellMaker",
   cascader = "cascader",
+  tableCellTemplate = "tableCellTemplate",
+  switch = "switch",
 }
 
 /**

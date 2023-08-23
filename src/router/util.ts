@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 23:13:08
+ * @LastEditTime: 2023-08-23 23:22:56
  * @FilePath: /ConfigForDesktopPage/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -9,8 +9,7 @@ import { CardComponentTemplate } from "../components/basicComponents/grid/module
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
 import { transformSync } from "@babel/core";
-import { useUserStoreHook } from "@/store/modules/user";
-import { stringAnyObj } from "@/modules/userManage/types";
+import { desktopDataTemplate, stringAnyObj } from "@/modules/userManage/types";
 
 // 函数执行时间计算
 const timeChecker = class {
@@ -117,7 +116,7 @@ let action = {} as stringAnyObj;
  * @param {*} basePath
  */
 export const getModuleFromView = (init = false) => {
-  const timec = new timeChecker("getModuleFromViewFuck");
+  const timec = new timeChecker("getModuleFromView");
   if (!init) {
     timec.getTime(1);
     return moduleList;
@@ -275,28 +274,32 @@ export const getModuleFromView = (init = false) => {
       const moduleName = getModuleName(fileName);
       moduleList.map((module: modulesCellTemplate) => {
         if (module.name == moduleName) {
-          const pageMap = requireModule(fileName)["PageConfig"];
+          const pageMap = requireModule(fileName)["PageConfig"] as {
+            [key: string]: desktopDataTemplate;
+          };
           Object.keys(pageMap).map((pageName: string) => {
-            module.routers[0].children.push(
-              routerCellMaker(
-                `/${moduleName}/${pageName}`,
-                pageMap[pageName]["name"]
-                  ? pageMap[pageName]["name"]
-                  : moduleName + "_" + pageName,
-                () => import(`../modules/${moduleName}/Index.vue`),
-                {
-                  meta: {
-                    originData: {
-                      ...pageMap[pageName],
-                      desktopData: null,
-                    },
-                    ...pageMap[pageName]["cusStyle"],
-                    title:
-                      pageMap[pageName]["name"] || moduleName + "_" + pageName,
+            const route = routerCellMaker(
+              `/${moduleName}/${pageName}`,
+              pageMap[pageName]["name"]
+                ? moduleName + "_" + pageMap[pageName]["name"]
+                : moduleName + "_" + pageName,
+              () => import(`../modules/${moduleName}/Index.vue`),
+              {
+                meta: {
+                  originData: {
+                    ...pageMap[pageName],
+                    desktopData: null,
                   },
-                }
-              )
+                  ...pageMap[pageName]["cusStyle"],
+                  title:
+                    pageMap[pageName]["name"] || moduleName + "_" + pageName,
+                },
+              }
             );
+            module.routers[0].children.push(route);
+            if (pageMap[pageName].InRouter) {
+              module.routers.push(route);
+            }
           });
         }
         return module;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-22 15:08:27
+ * @LastEditTime: 2023-08-23 23:10:30
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -16,6 +16,7 @@ export enum cardOnChangeType {
   forceRefreshToOrgin = "forceRefreshToOrgin",
   gridCardListonChange = "gridCardListonChange",
   cardConfigChange = "cardConfigChange",
+  cardConfigChangeNoMerge = "cardConfigChangeNoMerge",
   cardEdit = "cardEdit",
   cardDelete = "cardDelete",
   cardAdd = "cardAdd",

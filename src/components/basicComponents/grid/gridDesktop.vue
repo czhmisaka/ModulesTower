@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-27 22:15:03
+ * @LastEditTime: 2023-08-23 23:18:25
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -20,7 +20,7 @@
     <grid-layout
       :layout="gridListToLayout()"
       :col-num="gridColNum"
-      :row-height="gridRowNumAndUnit().blockSize"
+      :row-height="gridRowNumAndUnit.blockSize"
       :responsive="false"
       :isDraggable="baseData.editable"
       :isResizable="false"
@@ -28,7 +28,7 @@
       :prevent-collision="false"
       :use-css-transforms="true"
       :maxRows="cusStyle.maxRows || 30"
-      :margin="[gridRowNumAndUnit().margin, gridRowNumAndUnit().margin]"
+      :margin="[gridRowNumAndUnit.margin, gridRowNumAndUnit.margin]"
     >
       <div
         :class="'grayBg ' + (hightLightComponentsList.length > 0 ? 'grayBg_Active' : '')"
@@ -51,7 +51,9 @@
         class="grid-item"
         :style="{
           ...gridItemStyle(gridList[index]),
-          transition: baseData.editable
+          transition: noAnimate
+            ? ''
+            : baseData.editable
             ? fastMode
               ? 'max-width 0.4s, width 0.3s , height 0.3s'
               : ''
@@ -64,7 +66,7 @@
           :ref="'card_' + index"
           :detail="{ ...gridList[index], index }"
           :baseData="baseData"
-          :sizeUnit="gridRowNumAndUnit()"
+          :sizeUnit="gridRowNumAndUnit"
           :gridList="gridList"
           :componentLists="componentLists"
           @onChange="(value, options) => cardOnChange(index, value, options)"
@@ -87,7 +89,7 @@
       ref="cardEdit"
       :gridList="gridList"
       :componentIndex="baseData._componentIndex"
-      :sizeUnit="gridRowNumAndUnit()"
+      :sizeUnit="gridRowNumAndUnit"
       :componentLists="componentLists"
       @onChange="
         (index, value) =>
@@ -172,7 +174,7 @@ export default defineComponent({
       default: 12,
     },
 
-    // 可以使用的组件列表
+    // 当前桌面使用的组件数据
     desktopData: {
       type: Array,
       default: () => {
@@ -180,6 +182,7 @@ export default defineComponent({
       },
     },
 
+    // 可以使用的组件列表
     componentLists: {
       type: Object,
       default: () => {
@@ -187,19 +190,47 @@ export default defineComponent({
       },
     },
 
+    // 动画加速模式 / gpu
     fastMode: {
       type: Boolean,
       default: true,
     },
 
+    // 无动画模式
+    noAnimate: {
+      type: Boolean,
+      default: false,
+    },
+
+    // 桌面配置方案预置数据
     preBaseData: {
       type: Object,
-      default: {},
+      default: () => {
+        return {} as { [key: string]: any };
+      },
+    },
+
+    modelValue: {
+      type: Object,
+      default: () => {
+        return {} as { [key: string]: any };
+      },
     },
   },
   computed: {},
 
   watch: {
+    moduleValue: {
+      handler(val) {
+        this.baseData = {
+          ...this.baseData,
+          ...val,
+        };
+      },
+      deep: true,
+      immediate: true,
+    },
+    preBaseData(val) {},
     editable(val) {
       this.baseData.editable = val;
     },
@@ -230,12 +261,7 @@ export default defineComponent({
         _componentIndex: -1,
       } as { [key: string]: any },
 
-      interval: null,
-      idRandom: useAble++,
-      componentBoxInfo: {
-        width: 0,
-        height: 0,
-      },
+      idRandom: (useAble += Math.random()),
 
       // 高光组件列表
       hightLightComponentsList: [] as string[],
@@ -246,6 +272,8 @@ export default defineComponent({
 
       // 桌面组件配置
       cusStyleProps: {} as { [key: string]: any },
+
+      gridRowNumAndUnit: {} as any,
     };
   },
   methods: {
@@ -276,6 +304,48 @@ export default defineComponent({
       return back;
     },
 
+    /**
+     * @name: gridRowNum
+     * @description: 计算行数 和使用单位
+     * @authors: CZH
+     * @Date: 2022-05-04 18:14:23
+     */
+    gridRowNumAndUnitDeal() {
+      let width = 0;
+      let height = 0;
+      if (this.$refs["screenId_" + this.idRandom]) {
+        width = this.$refs["screenId_" + this.idRandom].offsetWidth;
+        height = this.$refs["screenId_" + this.idRandom].offsetHeight;
+      }
+      let screen = {
+        width: width || document.body.offsetWidth,
+        height: height || document.body.offsetHeight,
+        rowNum: 0,
+        colNum: this.gridColNum,
+        unit: "vw",
+        blockSize: 0, // px单位的 单个grid单元大小
+        colSize: 0,
+        margin: this.cusStyle?.margin || 12,
+      };
+      if (this.cusStyle.wholeScreen == true) {
+        screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
+        screen.unit = "vh";
+        let rowOrColKey = this.cusStyle.maxRows || this.gridColNum;
+        screen.blockSize =
+          (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
+      } else {
+        screen.rowNum = Math.floor(screen.height / this.gridColNum);
+        screen.blockSize =
+          screen.unit == "vw"
+            ? (screen.width -
+                this.gridColNum * this.cusStyle.margin -
+                this.cusStyle.margin) /
+              this.gridColNum
+            : screen.height / this.gridColNum;
+      }
+      this.gridRowNumAndUnit = screen;
+    },
+
     // 移动gridItem
     gridItemOnMove(i: number, x: number, y: number): void {
       this.gridList[i].setPosition(x, y);
@@ -304,11 +374,10 @@ export default defineComponent({
       options.type.map(async (type) => {
         if (index != -1)
           console.log(
-            index != -1 && index < this.gridList.length
+            index < this.gridList.length
               ? "组件「" + this.gridList[index].labelNameCN + "」"
               : "桌面组件",
             "请求执行事件<" + type + ">",
-            // JSON.parse(JSON.stringify(value))
             value
           );
         else
@@ -322,7 +391,7 @@ export default defineComponent({
           }
           this.baseData = { ...this.baseData };
         } else if (type == cardOnChangeType.upOnChange) {
-          this.$emit("onChange", value);
+          this.$emit("update:modelValue", value);
         } else if (type == cardOnChangeType.forceRefresh) {
           const gridList = [...this.gridList];
           this.gridList = [];
@@ -343,6 +412,30 @@ export default defineComponent({
                 if (card.label == x) {
                   needRefreshCardList.push(index);
                   card = deepMerge(value[x], card);
+                }
+              });
+              return card;
+            });
+            needRefreshCardList.map((item) => {
+              if (this.$refs["card_" + item] && this.$refs["card_" + item].length > 0) {
+                this.$refs["card_" + item][0].$forceUpdate();
+              }
+            });
+          } else {
+            console.error("输入数据有误", value);
+          }
+        } else if (type == cardOnChangeType.cardConfigChangeNoMerge) {
+          if (typeof value == "object") {
+            const changeList = Object.keys(value);
+            const needRefreshCardList = [] as number[];
+            // debugger;
+            this.gridList = this.gridList.map((card: gridCellTemplate, index: number) => {
+              changeList.map((x: string) => {
+                if (card.label == x) {
+                  needRefreshCardList.push(index);
+                  for (let c in value[x]) {
+                    card.options.props[c] = value[x][c];
+                  }
                 }
               });
               return card;
@@ -405,60 +498,24 @@ export default defineComponent({
           if (typeof value == "object") {
             for (let refs in value) {
               if (this.$refs[`PlugIn_${refs}`]) {
-                this.plugInData[refs] = value[refs];
                 const plugInComponent = this.$refs[`PlugIn_${refs}`][0];
-                if (plugInComponent && plugInComponent["open"]) {
-                  plugInComponent["open"]();
+                if (!value[refs]) {
+                  if (plugInComponent && plugInComponent["close"]) {
+                    plugInComponent["close"]();
+                  }
+                } else {
+                  this.plugInData[refs] = value[refs];
+                  if (plugInComponent && plugInComponent["open"]) {
+                    plugInComponent["open"]();
+                  }
                 }
               }
             }
+          } else if (type == cardOnChangeType.changeDesktopProperties) {
+            if (typeof value == "object") this.cusStyleProps = value;
           }
-        } else if (type == cardOnChangeType.changeDesktopProperties) {
-          if (typeof value == "object") this.cusStyleProps = value;
         }
       });
-    },
-
-    /**
-     * @name: gridRowNum
-     * @description: 计算行数 和使用单位
-     * @authors: CZH
-     * @Date: 2022-05-04 18:14:23
-     */
-    gridRowNumAndUnit() {
-      let width = 0;
-      let height = 0;
-      if (this.$refs["screenId_" + this.idRandom]) {
-        width = this.$refs["screenId_" + this.idRandom].offsetWidth;
-        height = this.$refs["screenId_" + this.idRandom].offsetHeight;
-      }
-      let screen = {
-        width: width || document.body.offsetWidth,
-        height: height || document.body.offsetHeight,
-        rowNum: 0,
-        colNum: this.gridColNum,
-        unit: "vw",
-        blockSize: 0, // px单位的 单个grid单元大小
-        colSize: 0,
-        margin: this.cusStyle?.margin || 0,
-      };
-      if (this.cusStyle.wholeScreen == true) {
-        screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
-        screen.unit = "vh";
-        let rowOrColKey = this.cusStyle.maxRows || this.gridColNum;
-        screen.blockSize =
-          (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
-      } else {
-        screen.rowNum = Math.floor(screen.height / this.gridColNum);
-        screen.blockSize =
-          screen.unit == "vw"
-            ? (screen.width -
-                this.gridColNum * this.cusStyle.margin -
-                this.cusStyle.margin) /
-              this.gridColNum
-            : screen.height / this.gridColNum;
-      }
-      return screen;
     },
 
     /**
@@ -507,36 +564,31 @@ export default defineComponent({
       Object.keys(this.preBaseData).map((key) => {
         this.baseData[key] = this.preBaseData[key];
       });
+
+    // 添加触发器
+    const that = this;
+    const data = {};
+    const name = "griddesktop_func_" + this.idRandom;
+    data[name] = that.gridRowNumAndUnitDeal;
+    window.addEventListener("resize", data[name]);
+  },
+
+  async unmounted() {
+    // 删除触发器
+    const that = this;
+    const data = {};
+    const name = "griddesktop_func_" + this.idRandom;
+    data[name] = that.gridRowNumAndUnitDeal;
+    window.removeEventListener("resize", data[name]);
   },
 
   async mounted() {
     this.forceUpdateGridList();
     const that = this;
-    if (that.interval) clearInterval(that.interval);
-    this.interval = setInterval(async () => {
-      let width =
-        document.getElementById("screenId_" + that.idRandom)?.offsetWidth ||
-        document.body.offsetWidth;
-      let height =
-        document.getElementById("screenId_" + that.idRandom)?.offsetHeight ||
-        document.body.offsetHeight;
-      if (
-        that.componentBoxInfo?.width != width ||
-        that.componentBoxInfo?.height != height
-      ) {
-        that.$forceUpdate();
-        that.updateTimes++;
-        if (that.updateTimes > 99999) that.updateTimes = -11111;
-      }
-      that.componentBoxInfo = {
-        width: width,
-        height: height,
-      };
-    }, 500);
-  },
-
-  unmounted() {
-    if (this.interval) clearInterval(this.interval);
+    // that.gridRowNumAndUnitDeal();
+    setTimeout(() => {
+      that.gridRowNumAndUnitDeal();
+    }, 100);
   },
 });
 </script>
@@ -549,14 +601,14 @@ export default defineComponent({
   position: relative;
 }
 .grayBg {
+  background-size: 4px 4px;
   transition: background-color 0.3s, background-image 0.3s, background-size 0.3s,
     backdrop-filter 0.3s;
   position: fixed;
   top: 0px;
   left: 0px;
-  background-image: radial-gradient(transparent 2px, var(--el-text-color-disabled) 2px);
-  background-size: 0px 0px;
-  backdrop-filter: saturate(0%) blur(0px);
+  background-image: radial-gradient(transparent 2px, var(--bg-color) 2px);
+  backdrop-filter: saturate(50%) blur(4px);
 }
 .grayBg_Active {
   background-color: rgba(0, 0, 0, 0.3);

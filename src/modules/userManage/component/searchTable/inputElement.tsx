@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-06 08:57:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 01:14:59
+ * @LastEditTime: 2023-08-23 23:24:55
  */
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import {
@@ -28,16 +28,19 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import gridDesktop from "@/components/basicComponents/grid";
 import { values } from 'lodash';
 import { componentMaker } from "./inputElementComponent/functionToComponent";
+import { propertiesMaker } from './searchTable';
 
 
 function base(cell: tableCellTemplate) {
   return {
-    // title: cell.label,
+    title: cell.label,
+    description: cell.input.description,
     type: "string",
+    'err:required': '请填写' + cell.label,
     "ui:options": {
-      attrs: {
-        clearable: true,
-      },
+      disabled: cell.input.disabled,
+      title: cell.label,
+      clearable: true,
       placeholder: "请输入" + cell.label,
       style: {
       },
@@ -57,11 +60,12 @@ export const globalBaseCellDeal = (
       placeholder: "请输入" + cell.label,
       style: {
         width: needTitle ? "360px" : "100%",
-        marginBottom: "-6px"
+        marginBottom: needTitle ? "12px" : ''
       },
     },
   };
-  return deepMerge(cellProperties, globalBaseCell);
+  return needTitle ? deepMerge(cellProperties, globalBaseCell) : deepMerge(globalBaseCell, cellProperties);
+  // return { ...cellProperties }
 };
 
 let inputElement = {} as {
@@ -71,39 +75,41 @@ let inputElement = {} as {
 inputElement[formInputType.input] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
       type: "string",
+      ...cell.input?.inputOptions,
     };
   },
 };
-
-inputElement[formInputType.password] = {
-  properties: (that, cell) => {
-    return {
-      type: "string",
-      "ui:options": {
-        "placeholder": "请输入",
-        "showPassword": true
-      }
-    };
-  },
-}
 
 inputElement[formInputType.mobile] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
       type: "string",
       minLength: 11,
       maxLength: 11,
+      ...cell.input?.inputOptions,
       // pattern
     };
   },
 };
-
-inputElement[formInputType.number] = {
+inputElement[formInputType.switch] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
+      type: "boolean",
+      ...cell.input?.inputOptions,
+    };
+  },
+}
+inputElement[formInputType.number] = {
+  properties: async (that, cell) => {
+    return {
+      ...base(cell),
       title: cell.label,
       type: "number",
+      ...cell.input?.inputOptions,
     };
   },
 };
@@ -111,20 +117,26 @@ inputElement[formInputType.number] = {
 inputElement[formInputType.textarea] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
       title: cell.label,
       type: "string",
       "ui:options": {
         type: "textarea",
+        disabled: cell.input.disabled,
       },
-    };
+      ...cell.input?.inputOptions,
+    }
   },
 };
 
 inputElement[formInputType.datePicker] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
+
       type: "number",
       format: "date",
+      ...cell.input?.inputOptions,
     };
   },
 };
@@ -176,6 +188,8 @@ inputElement[formInputType.uploadImage] = {
 inputElement[formInputType.datePickerRanger] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
+
       type: "array",
       format: "date",
       items: {
@@ -189,6 +203,8 @@ inputElement[formInputType.radio] = {
   properties: (that, cell) => {
     const { input } = cell;
     let properties = {
+      ...base(cell),
+
       type: "string",
       "ui:widget": defineComponent({
         props: [
@@ -196,7 +212,6 @@ inputElement[formInputType.radio] = {
         ],
         setup(props, context) {
           return () => [
-
             h(ElRadioGroup,
               {
                 ...props,
@@ -503,6 +518,7 @@ inputElement[formInputType.indexListForSwitch] = {
           "customRender"
         ],
         setup(props, context) {
+          // if()
           return () => [
             <ElScrollbar {...props}>
               {
@@ -640,7 +656,6 @@ inputElement[formInputType.tabSelect] = {
             return h(ElButton, {
               onClick: () => {
                 console.log(x);
-
                 context.emit("update:modelValue", x.value);
               }
             }, [x.label])
@@ -703,7 +718,7 @@ inputElement[formInputType.richTextArea] = {
       "ui:widget": editor,
       "ui:options": {
         style: {
-          width: "100%",
+          width: "99%",
           fontWeight: "900",
         },
       },
@@ -733,13 +748,14 @@ inputElement[formInputType.gridDesktop] = {
       "ui:widget": gridDesktop,
       "ui:options": {
         style: {
-          width: "100%",
+          width: "calc(100%)",
+          backGround: '#111',
           fontWeight: "900",
         },
       },
     } as stringAnyObj;
     let attrs = {
-      maxHeight: "400px",
+      // maxHeight: "400px",
     };
     if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
     if (input.funcInputOptionsLoader)
@@ -796,7 +812,7 @@ inputElement[formInputType.customComponent] = {
     const { input } = cell;
     let properties = {
       ...base(cell),
-      type: 'null',
+      type: 'string',
       "ui:widget": componentMaker(input.customComponent),
       "ui:options": {}
     }
@@ -810,5 +826,20 @@ inputElement[formInputType.customComponent] = {
     return properties;
   }
 }
+
+inputElement[formInputType.tableCellTemplate] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      title: input.label,
+      type: 'object',
+      properties: await propertiesMaker((await input.funcInputOptionsLoader(that) as tableCellTemplate[]) || [], that, true),
+      ...input.inputOptions
+    }
+    return properties;
+  },
+}
+
 
 export default inputElement;
