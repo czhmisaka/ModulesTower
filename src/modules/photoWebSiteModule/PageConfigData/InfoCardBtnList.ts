@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-31 01:52:36
+ * @LastEditTime: 2023-08-08 23:42:40
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -26,6 +26,7 @@ import { ElMessage } from "element-plus";
 import {
   changeCardProperties,
   changeVisible,
+  refreshDesktop,
 } from "@/components/basicComponents/grid/module/cardApi";
 
 //批量
@@ -386,3 +387,14 @@ export const 批量添加标签 = btnMaker(
     },
   }
 );
+
+export const 移出处理区 = btnMaker("移出处理区", btnActionTemplate.Function, {
+  icon: "Plus",
+  elType: "primary",
+  function: async (that, data) => {
+    const cart = useCartHook();
+    if (data.length && data.length > 0) cart.deleteCart(data.map((x) => x.id));
+    else cart.deleteCart([data.id]);
+    refreshDesktop(that);
+  },
+});

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@babel/core": "7.20.2",
+    "@babel/polyfill": "^7.12.1",
     "@ctrl/tinycolor": "^3.4.1",
     "@element-plus/icons-vue": "^0.2.4",
     "@lljj/vue3-form-element": "^1.14.0",
@@ -94,6 +95,7 @@
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-vue-jsx": "^3.7.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "cloc": "^2.10.0",
     "cssnano": "^5.1.13",
@@ -115,7 +117,8 @@
     "postcss-scss": "^4.0.5",
     "prettier": "^2.5.1",
     "pretty-quick": "3.1.1",
-    "rimraf": "3.0.2",
+    "rimraf": "^3.0.2",
+    "rollup-plugin-polyfill-node": "^0.12.0",
     "rollup-plugin-visualizer": "^5.8.2",
     "sass": "^1.53.0",
     "sass-loader": "^13.0.2",
@@ -133,7 +136,6 @@
     "unplugin-vue-define-options": "0.7.3",
     "vite": "^3.1.8",
     "vite-plugin-cdn-import": "^0.3.5",
-    "vite-plugin-chunk-split": "^0.4.7",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-env-compatible": "^1.1.1",
     "vite-plugin-html": "3.2.0",
@@ -163,5 +165,10 @@
   "alias": {
     "@/": "./src/",
     "@build": "build"
-  }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 11"
+  ]
 }

@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-05-18 23:06:49
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-16 15:21:24
- * @FilePath: /configforpagedemo/src/components/basicComponents/cell/card/cardBg.vue
+ * @LastEditTime: 2023-08-08 20:54:32
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/cell/card/cardBg.vue
 -->
 
 <script lang="ts">
@@ -21,6 +21,10 @@ export default defineComponent({
       type: String,
       default: "",
     },
+    noHover: {
+      type: String,
+      default: false,
+    },
   },
   setup(props, context) {
     const { slots } = context;
@@ -29,7 +33,7 @@ export default defineComponent({
       h(
         "div",
         {
-          class: isDark.value ? "" : "shadow",
+          class: `${isDark.value ? "" : "shadow"} ${props.noHover ? "" : "hover"}`,
           style: {
             width: "100%",
             height: "100%",
@@ -47,5 +51,21 @@ export default defineComponent({
 <style lang="scss" scoped>
 .shadow {
   filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.05));
+}
+
+.__hover {
+  box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0.3),
+    inset -0px -0px 0px rgba(255, 255, 255, 0.7), -0px -0px 0px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s;
+  z-index: 10000;
+}
+.__hover:hover {
+  padding: 3px;
+  box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.3),
+    inset -3px -3px 3px rgba(255, 255, 255, 0.7), -3px -3px 12px rgba(0, 0, 0, 0.4);
+  .__context {
+    border-radius: 3px;
+    box-shadow: inset -3px -3px 3px rgba(255, 255, 255, 0.7);
+  }
 }
 </style>

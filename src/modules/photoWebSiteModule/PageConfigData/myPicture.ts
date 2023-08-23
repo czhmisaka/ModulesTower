@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-06-20 16:46:31
  * @LastEditors: CZH
- * @LastEditTime: 2023-06-27 09:37:04
+ * @LastEditTime: 2023-08-09 00:25:58
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/myPicture.ts
  */
 import {
@@ -10,15 +10,67 @@ import {
   gridCellMaker,
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
-import { InfoCardBtnList, 批量下载 } from "./InfoCardBtnList";
-import { post } from "@/utils/api/requests";
+import { InfoCardBtnList, 批量下载, 移出处理区 } from "./InfoCardBtnList";
+import { piwigoMethod, post } from "@/utils/api/requests";
 import { useCartHook } from "@/store/modules/cart";
 import { setPosition } from "@/components/basicComponents/grid/module/util";
 import { setSize } from "../../../components/basicComponents/grid/module/util";
 import { setData } from "@/components/basicComponents/grid/module/cardApi";
+import { useUserStoreHook } from "@/store/modules/user";
+import {
+  btnMaker,
+  dobuleCheckBtnMaker,
+  repBackMessageShow,
+} from "@/modules/userManage/component/searchTable/drawerForm";
+import { btnActionTemplate } from "@/modules/userManage/types";
 
 export const myPicture = async () => {
-  const cart = useCartHook();
+  let user = useUserStoreHook();
+  let options = await user.getOptions();
+  const 删除 = btnMaker("删除", btnActionTemplate.Function, {
+    icon: "Delete",
+    elType: "danger",
+    isShow: (data) => {
+      return options.status == "webmaster" && data && data["path"];
+    },
+    function: async (that, data) => {
+      if (await dobuleCheckBtnMaker("删除图片", data.file).catch(() => false)) {
+        let res = await piwigoMethod({
+          method: "pwg.images.delete",
+          image_id: data.id,
+          pwg_token: (await useUserStoreHook().getOptions())["pwg_token"],
+        });
+        repBackMessageShow(that, res);
+      }
+    },
+  });
+  const 批量删除 = btnMaker("批量删除", btnActionTemplate.Function, {
+    icon: "Delete",
+    elType: "danger",
+    isShow: (data) => {
+      return (
+        options.status == "webmaster" &&
+        data &&
+        data["length"] &&
+        data["length"] > 0
+      );
+    },
+    function: async (that, data) => {
+      if (
+        await dobuleCheckBtnMaker(
+          "删除图片",
+          `【${data.map((x) => x.file).join("】【")}】`
+        ).catch(() => false)
+      ) {
+        let res = await piwigoMethod({
+          method: "pwg.images.delete",
+          image_id: data.map((x) => x.id),
+          pwg_token: (await useUserStoreHook().getOptions())["pwg_token"],
+        });
+        repBackMessageShow(that, res);
+      }
+    },
+  });
   return [
     gridCellMaker(
       "waterFall",
@@ -90,7 +142,7 @@ export const myPicture = async () => {
       },
       {
         props: {
-          btnList: [批量下载],
+          btnList: [移出处理区, 批量下载, 批量删除, 删除],
           watchKeyForCategory: "category",
         },
       }
