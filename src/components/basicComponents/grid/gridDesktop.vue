@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-08-23 23:18:25
+ * @LastEditTime: 2023-09-04 14:23:26
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -10,10 +10,7 @@
     :ref="'screenId_' + idRandom"
     :id="'screenId_' + idRandom"
     :style="{
-      transition: 'transform 0.3s',
-      overflow: cusStyle.wholeScreen ? '' : '',
-      transform: cusStyle.testProps ? 'rotateX(60deg) rotateZ(-30deg) scale(1.3) ' : '',
-      ...cusStyleProps,
+      overflow: cusStyle.wholeScreen ? 'hidden' : 'auto',
     }"
     class="baseGrid"
   >
@@ -127,8 +124,63 @@ import componentsListModal from "@/components/basicComponents/grid/module/baseTo
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 import gridLayout from "./GridLayout/GridLayout.vue";
 import gridItem from "./GridLayout/GridItem.vue";
-
+import { takeRight } from "lodash";
+import { timeConsole } from "@/main";
 let useAble = 0;
+function throttle(func, delay) {
+  let timer = null;
+  let lastTime = 0;
+  return function () {
+    const context = this;
+    const args = arguments;
+    const now = new Date().getTime();
+    if (now - lastTime >= delay) {
+      clearTimeout(timer);
+      func.apply(context, args);
+      lastTime = now;
+    } else {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        func.apply(context, args);
+        lastTime = now;
+      }, delay);
+    }
+  };
+}
+function fuck(that) {
+  let width = 0;
+  let height = 0;
+  if (that.$refs["screenId_" + that.idRandom]) {
+    width = that.$refs["screenId_" + that.idRandom].offsetWidth;
+    height = that.$refs["screenId_" + that.idRandom].offsetHeight;
+  }
+  let screen = {
+    width: width || document.body.offsetWidth,
+    height: height || document.body.offsetHeight,
+    rowNum: 0,
+    colNum: that.gridColNum,
+    unit: "vw",
+    blockSize: 0, // px单位的 单个grid单元大小
+    colSize: 0,
+    margin: that.cusStyle?.margin || 12,
+  };
+  if (that.cusStyle.wholeScreen == true) {
+    screen.rowNum = Math.floor(screen.width / (screen.height / that.gridColNum));
+    screen.unit = "vh";
+    let rowOrColKey = that.cusStyle.maxRows || that.gridColNum;
+    screen.blockSize = (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
+  } else {
+    screen.rowNum = Math.floor(screen.height / that.gridColNum);
+    screen.blockSize =
+      screen.unit == "vw"
+        ? (screen.width - that.gridColNum * that.cusStyle.margin - that.cusStyle.margin) /
+          that.gridColNum
+        : screen.height / that.gridColNum;
+  }
+  that.gridRowNumAndUnit = screen;
+}
+
+let fuckk = throttle(fuck, 33);
 export default defineComponent({
   name: "gridDesktop",
   components: {
@@ -220,10 +272,10 @@ export default defineComponent({
   computed: {},
 
   watch: {
-    moduleValue: {
+    modelValue: {
       handler(val) {
-        this.baseData = {
-          ...this.baseData,
+        this.baseData["modelValue"] = {
+          ...this.baseData["modelValue"],
           ...val,
         };
       },
@@ -270,9 +322,6 @@ export default defineComponent({
         timeOut: null,
       },
 
-      // 桌面组件配置
-      cusStyleProps: {} as { [key: string]: any },
-
       gridRowNumAndUnit: {} as any,
     };
   },
@@ -311,41 +360,8 @@ export default defineComponent({
      * @Date: 2022-05-04 18:14:23
      */
     gridRowNumAndUnitDeal() {
-      let width = 0;
-      let height = 0;
-      if (this.$refs["screenId_" + this.idRandom]) {
-        width = this.$refs["screenId_" + this.idRandom].offsetWidth;
-        height = this.$refs["screenId_" + this.idRandom].offsetHeight;
-      }
-      let screen = {
-        width: width || document.body.offsetWidth,
-        height: height || document.body.offsetHeight,
-        rowNum: 0,
-        colNum: this.gridColNum,
-        unit: "vw",
-        blockSize: 0, // px单位的 单个grid单元大小
-        colSize: 0,
-        margin: this.cusStyle?.margin || 12,
-      };
-      if (this.cusStyle.wholeScreen == true) {
-        screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
-        screen.unit = "vh";
-        let rowOrColKey = this.cusStyle.maxRows || this.gridColNum;
-        screen.blockSize =
-          (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
-      } else {
-        screen.rowNum = Math.floor(screen.height / this.gridColNum);
-        screen.blockSize =
-          screen.unit == "vw"
-            ? (screen.width -
-                this.gridColNum * this.cusStyle.margin -
-                this.cusStyle.margin) /
-              this.gridColNum
-            : screen.height / this.gridColNum;
-      }
-      this.gridRowNumAndUnit = screen;
+      fuckk(this);
     },
-
     // 移动gridItem
     gridItemOnMove(i: number, x: number, y: number): void {
       this.gridList[i].setPosition(x, y);
@@ -560,10 +576,19 @@ export default defineComponent({
   },
 
   async created() {
+    timeConsole.checkTime("gridDesktop");
     if (this.preBaseData && Object.keys(this.preBaseData).length > 0)
       Object.keys(this.preBaseData).map((key) => {
         this.baseData[key] = this.preBaseData[key];
       });
+
+    if (this.modelValue) {
+      this.baseData["modelValue"] = {
+        ...this.baseData["modelValue"],
+        ...this.modelValue,
+      };
+    }
+    this.forceUpdateGridList();
 
     // 添加触发器
     const that = this;
@@ -583,11 +608,11 @@ export default defineComponent({
   },
 
   async mounted() {
-    this.forceUpdateGridList();
     const that = this;
     // that.gridRowNumAndUnitDeal();
     setTimeout(() => {
       that.gridRowNumAndUnitDeal();
+      timeConsole.checkTime("gridDesktop");
     }, 100);
   },
 });
@@ -601,14 +626,13 @@ export default defineComponent({
   position: relative;
 }
 .grayBg {
+  transition: background-color 0.3s;
+  background-image: radial-gradient(transparent 1px, var(--bg-color) 1px);
   background-size: 4px 4px;
-  transition: background-color 0.3s, background-image 0.3s, background-size 0.3s,
-    backdrop-filter 0.3s;
+  backdrop-filter: saturate(50%) blur(4px);
   position: fixed;
   top: 0px;
   left: 0px;
-  background-image: radial-gradient(transparent 2px, var(--bg-color) 2px);
-  backdrop-filter: saturate(50%) blur(4px);
 }
 .grayBg_Active {
   background-color: rgba(0, 0, 0, 0.3);

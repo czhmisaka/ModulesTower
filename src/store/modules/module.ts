@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 02:02:17
+ * @LastEditTime: 2023-09-04 15:00:00
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -176,6 +176,7 @@ export const moduleStore = defineStore({
       this.isLoading = false;
       let moduleList = [];
       this.userInfo = await useUserStoreHook().getOptions();
+
       let res = await piwigoMethod({
         method: "pwg.users.getList",
         user_id: this.userInfo.id,
@@ -186,8 +187,9 @@ export const moduleStore = defineStore({
       this.groups = res.result.users[0]["groups"].map((x) => {
         return ress.result.groups.filter((c) => c.id == x)[0]["name"];
       });
+
       // 注入各个模块的展示界面
-      this.initRouterBackup();
+      await this.initRouterBackup();
 
       // 预处理
       resData.map((x) => {
@@ -204,13 +206,15 @@ export const moduleStore = defineStore({
       }
       this.nowModule = { children: this.routerBackup };
       this.isLoading = true;
+      console.log(this.nowModule, moduleList, "fuck");
     },
 
     checkWhichIsNowModule() {},
 
-    initRouterBackup(groups = this.groups) {
+    async initRouterBackup(groups = this.groups) {
       // 注入各个模块的展示界面
-      const moduleList = getModuleFromView(true);
+      const moduleList = await getModuleFromView(true);
+      console.log(moduleList, "fuck");
       let baseModuleRouterList = [] as RouteConfigsTable[];
       moduleList.map((module: modulesCellTemplate, index: number) => {
         module.routers.map((route: RouteConfigsTable, i: number) => {
@@ -242,27 +246,26 @@ export const moduleStore = defineStore({
           });
         }, 100);
       }
-      initRouter(true).then(async (router) => {
-        if (router && path != "/") {
-          if (
-            router
-              .getRoutes()
-              .map((x) => x.path)
-              .indexOf(path)
-          ) {
-            router.replace(
-              router.getRoutes()[
-                router
-                  .getRoutes()
-                  .map((x) => x.path)
-                  .indexOf(path)
-              ]
-            );
-          }
-        } else {
-          router.replace(this.nowModule.children[0].children[0]);
+      let router = await initRouter(true);
+      if (router && path != "/") {
+        if (
+          router
+            .getRoutes()
+            .map((x) => x.path)
+            .indexOf(path)
+        ) {
+          router.replace(
+            router.getRoutes()[
+              router
+                .getRoutes()
+                .map((x) => x.path)
+                .indexOf(path)
+            ]
+          );
         }
-      });
+      } else {
+        router.replace(this.nowModule.children[0].children[0]);
+      }
       return this.nowModule;
     },
 

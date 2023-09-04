@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-22 03:42:20
+ * @LastEditTime: 2023-09-04 14:19:56
  * @FilePath: /ConfigForDesktopPage/src/main.ts
  */
 let num = 0;
@@ -15,13 +15,17 @@ import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 
 import { MotionPlugin } from "@vueuse/motion";
-import { getAction } from "@/router/util";
+
+import { getAction, timeChecker } from "@/router/util";
+
 import * as Icons from "@element-plus/icons-vue";
 import utils from "./utils";
 import Vue3DraggableResizable from "vue3-draggable-resizable";
 import { getServerConfig } from "@/utils/config/appConfig";
 import { injectResponsiveStorage } from "@/utils/responsive";
 import { setupStore } from "@/store";
+
+export let timeConsole = new timeChecker("模块生成", false);
 
 const app = createApp(App);
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 00:08:18
+ * @LastEditTime: 2023-09-04 14:32:55
  * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
@@ -15,14 +15,19 @@ import {
   createWebHashHistory,
   RouteRecordNormalized,
 } from "vue-router";
-
-import { getAction } from "./util";
+import { emitter } from "@/utils/mitt";
+import {
+  routerCellMaker,
+  getModuleFromView,
+  modulesCellTemplate,
+  getAction,
+} from "./util";
 import { isMobile } from "../utils/Env";
 import { getConfig } from "@/utils/config/appConfig";
 
 import { toRouteType } from "./types";
 import NProgress from "@/utils/progress";
-import { findIndex } from "lodash-unified";
+import { findIndex, now } from "lodash-unified";
 import { sessionKey, type DataInfo } from "@/utils/auth";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
@@ -48,12 +53,9 @@ import homeRouter from "./modules/home";
 import errorRouter from "./modules/error";
 import remainingRouter from "./modules/remaining";
 import { RouteConfigsTable } from "../../types/index";
+import { baseModuleRouter } from "./util";
 import { useModuleHook } from "@/store/modules/module";
-import { useTags } from "@/layout/hooks/useTag";
 
-// let baseModuleRoutes = await getAction()["getAllPageRouter"]();
-
-// homeRouter.children = homeRouter.children.concat(baseModuleRoutes);
 // 路由存放
 const routes = [homeRouter, errorRouter];
 
@@ -167,7 +169,6 @@ router.beforeEach((to: toRouteType, _from, next) => {
               });
             }
           }
-          console.log(router);
           router.push(to.fullPath);
         });
       next();
@@ -191,6 +192,59 @@ router.afterEach(() => {
   NProgress.done();
 });
 
-let interval = null;
+const getNowModulePage = () => {
+  const nowModules = useModuleHook().nowModule;
+  if (
+    nowModules.children &&
+    nowModules.children.length > 0 &&
+    nowModules.children[0].children &&
+    nowModules.children[0].children.length > 0
+  ) {
+    return nowModules.children[0].children[0];
+  } else if (
+    nowModules.children &&
+    nowModules.children.length > 0 &&
+    nowModules.children[0]
+  ) {
+    return nowModules.children[0];
+  }
+  return false;
+};
 
+// 路由守卫
+// 控制默认到index界面执行匹配
+router.beforeEach(async (to, from, next) => {
+  let meta = {} as { [key: string]: any };
+  const page = getNowModulePage();
+  console.log(page, router, "asdfasd");
+  if (to.path == "/" && page) {
+    next({
+      path: page.path,
+    });
+  } else if (to.path == "/welcome" && page) {
+    router.replace(page.path);
+    next();
+  } else if (to.matched && to.matched.length > 1) {
+    meta = to.matched[1].meta;
+    useModuleHook().checkPage(to.matched[1].meta);
+    next();
+  } else if (to.matched.length == 0) {
+    if (decodeURI(to.path).split("/").length > 0) {
+      const routes = router.getRoutes();
+      const path = decodeURI(to.path);
+      if (routes.map((x) => x.path).indexOf(path) != -1)
+        routes.map((cell) => {
+          if (cell.path == path) {
+            next({ ...to, ...cell });
+          }
+        });
+      else {
+        await useModuleHook().searchToPage(path);
+        next();
+      }
+    }
+  } else {
+    next();
+  }
+});
 export default router;

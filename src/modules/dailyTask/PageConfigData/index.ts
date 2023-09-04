@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 20:53:17
+ * @LastEditTime: 2023-09-04 12:30:11
  * @FilePath: /ConfigForDesktopPage/src/modules/dailyTask/PageConfigData/index.ts
  */
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -15,20 +15,8 @@ import { mobileDesktop } from "@/modules/main/PageConfigData/mobile/mobile";
 let pageConfig = {} as { [key: string]: desktopDataTemplate };
 
 let Page = {
-  renwuliebiao: {
-    name: "任务列表",
-    desktopData: mobileDesktop,
-    gridColNum: 4,
-    cusStyle: {
-      maxRows: 8,
-      wholeScreen: true,
-      margin: 8,
-      Fullscreen: true,
-      showLink: false,
-    },
-  },
   main: {
-    name: "ads任务列表",
+    name: "任务列表",
     desktopData: mainDesktop,
     gridColNum: 12,
     cusStyle: {
