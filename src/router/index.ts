@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-04 14:32:55
+ * @LastEditTime: 2023-09-04 21:35:25
  * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
@@ -55,6 +55,7 @@ import remainingRouter from "./modules/remaining";
 import { RouteConfigsTable } from "../../types/index";
 import { baseModuleRouter } from "./util";
 import { useModuleHook } from "@/store/modules/module";
+import { timeConsole } from "@/main";
 
 // 路由存放
 const routes = [homeRouter, errorRouter];
@@ -109,6 +110,8 @@ export const loginPage = router
   .map((x) => x.path)[0];
 
 router.beforeEach((to: toRouteType, _from, next) => {
+  timeConsole.checkTime("路由守卫1");
+
   if (to.meta?.keepAlive) {
     const newMatched = to.matched;
     handleAliveRoute(newMatched, "add");
@@ -186,6 +189,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
       next();
     }
   }
+  timeConsole.checkTime("路由守卫1");
 });
 
 router.afterEach(() => {
@@ -214,9 +218,9 @@ const getNowModulePage = () => {
 // 路由守卫
 // 控制默认到index界面执行匹配
 router.beforeEach(async (to, from, next) => {
+  timeConsole.checkTime("路由守卫2");
   let meta = {} as { [key: string]: any };
   const page = getNowModulePage();
-  console.log(page, router, "asdfasd");
   if (to.path == "/" && page) {
     next({
       path: page.path,
@@ -246,5 +250,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next();
   }
+  timeConsole.checkTime("路由守卫2");
 });
+
 export default router;

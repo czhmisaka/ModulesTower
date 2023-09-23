@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-08-14 19:08:42
+ * @LastEditTime: 2023-09-24 03:18:10
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
@@ -75,6 +75,11 @@ export default defineComponent({
           : true;
       return back;
     };
+
+    const component = componentGetter(props.detail.component, {
+      ...props.componentLists,
+      ...componentLists,
+    }).component;
 
     return () => [
       h(
@@ -155,15 +160,15 @@ export default defineComponent({
               })
             : null,
           h(
-            componentGetter(props.detail.component, {
-              ...props.componentLists,
-              ...componentLists,
-            }).component,
+            component,
             {
               onOnChange: (key: string, value: any, options: { [key: string]: any }) => {
                 context.emit("onChange", key, value, options);
               },
               onReady: (e = false) => {
+                console.log(
+                  `组件【${props.detail.labelNameCN}】：${e ? "缓冲中" : "缓冲完成"}`
+                );
                 isLoading.value = e;
               },
               baseData: props.baseData,

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-04 14:03:22
+ * @LastEditTime: 2023-09-24 03:50:31
  * @FilePath: /ConfigForDesktopPage/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -10,6 +10,7 @@ import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
 import { transformSync } from "@babel/core";
 import { desktopDataTemplate, stringAnyObj } from "@/modules/userManage/types";
+import { timeConsole } from "@/main";
 
 // 函数执行时间计算
 export const timeChecker = class {
@@ -30,20 +31,20 @@ export const timeChecker = class {
     console.log(this.name, word, new Date().getTime() - this.startTime + "ms");
   };
 
-  checkTime = (word: string) => {
+  checkTime = (word: string, extraWord: string = "") => {
     if (!this.showConsole) return;
     if (!this.checkTimeMap[word]) {
       this.checkTimeMap[word] = new Date().getTime();
       console.log(
         this.name,
-        word,
+        word + extraWord,
         "start",
         new Date().getTime() - this.startTime + "ms"
       );
     } else {
       console.log(
         this.name,
-        word,
+        word + extraWord,
         "end",
         new Date().getTime() - this.checkTimeMap[word] + "ms",
         "节点时间",
@@ -75,7 +76,6 @@ export const timeChecker = class {
     }
   };
 };
-
 /**
  * @name: metaInfoTemplate
  * @description: 路由meta数据控制
@@ -116,14 +116,16 @@ export const routerCellMaker = (
     meta: {
       title: name,
       icon: "bxs:package",
+      showLink: true,
       ...options["meta"],
       // 这里的false可能需要根据用户的登录身份修改
-      showLink: true,
+
       // 这个属性用于标注这个路由的来源 ，只有超级管理员能保持一直可见
       moduleBackUpRouter: true,
     },
     ...options["router"],
   };
+  console.log(routerCell, "asd");
   return routerCell;
 };
 
@@ -137,8 +139,11 @@ export interface modulesCellTemplate {
   name: string;
   path: string;
   routers: any[];
+  isReady: boolean;
   pageMap: stringAnyObj;
-  components: CardComponentTemplate[];
+  components: {
+    [key: string]: CardComponentTemplate;
+  };
   output?: { [key: string]: any };
   children?: { [key: string]: any }[];
   baseInfo?: {
@@ -154,23 +159,6 @@ let moduleList = [] as modulesCellTemplate[];
 let action = {} as stringAnyObj;
 
 /**
- * @name: getModuleFromView_Import
- * @description: 用于导入module包的一个函数
- * @authors: CZH
- * @Date: 2023-05-29 09:25:51
- * @param {*} init
- */
-export const getModuleFromView_Import = (init = false) => {
-  const timec = new timeChecker("getModuleFromView");
-  if (!init) {
-    timec.getTime(1);
-    return moduleList;
-  }
-
-  timec.getTime(2);
-};
-
-/**
  * @name: getModuleFromView
  * @description: 从@/modules文件夹中遍历并生成模块文件列表,基于模块单体页面构建，不参与主体页面构建流程，自带动画效果
  * @authors: CZH
@@ -178,9 +166,22 @@ export const getModuleFromView_Import = (init = false) => {
  * @param {*} basePath
  */
 export const getModuleFromView = async (init = false) => {
-  const timec = new timeChecker("getModuleFromView");
+  timeConsole.checkTime("模块加载");
   if (!init) {
-    timec.getTime(1);
+    await new Promise((res) => {
+      let interval = setInterval(() => {
+        if (
+          moduleList &&
+          moduleList.length > 0 &&
+          moduleList.filter((x) => x.isReady).length ==
+            moduleList.filter((x) => x.components).length
+        ) {
+          clearInterval(interval);
+          timeConsole.checkTime("模块加载", "fake");
+          res(true);
+        }
+      }, 30);
+    });
     return moduleList;
   }
 
@@ -197,6 +198,7 @@ export const getModuleFromView = async (init = false) => {
   };
   // 文档路径
   const pageConfigData = "PageConfigData/index.ts";
+
   const component = "component/index.ts";
   const mainPage = "Index.vue";
   const output = "output.ts";
@@ -249,11 +251,18 @@ export const getModuleFromView = async (init = false) => {
    */
   function dealRequireList(
     checkFunc: (dealName: string, len: number) => boolean,
-    dealFunc: (fileName: string) => void
+    dealFunc: (fileName: string, isLast: boolean) => void,
+    afterFunc: () => void = () => {}
   ) {
-    requireList.map((fileName: string) => {
+    const dealList = requireList.filter((fileName: string) => {
+      return checkFunc(getDealName(fileName), getFileNameLength(fileName));
+    });
+    dealList.map(async (fileName: string, i: number) => {
       if (checkFunc(getDealName(fileName), getFileNameLength(fileName))) {
-        dealFunc(fileName);
+        await dealFunc(fileName, dealList.length - 1 == i);
+      }
+      if (dealList.length - 1 == i) {
+        afterFunc && afterFunc();
       }
     });
   }
@@ -267,12 +276,13 @@ export const getModuleFromView = async (init = false) => {
       const moduleName = getModuleName(fileName);
       moduleList.push({
         name: moduleName,
-        path: `/src/modules/${moduleName}/`,
+        path: `@/modules/${moduleName}/`,
+        isReady: false,
         routers: [
           routerCellMaker(
             `/${moduleName}`,
             moduleName,
-            () => import(`/src/modules/${moduleName}/Index.vue`),
+            () => import(`@/modules/${moduleName}/Index.vue`),
             {},
             []
           ),
@@ -281,7 +291,26 @@ export const getModuleFromView = async (init = false) => {
         baseInfo: { info: "" },
         output: {},
         children: [],
-        components: [] as CardComponentTemplate[],
+        components: {},
+      });
+    }
+  );
+
+  // 处理组件列表
+  dealRequireList(
+    (dealName, len) => dealName == component,
+    async (fileName: string, isLast: boolean) => {
+      const moduleName = getModuleName(fileName);
+      moduleList.map(async (module: modulesCellTemplate, i) => {
+        if (module.name == moduleName) {
+          module.components = await (await requireModule(fileName)).default();
+        }
+        if (i == moduleList.length - 1 && isLast) {
+          moduleList.map((x) => {
+            x.isReady = true;
+          });
+        }
+        return module;
       });
     }
   );
@@ -312,20 +341,6 @@ export const getModuleFromView = async (init = false) => {
     }
   );
 
-  // 处理组件列表
-  dealRequireList(
-    (dealName, len) => dealName == component,
-    (fileName: string) => {
-      const moduleName = getModuleName(fileName);
-      moduleList.map(async (module: modulesCellTemplate) => {
-        if (module.name == moduleName) {
-          module.components = await (await requireModule(fileName)).default();
-        }
-        return module;
-      });
-    }
-  );
-
   // 添加默认路由方案 (output配置中可以关闭)
   dealRequireList(
     (dealName, len) => dealName == pageConfigData,
@@ -344,7 +359,7 @@ export const getModuleFromView = async (init = false) => {
                 pageMap[pageName]["name"]
                   ? moduleName + "_" + pageMap[pageName]["name"]
                   : moduleName + "_" + pageName,
-                () => import(`/src/modules/${moduleName}/Index.vue`),
+                () => import(`@/modules/${moduleName}/Index.vue`),
                 {
                   meta: {
                     originData: {
@@ -382,261 +397,22 @@ export const getModuleFromView = async (init = false) => {
     }
   );
 
-  timec.getTime(2);
   await new Promise((res) => {
-    setTimeout(() => {
-      res(true);
-    }, 1000);
+    let interval = setInterval(() => {
+      if (
+        moduleList &&
+        moduleList.length > 0 &&
+        moduleList.filter((x) => x.isReady).length ==
+          moduleList.filter((x) => x.components).length
+      ) {
+        clearInterval(interval);
+        timeConsole.checkTime("模块加载");
+        res(true);
+      }
+    }, 30);
   });
-
   return moduleList;
 };
-
-// /**
-//  * @name: modulesCellTemplate
-//  * @description: 模块生成模板
-//  * @authors: CZH
-//  * @Date: 2022-11-07 16:05:19
-//  */
-// export interface modulesCellTemplate {
-//   name: string;
-//   path: string;
-//   routers: RouteConfigsTable[];
-//   components: CardComponentTemplate[];
-//   output?: { [key: string]: any };
-//   children?: { [key: string]: any }[];
-//   baseInfo?: {
-//     info: string;
-//     output?: boolean;
-//     authorize?: string;
-//     fitScreenSize?: string;
-//     [key: string]: any;
-//   };
-// }
-
-// let moduleList = [] as modulesCellTemplate[];
-// let action = {} as stringAnyObj;
-
-// /**
-//  * @name: getModuleFromView
-//  * @description: 从@/modules文件夹中遍历并生成模块文件列表,基于模块单体页面构建，不参与主体页面构建流程，自带动画效果
-//  * @authors: CZH
-//  * @Date: 2022-10-23 21:51:34
-//  * @param {*} basePath
-//  */
-// export const getModuleFromView = (init = false) => {
-//   const timec = new timeChecker("getModuleFromView");
-//   if (!init) {
-//     timec.getTime(1);
-//     return moduleList;
-//   }
-
-//   // 如果你找到了这里的 require.context 搜索出了问题，先看一下是不是出现了空文件夹，如有则删除。  -- czh 20221109
-//   // 感谢自己，表现形式可能为 undifined files -- czh 20230116
-//   // again ，可能需要做一个更好的提示信息 -- czh 20230209
-//   moduleList = [] as modulesCellTemplate[];
-//   const requireModule = require.context("@/modules/", true, /.\.ts|\.vue/g);
-//   const requireList = requireModule.keys() as string[];
-
-//   // 文档路径
-//   const pageConfigData = "PageConfigData/index.ts";
-//   const pageConfigEnv = "PageConfigData";
-//   const component = "component/index.ts";
-//   const mainPage = "Index.vue";
-//   const output = "output.ts";
-//   const router = "router/index.ts";
-
-//   /**
-//    * @name: getModuleName
-//    * @description: 获取模组名(文件夹名)
-//    * @authors: CZH
-//    * @Date: 2022-11-07 14:42:27‘
-//    * @param {string} fileName
-//    */
-//   function getModuleName(fileName: string): string {
-//     return fileName.split("./")[1].split("/")[0];
-//   }
-
-//   /**
-//    * @name: getDealName
-//    * @description: 获取当前所需处理的对象名
-//    * @authors: CZH
-//    * @Date: 2022-11-07 14:53:40
-//    * @param {string} fileName
-//    */
-//   function getDealName(fileName: string, len: number = 3): string {
-//     return fileName.split("/").length < len
-//       ? ""
-//       : fileName
-//           .split("/")
-//           .filter((x: any, i: number) => i >= len - 1)
-//           .join("/");
-//   }
-
-//   /**
-//    * @name: getFileNameLength
-//    * @description: 获取当前处理对象长度
-//    * @authors: CZH
-//    * @Date: 2022-11-07 14:54:12
-//    * @param {string} fileName
-//    */
-//   function getFileNameLength(fileName: string): number {
-//     return fileName.split("/").length;
-//   }
-//   /**
-//    * @name: dealRequireList
-//    * @description: 处理函数
-//    * @authors: CZH
-//    * @Date: 2022-11-07 14:54:37
-//    * @param {function} checkFunc
-//    * @param {function} dealFunc
-//    */
-//   function dealRequireList(
-//     checkFunc: (dealName: string, len: number) => boolean,
-//     dealFunc: (fileName: string) => void
-//   ) {
-//     requireList.map((fileName: string) => {
-//       if (checkFunc(getDealName(fileName), getFileNameLength(fileName))) {
-//         dealFunc(fileName);
-//       }
-//     });
-//   }
-
-//   // 处理获取到模块，构建基础的模块列表
-//   dealRequireList(
-//     (dealName, len) => dealName == mainPage && len == 3,
-//     (fileName: string) => {
-//       const moduleName = getModuleName(fileName);
-//       moduleList.push({
-//         name: moduleName,
-//         path: `@/modules/${moduleName}/`,
-//         routers: [
-//           routerCellMaker(
-//             `/${moduleName}`,
-//             moduleName,
-//             () => import(`/src/modules/${moduleName}/Index.vue`),
-//             {},
-//             []
-//           ),
-//         ],
-//         baseInfo: { info: "" },
-//         output: {},
-//         children: [],
-//         components: [] as CardComponentTemplate[],
-//       });
-//     }
-//   );
-
-//   // 整理模块包的引入关系
-//   dealRequireList(
-//     (dealName, len) =>
-//       dealName.indexOf(pageConfigEnv) > -1 &&
-//       len == 4 &&
-//       dealName != pageConfigData,
-//     (fileName: string) => {}
-//   );
-
-//   // 处理outPut文件
-//   dealRequireList(
-//     (dealName, len) => dealName == output && len == 3,
-//     (fileName: string) => {
-//       const moduleName = getModuleName(fileName);
-//       moduleList.map((module: modulesCellTemplate) => {
-//         if (module.name == moduleName) {
-//           const output = requireModule(fileName);
-//           if (output["output"]) module.output = output["output"];
-//           if (output["moduleInfo"]) {
-//             const moduleInfo = output["moduleInfo"];
-//             module.baseInfo = {
-//               ...module.baseInfo,
-//               ...moduleInfo,
-//             };
-//             module.routers[0].meta = {
-//               ...module.routers[0].meta,
-//               ...moduleInfo,
-//             };
-//           }
-//         }
-//         return module;
-//       });
-//     }
-//   );
-
-//   // 处理组件列表
-//   dealRequireList(
-//     (dealName, len) => dealName == component,
-//     (fileName: string) => {
-//       const moduleName = getModuleName(fileName);
-//       moduleList.map((module: modulesCellTemplate) => {
-//         if (module.name == moduleName) {
-//           module.components = requireModule(fileName).default;
-//         }
-//         return module;
-//       });
-//     }
-//   );
-
-//   // 添加默认路由方案 (output配置中可以关闭)
-//   dealRequireList(
-//     (dealName, len) => dealName == pageConfigData,
-//     (fileName: string) => {
-//       const moduleName = getModuleName(fileName);
-//       moduleList.map((module: modulesCellTemplate) => {
-//         if (module.name == moduleName) {
-//           const pageMap = requireModule(fileName)["PageConfig"] as {
-//             [key: string]: desktopDataTemplate;
-//           };
-//           Object.keys(pageMap).map((pageName: string) => {
-//             const route = routerCellMaker(
-//               `/${moduleName}/${pageName}`,
-//               pageMap[pageName]["name"]
-//                 ? moduleName + "_" + pageMap[pageName]["name"]
-//                 : moduleName + "_" + pageName,
-//               () => import(`/src/modules/${moduleName}/Index.vue`),
-//               {import default from '../components/basicComponents/grid/module/cardApi/index';
-
-//                 meta: {
-//                   originData: {
-//                     ...pageMap[pageName],
-//                     desktopData: null,
-//                   },
-//                   ...pageMap[pageName]["cusStyle"],
-//                   title:
-//                     pageMap[pageName]["name"] || moduleName + "_" + pageName,
-//                 },
-//               }
-//             );
-//             module.routers[0].children.push(route);
-//             if (pageMap[pageName].InRouter) {
-//               module.routers.push(route);
-//             }
-//           });
-//         }
-//         return module;
-//       });
-//     }
-//   );
-
-//   // 处理路由列表
-//   dealRequireList(
-//     (dealName, len) => dealName == router,
-//     (fileName: string) => {
-//       const moduleName = getModuleName(fileName);
-//       moduleList.map((module: modulesCellTemplate) => {
-//         if (module.name == moduleName) {
-//           module.routers = [
-//             ...module.routers,
-//             ...requireModule(fileName).default,
-//           ];
-//         }
-//         return module;
-//       });
-//     }
-//   );
-
-//   timec.getTime(2);
-//   return moduleList;
-// };
 
 export const getAction = () => {
   if (Object.keys(action).length == 0) getModuleFromView(true);
@@ -655,6 +431,7 @@ export const getAction = () => {
         }
       });
     });
+    console.log(routes, "asd");
     return routes;
   };
 

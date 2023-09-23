@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-18 23:06:49
  * @LastEditors: CZH
- * @LastEditTime: 2023-08-08 20:54:32
+ * @LastEditTime: 2023-09-04 21:23:46
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/cell/card/cardBg.vue
 -->
 
@@ -22,7 +22,7 @@ export default defineComponent({
       default: "",
     },
     noHover: {
-      type: String,
+      type: Boolean,
       default: false,
     },
   },

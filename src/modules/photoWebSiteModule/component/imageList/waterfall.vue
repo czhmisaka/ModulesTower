@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 22:42:52
+ * @LastEditTime: 2023-09-24 03:36:27
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -181,7 +181,7 @@ export default defineComponent({
     baseData: {
       handler: async function (val) {
         let back = getBaseDataByWatchKey(val, this.watchKey);
-        if (back && JSON.stringify(back) != this.preData) {
+        if (back && JSON.stringify(back) != this.preData && this.open) {
           this.preData = JSON.stringify(back);
           this.data.offset = 0;
           this.rowList = [[]];
@@ -213,7 +213,7 @@ export default defineComponent({
         that.rowList = [[]];
         await that.getImgList(that.baseData, true);
       }
-    }, 1000);
+    }, 100);
   },
   data: () => {
     return {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-04 15:00:00
+ * @LastEditTime: 2023-09-04 21:28:45
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -213,14 +213,12 @@ export const moduleStore = defineStore({
 
     async initRouterBackup(groups = this.groups) {
       // 注入各个模块的展示界面
-      const moduleList = await getModuleFromView(true);
-      console.log(moduleList, "fuck");
+      const moduleList = await getModuleFromView(false);
       let baseModuleRouterList = [] as RouteConfigsTable[];
       moduleList.map((module: modulesCellTemplate, index: number) => {
         module.routers.map((route: RouteConfigsTable, i: number) => {
           route.children
             ? route.children.map((cell: RouteConfigsTable) => {
-                console.log(cell);
                 if (cell.meta && cell.meta["needGroupName"]) {
                   if (groups.indexOf(cell.meta["needGroupName"]) > -1)
                     baseModuleRouterList.push(cell);
@@ -247,28 +245,9 @@ export const moduleStore = defineStore({
         }, 100);
       }
       let router = await initRouter(true);
-      if (router && path != "/") {
-        if (
-          router
-            .getRoutes()
-            .map((x) => x.path)
-            .indexOf(path)
-        ) {
-          router.replace(
-            router.getRoutes()[
-              router
-                .getRoutes()
-                .map((x) => x.path)
-                .indexOf(path)
-            ]
-          );
-        }
-      } else {
-        router.replace(this.nowModule.children[0].children[0]);
-      }
+      router.push(path);
       return this.nowModule;
     },
-
     async searchToPage(pagePath: string) {
       let targetModuleIndex = -1;
       for (let i = 0; i < this.moduleList.length; i++) {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 23:23:48
+ * @LastEditTime: 2023-09-24 03:27:13
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -111,7 +111,8 @@ export const getFunc = async function (that, data) {
     return res;
   };
   const getCategory = async (data) => {
-    let { limit, offset, query } = data;
+    let { limit, offset, query, category } = data;
+    if (!query) query = {};
     let {
       tags,
       name,
@@ -125,11 +126,12 @@ export const getFunc = async function (that, data) {
       height_max,
       color,
     } = query;
+    console.log(color, "asdfuck");
     if (!color) {
       let res = await post(
         `/images?offset=${offset}&limit=${limit}${
-          Object.keys(query).length == 0 && data.category?.id
-            ? "&catrgory=" + data.category?.id
+          Object.keys(query).length == 0 && category?.id
+            ? "&catrgory=" + category?.id
             : ""
         }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}${
           file_size_max ? "&file_size_max=" + file_size_max : ""
@@ -158,6 +160,7 @@ export const getFunc = async function (that, data) {
     }
   };
   const getCollection = async (data) => {
+    console.log("asdqwefuck");
     let { limit, offset, query } = data;
     let resp = await piwigoMethod({
       col_id: data["collection"].id,
@@ -176,10 +179,12 @@ export const getFunc = async function (that, data) {
       },
     };
   };
+  let fuckkey = false;
   if (
     JSON.stringify(baseData["category"]) !=
     JSON.stringify(that.baseData["category"])
   ) {
+    fuckkey = true;
     lastFunc = 1;
     res = await getCategory(data);
     setData(that, {
@@ -189,14 +194,22 @@ export const getFunc = async function (that, data) {
     JSON.stringify(baseData["collection"]) !=
     JSON.stringify(that.baseData["collection"])
   ) {
+    fuckkey = true;
     lastFunc = 2;
     res = await getCollection(data);
     setData(that, {
       category: {},
     });
-  } else if (lastFunc == 1) res = await getCategory(data);
-  else if (lastFunc == 2) res = await getCollection(data);
+  } else if (lastFunc == 1) {
+    fuckkey = true;
+    res = await getCategory(data);
+  } else if (lastFunc == 2) {
+    fuckkey = true;
+    res = await getCollection(data);
+  }
+
   baseData = JSON.parse(JSON.stringify({ ...that.baseData, ...data.query }));
+  console.log(baseData, that.baseData, fuckkey, res, res.data, "asd");
   return res.data.list.map((x) => {
     let path = x.path.replace("./", "/");
     return {
@@ -274,6 +287,7 @@ export const mainDesktop = async () => {
             });
             return col.result.collections;
           },
+          noNeedInit: true,
           clickItemDetailFunc: (that, data) => {
             openDrawerFormEasy(that, {
               title: "收藏夹【" + data.name + "】",

@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-04 14:19:56
+ * @LastEditTime: 2023-09-04 21:33:12
  * @FilePath: /ConfigForDesktopPage/src/main.ts
  */
 let num = 0;
@@ -25,7 +25,7 @@ import { getServerConfig } from "@/utils/config/appConfig";
 import { injectResponsiveStorage } from "@/utils/responsive";
 import { setupStore } from "@/store";
 
-export let timeConsole = new timeChecker("模块生成", false);
+export let timeConsole = new timeChecker("模块生成");
 
 const app = createApp(App);
 

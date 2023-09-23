@@ -172,6 +172,7 @@ function initRouter(noRefresh: boolean = false): Promise<Router> {
       routesFromModule.map((x) => {
         data.push(x);
       });
+      console.log(data, "routesFromModule");
       if (data.length === 0) {
         await usePermissionStoreHook().handleWholeMenus(data);
         resolve(router);

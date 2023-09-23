@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 23:35:11
+ * @LastEditTime: 2023-09-24 03:21:06
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -45,7 +45,7 @@
         trigger="hover"
       >
         <template #reference>
-          <el-button icon="plus" type="primary" plain="true"> 以图搜图 </el-button>
+          <el-button icon="plus" type="primary" :plain="true"> 以图搜图 </el-button>
         </template>
         <template #default>
           <el-upload
@@ -473,9 +473,9 @@ export default defineComponent({
         icon: false,
         searchInfo: true,
       });
-      setData(context, {
-        query: {},
-      });
+      // setData(context, {
+      //   query: {},
+      // });
       changeCardProperties(context, {
         waterFall: {
           watchKey: ["category", "query", "collection"],
