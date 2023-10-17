@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-06 08:57:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-08-23 23:24:55
+ * @LastEditTime: 2023-10-04 14:35:39
  */
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import {
@@ -33,6 +33,7 @@ import { propertiesMaker } from './searchTable';
 
 function base(cell: tableCellTemplate) {
   return {
+    options: cell.input,
     title: cell.label,
     description: cell.input.description,
     type: "string",
@@ -53,6 +54,7 @@ export const globalBaseCellDeal = (
   cellProperties: stringAnyObj | Promise<stringAnyObj>,
   needTitle: boolean = false
 ): stringAnyObj | Promise<stringAnyObj> => {
+  // const globalBaseCell = {};
   const globalBaseCell = {
     'err:required': '请填写' + cell.label,
     "ui:options": {
@@ -60,7 +62,7 @@ export const globalBaseCellDeal = (
       placeholder: "请输入" + cell.label,
       style: {
         width: needTitle ? "360px" : "100%",
-        marginBottom: needTitle ? "12px" : ''
+        marginBottom: needTitle ? "6px" : '6px'
       },
     },
   };
@@ -133,7 +135,6 @@ inputElement[formInputType.datePicker] = {
   properties: (that, cell) => {
     return {
       ...base(cell),
-
       type: "number",
       format: "date",
       ...cell.input?.inputOptions,
@@ -204,7 +205,6 @@ inputElement[formInputType.radio] = {
     const { input } = cell;
     let properties = {
       ...base(cell),
-
       type: "string",
       "ui:widget": defineComponent({
         props: [
@@ -709,6 +709,7 @@ inputElement[formInputType.remoteDictSelect] = {
   }
 }
 
+
 inputElement[formInputType.richTextArea] = {
   properties: async (that, cell) => {
     const { input } = cell;
@@ -827,6 +828,14 @@ inputElement[formInputType.customComponent] = {
   }
 }
 
+
+
+/**
+ * @name: tableCellTemplate
+ * @description: 嵌套表单
+ * @authors: CZH
+ * @Date: 2023-08-29 09:56:31
+ */
 inputElement[formInputType.tableCellTemplate] = {
   properties: async (that, cell) => {
     const { input } = cell;
@@ -835,11 +844,13 @@ inputElement[formInputType.tableCellTemplate] = {
       title: input.label,
       type: 'object',
       properties: await propertiesMaker((await input.funcInputOptionsLoader(that) as tableCellTemplate[]) || [], that, true),
-      ...input.inputOptions
+      ...input.inputOptions,
     }
     return properties;
   },
 }
+
+
 
 
 export default inputElement;

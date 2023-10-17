@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-24 03:32:36
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
+ * @LastEditTime: 2023-09-25 09:35:18
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuList.vue
 -->
 <template>
   <cardBg
@@ -217,12 +217,7 @@ export default defineComponent({
   async mounted() {
     await this.init();
     // 选中第一个
-    if (
-      this.treeData &&
-      this.treeData[0] &&
-      this.treeData[0].children &&
-      this.treeData[0].children[0]
-    ) {
+    if (this.treeData && this.treeData[0] && this.treeData[0].children[0]) {
       const node = this.treeData[0].children[0];
       const that = this;
       this.$nextTick(() => {

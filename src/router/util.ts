@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-24 03:50:31
+ * @LastEditTime: 2023-10-16 21:12:59
  * @FilePath: /ConfigForDesktopPage/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -125,7 +125,6 @@ export const routerCellMaker = (
     },
     ...options["router"],
   };
-  console.log(routerCell, "asd");
   return routerCell;
 };
 

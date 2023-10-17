@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-12-02 11:00:29
- * @LastEditors: CZH
- * @LastEditTime: 2023-08-23 23:24:11
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/types.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-08-22 11:26:26
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/types.ts
  */
 
 import {
@@ -133,6 +133,14 @@ export interface btnCellTemplate extends stringAnyObj {
   apiList: string[];
   // 按钮key
   showAbleKey: string;
+  uploadInfo?:{
+    data: stringAnyObj,
+    action: '',
+    limit:1,
+    success:()=>{
+      
+    }
+  }
 }
 
 export interface PageDataTemplate extends stringAnyObj {
@@ -160,7 +168,6 @@ export interface tableCellOptionsInputPropertiesTemplate {
   ) =>
     | Promise<tableCellOptions[] | void>
     | tableCellOptions[]
-    | Promise<stringAnyObj>
     | stringAnyObj
     | void;
   // 一些style
@@ -241,7 +248,6 @@ export enum formInputType {
   selects = "selects",
   number = "number",
   inputList = "inputList",
-  password = "password",
   input = "input",
   areaCascader = "areaCascader",
   datePicker = "datePicker",

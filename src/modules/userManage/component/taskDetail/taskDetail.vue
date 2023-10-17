@@ -263,7 +263,7 @@ export default defineComponent({
             }
         }
         .JVMBasic {
-            width: calc(100% - 24px);
+            width: calc(100% - 12px);
             padding: 12px;
             border-radius: 6px;
             border: 1px solid #ddd;

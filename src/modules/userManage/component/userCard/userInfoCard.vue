@@ -1,111 +1,84 @@
 <!--
  * @Date: 2023-02-13 10:25:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 17:49:08
- * @FilePath: /configforpagedemo/src/modules/userManage/component/userCard/userInfoCard.vue
+ * @LastEditTime: 2023-09-14 18:33:03
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/userCard/userInfoCard.vue
 -->
 <template>
-  <cardBg
-    @mouseenter="hightLight()"
-    @mouseleave="hightLight(false)"
-    :cusStyle="cardBgCusStyle"
-  >
-    <el-popover
-      ref="popoverRef"
-      placement="left-start"
-      :show-arrow="false"
-      :show-after="300"
-      :visible="isHover"
-      :width="400"
+  <cardBg :cusStyle="cardBgCusStyle">
+    <div
+      :style="{
+        width: '100%',
+        height: '100%',
+        overflow: 'auto',
+        overflowX: 'hidden',
+      }"
     >
-      <template #reference>
-        <div
+      <div
+        class="wholeWidthBox"
+        :style="{
+          height: blockSizePercent(2),
+        }"
+        v-if="userInfoData['username']"
+      >
+        <el-image
+          v-if="userInfoData['icon'] ? userInfoData['icon'].replace('/lcdp', '/api') : ''"
           :style="{
-            width: '100%',
-            height: '100%',
-            overflow: 'auto',
-            overflowX: 'hidden',
+            width: blockSizePercent(1.4),
+            height: blockSizePercent(1.4),
+            borderRadius: '50%',
+            margin: blockSizePercent(0.3),
+          }"
+          class="mainColorBorder"
+          :src="userpng"
+          fit="cover"
+        />
+
+        <!-- userInfoData['icon'] ? userInfoData['icon'].replace('/lcdp', '/api') : userpng -->
+        <div
+          class="flexCol"
+          :style="{
+            width: `calc(100% - ${blockSizePercent(2)})`,
+            fontSize: blockSizePercent(0.2),
           }"
         >
-          <div
-            class="wholeWidthBox"
-            :style="{
-              height: blockSizePercent(2),
-            }"
-            v-if="userInfoData['name']"
-          >
-            <el-image
-              :style="{
-                width: blockSizePercent(1.4),
-                height: blockSizePercent(1.4),
-                borderRadius: '50%',
-                margin: blockSizePercent(0.3),
-              }"
-              class="mainColorBorder"
-              :src="
-                userInfoData['icon'] ? userInfoData['icon'].replace('/lcdp', '/api') : ''
-              "
-              fit="cover"
-            />
-            <div
-              class="flexCol"
-              :style="{
-                width: `calc(100% - ${blockSizePercent(2)})`,
-                fontSize: blockSizePercent(0.2),
-              }"
-            >
-              <span class="name">
-                {{ userInfoData["name"] }}
-                <br />
-                <span class="mobile">手机号：{{ userInfoData["mobile"] }}</span>
-              </span>
-            </div>
-          </div>
-          <div class="btnList" :style="{}" v-if="btnList && btnList.length">
-            <div
-              v-for="item in btnList.filter((btn) =>
-                btn && btn.isShow
-                  ? btn.isShow(userInfoData, JSON.parse(JSON.stringify(btn)))
-                  : true
-              )"
-              style="float: left; margin-right: 6px"
-            >
-              <el-button
-                class="btn"
-                :loading="item.isLoading"
-                @click="btnClick(item)"
-                :type="item.elType"
-                :icon="item.icon"
-                :size="blockSizePercent(1, '') < 40 ? 'small' : 'default'"
-                :text="blockSizePercent(1, '') < 40"
-              >
-                {{ item.label }}
-              </el-button>
-            </div>
-          </div>
+          <span class="name">
+            {{ userInfoData["username"] }}
+            <br />
+            <span class="mobile">部门：{{ userInfoData["unitNames"] }}</span>
+          </span>
         </div>
-      </template>
-      <div v-if="showTemplate && showTemplate.length > 0">
-        <el-form ref="form" v-on:submit.prevent :label-position="'left'" size="small">
-          <el-form-item
-            :label-width="'120px'"
-            :label="item.label"
-            v-for="item in showTemplate.filter((x) => x.table.type != showType.btnList)"
-          >
-            <span v-if="item.table.type == showType.funcComponent">
-              <component :is="item.table.showFunc(userInfoData, item.key)"></component>
-            </span>
-            <span v-else-if="item.table.type == showType.func">
-              {{ item.table.showFunc(userInfoData, item.key) }}
-            </span>
-          </el-form-item>
-        </el-form>
       </div>
-    </el-popover>
+      <div class="btnList" :style="{}" v-if="btnList && btnList.length">
+        <div
+          v-for="item in btnList.filter((btn) =>
+            btn && btn.isShow
+              ? btn.isShow(userInfoData, JSON.parse(JSON.stringify(btn)))
+              : true
+          )"
+          style="float: left; margin-right: 6px"
+        >
+          <el-button
+            class="btn"
+            :loading="item.isLoading"
+            @click="btnClick(item)"
+            :type="item.elType"
+            :icon="item.icon"
+            :size="blockSizePercent(1, '') as number < 40 ? 'small' : 'default'"
+            :text="blockSizePercent(1, '') as number < 40"
+          >
+            {{ item.label }}
+          </el-button>
+        </div>
+      </div>
+    </div>
   </cardBg>
 </template>
 
 <script lang="ts">
+import userpng from "@/assets/img/user.png";
+console.log(userpng, "asd");
+
 import { defineComponent, ref, watch, onMounted, toRefs } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import {
@@ -176,6 +149,7 @@ export default defineComponent({
 
   data: () => {
     return {
+      userpng,
       userInfoData: {},
       showType,
       isHover: false,
@@ -200,8 +174,8 @@ export default defineComponent({
 
   methods: {
     hightLight(value = true) {
-      hightLightComponent(this, value ? [this.detail.label] : []);
-      this.isHover = value;
+      // hightLightComponent(this, value ? [this.detail.label] : []);
+      // this.isHover = value;
     },
     /**
      * @name: btnClick
@@ -227,7 +201,6 @@ export default defineComponent({
     this.$emit("ready", true);
     if (this.userInfo) {
       this.userInfoData = await this.userInfo();
-      console.log(this.userInfoData);
     }
     this.$emit("ready");
   },
@@ -236,12 +209,13 @@ export default defineComponent({
 
     // 方便获取 尺寸
     const blockSizePercent = (num, unit = "px"): string | number => {
-      const size = gridInfo.value.gridInfo.default.size.width;
-      const sizeChangeRate = size / 3 / 2;
-      return sizeUnit.value["blockSize"] * num * sizeChangeRate + unit;
+      // const size = gridInfo.value.gridInfo.default.size.width;
+      // const sizeChangeRate = size / 3 / 2;
+      // return sizeUnit.value["blockSize"] * num * sizeChangeRate + unit;
+      return 30 * num + unit;
     };
 
-    return { sizeUnit, gridInfo, blockSizePercent };
+    return { blockSizePercent };
   },
 });
 </script>
@@ -253,8 +227,9 @@ export default defineComponent({
   justify-content: flex-start;
 }
 .mainColorBorder {
-  border: 1px white solid;
-  box-shadow: 0px 0px 4px var(--el-color-primary);
+  display: inline-block;
+  border: 2px white solid;
+  box-shadow: 0px 0px 2px $subMenuActiveBg;
 }
 
 .flexCol {

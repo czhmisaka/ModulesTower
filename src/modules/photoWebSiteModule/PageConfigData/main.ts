@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-24 03:27:13
+ * @LastEditTime: 2023-10-16 21:13:16
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -126,7 +126,6 @@ export const getFunc = async function (that, data) {
       height_max,
       color,
     } = query;
-    console.log(color, "asdfuck");
     if (!color) {
       let res = await post(
         `/images?offset=${offset}&limit=${limit}${

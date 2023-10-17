@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-11 17:49:11
+ * @LastEditTime: 2023-09-20 10:51:58
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
@@ -34,7 +34,7 @@
         <el-button
           style="margin-left: 0px"
           :size="size"
-          v-if="searchBtn && selectedKey.length == 0"
+          v-if="searchBtn && isBtnShow(searchBtn) && selectedKey.length == 0"
           :loading="searchBtn.isLoading"
           :type="searchBtn.elType"
           plain
@@ -225,6 +225,11 @@ export default defineComponent({
     this.$emit("ready");
   },
   methods: {
+    isBtnShow(btn: btnCellTemplate) {
+      const that = this;
+      return btn.isShow(that, btn);
+    },
+
     /**
      * @name: nodeClick
      * @description: 点击上报事件
@@ -328,7 +333,7 @@ export default defineComponent({
   transition: all 0.3;
 
   ::v-deep .el-tree-node__label {
-    width: calc(100% - 24px);
+    width: calc(100% - 12px);
   }
   .searchBar {
     display: flex;

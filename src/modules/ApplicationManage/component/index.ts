@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-04 15:05:23
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/index.ts
+ * @LastEditTime: 2023-09-04 15:06:40
+ * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/index.ts
  */
 import {
   CardComponentTemplate,

@@ -1,7 +1,6 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-13 18:16:53
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
@@ -31,9 +30,11 @@ import { deepClone } from "@/utils";
 import { ElDrawer, ElDivider, ElButton } from "element-plus";
 import { customComponent } from "@/modules/userManage/types";
 
-const baseShowFunc = (data, key) => {
+const noDataIcon = "_";
+
+const baseShowFunc = (data, key, isPopover = false) => {
   if (data[key] != undefined) return data[key] + "";
-  else return "";
+  else return noDataIcon;
 };
 
 /**
@@ -164,7 +165,7 @@ export const DateCell = (
   return {
     ...showCell(showType.func, {
       showFunc: (data: any, key: string) =>
-        data[key] ? new Date(data[key] * 1).toLocaleString() : " ",
+        data[key] ? new Date(data[key] * 1).toLocaleString() : noDataIcon,
       ...options,
     }),
     ...searchCell(formInputType.datePicker, inputOptions),
@@ -251,8 +252,8 @@ export const remoteDictSelectSearchCell = (dictKey: string) => {
         const remoteDictStore = useRemoteDictHook();
         remoteDictStore.getByKey(dictKey)[data[key]];
         return remoteDictStore.keyMap[dictKey]
-          ? remoteDictStore.keyMap[dictKey][data[key]]
-          : "";
+          ? remoteDictStore.keyMap[dictKey][data[key]] || noDataIcon
+          : noDataIcon;
       },
     }),
     ...searchCell(formInputType.remoteDictSelect, {
@@ -307,6 +308,7 @@ export const actionCell = (
   tableCellOption.table = {
     type: showType.btnList,
     btnList: btnList,
+    fixed: "right",
     ...options,
   };
   return tableCellOption;
@@ -357,7 +359,8 @@ export const gridDesktopCell = (
       inputOptions: {
         style: {
           height: "50vh",
-          maxHeight: "50vh",
+          maxHeight: "100vh",
+          width: "100%",
         },
         ...options,
       },
@@ -385,6 +388,9 @@ export const richTextCell = (
   return {
     ...searchCell(formInputType.richTextArea, {
       ...inputProperties,
+      funcInputOptionsLoader: () => {
+        return {};
+      },
     }),
     ...showCell(showType.funcComponent, {
       showFunc: (data, key) =>
@@ -394,6 +400,24 @@ export const richTextCell = (
           },
         }),
       ...showOptions,
+    }),
+  };
+};
+
+/**
+ * @name: tableCellTemplateCell
+ * @description: 一个用于嵌套json层级编辑的工具
+ * @authors: CZH
+ * @Date: 2023-09-25 19:24:18
+ */
+export const tableCellTemplateCell = (
+  tableCellTemplateList: tableCellTemplate[]
+) => {
+  return {
+    ...searchCell(formInputType.tableCellTemplate, {
+      funcInputOptionsLoader: (that) => {
+        return tableCellTemplateList;
+      },
     }),
   };
 };
@@ -462,7 +486,7 @@ export const tableCellTemplateMaker = (
     table: {
       showFunc: baseShowFunc,
       type: showType.func,
-      sortable: true,
+      sortable: false,
       width: "auto",
       style: {
         maxHeight: "120px",

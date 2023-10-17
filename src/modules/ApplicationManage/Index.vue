@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-16 21:44:59
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/Index.vue
+ * @LastEditTime: 2023-10-08 18:22:06
+ * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/Index.vue
 -->
 
 <template>

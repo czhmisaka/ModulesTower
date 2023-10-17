@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 00:54:05
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
+ * @LastEditTime: 2023-09-22 16:28:24
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
   <cardBg
@@ -25,14 +25,14 @@
     />
     <infoTable
       :template="showItemTemplate"
-      :data-list="PageData.data"
+      :data-list="PageData?.data"
       :loading="isLoading"
       @search="search"
       @refresh="refresh"
-      :canSelect="canSelect"
       :style="{
         height: TableHeight + 'px',
       }"
+      :load="load"
       :baseData="baseData"
       @selectedChange="selectedChange"
       @onChange="(value, options) => $emit('onChange', value, options)"
@@ -45,7 +45,7 @@
       v-if="PageData.total"
       v-model:current-page="PageData.pageNumber"
       v-model:page-size="PageData.pageSize"
-      :page-sizes="[2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 100]"
+      :page-sizes="[5, 10, 20, 30, 40, 100]"
       :small="true"
       :background="true"
       layout="total, sizes, prev, pager, next, jumper"
@@ -68,7 +68,7 @@ import {
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import inputForm from "./inputForm.vue";
-import infoTable from "./infoTable.vue";
+import infoTable from "./info/infoTable.vue";
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { tableCellTemplateMaker } from "./searchTable";
 import search from "@iconify-icons/ep/search";
@@ -80,7 +80,50 @@ import {
   btnActionTemplate,
 } from "@/modules/userManage/types";
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
+import { timeConsole } from "@/main";
+let useAble = 0;
 
+function throttle(func, delay) {
+  let timer = null;
+  let lastTime = 0;
+  return function () {
+    const context = this;
+    const args = arguments;
+    const now = new Date().getTime();
+    if (now - lastTime >= delay) {
+      clearTimeout(timer);
+      func.apply(context, args);
+      lastTime = now;
+    } else {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        func.apply(context, args);
+        lastTime = now;
+      }, delay);
+    }
+  };
+}
+function fuck(that) {
+  timeConsole.checkTime("表单高度计算");
+  const mainBox = that.$refs["mainBox"];
+  const inputBox = that.$refs["inputBox"];
+  if (mainBox && inputBox) {
+    let baseHeight = 0;
+    let offsetHeight = -16;
+    if (that.PageData.total) baseHeight = 32;
+    if (inputBox.$el.offsetHeight)
+      that.TableHeight =
+        mainBox.$el.offsetHeight -
+        inputBox.$el.offsetHeight -
+        34 -
+        baseHeight -
+        offsetHeight;
+    else that.TableHeight = mainBox.$el.offsetHeight - 24 - baseHeight - offsetHeight;
+  }
+  timeConsole.checkTime("表单高度计算");
+}
+
+let fuckk = throttle(fuck, 200);
 export default defineComponent({
   componentInfo: {
     labelNameCn: "搜索列表组件",
@@ -161,7 +204,6 @@ export default defineComponent({
     "defaultQuery",
     "baseData",
     "sizeUnit",
-    "canSelect",
     "searchFunc",
     "showItemTemplate",
     "searchItemTemplate",
@@ -169,12 +211,15 @@ export default defineComponent({
     "btnList",
     "autoSearch",
     "pageConfig",
+    "load",
   ],
   components: { cardBg, inputForm, infoTable, sideDialogForm },
   data() {
     return {
       query: {},
-      PageData: {} as PageDataTemplate,
+      PageData: {
+        pageSize: 1000,
+      } as PageDataTemplate,
       isLoading: false,
 
       isReady: false,
@@ -187,36 +232,48 @@ export default defineComponent({
 
       interval: null,
       baseDataForCheck: {},
+      idRandom: (useAble += Math.random()),
     };
   },
-  async mounted() {
+
+  async created() {
+    timeConsole.checkTime("searchTable");
     this.isReady = false;
     await this.initData();
-    await this.$nextTick();
-    this.$emit("ready");
     this.isReady = true;
+    this.$emit("ready");
+    timeConsole.checkTime("initData");
     await this.search();
-    let that = this;
-    if (that.interval) clearInterval(that.interval);
-    that.interval = setInterval(() => {
-      if (that.$refs["mainBox"] && that.$refs["inputBox"]) {
-        let baseHeight = 0;
-        let offsetHeight = -6;
-        if (that.PageData.total) baseHeight = 32;
-        if (that.$refs["inputBox"].$el.offsetHeight)
-          that.TableHeight =
-            that.$refs["mainBox"].$el.offsetHeight -
-            that.$refs["inputBox"].$el.offsetHeight -
-            34 -
-            baseHeight -
-            offsetHeight;
-        else
-          that.TableHeight =
-            that.$refs["mainBox"].$el.offsetHeight - 24 - baseHeight - offsetHeight;
-      }
-    }, 200);
+    timeConsole.checkTime("initData");
   },
+  async mounted() {
+    const that = this;
+    const data = {};
+    const name = "searchTable_func_" + this.idRandom;
+    data[name] = that.changeSize;
+    window.addEventListener("resize", data[name]);
+    let num = 0;
+    const interval = setInterval(() => {
+      that.changeSize();
+      num++;
+      if (num > 10) clearInterval(interval);
+    }, 400);
+    timeConsole.checkTime("searchTable");
+  },
+
+  async unmounted() {
+    const that = this;
+    const data = {};
+    const name = "searchTable_func_" + this.idRandom;
+    data[name] = that.changeSize;
+    window.removeEventListener("resize", data[name]);
+  },
+
   methods: {
+    changeSize() {
+      fuckk(this);
+    },
+
     async initData() {
       if (this.defaultQuery && Object.keys(this.defaultQuery).length > 0) {
         this.query = deepClone(this.defaultQuery);
@@ -233,7 +290,7 @@ export default defineComponent({
       this.query = query;
       if (this.autoSearch) this.search();
     },
-
+    uploadChange(query: stringAnyObj) {},
     refresh() {
       if (
         this.autoSearch == false &&
@@ -261,7 +318,11 @@ export default defineComponent({
       btn["isLoading"] = true;
       if (btn.type == btnActionTemplate.OpenDrawer) {
         this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
-      } else if (btn.type == btnActionTemplate.Function && btn.function) {
+      } else if (
+        (btn.type == btnActionTemplate.Function ||
+          btn.type == btnActionTemplate.UploadFunction) &&
+        btn.function
+      ) {
         let that = this;
         await btn.function(that, data);
       } else if (btn.type == btnActionTemplate.Url) {
@@ -286,22 +347,33 @@ export default defineComponent({
         ...this.query,
         ...query,
       };
+      let result = null;
       if (this.searchFunc && this.isReady) {
         this.isLoading = true;
-        try {
-          let result = await this.searchFunc(this.query, this);
-          this.PageData.data = [];
+        // try {
+        timeConsole.checkTime("searchFunc");
+        result = await this.searchFunc(this.query, this);
+        if (result) {
           if (result.total || result.total == 0) {
+            this.PageData.data = [];
             const data = result.list;
-            this.PageData = { ...result, data };
+            this.PageData = {
+              ...result,
+              data,
+              pageNumber: result.pageNum == 0 ? 1 : result.pageNum,
+            };
           } else this.PageData.data = result;
-        } catch (e) {
-          console.log("【searchTable】组件search事件报错", e);
-        } finally {
-          console.log(this.PageData, "fuckOff");
-          this.selectedChange([]);
           this.isLoading = false;
+        } else {
+          this.PageData = { data: [] };
         }
+        timeConsole.checkTime("searchFunc");
+        // } catch (e) {
+        //   console.error("【searchTable】组件search事件报错", e, result);
+        // } finally {
+        this.selectedChange([]);
+        this.isLoading = false;
+        // }
       }
     },
   },

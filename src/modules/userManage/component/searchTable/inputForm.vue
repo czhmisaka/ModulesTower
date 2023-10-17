@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 00:42:31
+ * @LastEditTime: 2023-09-29 20:57:11
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -12,24 +12,19 @@
       !autoSearch
     "
   >
-    <!-- :cus-style="{
+    <cardBg
+      ref="formBox"
+      class="formBox"
+      :cus-style="{
         padding: '0px',
         height: 'auto',
-        paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '6px' : '0px',
+        paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '12px' : '0px',
         'border-radius': '6px',
         border: '0px solid',
         filter: 'none',
         'box-shadow': 'none',
         display: 'inline-block',
-      }" -->
-    <cardBg
-      ref="formBox"
-      :cus-style="{
-        padding: '6px',
-        paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '6px' : '0px',
-        'border-radius': '6px',
       }"
-      class="formBox"
     >
       <VueForm
         v-model="formData"
@@ -48,7 +43,7 @@
         >
           <el-button
             class="btn"
-            v-if="!autoSearch && queryItemTemplate.length > 0"
+            v-if="!autoSearch && queryItemTemplate && queryItemTemplate.length > 0"
             @click="refreshData(-1)"
             icon="RefreshRight"
             plain
@@ -65,17 +60,52 @@
             >搜索</el-button
           >
           <div
-            v-for="item in (btnList || []).filter((btn) =>
+            v-for="(item, index) in (btnList || []).filter((btn) =>
               btn && btn.isShow
                 ? btn.isShow({ ...formData, _selectedList: selectedList }, btn)
                 : true
             )"
+            :key="index + 'btn'"
             class="floatLeft"
             :style="item.style ? item.style : ''"
           >
+            <!--  :on-success="item.uploadInfo.onsuccess"
+            :on-error="item.uploadInfo.onerror"
+            :on-exceed="item.uploadInfo.onexceed" -->
+            <el-upload
+              ref="uploadRef"
+              :headers="getDownLoadRequestHeaders()"
+              class="upload-demo"
+              :action="actionUrl + (item.uploadInfo ? item.uploadInfo.action : '')"
+              :limit="item.uploadInfo ? item.uploadInfo.limit : 1"
+              :data="item.uploadInfo ? item.uploadInfo?.data : {}"
+              :on-success="
+                (response, file, fileList) => {
+                  return btnClick(item, response);
+                }
+              "
+              :on-error="
+                (response, file, fileList) => {
+                  return btnClick(item, response);
+                }
+              "
+              :on-exceed="
+                (response, file, fileList) => {
+                  return btnClick(item, response);
+                }
+              "
+              :show-file-list="false"
+              v-if="item.type == btnActionTemplate.UploadFunction"
+            >
+              <el-button plain icon="plus" type="primary">{{ item.label }}</el-button>
+            </el-upload>
             <el-button
+              v-else
               :loading="item.isLoading"
               @click="btnClick(item)"
+              :disabled="
+                item.isDisable({ ...formData, _selectedList: selectedList }, item)
+              "
               :type="
                 item.elType
                   ? typeof item.elType != 'string'
@@ -108,13 +138,13 @@
         />
       </div>
     </cardBg>
-    <el-divider
+    <!-- <el-divider
       :style="{
         opacity: 0,
-        width: 'calc(100% - 24px)',
+        width: 'calc(100% - 12px)',
         margin: '6px',
       }"
-    />
+    /> -->
   </div>
 </template>
 
@@ -129,7 +159,11 @@ import {
   tableCellTemplate,
   stringAnyObj,
   btnCellTemplate,
+  btnActionTemplate,
 } from "@/modules/userManage/types";
+import { getDownLoadRequestHeaders } from "@/utils/api/user/header";
+
+const VITE_PROXY_DOMAIN_REAL = "/";
 let interval = null;
 export default defineComponent({
   name: "表单组件",
@@ -188,6 +222,8 @@ export default defineComponent({
         type: "object",
         properties: {},
       },
+      btnActionTemplate,
+      actionUrl: VITE_PROXY_DOMAIN_REAL,
     };
   },
 
@@ -211,6 +247,9 @@ export default defineComponent({
   },
 
   methods: {
+    getDownLoadRequestHeaders() {
+      return getDownLoadRequestHeaders();
+    },
     /**
      * @name: 初始化搜索用表单和对象
      * @description: initForm
@@ -221,7 +260,7 @@ export default defineComponent({
       if (Object.keys(this.query).length > 0) {
       }
       let properties = {} as stringAnyObj;
-      properties = await propertiesMaker(queryItemTemplate, this);
+      properties = await propertiesMaker(queryItemTemplate, this, false);
       this.schema.properties = properties;
     },
 
@@ -232,6 +271,7 @@ export default defineComponent({
 
     // 回报搜索事件
     handleSubmit(formData: stringAnyObj) {
+      formData.pageNumber = 1;
       this.$emit("search", formData);
     },
 
@@ -242,8 +282,8 @@ export default defineComponent({
      * @Date: 2022-11-21 19:03:17
      * @param {*} btn
      */
-    btnClick(btn: btnCellTemplate) {
-      this.$emit("btnClick", btn);
+    btnClick(btn: btnCellTemplate, res?: stringAnyObj) {
+      this.$emit("btnClick", btn, res);
     },
 
     changeOpen() {
@@ -271,6 +311,18 @@ export default defineComponent({
       } else {
         this.formData = val;
       }
+    },
+    addFileCreate(e) {
+      console.log(e, "success");
+      this.$emit("inputChange", e);
+    },
+    errorFile(e) {
+      console.log(e, "err");
+      this.$emit("inputChange", e);
+    },
+    exceedFile(e) {
+      console.log(e, "exceed");
+      this.$emit("inputChange", e);
     },
   },
 });

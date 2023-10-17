@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 23:16:14
+ * @LastEditTime: 2023-09-26 18:37:46
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -16,6 +16,7 @@
     :show-close="true"
     @close="fuckClose"
   >
+    <div style="display: none">{{ formData }}</div>
     <div
       :class="
         'formBody ' +
@@ -38,42 +39,60 @@
           :preBaseData="plugInData['gridDesktopConfig'].preBaseData"
           :component-lists="component"
           :cus-style="plugInData['gridDesktopConfig']?.cusStyle"
+          @onChange="changeData"
         />
       </div>
     </div>
-    <div class="formBody" v-else-if="isOpen && !plugInData['noEdit']">
+    <div
+      :class="
+        'formBody ' +
+        (!plugInData.btnList || plugInData.btnList.length == 0 ? 'formBody_noBtn' : '')
+      "
+      v-else-if="isOpen && !plugInData['noEdit']"
+    >
+      <!--  调试模式 -->
+      <!-- {{ formData }} -->
+      <!-- {{ schema }} -->
       <el-scrollbar>
-        <el-card>
-          <VueForm
-            v-if="isOpen"
-            v-model="formData"
-            :style="{
-              textAlign: 'top',
-            }"
-            :schema="schema"
-            :ui-schema="uiSchema"
-            :formProps="formProps"
-          >
-            <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
-          </VueForm>
-        </el-card>
+        <VueForm
+          v-if="isOpen"
+          v-model="formData"
+          :style="{
+            textAlign: 'top',
+          }"
+          :schema="schema"
+          :ui-schema="uiSchema"
+          :formProps="formProps"
+        >
+          <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
+        </VueForm>
       </el-scrollbar>
-      {{ formData }}
     </div>
-    <div class="formBody" v-else-if="isOpen">
+    <div
+      :class="
+        'formBody ' +
+        (!plugInData.btnList || plugInData.btnList.length == 0 ? 'formBody_noBtn' : '')
+      "
+      v-else-if="isOpen"
+    >
       <el-form ref="form" v-on:submit.prevent :label-position="'left'" size="small">
         <el-form-item
           :label-width="'120px'"
           :label="item.label"
-          v-for="item in queryItemTemplate.filter(
+          v-for="(item, index) in queryItemTemplate.filter(
             (x) => x.table.type != showType.btnList
           )"
+          :key="index + 'el-form'"
         >
-          <span v-if="item.table.type == showType.funcComponent">
-            <component
-              :is="item.table.showFunc(plugInData['data'], item.key)"
-            ></component>
+          <span v-if="item.table.type == showType.dataKey">
+            {{ plugInData["data"][item.key] }}
           </span>
+          <component
+            v-else-if="item.table.type == showType.funcComponent"
+            @btnClick="btnClick"
+            :is="item.table.showFunc(plugInData['data'], item.key)"
+            @click="(btns) => btnClick(btns, plugInData['data'])"
+          ></component>
           <span v-else-if="item.table.type == showType.func">
             {{ item.table.showFunc(plugInData["data"], item.key) }}
           </span>
@@ -92,11 +111,41 @@
         style="float: left; margin-right: 6px"
         :key="index + 'btnlistitem'"
       >
+        <el-upload
+          ref="uploadRef"
+          :headers="getDownLoadRequestHeaders()"
+          class="upload-demo"
+          :action="actionUrl + (item.uploadInfo ? item.uploadInfo.action : '')"
+          :limit="item.uploadInfo ? item.uploadInfo.limit : 1"
+          :data="item.uploadInfo ? { ...item.uploadInfo.data, id: formData.id } : {}"
+          :on-success="
+            (response, file, fileList) => {
+              return btnClick(item, response);
+            }
+          "
+          :on-error="
+            (response, file, fileList) => {
+              return btnClick(item, response);
+            }
+          "
+          :on-exceed="
+            (response, file, fileList) => {
+              return btnClick(item, response);
+            }
+          "
+          :show-file-list="false"
+          v-if="item.type == btnActionTemplate.UploadFunction"
+        >
+          <el-button plain icon="plus" type="primary">{{ item.label }}</el-button>
+        </el-upload>
         <el-button
+          plain
           :loading="item.isLoading"
           @click="btnClick(item)"
+          :disabled="item.isDisable(formData)"
           :type="item.elType"
           :icon="item.icon"
+          v-else
         >
           {{ item.label }}
         </el-button>
@@ -114,7 +163,7 @@ import { propertiesMaker, uiSchemaMaker } from "./searchTable";
 
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { ElDrawer, ElDivider, ElButton } from "element-plus";
-import drawer from "element-plus/es/components/drawer";
+import { getDownLoadRequestHeaders } from "@/utils/api/user/header";
 import {
   btnActionTemplate,
   stringAnyObj,
@@ -128,7 +177,7 @@ import { isMobile } from "@/utils/Env";
 
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
-
+const VITE_PROXY_DOMAIN_REAL = "/";
 let formDataForCheck = {};
 export default defineComponent({
   name: "drawerForm",
@@ -153,7 +202,9 @@ export default defineComponent({
     return {
       btnActionTemplate,
       isOpen: false,
-      formData: {},
+      formData: {
+        id: "",
+      },
       uiSchema: {},
       isMobile,
       isReady: false,
@@ -183,6 +234,7 @@ export default defineComponent({
 
       // drawer
       drawerData: {} as stringAnyObj,
+      actionUrl: VITE_PROXY_DOMAIN_REAL,
     };
   },
   methods: {
@@ -192,6 +244,9 @@ export default defineComponent({
      * @authors: CZH
      * @Date: 2022-11-14 10:17:28
      */
+    getDownLoadRequestHeaders() {
+      return getDownLoadRequestHeaders();
+    },
     async initForm(queryItemTemplate: tableCellTemplate[] = this.queryItemTemplate) {
       let properties = {} as stringAnyObj;
       properties = await propertiesMaker(queryItemTemplate, this, true);
@@ -221,7 +276,9 @@ export default defineComponent({
               )
                 this.initForm(queryItemTemplate);
               else if (queryItemTemplate) {
-                this.formData = queryItemTemplate;
+                for (let x in queryItemTemplate) {
+                  this.formData[x] = queryItemTemplate[x];
+                }
                 this.$forceUpdate();
               }
             }
@@ -238,7 +295,7 @@ export default defineComponent({
      * @Date: 2022-12-02 09:27:05
      * @param {*} btn
      */
-    async btnClick(btn: btnCellTemplate) {
+    async btnClick(btn: btnCellTemplate, res?: stringAnyObj) {
       if (btn.type == btnActionTemplate.OpenDrawer) {
         this.drawerData = btn.drawerProps;
         this.$refs["drawer"].open();
@@ -247,6 +304,8 @@ export default defineComponent({
           let Data = this.$refs["gridDesktop"].baseData;
           await btn.function(this, Data);
         } else await btn.function(this, this.formData);
+      } else if (btn.type == btnActionTemplate.UploadFunction && btn.function) {
+        await btn.function(this, res);
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
@@ -257,17 +316,21 @@ export default defineComponent({
      * @authors: CZH
      * @Date: 2022-12-02 09:27:52
      */
-    async close(dontRefresh = false) {
+    async close() {
       this.isOpen = false;
       this.formData = {};
-      if (!dontRefresh)
-        this.$emit("onChange", {}, { type: [cardOnChangeType.forceRefresh] });
+      this.$emit("onChange", {}, { type: [cardOnChangeType.forceRefresh] });
     },
 
     fuckClose() {
       localStorage.setItem("fuckThePJ", "true");
     },
 
+    changeData(data) {
+      for (let x in data) {
+        this.formData[x] = data[x];
+      }
+    },
     /**
      * @name: open
      * @description: 打开弹窗见面
@@ -299,11 +362,59 @@ export default defineComponent({
     },
   },
 });
+
+let a = {
+  schema: {
+    type: "object",
+    required: [],
+    properties: {
+      key_0018433602402946114: {
+        title: "文本输入",
+        type: "string",
+        "err:required": "请填写文本输入",
+        "ui:options": {
+          title: "文本输入",
+          clearable: true,
+          placeholder: "请输入文本输入",
+          style: {},
+        },
+      },
+      preView: {
+        title: "输入预览",
+        disabled: true,
+        type: "string",
+        "err:required": "请填写输入预览",
+        "ui:options": { type: "textarea" },
+      },
+    },
+    "ui:order": ["string_1691763736174x0"],
+  },
+  uiSchema: {},
+  formFooter: {
+    show: false,
+  },
+  formProps: {
+    labelWidth: "100px",
+    labelSuffix: "：",
+  },
+};
 </script>
 
 <style>
+.el-drawer__title::after {
+  border-bottom: 1px solid var(--el-border-color);
+  content: "";
+  height: 1px;
+  display: block;
+  width: 100%;
+  transform: translateY(1em);
+}
+.genFormLabel {
+  font-weight: 700;
+}
 .genFromComponent .genFormItemRequired:before {
   content: "" !important;
+  margin: 0px !important;
 }
 .genFromComponent .genFormItemRequired:after {
   content: "*" !important;
@@ -320,7 +431,7 @@ export default defineComponent({
 }
 
 .formBody_noBtn {
-  height: calc(100%);
+  height: calc(100%) !important;
   overflow-y: auto;
 }
 </style>
