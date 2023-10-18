@@ -1,96 +1,55 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-18 16:54:54
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/info/infoTable.vue
+ * @LastEditTime: 2023-10-18 22:32:55
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/info/infoTable.vue
 -->
 <template>
-  <div ref="tableBox" class="tableBox" v-loading="loading">
-    <ElTable
-      v-if="dataList && dataList.length > 0"
-      v-loading="loading"
-      ref="tableController"
-      :key="fuckKey"
-      :data="dataList"
-      height="100%"
-      :row-style="{ 'min-height': '60px', 'min-width': '100px' }"
-      :header-cell-style="isDark ? tableHeaderDark : tableHeader"
-      :fit="true"
-      :border="false"
-      row-key="id"
-      @selection-change="selectPosition"
-      style="cursor: default"
-      lazy
-      :load="load"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-    >
-      <ElTableColumn
-        :selectable="judgeSelect"
-        type="selection"
-        align="center"
-        fixed="left"
-        :sort-by="(row, index) => sortBy(row, index, item.key)"
-      ></ElTableColumn>
-      <ElTableColumn
-        v-for="(item, index) in template"
-        :key="index + 'tablecolumn'"
-        :label="item.label"
-        :width="item.table?.width || 'auto'"
-        :prop="item.key"
-        :fixed="item.table.fixed"
-      >
+  <div ref="tableBox" class="tableBox">
+    <ElTable ref="tableController" :key="fuckKey" :header-cell-style="isDark ? tableHeaderDark : tableHeader"
+      :data="dataList" @selection-change="selectPosition" @row-dblclick="cellDblclick" v-loading="loading"
+      style="cursor: default" :row-style="{ 'min-height': '60px', 'min-width': '100px' }" :fit="true" :border="false"
+      :height="'100%'" row-key="id">
+      <ElTableColumn v-if="!cantSelect" :selectable="judgeSelect" type="selection" align="center" fixed="left">
+      </ElTableColumn>
+      <ElTableColumn v-for="(item, index) in template" :sort-by="(row, index) => sortBy(row, index, item.key)"
+        :label="item.label" :width="item.table.type == showType.btnList ? 'auto' : item.table?.width || 'auto'
+          " :prop="item.key" :fixed="item.table.type == showType.btnList ? 'right' : item.table.fixed">
         <template #header>
           <div class="ColumnHeader">
-            {{ item.label }}
+            <el-popover placement="top-start" trigger="hover" :show-after="400" :content="`${item.label}`">
+              <template #reference>
+                {{ item.label }}
+              </template>
+            </el-popover>
           </div>
         </template>
         <template #default="scope" v-if="item.table.type != showType.dataKey">
-          <div
-            class="flexBox"
-            :style="item.table?.style"
-            v-if="item.table.type != showType.btnList"
-          >
-            <component
-              v-if="item.table.type == showType.funcComponent"
-              @btnClick="btnClick"
-              :is="item.table.showFunc(scope.row, item.key)"
-              @click="(btns) => btnClick(btns, scope.row)"
-            ></component>
-            <el-popover
-              v-else-if="item.table.type == showType.func"
-              placement="top-start"
-              trigger="hover"
-              :show-after="500"
-              :content="item.table.showFunc(scope.row, item.key, true) + ''"
-            >
+          <div class="flexBox" :style="item.table?.style" v-if="item.table.type == showType.funcComponent">
+            <component :is="item.table.showFunc(scope.row, item.key)" @click="(btns) => btnClick(btns, scope.row)">
+            </component>
+          </div>
+          <div class="flexBox" :style="item.table?.style" v-if="item.table.type == showType.func">
+            <el-popover v-if="typeof item.table.showFunc(scope.row, item.key) == 'string'" placement="top-start"
+              trigger="hover" :show-after="500" :content="item.table.showFunc(scope.row, item.key) + ''">
               <template #reference>
                 {{ item.table.showFunc(scope.row, item.key) }}
               </template>
             </el-popover>
           </div>
-          <div class="flexBox noOverflow" :style="item.table?.style" v-else>
-            <el-button
-              v-if="!item.table.noDetail"
-              size="small"
-              link
-              type="primary"
-              @click="cellDblclick(scope.row)"
-            >
+          <div class="flexBox noOverflow" :style="item.table?.style" v-if="item.table.type == showType.btnList">
+            <el-button v-if="!item.table.noDetail" size="small" link type="primary" @click="cellDblclick(scope.row)">
               详情
             </el-button>
-            <span v-for="(btns, index) in item.table.btnList" :key="index + 'btn'">
-              <el-button
-                v-if="btns.isShow(scope.row, btns)"
-                :loading="loadingMap[btns.label + btns.showAbleKey + scope['$index']]"
-                :disabled="btns.isDisable(scope.row, item.key)"
-                size="small"
-                link
-                :type="btns.isDisable(scope.row, item.key) ? 'info' : 'primary'"
-                @click="btnClick(btns, scope.row, scope)"
-              >
-                {{ btns.label }}
-              </el-button>
-            </span>
+            <el-button v-for="(btns, index) in (btnList(item, scope.row)
+              ? btnList(item, scope.row)
+              : []
+            ).filter((x, i) => {
+              return i < 10;
+            })" :loading="loadingMap[btns.label + btns.showAbleKey + scope['$index']]" size="small" link type="primary"
+              @click="btnClick(btns, scope.row, scope)">
+              {{ btns.label }}
+            </el-button>
           </div>
         </template>
       </ElTableColumn>
@@ -100,19 +59,14 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { ElButton, ElPopover, ElTable, ElTableColumn, ElTableV2 } from "element-plus";
+import { ElButton, ElPopover, ElTable, ElTableColumn } from "element-plus";
 import { useDark } from "@pureadmin/utils";
-import {
-  btnCellTemplate,
-  btnActionTemplate,
-  showType,
-  stringAnyObj,
-  tableCellTemplate,
-} from "../../../types";
-
+import loading from "element-plus/es/components/loading";
+import tableHeader from "element-plus/es/components/table/src/table-header";
+import { showType, btnCellTemplate, stringAnyObj, btnActionTemplate } from "@/modules/userManage/types";
 export default defineComponent({
-  components: { ElTable, ElTableV2, ElTableColumn },
-  props: ["template", "loading", "dataList", "baseData", "load"],
+  components: { ElTable, ElTableColumn },
+  props: ["template", "loading", "dataList", "baseData", "cantSelect"],
   data() {
     return {
       showType,
@@ -122,16 +76,6 @@ export default defineComponent({
     };
   },
   computed: {
-    columns() {
-      return this.template.map((item: tableCellTemplate) => {
-        return {
-          key: item.key,
-          title: item.label,
-          dataKey: item.key,
-          width: "120px",
-        };
-      });
-    },
     tableHeader() {
       return {
         backgroundColor: "#f8f9fb",
@@ -155,6 +99,14 @@ export default defineComponent({
       } else {
         return true;
       }
+    },
+    btnList(item, data) {
+      if (!item.table.btnList) return false;
+      const back = item.table.btnList.filter((x) => {
+        return x.isShow(data, JSON.parse(JSON.stringify(x)));
+      });
+      if (back && back.length > 0) return back;
+      else return false;
     },
 
     /**
@@ -250,6 +202,7 @@ export default defineComponent({
   overflow: hidden;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
+
 .flexBox {
   display: contents;
   float: left;
@@ -259,10 +212,12 @@ export default defineComponent({
   white-space: nowrap;
   width: 100%;
 }
+
 .noOverflow {
   overflow: hidden;
   text-overflow: unset;
 }
+
 .ColumnHeader {
   float: left;
   width: calc(100% - 26px);

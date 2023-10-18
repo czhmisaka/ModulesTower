@@ -1,59 +1,29 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-22 16:28:24
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.vue
+ * @LastEditTime: 2023-10-18 22:31:06
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
-  <cardBg
-    ref="mainBox"
-    :cusStyle="{
-      padding: '12px',
-    }"
-  >
-    <inputForm
-      ref="inputBox"
-      :query="query"
-      @search="search"
-      @refresh="refresh"
-      @btnClick="btnClick"
-      :queryItemTemplate="searchItemTemplate"
-      :selectedList="selectedList"
-      @inputChange="queryChange"
-      :btn-list="btnList"
-      :autoSearch="autoSearch"
-    />
-    <infoTable
-      :template="showItemTemplate"
-      :data-list="PageData?.data"
-      :loading="isLoading"
-      @search="search"
-      @refresh="refresh"
-      :style="{
+  <cardBg ref="mainBox" :cusStyle="{
+    padding: '12px',
+  }">
+    <inputForm ref="inputBox" :query="query" @search="search" @refresh="refresh" @btnClick="btnClick"
+      :queryItemTemplate="searchItemTemplate" :selectedList="selectedList" @inputChange="queryChange" :btn-list="btnList"
+      :autoSearch="autoSearch" />
+    <infoTable :template="showItemTemplate" :data-list="PageData?.data" :loading="isLoading" @search="search"
+      :cantSelect="cantSelect" @refresh="refresh" :style="{
         height: TableHeight + 'px',
-      }"
-      :load="load"
-      :baseData="baseData"
-      @selectedChange="selectedChange"
-      @onChange="(value, options) => $emit('onChange', value, options)"
-    />
-    <el-pagination
-      :style="{
-        marginTop: '6px',
-        float: 'right',
-      }"
-      v-if="PageData.total"
-      v-model:current-page="PageData.pageNumber"
-      v-model:page-size="PageData.pageSize"
-      :page-sizes="[5, 10, 20, 30, 40, 100]"
-      :small="true"
-      :background="true"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="PageData.total"
-      @size-change="(e) => search({ pageSize: e })"
-      @current-change="(e) => search({ pageNumber: e })"
-      :hide-on-single-page="false"
-    />
+      }" :load="load" :baseData="baseData" @selectedChange="selectedChange"
+      @onChange="(value, options) => $emit('onChange', value, options)" />
+    <el-pagination :style="{
+      marginTop: '6px',
+      float: 'right',
+    }" v-if="PageData.total" v-model:current-page="PageData.pageNumber" v-model:page-size="PageData.pageSize"
+      :page-sizes="[5, 10, 20, 30, 40, 100]" :small="true" :background="true"
+      layout="total, sizes, prev, pager, next, jumper" :total="PageData.total"
+      @size-change="(e) => search({ pageSize: e })" @current-change="(e) => search({ pageNumber: e })"
+      :hide-on-single-page="false" />
   </cardBg>
 </template>
 
@@ -186,14 +156,14 @@ export default defineComponent({
       handler(val) {
         this.searchKeyWithBaseData
           ? this.searchKeyWithBaseData.map((key) => {
-              if (
-                Object.keys(val).indexOf(key) > -1 &&
-                this.baseDataForCheck[key] != val[key]
-              ) {
-                this.baseDataForCheck[key] = val[key];
-                this.search();
-              }
-            })
+            if (
+              Object.keys(val).indexOf(key) > -1 &&
+              this.baseDataForCheck[key] != val[key]
+            ) {
+              this.baseDataForCheck[key] = val[key];
+              this.search();
+            }
+          })
           : null;
       },
       deep: true,
@@ -212,6 +182,7 @@ export default defineComponent({
     "autoSearch",
     "pageConfig",
     "load",
+    "cantSelect"
   ],
   components: { cardBg, inputForm, infoTable, sideDialogForm },
   data() {
@@ -290,7 +261,7 @@ export default defineComponent({
       this.query = query;
       if (this.autoSearch) this.search();
     },
-    uploadChange(query: stringAnyObj) {},
+    uploadChange(query: stringAnyObj) { },
     refresh() {
       if (
         this.autoSearch == false &&

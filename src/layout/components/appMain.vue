@@ -47,7 +47,7 @@ const transitionMain = defineComponent({
           transitions.value(this.route) && this.route.meta.transition.enterTransition
             ? "pure-classes-transition"
             : (transitions.value(this.route) && this.route.meta.transition.name) ||
-              "fade-transform",
+            "fade-transform",
         enterActiveClass:
           transitions.value(this.route) &&
           `animate__animated ${this.route.meta.transition.enterTransition}`,
@@ -72,26 +72,15 @@ const transitionMain = defineComponent({
 </script>
 
 <template>
-  <section
-    :class="[props.fixedHeader ? 'app-main' : 'app-main-nofixed-header']"
-    :style="getSectionStyle"
-  >
+  <section :class="[props.fixedHeader ? 'app-main' : 'app-main-nofixed-header']" :style="getSectionStyle">
     <router-view>
       <template #default="{ Component, route }">
         <div v-if="route.meta['wholeScreen']" class="wholeScreen-box">
           <transitionMain :route="route">
-            <keep-alive
-              v-if="keepAlive"
-              :include="usePermissionStoreHook().cachePageList"
-            >
+            <keep-alive v-if="keepAlive" :include="usePermissionStoreHook().cachePageList">
               <component :is="Component" :key="route.fullPath" class="main-content" />
             </keep-alive>
-            <component
-              v-else
-              :is="Component"
-              :key="route.fullPath"
-              class="main-content"
-            />
+            <component v-else :is="Component" :key="route.fullPath" class="main-content" />
           </transitionMain>
         </div>
         <el-scrollbar v-else-if="props.fixedHeader">
@@ -99,34 +88,18 @@ const transitionMain = defineComponent({
             <backTop />
           </el-backtop>
           <transitionMain :route="route">
-            <keep-alive
-              v-if="keepAlive"
-              :include="usePermissionStoreHook().cachePageList"
-            >
+            <keep-alive v-if="keepAlive" :include="usePermissionStoreHook().cachePageList">
               <component :is="Component" :key="route.fullPath" class="main-content" />
             </keep-alive>
-            <component
-              v-else
-              :is="Component"
-              :key="route.fullPath"
-              class="main-content"
-            />
+            <component v-else :is="Component" :key="route.fullPath" class="main-content" />
           </transitionMain>
         </el-scrollbar>
         <div v-else>
           <transitionMain :route="route">
-            <keep-alive
-              v-if="keepAlive"
-              :include="usePermissionStoreHook().cachePageList"
-            >
+            <keep-alive v-if="keepAlive" :include="usePermissionStoreHook().cachePageList">
               <component :is="Component" :key="route.fullPath" class="main-content" />
             </keep-alive>
-            <component
-              v-else
-              :is="Component"
-              :key="route.fullPath"
-              class="main-content"
-            />
+            <component v-else :is="Component" :key="route.fullPath" class="main-content" />
           </transitionMain>
         </div>
       </template>
@@ -145,13 +118,13 @@ const transitionMain = defineComponent({
 .app-main-nofixed-header {
   width: 100%;
   height: 100%;
-  overflow: scroll !important;
   position: relative;
 }
 
 .main-content {
   width: calc(100% - 0px);
 }
+
 .wholeScreen-box {
   height: calc(100% - 0px);
 }

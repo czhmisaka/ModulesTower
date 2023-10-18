@@ -22,20 +22,11 @@ const { moduleList, checkModule } = useModuleHook();
 </script>
 
 <template>
-  <div
-    class="navbar bg-[#fff] shadow-sm shadow-[rgba(0, 21, 41, 0.08)] dark:shadow-[#0d0d0d]"
-  >
-    <topCollapse
-      v-if="device === 'mobile'"
-      class="hamburger-container"
-      :is-active="pureApp.sidebar.opened"
-      @toggleClick="toggleSideBar"
-    />
+  <div class="navbar bg-[#fff] shadow-sm shadow-[rgba(0, 21, 41, 0.08)] dark:shadow-[#0d0d0d]">
+    <topCollapse v-if="device === 'mobile'" class="hamburger-container" :is-active="pureApp.sidebar.opened"
+      @toggleClick="toggleSideBar" />
 
-    <Breadcrumb
-      v-if="layout !== 'mix' && device !== 'mobile'"
-      class="breadcrumb-container"
-    />
+    <Breadcrumb v-if="layout !== 'mix' && device !== 'mobile'" class="breadcrumb-container" />
 
     <mixNav v-if="layout === 'mix'" />
 
@@ -47,10 +38,7 @@ const { moduleList, checkModule } = useModuleHook();
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img
-            src="https://avatars.githubusercontent.com/u/22533472?v=4"
-            :style="avatarsStyle"
-          />
+          <img src="https://avatars.githubusercontent.com/u/22533472?v=4" :style="avatarsStyle" />
           <p v-if="username" class="dark:text-white">
             {{ username }}
           </p>
@@ -58,10 +46,7 @@ const { moduleList, checkModule } = useModuleHook();
         <template #dropdown>
           <!-- 模块选择操作 -->
           <el-dropdown-menu class="logout">
-            <el-dropdown-item
-              v-for="(item, index) in moduleList"
-              @click="checkModule(index)"
-            >
+            <el-dropdown-item v-for="(item, index) in moduleList" @click="checkModule(index)">
               {{ item.name }}
             </el-dropdown-item>
           </el-dropdown-menu>

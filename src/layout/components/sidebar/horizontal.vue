@@ -1,3 +1,9 @@
+<!--
+ * @Date: 2023-08-23 16:53:39
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-10-18 22:43:28
+ * @FilePath: /ConfigForDesktopPage/src/layout/components/sidebar/horizontal.vue
+-->
 <script setup lang="ts">
 import Search from "../search/index.vue";
 import Notice from "../notice/index.vue";
@@ -38,52 +44,32 @@ watch(
       <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
       <h4>{{ title }}</h4>
     </div>
-    <el-menu
-      router
-      ref="menuRef"
-      mode="horizontal"
-      class="horizontal-header-menu"
-      :default-active="route.path"
-      @select="indexPath => menuSelect(indexPath, routers)"
-    >
-      <sidebar-item
-        v-for="route in usePermissionStoreHook().wholeMenus"
-        :key="route.path"
-        :item="route"
-        :base-path="route.path"
-      />
+    <el-menu router ref="menuRef" mode="horizontal" class="horizontal-header-menu" :default-active="route.path"
+      @select="indexPath => menuSelect(indexPath, routers)">
+      <sidebar-item v-for="route in usePermissionStoreHook().wholeMenus" :key="route.path" :item="route"
+        :base-path="route.path" />
     </el-menu>
     <div class="horizontal-header-right">
       <!-- 菜单搜索 -->
-      <Search />
+      <!-- <Search /> -->
       <!-- 通知 -->
       <Notice id="header-notice" />
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover">
-          <img
-            src="https://avatars.githubusercontent.com/u/22533472?v=4"
-            :style="avatarsStyle"
-          />
+          <img src="https://avatars.githubusercontent.com/u/22533472?v=4" :style="avatarsStyle" />
           <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline
-                icon="logout-circle-r-line"
-                style="margin: 5px"
-              />
+              <IconifyIconOffline icon="logout-circle-r-line" style="margin: 5px" />
               退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <span
-        class="set-icon navbar-bg-hover"
-        title="打开项目配置"
-        @click="onPanel"
-      >
+      <span class="set-icon navbar-bg-hover" title="打开项目配置" @click="onPanel">
         <IconifyIconOffline icon="setting" />
       </span>
     </div>

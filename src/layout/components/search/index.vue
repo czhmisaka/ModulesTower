@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-02-14 17:29:00
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-16 20:54:58
+ * @LastEditTime: 2023-10-18 22:36:19
  * @FilePath: /ConfigForDesktopPage/src/layout/components/search/index.vue
 -->
 <script lang="ts" setup>
@@ -20,10 +20,7 @@ function handleSearch() {
 </script>
 
 <template>
-  <div
-    class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover"
-    @click="handleSearch"
-  >
+  <div class="search-container w-[40px] h-[48px] flex-c cursor-pointer navbar-bg-hover" @click="handleSearch">
     <IconifyIconOffline icon="search" />
   </div>
   <SearchModal v-model:value="show" />

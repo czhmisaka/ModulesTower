@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-08 18:22:06
- * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/Index.vue
+ * @LastEditTime: 2023-10-18 00:02:10
+ * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/Index.vue
 -->
 
 <template>
@@ -21,8 +21,6 @@
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
-import { isValidKey } from "@/utils/index";
-import { GetAllUser } from "@/utils/api/user/user";
 import { timeConsole } from "@/main";
 
 console.log(PageConfig, "PageConfig");
@@ -36,6 +34,7 @@ export default defineComponent({
       return this.$modules.getAllComponents();
     },
   },
+
   methods: {
     async init() {
       timeConsole.checkTime("index页面");
@@ -60,6 +59,7 @@ export default defineComponent({
       timeConsole.checkTime("index页面");
     },
   },
+
   watch: {
     $route: {
       handler(): void {

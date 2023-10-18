@@ -6,46 +6,18 @@
 -->
 <template>
   <div ref="tableBox" class="tableBox">
-    <ElTable
-      ref="tableController"
-      :key="fuckKey"
-      :header-cell-style="isDark ? tableHeaderDark : tableHeader"
-      :data="dataList"
-      @selection-change="selectPosition"
-      @row-dblclick="cellDblclick"
-      v-loading="loading"
-      style="cursor: default"
-      :row-style="{ 'min-height': '60px', 'min-width': '100px' }"
-      :fit="true"
-      :border="false"
-      :height="'100%'"
-      row-key="id"
-    >
-      <ElTableColumn
-        v-if="!cantSelect"
-        :selectable="judgeSelect"
-        type="selection"
-        align="center"
-        fixed="left"
-      ></ElTableColumn>
-      <ElTableColumn
-        v-for="(item, index) in template"
-        :sort-by="(row, index) => sortBy(row, index, item.key)"
-        :label="item.label"
-        :width="
-          item.table.type == showType.btnList ? 'auto' : item.table?.width || 'auto'
-        "
-        :prop="item.key"
-        :fixed="item.table.type == showType.btnList ? 'right' : item.table.fixed"
-      >
+    <ElTable ref="tableController" :key="fuckKey" :header-cell-style="isDark ? tableHeaderDark : tableHeader"
+      :data="dataList" @selection-change="selectPosition" @row-dblclick="cellDblclick" v-loading="loading"
+      style="cursor: default" :row-style="{ 'min-height': '60px', 'min-width': '100px' }" :fit="true" :border="false"
+      :height="'100%'" row-key="id">
+      <ElTableColumn v-if="!cantSelect" :selectable="judgeSelect" type="selection" align="center" fixed="left">
+      </ElTableColumn>
+      <ElTableColumn v-for="(item, index) in template" :sort-by="(row, index) => sortBy(row, index, item.key)"
+        :label="item.label" :width="item.table.type == showType.btnList ? 'auto' : item.table?.width || 'auto'
+          " :prop="item.key" :fixed="item.table.type == showType.btnList ? 'right' : item.table.fixed">
         <template #header>
           <div class="ColumnHeader">
-            <el-popover
-              placement="top-start"
-              trigger="hover"
-              :show-after="400"
-              :content="`${item.label}`"
-            >
+            <el-popover placement="top-start" trigger="hover" :show-after="400" :content="`${item.label}`">
               <template #reference>
                 {{ item.label }}
               </template>
@@ -53,60 +25,29 @@
           </div>
         </template>
         <template #default="scope" v-if="item.table.type != showType.dataKey">
-          <div
-            class="flexBox"
-            :style="item.table?.style"
-            v-if="item.table.type == showType.funcComponent"
-          >
-            <component
-              :is="item.table.showFunc(scope.row, item.key)"
-              @click="(btns) => btnClick(btns, scope.row)"
-            ></component>
+          <div class="flexBox" :style="item.table?.style" v-if="item.table.type == showType.funcComponent">
+            <component :is="item.table.showFunc(scope.row, item.key)" @click="(btns) => btnClick(btns, scope.row)">
+            </component>
           </div>
-          <div
-            class="flexBox"
-            :style="item.table?.style"
-            v-if="item.table.type == showType.func"
-          >
-            <el-popover
-              v-if="typeof item.table.showFunc(scope.row, item.key) == 'string'"
-              placement="top-start"
-              trigger="hover"
-              :show-after="500"
-              :content="item.table.showFunc(scope.row, item.key) + ''"
-            >
+          <div class="flexBox" :style="item.table?.style" v-if="item.table.type == showType.func">
+            <el-popover v-if="typeof item.table.showFunc(scope.row, item.key) == 'string'" placement="top-start"
+              trigger="hover" :show-after="500" :content="item.table.showFunc(scope.row, item.key) + ''">
               <template #reference>
                 {{ item.table.showFunc(scope.row, item.key) }}
               </template>
             </el-popover>
           </div>
-          <div
-            class="flexBox noOverflow"
-            :style="item.table?.style"
-            v-if="item.table.type == showType.btnList"
-          >
-            <el-button
-              v-if="!item.table.noDetail"
-              size="small"
-              link
-              type="primary"
-              @click="cellDblclick(scope.row)"
-            >
+          <div class="flexBox noOverflow" :style="item.table?.style" v-if="item.table.type == showType.btnList">
+            <el-button v-if="!item.table.noDetail" size="small" link type="primary" @click="cellDblclick(scope.row)">
               详情
             </el-button>
-            <el-button
-              v-for="(btns, index) in (btnList(item, scope.row)
-                ? btnList(item, scope.row)
-                : []
-              ).filter((x, i) => {
-                return i < 10;
-              })"
-              :loading="loadingMap[btns.label + btns.showAbleKey + scope['$index']]"
-              size="small"
-              link
-              type="primary"
-              @click="btnClick(btns, scope.row, scope)"
-            >
+            <el-button v-for="(btns, index) in (btnList(item, scope.row)
+              ? btnList(item, scope.row)
+              : []
+            ).filter((x, i) => {
+              return i < 10;
+            })" :loading="loadingMap[btns.label + btns.showAbleKey + scope['$index']]" size="small" link
+              type="primary" @click="btnClick(btns, scope.row, scope)">
               {{ btns.label }}
             </el-button>
           </div>
@@ -262,6 +203,7 @@ export default defineComponent({
   overflow: hidden;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
+
 .flexBox {
   display: contents;
   float: left;
@@ -271,10 +213,12 @@ export default defineComponent({
   white-space: nowrap;
   width: 100%;
 }
+
 .noOverflow {
   overflow: hidden;
   text-overflow: unset;
 }
+
 .ColumnHeader {
   float: left;
   width: calc(100% - 26px);

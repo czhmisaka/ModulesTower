@@ -30,12 +30,15 @@ function toCart() {
       <el-badge v-if="useCartHook().count > 0" :value="useCartHook().count" :max="99">
         <span class="header-notice-icon">
           <!-- <IconifyIconOffline icon="cart" /> -->
-          <el-icon><ShoppingCart /></el-icon>
+          暂存区
+          <!-- <el-icon><ShoppingCart /></el-icon> -->
         </span>
       </el-badge>
       <span class="header-notice-icon" v-else>
         <!-- <IconifyIconOffline icon="cart" /> -->
-        <el-icon><ShoppingCart /></el-icon>
+        <el-icon>
+          <ShoppingCart />
+        </el-icon>
       </span>
     </span>
     <!-- <template #dropdown>
@@ -77,7 +80,8 @@ function toCart() {
   cursor: pointer;
 
   .header-notice-icon {
-    font-size: 18px;
+    // font-size: 18px;
+    font-size: 14px;
   }
 }
 

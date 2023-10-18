@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 19:28:21
+ * @LastEditTime: 2023-10-18 22:28:41
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/userManage.ts
  */
 import {
@@ -96,7 +96,6 @@ export const userManage = async () => {
       btnList: [提交创建用户],
     },
   });
-
   const 删除用户 = btnMaker("删除", btnActionTemplate.Function, {
     icon: "Delete",
     elType: "danger",
@@ -251,7 +250,7 @@ export const userManage = async () => {
             return res && res.result ? res.result.users : [];
           },
           btnList: [创建用户],
-          autoSearch: false,
+          autoSearch: true,
           cantSelect: true,
         },
         isSettingTool: false,
