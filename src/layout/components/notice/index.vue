@@ -36,9 +36,10 @@ function toCart() {
       </el-badge>
       <span class="header-notice-icon" v-else>
         <!-- <IconifyIconOffline icon="cart" /> -->
-        <el-icon>
+        暂存区
+        <!-- <el-icon>
           <ShoppingCart />
-        </el-icon>
+        </el-icon> -->
       </span>
     </span>
     <!-- <template #dropdown>

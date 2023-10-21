@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-08-23 16:53:39
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-18 22:43:28
+ * @LastEditTime: 2023-10-18 23:01:08
  * @FilePath: /ConfigForDesktopPage/src/layout/components/sidebar/horizontal.vue
 -->
 <script setup lang="ts">
@@ -51,7 +51,7 @@ watch(
     </el-menu>
     <div class="horizontal-header-right">
       <!-- 菜单搜索 -->
-      <!-- <Search /> -->
+      <Search />
       <!-- 通知 -->
       <Notice id="header-notice" />
       <!-- 退出登录 -->

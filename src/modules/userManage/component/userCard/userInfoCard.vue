@@ -1,47 +1,32 @@
 <!--
  * @Date: 2023-02-13 10:25:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-14 18:33:03
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/userCard/userInfoCard.vue
+ * @LastEditTime: 2023-10-18 22:54:51
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/userCard/userInfoCard.vue
 -->
 <template>
   <cardBg :cusStyle="cardBgCusStyle">
-    <div
-      :style="{
-        width: '100%',
-        height: '100%',
-        overflow: 'auto',
-        overflowX: 'hidden',
-      }"
-    >
-      <div
-        class="wholeWidthBox"
-        :style="{
-          height: blockSizePercent(2),
-        }"
-        v-if="userInfoData['username']"
-      >
-        <el-image
-          v-if="userInfoData['icon'] ? userInfoData['icon'].replace('/lcdp', '/api') : ''"
-          :style="{
-            width: blockSizePercent(1.4),
-            height: blockSizePercent(1.4),
-            borderRadius: '50%',
-            margin: blockSizePercent(0.3),
-          }"
-          class="mainColorBorder"
-          :src="userpng"
-          fit="cover"
-        />
+    <div :style="{
+      width: '100%',
+      height: '100%',
+      overflow: 'auto',
+      overflowX: 'hidden',
+    }">
+      <div class="wholeWidthBox" :style="{
+        height: blockSizePercent(2),
+      }" v-if="userInfoData['username']">
+        <el-image v-if="userInfoData['icon'] ? userInfoData['icon'].replace('/lcdp', '/api') : ''" :style="{
+          width: blockSizePercent(1.4),
+          height: blockSizePercent(1.4),
+          borderRadius: '50%',
+          margin: blockSizePercent(0.3),
+        }" class="mainColorBorder" :src="userpng" fit="cover" />
 
         <!-- userInfoData['icon'] ? userInfoData['icon'].replace('/lcdp', '/api') : userpng -->
-        <div
-          class="flexCol"
-          :style="{
-            width: `calc(100% - ${blockSizePercent(2)})`,
-            fontSize: blockSizePercent(0.2),
-          }"
-        >
+        <div class="flexCol" :style="{
+          width: `calc(100% - ${blockSizePercent(2)})`,
+          fontSize: blockSizePercent(0.2),
+        }">
           <span class="name">
             {{ userInfoData["username"] }}
             <br />
@@ -50,23 +35,14 @@
         </div>
       </div>
       <div class="btnList" :style="{}" v-if="btnList && btnList.length">
-        <div
-          v-for="item in btnList.filter((btn) =>
-            btn && btn.isShow
-              ? btn.isShow(userInfoData, JSON.parse(JSON.stringify(btn)))
-              : true
-          )"
-          style="float: left; margin-right: 6px"
-        >
-          <el-button
-            class="btn"
-            :loading="item.isLoading"
-            @click="btnClick(item)"
-            :type="item.elType"
-            :icon="item.icon"
+        <div v-for="item in btnList.filter((btn) =>
+          btn && btn.isShow
+            ? btn.isShow(userInfoData, JSON.parse(JSON.stringify(btn)))
+            : true
+        )" style="float: left; margin-right: 6px">
+          <el-button class="btn" :loading="item.isLoading" @click="btnClick(item)" :type="item.elType" :icon="item.icon"
             :size="blockSizePercent(1, '') as number < 40 ? 'small' : 'default'"
-            :text="blockSizePercent(1, '') as number < 40"
-          >
+            :text="blockSizePercent(1, '') as number < 40">
             {{ item.label }}
           </el-button>
         </div>
@@ -76,8 +52,6 @@
 </template>
 
 <script lang="ts">
-import userpng from "@/assets/img/user.png";
-console.log(userpng, "asd");
 
 import { defineComponent, ref, watch, onMounted, toRefs } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
@@ -149,7 +123,7 @@ export default defineComponent({
 
   data: () => {
     return {
-      userpng,
+      userpng: '',
       userInfoData: {},
       showType,
       isHover: false,
@@ -226,6 +200,7 @@ export default defineComponent({
   display: flex;
   justify-content: flex-start;
 }
+
 .mainColorBorder {
   display: inline-block;
   border: 2px white solid;
@@ -236,21 +211,25 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+
   .name {
     font-size: 1.6em;
     font-weight: bolder;
+
     .mobile {
       font-size: 0.8;
       font-weight: 100;
     }
   }
 }
+
 .btnList {
   width: calc(100%);
   height: 40px;
   position: absolute;
   bottom: 0px;
   margin-bottom: 6px;
+
   .btn {
     bottom: 0px;
     position: absolute;
