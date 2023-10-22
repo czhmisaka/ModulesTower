@@ -1,69 +1,40 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-25 09:35:18
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuList.vue
+ * @LastEditTime: 2023-10-22 16:06:54
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
 -->
 <template>
-  <cardBg
-    :cusStyle="{
-      padding: '12px',
-    }"
-  >
+  <cardBg :cusStyle="{
+    padding: '12px',
+  }">
     <div :class="`menuBox box_${random}`">
       <div class="searchBar">
-        <el-input
-          :style="{
-            width: '100%',
-            marginRight: searchBtn || selectedKey != '' ? '6px' : '',
-          }"
-          v-model="selectedKey"
-          :size="size"
-          @keydown.enter.prevent="searchFuncByName ? searchFuncByName() : search({})"
-          clearable
-        ></el-input>
-        <el-button
-          v-show="selectedKey && selectedKey.length > 0"
-          @click="searchFuncByName ? searchFuncByName() : search({})"
-          :size="size"
-          plain
-          type="primary"
-        >
+        <el-input :style="{
+          width: '100%',
+          marginRight: searchBtn || selectedKey != '' ? '6px' : '',
+        }" v-model="selectedKey" :size="size"
+          @keydown.enter.prevent="searchFuncByName ? searchFuncByName() : search({})" clearable></el-input>
+        <el-button v-show="selectedKey && selectedKey.length > 0"
+          @click="searchFuncByName ? searchFuncByName() : search({})" :size="size" plain type="primary">
           搜索
         </el-button>
-        <el-button
-          style="margin-left: 0px"
-          :size="size"
-          v-if="searchBtn && isBtnShow(searchBtn) && searchBtn && selectedKey.length == 0"
-          :loading="searchBtn.isLoading"
-          :type="searchBtn.elType"
-          plain
-          @click="btnClick(searchBtn)"
-        >
+        <el-button style="margin-left: 0px" :size="size"
+          v-if="searchBtn && isBtnShow(searchBtn) && searchBtn && selectedKey.length == 0" :loading="searchBtn.isLoading"
+          :type="searchBtn.elType" plain @click="btnClick(searchBtn)">
           {{ searchBtn.label }}
         </el-button>
       </div>
 
       <!-- 这里展示的是搜索结果 -->
       <div class="content" v-if="searchResult.length != 0 && selectedKey">
-        <el-tree
-          :data="searchResult"
-          :props="defaultProps"
-          @node-click="nodeClick"
-          :highlight-current="true"
-          node-key="id"
-          :default-expanded-keys="expandedKey"
-        >
+        <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick" :highlight-current="true"
+          node-key="id" :default-expanded-keys="expandedKey">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ data[defaultProps["label"]] }}</div>
-              <el-button
-                v-if="clickItemDetailFunc"
-                text
-                size="small"
-                icon="More"
-                @click.stop="clickItemDetail(data)"
-              ></el-button>
+              <el-button v-if="clickItemDetailFunc" text size="small" icon="More"
+                @click.stop="clickItemDetail(data)"></el-button>
             </div>
           </template>
         </el-tree>
@@ -71,27 +42,14 @@
 
       <!-- 这里展示的是默认树形结构 -->
       <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
-        <el-tree
-          :data="treeData"
-          :props="defaultProps"
-          @node-click="nodeClick"
-          :highlight-current="true"
-          node-key="id"
-          ref="elTree"
-          @node-expand="nodeChangeOpen"
-          @node-collapse="nodeChangeClose"
-          :default-expanded-keys="expandedKey"
-        >
+        <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick" :highlight-current="true" node-key="id"
+          ref="elTree" @node-expand="nodeChangeOpen" @node-collapse="nodeChangeClose"
+          :default-expanded-keys="expandedKey">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ data[defaultProps["label"]] }}</div>
-              <el-button
-                v-if="clickItemDetailFunc"
-                text
-                size="small"
-                icon="More"
-                @click.stop="clickItemDetail(data)"
-              ></el-button>
+              <el-button v-if="clickItemDetailFunc" text size="small" icon="More"
+                @click.stop="clickItemDetail(data)"></el-button>
             </div>
           </template>
         </el-tree>
@@ -217,7 +175,7 @@ export default defineComponent({
   async mounted() {
     await this.init();
     // 选中第一个
-    if (this.treeData && this.treeData[0] && this.treeData[0].children[0]) {
+    if (this.treeData && this.treeData[0] && this.treeData[0].children && this.treeData[0].children[0]) {
       const node = this.treeData[0].children[0];
       const that = this;
       this.$nextTick(() => {
@@ -294,16 +252,16 @@ export default defineComponent({
       this.searchResult =
         res.length > 1
           ? res.reduce((pre, item) => {
-              let children = [];
-              if (item.children) {
-                children = item.children;
-                delete item.children;
-              }
-              if (!pre.length) return [pre].concat(item).concat(children);
-              else {
-                return pre.concat(item).concat(children);
-              }
-            })
+            let children = [];
+            if (item.children) {
+              children = item.children;
+              delete item.children;
+            }
+            if (!pre.length) return [pre].concat(item).concat(children);
+            else {
+              return pre.concat(item).concat(children);
+            }
+          })
           : res;
     },
 
@@ -348,18 +306,22 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   transition: all 0.3s;
+
   ::v-deep .el-tree-node__label {
     width: calc(100% - 12px);
   }
+
   .searchBar {
     display: flex;
   }
+
   .content {
     width: 100%;
     height: auto;
     max-height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
+
     .searchItem {
       margin: 4px 18px;
       width: calc(100% - 16px);
@@ -384,6 +346,7 @@ export default defineComponent({
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+
   .text {
     width: 140px;
     overflow: hidden;
@@ -392,7 +355,15 @@ export default defineComponent({
     text-align: left;
   }
 }
-::v-deep .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
-  background-color: #99ccff;
+
+::v-deep .el-tree--highlight-current .el-tree-node>.el-tree-node__content {
+  transition: all 0.2s;
+}
+
+::v-deep .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+  background-color: var(--el-color-primary);
+  border-radius: 6px;
+  color: #fff;
+  margin: 3px 0px;
 }
 </style>

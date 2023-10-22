@@ -1,45 +1,27 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-20 10:51:58
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuListRemote.vue
+ * @LastEditTime: 2023-10-22 16:08:06
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
-  <cardBg
-    :cusStyle="{
-      padding: '12px',
-    }"
-  >
+  <cardBg :cusStyle="{
+    padding: '12px',
+  }">
     <div :class="`menuBox box_${random}`">
       <div class="searchBar">
-        <el-input
-          :style="{
-            width: '100%',
-            marginRight: searchBtn || selectedKey != '' ? '6px' : '',
-          }"
-          v-model="selectedKey"
-          :size="size"
-          @keydown.enter.prevent="searchFuncByName ? searchByName() : search()"
-          clearable
-        ></el-input>
-        <el-button
-          v-show="selectedKey && selectedKey.length > 0"
-          @click="searchFuncByName ? searchByName() : search()"
-          :size="size"
-          plain
-          type="primary"
-        >
+        <el-input :style="{
+          width: '100%',
+          marginRight: searchBtn || selectedKey != '' ? '6px' : '',
+        }" v-model="selectedKey" :size="size" @keydown.enter.prevent="searchFuncByName ? searchByName() : search()"
+          clearable></el-input>
+        <el-button v-show="selectedKey && selectedKey.length > 0" @click="searchFuncByName ? searchByName() : search()"
+          :size="size" plain type="primary">
           搜索
         </el-button>
-        <el-button
-          style="margin-left: 0px"
-          :size="size"
-          v-if="searchBtn && isBtnShow(searchBtn) && selectedKey.length == 0"
-          :loading="searchBtn.isLoading"
-          :type="searchBtn.elType"
-          plain
-          @click="btnClick(searchBtn)"
-        >
+        <el-button style="margin-left: 0px" :size="size"
+          v-if="searchBtn && isBtnShow(searchBtn) && selectedKey.length == 0" :loading="searchBtn.isLoading"
+          :type="searchBtn.elType" plain @click="btnClick(searchBtn)">
           {{ searchBtn.label }}
         </el-button>
       </div>
@@ -47,29 +29,18 @@
       <!-- 这里展示的是搜索结果 -->
       <div class="content" v-if="searchResult.length != 0 && selectedKey">
         <div v-for="item in searchResult">
-          <cardBg
-            :title="item.label"
-            :title-icon="item.icon"
-            :cus-style="{
-              margin: '6px 3px',
-              width: 'calc(100% - 6px)',
-              borderRadius: '3px',
-              padding: '3px',
-            }"
-          >
+          <cardBg :title="item.label" :title-icon="item.icon" :cus-style="{
+            margin: '6px 3px',
+            width: 'calc(100% - 6px)',
+            borderRadius: '3px',
+            padding: '3px',
+          }">
             <div v-for="it in item.data" class="flexItem">
               <div>
                 {{ it.label }}
               </div>
-              <el-button
-                v-if="item.btn"
-                @click="btnClick(item.btn, it)"
-                :type="item.btn.elType"
-                :icon="item.btn.icon"
-                size="small"
-                plain
-                text
-              >
+              <el-button v-if="item.btn" @click="btnClick(item.btn, it)" :type="item.btn.elType" :icon="item.btn.icon"
+                size="small" plain text>
                 {{ item.btn.label }}
               </el-button>
             </div>
@@ -79,23 +50,13 @@
 
       <!-- 这里展示的是默认树形结构 -->
       <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
-        <el-tree
-          v-model="treeData"
-          :props="defaultProps"
-          :lazy="true"
-          :load="treeDataFuncByLevel"
-          @node-click="nodeClick"
-        >
+        <el-tree v-model="treeData" :props="defaultProps" :lazy="true" :load="treeDataFuncByLevel"
+          @node-click="nodeClick">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ node.label }}</div>
-              <el-button
-                v-if="clickItemDetailFunc"
-                text
-                size="small"
-                icon="More"
-                @click.stop="clickItemDetail(data)"
-              ></el-button>
+              <el-button v-if="clickItemDetailFunc" text size="small" icon="More"
+                @click.stop="clickItemDetail(data)"></el-button>
             </div>
           </template>
         </el-tree>
@@ -268,16 +229,16 @@ export default defineComponent({
         that.searchResult =
           res.length > 1
             ? res.reduce((pre, item) => {
-                let children = [];
-                if (item.children) {
-                  children = item.children;
-                  delete item.children;
-                }
-                if (!pre.length) return [pre].concat(item).concat(children);
-                else {
-                  return pre.concat(item).concat(children);
-                }
-              })
+              let children = [];
+              if (item.children) {
+                children = item.children;
+                delete item.children;
+              }
+              if (!pre.length) return [pre].concat(item).concat(children);
+              else {
+                return pre.concat(item).concat(children);
+              }
+            })
             : res;
       };
       this.treeDataFuncByLevel({}, resolve, this.selectedKey);
@@ -335,15 +296,18 @@ export default defineComponent({
   ::v-deep .el-tree-node__label {
     width: calc(100% - 12px);
   }
+
   .searchBar {
     display: flex;
   }
+
   .content {
     width: 100%;
     height: auto;
     max-height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
+
     .searchItem {
       margin: 4px 18px;
       width: calc(100% - 16px);
@@ -368,6 +332,7 @@ export default defineComponent({
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+
   .text {
     width: calc(100% - 40px);
     overflow: hidden;
@@ -376,6 +341,7 @@ export default defineComponent({
     text-align: left;
   }
 }
+
 .flexItem {
   align-items: center;
   display: flex;
@@ -385,5 +351,17 @@ export default defineComponent({
   justify-content: space-between;
   width: 100%;
   color: #666;
+}
+
+
+::v-deep .el-tree--highlight-current .el-tree-node>.el-tree-node__content {
+  transition: all 0.2s;
+}
+
+::v-deep .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+  background-color: var(--el-color-primary);
+  border-radius: 6px;
+  color: #fff;
+  margin: 3px 0px;
 }
 </style>
