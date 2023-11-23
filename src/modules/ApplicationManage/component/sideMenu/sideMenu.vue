@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-05-30 10:47:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-17 23:38:32
- * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/component/sideMenu/sideMenu.vue
+ * @LastEditTime: 2023-10-13 15:56:57
+ * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/sideMenu/sideMenu.vue
 -->
 <script lang="ts">
 import { defineComponent } from "vue";

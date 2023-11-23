@@ -1,7 +1,8 @@
+
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-16 10:23:46
+ * @LastEditTime: 2023-10-20 18:35:39
  * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/formPage/formPage.vue
 -->
 <template>
@@ -16,31 +17,35 @@
       formBody_noTitle_noBtn: (!btnList || btnList.length == 0) && !title,
     }" v-if="(!showTypeProp || showTypeProp == 'edit') && formData && formProps && formInputTemplate">
       <el-scrollbar>
-        <el-card>
-          <VueForm v-model="formData" :style="{
-            textAlign: 'top',
-          }" :schema="schema" :ui-schema="uiSchema" :formProps="formProps">
-            <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
-          </VueForm>
-        </el-card>
+        <VueForm v-if="showTypeProp == 'edit'" v-model="formData" :style="{
+          textAlign: 'top',
+        }" :schema="schema" :ui-schema="uiSchema" :formProps="formProps" @change="(e) => console.log(e)">
+          <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
+        </VueForm>
       </el-scrollbar>
     </div>
-    <!-- {{ formData }} -->
     <div :class="{
       formBody_noBtn: !btnList || btnList.length == 0,
       formBody_noTitle: !title,
       formBody_noTitle_noBtn: (!btnList || btnList.length == 0) && !title,
     }" v-if="showTypeProp == 'show'">
-      <el-form ref="form" v-on:submit.prevent :label-position="'left'" size="small">
+      <el-form ref="form" v-on:submit.prevent :label-position="'left'">
         <el-form-item :label-width="'120px'" :label="item.label" v-for="(item, index) in showItemTemplate.filter(
           (x) => x.table.type != showType.btnList
         )" :key="index + 'btnFormList'">
+          <template #label="it">
+            {{ it.label }}
+          </template>
           <span v-if="item.table.type == showType.funcComponent">
             <component :is="item.table.showFunc(formData, item.key)"></component>
           </span>
-          <span v-else-if="item.type == showType.func">
+          <span v-else-if="item.table.type == showType.func">
             {{ item.table.showFunc(formData, item.key) }}
           </span>
+          <span v-else-if="item.table.type == showType.dataKey">
+            {{ formData[item.key] }}
+          </span>
+          <!-- {{ item }} -->
         </el-form-item>
       </el-form>
     </div>
@@ -82,6 +87,8 @@ import { btnList } from "@/modules/knowledge/PageConfigData/template/templateDet
 import { showType, tableCellTemplate, btnCellTemplate, btnActionTemplate } from "@/modules/userManage/types";
 import { stringAnyObj } from '../../types';
 import { queryItemTemplateLocal } from '../../../knowledge/PageConfigData/template/templateDetail';
+import { deepClone } from "@/utils";
+let formDataForCheck = {};
 
 export default defineComponent({
   componentInfo: {
@@ -130,7 +137,15 @@ export default defineComponent({
   baseProps: {},
   props: ['formDataFunc', "title", "defaultFormData", "showItemTemplate", "formInputTemplate", "btnList", 'showTypeProp', 'cusStyle'],
   components: { cardBg, VueForm },
-  watch: {},
+  watch: {
+    formData: {
+      handler(val) {
+        if (this.isReady) this.checkOnChange(val);
+      },
+      immediate: true,
+      deep: true,
+    },
+  },
   data: () => {
     return {
       searchResult: [],
@@ -151,12 +166,14 @@ export default defineComponent({
         defaultSelectFirstOption: true,
         labelWidth: "120px",
       },
+      isReady: false
     };
   },
   async mounted() {
     await this.init();
     await this.initForm();
     this.$emit("ready");
+    this.isReady = true;
   },
   methods: {
     // 初始化表单
@@ -172,10 +189,13 @@ export default defineComponent({
     },
 
     async init() {
-      if (this.defaultFormData)
+      if (this.defaultFormData) {
         this.formData = this.defaultFormData;
+        formDataForCheck = deepClone(this.formData);
+      }
       if (this.formDataFunc)
         this.formData = await this.formDataFunc(this);
+      console.log('初始化字段', this.formData)
     },
 
     async btnClick(btn: btnCellTemplate) {
@@ -190,6 +210,37 @@ export default defineComponent({
         window.open(btn.url);
       }
       btn["isLoading"] = false;
+    },
+
+
+    async checkOnChange(val = this.formData, force = false) {
+      Object.keys(val).map((key) => {
+        if (val[key] != formDataForCheck[key] || force) {
+          this.formInputTemplate.map(async (cell) => {
+            if (cell.key == key && cell.input && cell.input.onChangeFunc) {
+              // 如有返回则可以重置表单的输入方案
+              const that = this;
+              const queryItemTemplate = await cell.input.onChangeFunc(
+                that,
+                this.formData
+              );
+              if (
+                queryItemTemplate &&
+                queryItemTemplate.length &&
+                queryItemTemplate[0].key
+              )
+                this.initForm(queryItemTemplate);
+              else if (queryItemTemplate) {
+                for (let x in queryItemTemplate) {
+                  this.formData[x] = queryItemTemplate[x];
+                }
+                this.$forceUpdate();
+              }
+            }
+          });
+          formDataForCheck[key] = val[key];
+        }
+      });
     },
   },
 });
