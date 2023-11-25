@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-22 09:29:30
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/dataTemplate.ts
+ * @LastEditTime: 2023-11-22 10:49:52
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 import { cardUtil } from "./util";
@@ -16,11 +16,13 @@ export enum cardOnChangeType {
   forceRefreshToOrgin = "forceRefreshToOrgin",
   gridCardListonChange = "gridCardListonChange",
   cardConfigChange = "cardConfigChange",
+  cardConfigChangeNoMerge = "cardConfigChangeNoMerge",
   cardEdit = "cardEdit",
   cardDelete = "cardDelete",
+  cardAdd = "cardAdd",
   openComponentsList = "openComponentsList",
   moduleApi = "moduleApi",
-  hightLightCard = "hightLightCard",
+  highLightCard = "highLightCard",
 }
 
 export const gridSizeConfig = (
@@ -78,6 +80,8 @@ export interface gridCellOptions {
   props?: {
     [key: string]: any;
   };
+  isSettingTool?: Boolean;
+  noAnimate?: Boolean;
   showInGridDesktop?: Boolean;
   [key: string]: any;
 }
@@ -139,7 +143,7 @@ export enum inputType {
 
 export interface CardComponentTemplate {
   name?: string;
-  settngDetail: {
+  settingDetail: {
     props?: {
       [key: string]: {
         label: string;
@@ -155,14 +159,7 @@ export interface CardComponentTemplate {
     [key: string]: any;
   };
   component: any;
-  compontentInfo?: {
-    description?: string;
-    label?: string;
-    group?: string;
-    context?: Array<any>;
-    gridInfo?: { [key: string]: gridSizeCell };
-    [key: string]: any;
-  };
+  componentInfo?: componentInfo;
   [key: string]: any;
 }
 
@@ -199,7 +196,7 @@ export const cardComponentMaker = (
 ): CardComponentTemplate => {
   let cardComponent = {
     name: compontentInfo.label,
-    settngDetail: {
+    settingDetail: {
       props,
       baseProps,
     },
@@ -233,7 +230,6 @@ export const componentGetter = (
       } else {
         return componentLists["iframe"];
       }
-      break;
     case cardComponentType.fromData:
       if (!component.data) return "";
       return {
@@ -241,7 +237,6 @@ export const componentGetter = (
         // component: defineComponent(eval('(()=>{return '+component.data+'})()')),
         component: createApp(eval("(()=>{return " + component.data + "})()")),
       };
-      break;
     case cardComponentType.cusComponent:
       break;
   }

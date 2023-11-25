@@ -1,91 +1,93 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 17:30:13
- * @FilePath: /configforpagedemo/index.html
+ * @LastEditTime: 2023-08-10 11:18:10
+ * @FilePath: /lcdp_fe_setup/index.html
 -->
 <!DOCTYPE html>
 <html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="/public/favicon.ico">
-    <title></title>
-    
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but  doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app">
-      <style>
-        html,
-        body,
-        #app {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          position: relative;
-          justify-content: center;
-          align-items: center;
-          overflow: hidden;
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="/public/favicon.ico">
+  <title></title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+  </noscript>
+  <div id="app">
+    <style>
+      html,
+      body,
+      #app {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .loader,
+      .loader:before,
+      .loader:after {
+        border-radius: 50%;
+        width: 2.5em;
+        height: 2.5em;
+        animation-fill-mode: both;
+        animation: loadAnimation 1.8s infinite ease-in-out;
+      }
+
+      .loader {
+        color: #406eeb;
+        font-size: 10px;
+        margin: 80px auto;
+        position: relative;
+        text-indent: -9999em;
+        transform: translateZ(0);
+        animation-delay: -0.16s;
+        top: 0;
+        transform: translate(-50%, 0);
+      }
+
+      .loader:before,
+      .loader:after {
+        content: "";
+        position: absolute;
+        top: 0;
+      }
+
+      .loader:before {
+        left: -3.5em;
+        animation-delay: -0.32s;
+      }
+
+      .loader:after {
+        left: 3.5em;
+      }
+
+      @keyframes loadAnimation {
+
+        0%,
+        80%,
+        100% {
+          box-shadow: 0 2.5em 0 -1.3em;
         }
 
-        .loader,
-        .loader:before,
-        .loader:after {
-          border-radius: 50%;
-          width: 2.5em;
-          height: 2.5em;
-          animation-fill-mode: both;
-          animation: loadAnimation 1.8s infinite ease-in-out;
+        40% {
+          box-shadow: 0 2.5em 0 0;
         }
+      }
+    </style>
+    <div class="loader"></div>
+  </div>
+  <!-- built files will be auto injected -->
+  <script type="module" src="/src/main.ts"></script>
+</body>
 
-        .loader {
-          color: #406eeb;
-          font-size: 10px;
-          margin: 80px auto;
-          position: relative;
-          text-indent: -9999em;
-          transform: translateZ(0);
-          animation-delay: -0.16s;
-          top: 0;
-          transform: translate(-50%, 0);
-        }
-
-        .loader:before,
-        .loader:after {
-          content: "";
-          position: absolute;
-          top: 0;
-        }
-
-        .loader:before {
-          left: -3.5em;
-          animation-delay: -0.32s;
-        }
-
-        .loader:after {
-          left: 3.5em;
-        }
-
-        @keyframes loadAnimation {
-          0%,
-          80%,
-          100% {
-            box-shadow: 0 2.5em 0 -1.3em;
-          }
-
-          40% {
-            box-shadow: 0 2.5em 0 0;
-          }
-        }
-      </style>
-      <div class="loader"></div>
-    </div>
-    <!-- built files will be auto injected -->
-    <script type="module" src="/src/main.ts"></script>
-
-  </body>
 </html>

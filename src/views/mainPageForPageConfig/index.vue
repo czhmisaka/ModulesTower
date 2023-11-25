@@ -1,25 +1,19 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-18 00:20:24
+ * @LastEditTime: 2022-12-19 15:04:51
  * @FilePath: /configforpagedemo/src/views/mainPageForPageConfig/index.vue
 -->
 
 <template>
-  <div
-    :style="{
-      width: 'calc(100% )',
-      height: 'calc(100% )',
-      background: 'rgba(0,0,0,0)',
-      overflow: 'hidden',
-    }"
-  >
-    <gridDesktop
-      :grid-col-num="desktopData.gridColNum"
-      :desktopData="desktopDataList"
-      :component-lists="component"
-      :cus-style="desktopData?.cusStyle"
-    />
+  <div :style="{
+    width: 'calc(100% )',
+    height: 'calc(100% )',
+    background: 'rgba(0,0,0,0)',
+    overflow: 'hidden',
+  }">
+    <gridDesktop :grid-col-num="desktopData.gridColNum" :desktopData="desktopDataList" :component-lists="component"
+      :cus-style="desktopData?.cusStyle" />
     {{ dataText }}
   </div>
 </template>
@@ -29,7 +23,6 @@ import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { defineComponent } from "vue";
 import { isValidKey } from "@/utils/index";
 import { GetAllUser } from "@/utils/api/user/user";
-import { getAction } from "@/router/util";
 
 const PageConfig = {};
 
@@ -40,7 +33,7 @@ export default defineComponent({
 
   computed: {
     component() {
-      return getAction().getAllComponents();
+      return this.$modules.getAllComponents();
     },
   },
   methods: {

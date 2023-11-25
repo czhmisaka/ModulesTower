@@ -1,13 +1,14 @@
 /*
  * @Date: 2023-02-04 18:33:26
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-27 20:18:36
- * @FilePath: /configforpagedemo/src/store/modules/settings.ts
+ * @LastEditTime: 2023-07-20 16:31:13
+ * @FilePath: /lcdp_fe_setup/src/store/modules/settings.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
 import { setType } from "./types";
 import { getConfig } from "@/utils/config/appConfig";
+import { useModuleHook } from "./module";
 
 export const useSettingStore = defineStore({
   id: "pure-setting",

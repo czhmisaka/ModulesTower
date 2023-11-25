@@ -1,36 +1,80 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 20:17:23
- * @FilePath: /configforpagedemo/src/router/util.ts
+ * @LastEditTime: 2023-11-21 15:48:56
+ * @FilePath: /lcdp_fe_setup/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
 import { CardComponentTemplate } from "../components/basicComponents/grid/module/dataTemplate";
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
 import { transformSync } from "@babel/core";
-import { useUserStoreHook } from "@/store/modules/user";
-import { stringAnyObj } from "@/modules/userManage/types";
+import { desktopDataTemplate, stringAnyObj } from "@/modules/userManage/types";
+import { timeConsole } from "@/main";
 
 // 函数执行时间计算
-const timeChecker = class {
+export const timeChecker = class {
   name: string;
   startTime: number;
-  constructor(name) {
+  checkTimeMap: stringAnyObj;
+  checkNumMap: stringAnyObj;
+  showConsole: boolean;
+  constructor(name, showConsole: boolean = true) {
     this.name = name;
     this.startTime = new Date().getTime();
+    this.checkTimeMap = {};
+    this.checkNumMap = {};
+    this.showConsole = showConsole;
   }
   getTime = (word: string | number = " ") => {
+    if (!this.showConsole) return;
     console.log(this.name, word, new Date().getTime() - this.startTime + "ms");
   };
-};
 
-function transform(scriptText: string) {
-  const transformed = transformSync(scriptText, {
-    presets: ["@babel/preset-env"],
-  });
-  return transformed.code;
-}
+  checkTime = (word: string, extraWord: string = "") => {
+    if (!this.showConsole) return;
+    if (!this.checkTimeMap[word]) {
+      this.checkTimeMap[word] = new Date().getTime();
+      console.log(
+        this.name,
+        word + extraWord,
+        "start",
+        new Date().getTime() - this.startTime + "ms"
+      );
+    } else {
+      console.log(
+        this.name,
+        word + extraWord,
+        `耗时【${new Date().getTime() - this.checkTimeMap[word]}ms】`,
+        "end",
+        new Date().getTime() - this.startTime + "ms"
+      );
+      this.checkTimeMap[word] = "";
+    }
+  };
+
+  checkNum = (word: string) => {
+    if (!this.showConsole) return;
+    if (this.checkNumMap[word]) {
+      console.log(
+        this.name,
+        word,
+        this.checkNumMap[word]++,
+        "节点时间",
+        new Date().getTime() - this.startTime + "ms"
+      );
+    } else {
+      this.checkNumMap[word] = -1;
+      console.log(
+        this.name,
+        word,
+        this.checkNumMap[word]++,
+        "节点时间",
+        new Date().getTime() - this.startTime + "ms"
+      );
+    }
+  };
+};
 
 /**
  * @name: metaInfoTemplate
@@ -74,7 +118,7 @@ export const routerCellMaker = (
       icon: "bxs:package",
       ...options["meta"],
       // 这里的false可能需要根据用户的登录身份修改
-      showLink: true,
+      showLink: false,
 
       // 这个属性用于标注这个路由的来源 ，只有超级管理员能保持一直可见
       moduleBackUpRouter: true,
@@ -93,8 +137,12 @@ export const routerCellMaker = (
 export interface modulesCellTemplate {
   name: string;
   path: string;
-  routers: RouteConfigsTable[];
-  components: CardComponentTemplate[];
+  routers: any[];
+  isReady: boolean;
+  pageMap: stringAnyObj;
+  components: {
+    [key: string]: CardComponentTemplate;
+  };
   output?: { [key: string]: any };
   children?: { [key: string]: any }[];
   baseInfo?: {
@@ -116,23 +164,41 @@ let action = {} as stringAnyObj;
  * @Date: 2022-10-23 21:51:34
  * @param {*} basePath
  */
-export const getModuleFromView = (init = false) => {
-  const timec = new timeChecker("getModuleFromViewFuck");
+export const getModuleFromView = async (init = false) => {
+  timeConsole.checkTime("模块加载");
   if (!init) {
-    timec.getTime(1);
+    await new Promise((res) => {
+      let interval = setInterval(() => {
+        if (
+          moduleList &&
+          moduleList.length > 0 &&
+          moduleList.filter((x) => x.isReady).length ==
+            moduleList.filter((x) => x.components).length
+        ) {
+          clearInterval(interval);
+          timeConsole.checkTime("模块加载", "fake");
+          res(true);
+        }
+      }, 30);
+    });
     return moduleList;
   }
 
   // 如果你找到了这里的 require.context 搜索出了问题，先看一下是不是出现了空文件夹，如有则删除。  -- czh 20221109
   // 感谢自己，表现形式可能为 undifined files -- czh 20230116
   // again ，可能需要做一个更好的提示信息 -- czh 20230209
+  // fuck 迁移这种规模的代码都有点困难 -- czh 20230618
+  // 好消息，现在我们改成了import(试图) -- czh 20230706
+  // TMD为什么组件加载时间这么长，请不要把组件当成页面写 -- czh 20231120
   moduleList = [] as modulesCellTemplate[];
-  const requireModule = require.context("@/modules/", true, /.\.ts|\.vue/g);
-  const requireList = requireModule.keys() as string[];
-
+  const importModule = import.meta.glob("@/modules/**", {});
+  const requireList = Object.keys(importModule) as string[];
+  const requireModule = async (fileName: string): Promise<any> => {
+    return await importModule[fileName]();
+  };
   // 文档路径
   const pageConfigData = "PageConfigData/index.ts";
-  const pageConfigEnv = "PageConfigData";
+
   const component = "component/index.ts";
   const mainPage = "Index.vue";
   const output = "output.ts";
@@ -146,7 +212,7 @@ export const getModuleFromView = (init = false) => {
    * @param {string} fileName
    */
   function getModuleName(fileName: string): string {
-    return fileName.split("./")[1].split("/")[0];
+    return fileName.split("/src/modules/")[1].split("/")[0];
   }
 
   /**
@@ -156,7 +222,7 @@ export const getModuleFromView = (init = false) => {
    * @Date: 2022-11-07 14:53:40
    * @param {string} fileName
    */
-  function getDealName(fileName: string, len: number = 3): string {
+  function getDealName(fileName: string, len: number = 5): string {
     return fileName.split("/").length < len
       ? ""
       : fileName
@@ -185,57 +251,88 @@ export const getModuleFromView = (init = false) => {
    */
   function dealRequireList(
     checkFunc: (dealName: string, len: number) => boolean,
-    dealFunc: (fileName: string) => void
+    dealFunc: (fileName: string, isLast: boolean) => void,
+    afterFunc: () => void = () => {}
   ) {
-    requireList.map((fileName: string) => {
+    const dealList = requireList.filter((fileName: string) => {
+      return checkFunc(getDealName(fileName), getFileNameLength(fileName));
+    });
+    dealList.map(async (fileName: string, i: number) => {
       if (checkFunc(getDealName(fileName), getFileNameLength(fileName))) {
-        dealFunc(fileName);
+        await dealFunc(fileName, dealList.length - 1 == i);
+      }
+      if (dealList.length - 1 == i) {
+        afterFunc && afterFunc();
       }
     });
   }
 
   // 处理获取到模块，构建基础的模块列表
   dealRequireList(
-    (dealName, len) => dealName == mainPage && len == 3,
+    (dealName, len) => {
+      return dealName == mainPage && len == 5;
+    },
     (fileName: string) => {
       const moduleName = getModuleName(fileName);
       moduleList.push({
         name: moduleName,
         path: `@/modules/${moduleName}/`,
+        isReady: false,
         routers: [
           routerCellMaker(
             `/${moduleName}`,
             moduleName,
-            () => import(`../modules/${moduleName}/Index.vue`),
+            () => import(`@/modules/${moduleName}/Index.vue`),
             {},
             []
           ),
         ],
+        pageMap: {},
         baseInfo: { info: "" },
         output: {},
         children: [],
-        components: [] as CardComponentTemplate[],
+        components: {},
       });
     }
   );
 
-  // 整理模块包的引入关系
+  // 处理组件列表
+  // 此处需要更新成 promise.all 形式 -- 改好了 czh 2023 1121
+  // 之后需要基于判断当前优先加载的组件去获取需要展示的组件对象
+  let compDealPromiseList = [];
+  let hasCompModuleName = [];
   dealRequireList(
-    (dealName, len) =>
-      dealName.indexOf(pageConfigEnv) > -1 &&
-      len == 4 &&
-      dealName != pageConfigData,
-    (fileName: string) => {}
+    (dealName, len) => dealName == component,
+    async (fileName: string, isLast: boolean) => {
+      const moduleName = getModuleName(fileName);
+      moduleList.map(async (module: modulesCellTemplate, index) => {
+        if (module.name == moduleName) {
+          const func = async (fileName, index) => {
+            let comp = await (await requireModule(fileName)).default();
+            moduleList[index]["components"] = comp;
+            moduleList[index].isReady = true;
+          };
+          hasCompModuleName.push(moduleName);
+          compDealPromiseList.push(func(fileName, index));
+        }
+      });
+    }
   );
+  // 无组件则直接ready
+  moduleList.map((x) => {
+    if (hasCompModuleName.indexOf(x.name) == -1) x.isReady = true;
+  });
+  // 等待组件加载
+  Promise.all(compDealPromiseList);
 
   // 处理outPut文件
   dealRequireList(
-    (dealName, len) => dealName == output && len == 3,
+    (dealName, len) => dealName == output && len == 5,
     (fileName: string) => {
       const moduleName = getModuleName(fileName);
-      moduleList.map((module: modulesCellTemplate) => {
+      moduleList.map(async (module: modulesCellTemplate) => {
         if (module.name == moduleName) {
-          const output = requireModule(fileName);
+          const output = (await importModule[fileName]()) as stringAnyObj;
           if (output["output"]) module.output = output["output"];
           if (output["moduleInfo"]) {
             const moduleInfo = output["moduleInfo"];
@@ -254,37 +351,25 @@ export const getModuleFromView = (init = false) => {
     }
   );
 
-  // 处理组件列表
-  dealRequireList(
-    (dealName, len) => dealName == component,
-    (fileName: string) => {
-      const moduleName = getModuleName(fileName);
-      moduleList.map((module: modulesCellTemplate) => {
-        if (module.name == moduleName) {
-          console.log(fileName, "asd");
-          module.components = requireModule(fileName).default;
-        }
-        return module;
-      });
-    }
-  );
-
   // 添加默认路由方案 (output配置中可以关闭)
   dealRequireList(
     (dealName, len) => dealName == pageConfigData,
     (fileName: string) => {
       const moduleName = getModuleName(fileName);
-      moduleList.map((module: modulesCellTemplate) => {
+      moduleList.map(async (module: modulesCellTemplate) => {
         if (module.name == moduleName) {
-          const pageMap = requireModule(fileName)["PageConfig"];
+          const pageMap = (await requireModule(fileName))["PageConfig"];
+          for (let x in pageMap) {
+            module.pageMap[x] = pageMap[x];
+          }
           Object.keys(pageMap).map((pageName: string) => {
             module.routers[0].children.push(
               routerCellMaker(
                 `/${moduleName}/${pageName}`,
                 pageMap[pageName]["name"]
-                  ? pageMap[pageName]["name"]
+                  ? moduleName + "_" + pageMap[pageName]["name"]
                   : moduleName + "_" + pageName,
-                () => import(`../modules/${moduleName}/Index.vue`),
+                () => import(`@/modules/${moduleName}/Index.vue`),
                 {
                   meta: {
                     originData: {
@@ -310,11 +395,11 @@ export const getModuleFromView = (init = false) => {
     (dealName, len) => dealName == router,
     (fileName: string) => {
       const moduleName = getModuleName(fileName);
-      moduleList.map((module: modulesCellTemplate) => {
+      moduleList.map(async (module: modulesCellTemplate) => {
         if (module.name == moduleName) {
           module.routers = [
             ...module.routers,
-            ...requireModule(fileName).default,
+            ...(await requireModule(fileName)).default,
           ];
         }
         return module;
@@ -322,13 +407,25 @@ export const getModuleFromView = (init = false) => {
     }
   );
 
-  timec.getTime(2);
+  await new Promise((res) => {
+    let interval = setInterval(() => {
+      if (
+        moduleList &&
+        moduleList.length > 0 &&
+        moduleList.filter((x) => x.isReady).length ==
+          moduleList.filter((x) => x.components).length
+      ) {
+        clearInterval(interval);
+        timeConsole.checkTime("模块加载");
+        res(true);
+      }
+    }, 30);
+  });
   return moduleList;
 };
 
 export const getAction = () => {
   if (Object.keys(action).length == 0) getModuleFromView(true);
-
   // 获取所有的模块构建出来的路由记录
   action["getAllPageRouter"] = async () => {
     let routes = [];

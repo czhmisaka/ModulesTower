@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-08 18:38:02
- * @FilePath: /configforpagedemo/src/store/modules/types.ts
+ * @LastEditTime: 2023-08-28 15:05:49
+ * @FilePath: /lcdp_fe_setup/src/store/modules/types.ts
  */
 import { stringAnyObj } from "@/modules/userManage/types";
 import { extend } from "lodash";
@@ -53,6 +53,7 @@ export type userType = {
   currentPage?: number;
   menuList?: stringAnyObj[];
   options: stringAnyObj;
+  isLoading: boolean;
 };
 
 export type loadingType = {

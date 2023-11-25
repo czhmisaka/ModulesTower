@@ -1,58 +1,37 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 15:01:56
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.vue
+ * @LastEditTime: 2023-11-23 09:45:00
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.vue
 -->
 <template>
-  <cardBg
-    ref="mainBox"
-    :cusStyle="{
-      padding: '12px',
-    }"
-  >
-    <inputForm
-      ref="inputBox"
-      :query="query"
-      @search="search"
-      @refresh="refresh"
-      @btnClick="btnClick"
-      :queryItemTemplate="searchItemTemplate"
-      :selectedList="selectedList"
-      @inputChange="queryChange"
-      :btn-list="btnList"
-      :autoSearch="autoSearch"
-    />
-    <infoTable
-      :template="showItemTemplate"
-      :data-list="PageData.data || PageData.list"
-      :loading="isLoading"
-      @search="search"
-      @refresh="refresh"
-      :style="{
+  <cardBg ref="mainBox" :cusStyle="{
+    padding: '12px',
+  }">
+    <screenInputform ref="inputBox" :query="query" @search="search" @refresh="refresh" @btnClick="btnClick"
+      :queryItemTemplate="searchItemTemplate" :selectedList="selectedList" @inputChange="queryChange" :btn-list="btnList"
+      :autoSearch="autoSearch" v-if="screenStatus" />
+    <inputForm ref="inputBox" :query="query" @search="search" @refresh="refresh" @btnClick="btnClick"
+      :queryItemTemplate="searchItemTemplate" :selectedList="selectedList" @inputChange="queryChange" :btn-list="btnList"
+      :autoSearch="autoSearch" :isCard="isCard" v-else />
+    <infoTable v-if="!isCard" :template="showItemTemplate" :data-list="PageData?.data" :loading="isLoading"
+      @search="search" @refresh="refresh" :style="{
         height: TableHeight + 'px',
-      }"
-      :baseData="baseData"
-      @selectedChange="selectedChange"
-      @onChange="(value, options) => $emit('onChange', value, options)"
-    />
-    <el-pagination
-      :style="{
-        marginTop: '6px',
-        float: 'right',
-      }"
-      v-if="PageData.total"
-      v-model:current-page="PageData.pageNumber"
-      v-model:page-size="PageData.pageSize"
-      :page-sizes="[10, 20, 30, 40, 100]"
-      :small="true"
-      :background="true"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="PageData.total"
-      @size-change="(e) => search({ pageSize: e })"
-      @current-change="(e) => search({ pageNumber: e })"
-      :hide-on-single-page="false"
-    />
+      }" :load="load" :baseData="baseData" @selectedChange="selectedChange"
+      @onChange="(value, options) => $emit('onChange', value, options)" />
+    <cardList v-else-if="isCard" :template="showItemTemplate" :data-list="PageData?.data" :loading="isLoading"
+      :height="TableHeight" @search="search" @refresh="refresh" :style="{
+        height: TableHeight + 'px',
+      }" :cardFunc="cardFunc" :load="load" :baseData="baseData" @selectedChange="selectedChange"
+      @onChange="(value, options) => $emit('onChange', value, options)" />
+    <el-pagination :style="{
+      marginTop: '6px',
+      float: 'right',
+    }" v-if="PageData.total" v-model:current-page="PageData.pageNumber" v-model:page-size="PageData.pageSize"
+      :page-sizes="[5, 10, 20, 30, 40, 100]" :small="true" :background="true"
+      layout="total, sizes, prev, pager, next, jumper" :total="PageData.total"
+      @size-change="(e) => search({ pageSize: e })" @current-change="(e) => search({ pageNumber: e })"
+      :hide-on-single-page="false" />
   </cardBg>
 </template>
 
@@ -67,7 +46,9 @@ import {
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import inputForm from "./inputForm.vue";
-import infoTable from "./infoTable.vue";
+import screenInputform from './screenInputform.vue'
+import infoTable from "./info/infoTable.vue";
+import cardlist from './info/cardlist.vue'
 import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 import { tableCellTemplateMaker } from "./searchTable";
 import search from "@iconify-icons/ep/search";
@@ -79,7 +60,53 @@ import {
   btnActionTemplate,
 } from "@/modules/userManage/types";
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
+import { timeConsole } from "@/main";
 
+
+let useAble = 0;
+
+function throttle(func, delay) {
+  let timer = null;
+  let lastTime = 0;
+  return function () {
+    const context = this;
+    const args = arguments;
+    const now = new Date().getTime();
+    if (now - lastTime >= delay) {
+      clearTimeout(timer);
+      func.apply(context, args);
+      lastTime = now;
+    } else {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        func.apply(context, args);
+        lastTime = now;
+      }, delay);
+    }
+  };
+}
+function fuck(that) {
+  timeConsole.checkTime("表单高度计算");
+  const mainBox = that.$refs["mainBox"];
+  const inputBox = that.$refs["inputBox"];
+  if (mainBox && inputBox) {
+    let baseHeight = 0;
+    let offsetHeight = -16;
+    if (that.PageData.total) baseHeight = 32;
+    if (inputBox.$el.offsetHeight)
+      that.TableHeight =
+        mainBox.$el.offsetHeight -
+        inputBox.$el.offsetHeight -
+        34 -
+        baseHeight -
+        offsetHeight;
+    else that.TableHeight = mainBox.$el.offsetHeight - 24 - baseHeight - offsetHeight;
+  }
+  timeConsole.checkTime("表单高度计算");
+}
+
+let num = true
+let fuckk = throttle(fuck, 200);
 export default defineComponent({
   componentInfo: {
     labelNameCn: "搜索列表组件",
@@ -124,6 +151,18 @@ export default defineComponent({
       label: "自动搜索",
       type: inputType.boolean,
     },
+    modeChange: {
+      label: '展示列表和卡片模式的切换按钮',
+      type: inputType.boolean
+    },
+    isCard: {
+      label: '展示卡片模式',
+      type: inputType.boolean,
+    },
+    cardFunc: {
+      label: '卡片模式渲染方式',
+      type: inputType.functionEditor
+    },
   } as propInfo,
 
   baseProps: {
@@ -142,14 +181,14 @@ export default defineComponent({
       handler(val) {
         this.searchKeyWithBaseData
           ? this.searchKeyWithBaseData.map((key) => {
-              if (
-                Object.keys(val).indexOf(key) > -1 &&
-                this.baseDataForCheck[key] != val[key]
-              ) {
-                this.baseDataForCheck[key] = val[key];
-                this.search();
-              }
-            })
+            if (
+              Object.keys(val).indexOf(key) > -1 &&
+              this.baseDataForCheck[key] != val[key]
+            ) {
+              this.baseDataForCheck[key] = val[key];
+              this.search();
+            }
+          })
           : null;
       },
       deep: true,
@@ -160,6 +199,7 @@ export default defineComponent({
     "defaultQuery",
     "baseData",
     "sizeUnit",
+    "detail",
     "searchFunc",
     "showItemTemplate",
     "searchItemTemplate",
@@ -167,12 +207,19 @@ export default defineComponent({
     "btnList",
     "autoSearch",
     "pageConfig",
+    "load",
+    "isCard",
+    "cardFunc",
+    "screenStatus"
   ],
-  components: { cardBg, inputForm, infoTable, sideDialogForm },
+  components: { cardBg, inputForm, infoTable, sideDialogForm, cardList: cardlist, screenInputform },
+
   data() {
     return {
       query: {},
-      PageData: {} as PageDataTemplate,
+      PageData: {
+        pageSize: 1000,
+      } as PageDataTemplate,
       isLoading: false,
 
       isReady: false,
@@ -185,40 +232,51 @@ export default defineComponent({
 
       interval: null,
       baseDataForCheck: {},
+      idRandom: (useAble += Math.random()),
     };
   },
-  async mounted() {
+
+  async created() {
+    timeConsole.checkTime("searchTable");
     this.isReady = false;
     await this.initData();
-    await this.$nextTick();
-    this.$emit("ready");
     this.isReady = true;
+    this.$emit("ready");
+    timeConsole.checkTime("initData");
     await this.search();
-    let that = this;
-    if (that.interval) clearInterval(that.interval);
-    that.interval = setInterval(() => {
-      if (that.$refs["mainBox"] && that.$refs["inputBox"]) {
-        let baseHeight = 0;
-        let offsetHeight = -6;
-        if (that.PageData.total) baseHeight = 32;
-        if (that.$refs["inputBox"].$el.offsetHeight)
-          that.TableHeight =
-            that.$refs["mainBox"].$el.offsetHeight -
-            that.$refs["inputBox"].$el.offsetHeight -
-            34 -
-            baseHeight -
-            offsetHeight;
-        else
-          that.TableHeight =
-            that.$refs["mainBox"].$el.offsetHeight - 24 - baseHeight - offsetHeight;
-      }
-    }, 200);
+    timeConsole.checkTime("initData");
   },
+  async mounted() {
+    const that = this;
+    const data = {};
+    const name = "searchTable_func_" + this.idRandom;
+    data[name] = that.changeSize;
+    window.addEventListener("resize", data[name]);
+    let num = 0;
+    const interval = setInterval(() => {
+      that.changeSize();
+      num++;
+      if (num > 10) clearInterval(interval);
+    }, 50);
+    timeConsole.checkTime("searchTable");
+  },
+
+  async unmounted() {
+    const that = this;
+    const data = {};
+    const name = "searchTable_func_" + this.idRandom;
+    data[name] = that.changeSize;
+    window.removeEventListener("resize", data[name]);
+  },
+
   methods: {
+    changeSize() {
+      fuckk(this);
+    },
+
     async initData() {
-      if (this.defaultQuery && Object.keys(this.defaultQuery).length > 0) {
+      if (this.defaultQuery && Object.keys(this.defaultQuery).length > 0)
         this.query = deepClone(this.defaultQuery);
-      }
     },
 
     /**
@@ -231,7 +289,7 @@ export default defineComponent({
       this.query = query;
       if (this.autoSearch) this.search();
     },
-
+    uploadChange(query: stringAnyObj) { },
     refresh() {
       if (
         this.autoSearch == false &&
@@ -259,10 +317,14 @@ export default defineComponent({
       btn["isLoading"] = true;
       if (btn.type == btnActionTemplate.OpenDrawer) {
         this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
-      } else if (btn.type == btnActionTemplate.Function && btn.function) {
+      } else if (
+        (btn.type == btnActionTemplate.Function ||
+          btn.type == btnActionTemplate.UploadFunction
+          || btn.type == btnActionTemplate.HoverFunction) &&
+        btn.function
+      ) {
         let that = this;
-        await btn.function(that, data);
-        // this.$emit("onSearch");
+        await btn.function(that, { ...data, _selectedList: this.selectedList });
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }
@@ -285,15 +347,29 @@ export default defineComponent({
         ...this.query,
         ...query,
       };
+      let result = null;
       if (this.searchFunc && this.isReady) {
         this.isLoading = true;
         try {
-          let result = await this.searchFunc(this.query, this);
-          this.PageData = {};
-          if (result.total || result.total == 0) this.PageData = result;
-          else this.PageData.data = result;
+          timeConsole.checkTime("searchFunc");
+          result = await this.searchFunc(this.query, this);
+          if (result) {
+            if (result.total || result.total == 0) {
+              this.PageData.data = [];
+              const data = result.list;
+              this.PageData = {
+                ...result,
+                data,
+                pageNumber: result.pageNum && result.pageNum == 0 ? 1 : result.pageNum,
+              };
+            } else this.PageData.data = result;
+            this.isLoading = false;
+          } else {
+            this.PageData = { data: [] };
+          }
+          timeConsole.checkTime("searchFunc");
         } catch (e) {
-          console.log("【searchTable】组件search事件报错", e);
+          console.error("【searchTable】组件search事件报错", e, result);
         } finally {
           this.selectedChange([]);
           this.isLoading = false;

@@ -24,7 +24,7 @@ const themeColors = {
     menuText: "rgb(254 254 254 / 65%)",
     sidebarLogo: "#002140",
     menuTitleHover: "#fff",
-    menuActiveBefore: "#4091f7"
+    menuActiveBefore: "#4091f7",
   },
   light: {
     vxeColor,
@@ -37,7 +37,7 @@ const themeColors = {
     menuText: "#7a80b4",
     sidebarLogo: "#fff",
     menuTitleHover: "#000",
-    menuActiveBefore: "#4091f7"
+    menuActiveBefore: "#4091f7",
   },
   dusk: {
     vxeColor: "#f5222d",
@@ -50,7 +50,7 @@ const themeColors = {
     menuText: "rgb(254 254 254 / 65.1%)",
     sidebarLogo: "#42090c",
     menuTitleHover: "#fff",
-    menuActiveBefore: "#e13c39"
+    menuActiveBefore: "#e13c39",
   },
   volcano: {
     vxeColor: "#fa541c",
@@ -63,7 +63,7 @@ const themeColors = {
     menuText: "rgb(254 254 254 / 65%)",
     sidebarLogo: "#441708",
     menuTitleHover: "#fff",
-    menuActiveBefore: "#e85f33"
+    menuActiveBefore: "#e85f33",
   },
   yellow: {
     vxeColor: "#fadb14",
@@ -76,7 +76,7 @@ const themeColors = {
     menuText: "rgb(254 254 254 / 65%)",
     sidebarLogo: "#443b05",
     menuTitleHover: "#fff",
-    menuActiveBefore: "#f6da4d"
+    menuActiveBefore: "#f6da4d",
   },
   mingQing: {
     vxeColor: "#13c2c2",
@@ -89,7 +89,7 @@ const themeColors = {
     menuText: "#7a80b4",
     sidebarLogo: "#053434",
     menuTitleHover: "#fff",
-    menuActiveBefore: "#59bfc1"
+    menuActiveBefore: "#59bfc1",
   },
   auroraGreen: {
     vxeColor: "#52c41a",
@@ -102,7 +102,7 @@ const themeColors = {
     menuText: "#7a80b4",
     sidebarLogo: "#112f21",
     menuTitleHover: "#fff",
-    menuActiveBefore: "#60ac80"
+    menuActiveBefore: "#60ac80",
   },
   pink: {
     vxeColor: "#eb2f96",
@@ -115,7 +115,7 @@ const themeColors = {
     menuText: "#7a80b4",
     sidebarLogo: "#3f0d29",
     menuTitleHover: "#fff",
-    menuActiveBefore: "#d84493"
+    menuActiveBefore: "#d84493",
   },
   saucePurple: {
     vxeColor: "#722ed1",
@@ -128,8 +128,8 @@ const themeColors = {
     menuText: "#7a80b4",
     sidebarLogo: "#1f0c38",
     menuTitleHover: "#fff",
-    menuActiveBefore: "#693ac9"
-  }
+    menuActiveBefore: "#693ac9",
+  },
 };
 
 /**
@@ -137,7 +137,7 @@ const themeColors = {
  */
 export const genScssMultipleScopeVars = (): MultipleScopeVarsItem[] => {
   const result = [] as MultipleScopeVarsItem[];
-  Object.keys(themeColors).forEach(key => {
+  Object.keys(themeColors).forEach((key) => {
     result.push({
       scopeName: `layout-theme-${key}`,
       varsContent: `
@@ -152,7 +152,7 @@ export const genScssMultipleScopeVars = (): MultipleScopeVarsItem[] => {
         $sidebarLogo: ${themeColors[key].sidebarLogo} !default;
         $menuTitleHover: ${themeColors[key].menuTitleHover} !default;
         $menuActiveBefore: ${themeColors[key].menuActiveBefore} !default;
-      `
+      `,
     } as MultipleScopeVarsItem);
   });
   return result;

@@ -560,10 +560,10 @@ watch(
   }
 );
 </script>
-
+<!-- 
+  transition: all 200ms ease; -->
 <style scoped>
 .vue-grid-item {
-  transition: all 200ms ease;
   transition-property: left top, right;
 }
 
@@ -599,7 +599,7 @@ watch(
   transition-duration: 100ms;
 }
 
-.vue-grid-item > .vue-resizable-handle {
+.vue-grid-item>.vue-resizable-handle {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -614,7 +614,7 @@ watch(
   background-origin: content-box;
 }
 
-.vue-grid-item > .vue-rtl-resizable-handle {
+.vue-grid-item>.vue-rtl-resizable-handle {
   right: auto;
   bottom: 0;
   left: 0;

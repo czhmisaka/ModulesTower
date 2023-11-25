@@ -24,6 +24,7 @@ import { toggleTheme } from "@pureadmin/theme/dist/browser-utils";
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
 import { loginPage } from "@/router/index";
+import { post } from "@/utils/api/requests";
 
 const router = useRouter();
 const { device } = useNav();
@@ -121,9 +122,11 @@ const multiTagsCacheChange = () => {
 };
 
 /** 清空缓存并返回登录页 */
-function onReset() {
+async function onReset() {
+  await post("/web/usc/logout", {});
   removeToken();
   storageLocal.clear();
+
   storageSession.clear();
   const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
   useAppStoreHook().setLayout(Layout);

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-04 17:22:52
- * @LastEditors: CZH
- * @LastEditTime: 2022-12-16 16:29:48
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-07-27 19:53:07
  * @FilePath: /configforpagedemo/src/layout/components/sidebar/vertical.vue
 -->
 <script setup lang="ts">
@@ -31,7 +31,6 @@ const menuData = computed(() => {
     ? subMenuData.value
     : usePermissionStoreHook().wholeMenus;
 });
-
 function getSubMenuData(path: string) {
   // path的上级路由组成的数组
   const parentPathArr = getParentPaths(path, usePermissionStoreHook().wholeMenus);

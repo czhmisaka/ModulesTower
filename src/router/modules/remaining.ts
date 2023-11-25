@@ -1,12 +1,11 @@
 /*
  * @Date: 2023-02-04 18:33:26
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-13 10:17:34
- * @FilePath: /configforpagedemo/src/router/modules/remaining.ts
+ * @LastEditTime: 2023-11-23 13:59:19
+ * @FilePath: /ConfigForDesktopPage/src/router/modules/remaining.ts
  */
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
-
 const remainingRouter: Array<RouteConfigsTable> = [
   {
     path: "/login",

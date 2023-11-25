@@ -1,85 +1,55 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-17 00:10:11
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
+ * @LastEditTime: 2023-11-02 16:03:58
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuList.vue
 -->
 <template>
-  <cardBg
-    :cusStyle="{
-      padding: '12px',
-    }"
-  >
+  <cardBg :cusStyle="{
+    padding: '12px',
+  }">
     <div :class="`menuBox box_${random}`">
-      <div class="searchBar" v-if="!noSearch">
-        <el-input
-          :style="{
-            width: '100%',
-            marginRight: searchBtn || selectedKey != '' ? '6px' : '',
-          }"
-          v-model="selectedKey"
-          :size="size"
-          clearable
-        ></el-input>
-        <el-button
-          v-if="selectedKey && selectedKey.length > 0"
-          @click="search"
-          :size="size"
-          type="primary"
-        >
+      <div class="searchBar">
+        <el-input :style="{
+          width: '100%',
+          marginRight: searchBtn || selectedKey != '' ? '6px' : '',
+        }" v-model="selectedKey" :size="size" :placeholder="searchFuncPlaceHolder || '搜索'"
+          @keydown.enter.prevent="searchFuncByName ? searchFuncByName() : search({})" clearable></el-input>
+        <el-button v-show="selectedKey && selectedKey.length > 0"
+          @click="searchFuncByName ? searchFuncByName() : search({})" :size="size" plain type="primary">
           搜索
         </el-button>
-        <el-button
-          style="margin-left: 0px"
-          :size="size"
-          v-if="searchBtn && selectedKey.length == 0"
-          :loading="searchBtn.isLoading"
-          :type="searchBtn.elType"
-          @click="btnClick(searchBtn)"
-        >
+        <el-button style="margin-left: 0px" :size="size"
+          v-if="searchBtn && isBtnShow(searchBtn) && searchBtn && selectedKey.length == 0" :loading="searchBtn.isLoading"
+          :type="searchBtn.elType" plain @click="btnClick(searchBtn)">
           {{ searchBtn.label }}
         </el-button>
       </div>
 
       <!-- 这里展示的是搜索结果 -->
-      <div
-        class="content"
-        :style="noSearch ? 'max-height: calc(100%)' : 'max-height: calc(100% - 40px)'"
-        v-if="searchResult.length != 0 && selectedKey"
-      >
-        <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick">
+      <div class="content" v-if="searchResult.length != 0 && selectedKey">
+        <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick" :highlight-current="true"
+          node-key="id" :default-expanded-keys="expandedKey">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ data[defaultProps["label"]] }}</div>
-              <el-button
-                v-if="clickItemDetailFunc"
-                text
-                size="small"
-                icon="More"
-                @click.stop="clickItemDetail(data)"
-              ></el-button>
+              <el-button v-if="clickItemDetailFunc" text size="small" icon="More"
+                @click.stop="clickItemDetail(data)"></el-button>
             </div>
           </template>
         </el-tree>
       </div>
 
       <!-- 这里展示的是默认树形结构 -->
-      <div
-        class="content"
-        :style="noSearch ? 'max-height: calc(100%)' : 'max-height: calc(100% - 40px)'"
-        v-if="searchResult.length == 0 && selectedKey == ''"
-      >
-        <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick">
+      <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
+        <el-tree :data="treeData" :props="defaultProps" @node-click="nodeClick" :highlight-current="true" node-key="id"
+          ref="elTree" @node-expand="nodeChangeOpen" @node-collapse="nodeChangeClose"
+          :default-expanded-keys="expandedKey">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ data[defaultProps["label"]] }}</div>
-              <el-button
-                v-if="clickItemDetailFunc"
-                text
-                size="small"
-                icon="More"
-                @click.stop="clickItemDetail(data)"
-              ></el-button>
+              <el-button v-if="clickItemDetailFunc" text size="small" icon="More"
+                @click.stop="clickItemDetail(data)"></el-button>
             </div>
           </template>
         </el-tree>
@@ -133,11 +103,12 @@ export default defineComponent({
       description: "参考文档：https://element-plus.org/zh-CN/component/tree.html#props",
       type: inputType.obj,
     },
-    noSearch: {
-      label: "不展示搜索框",
-      type: inputType.boolean,
-    },
     clickItemDetailFunc: {
+      label: "点击元素详情事件",
+      description: "一般用于展示元素弹窗等",
+      type: inputType.functionEditor,
+    },
+    clickItemFunc: {
       label: "点击元素详情事件",
       description: "一般用于展示元素弹窗等",
       type: inputType.functionEditor,
@@ -178,9 +149,13 @@ export default defineComponent({
     "outputKey",
     "defaultProps",
     "treeDataFunc",
-    "noSearch",
+    "treeDataFuncByLevel",
     "clickItemDetailFunc",
+    "clickItemFunc",
     "searchBtn",
+    "searchFuncPlaceHolder",
+    "searchFuncByName",
+    "detail",
   ],
   components: { cardBg },
   watch: {
@@ -195,13 +170,39 @@ export default defineComponent({
       random,
       size: sizeTem.small,
       searchResult: [],
+      expandedKey: [],
     };
   },
   async mounted() {
     await this.init();
-    this.$emit("ready");
+    // 选中第一个
+    if (this.treeData && this.treeData[0] && this.treeData[0].children && this.treeData[0].children[0]) {
+      const node = this.treeData[0].children[0];
+      const that = this;
+      this.$nextTick(() => {
+        this.$refs.elTree.setCurrentKey(node.id);
+        this.clickItemFunc(that, node);
+      });
+    }
   },
   methods: {
+    isBtnShow(btn: btnCellTemplate) {
+      const that = this;
+      return btn.isShow(that, btn);
+    },
+
+    nodeChangeOpen(node) {
+      const that = this;
+      // const tree = this.$refs["elTree"];
+      // console.log(tree, "tree");
+      that.expandedKey.push(node.id);
+      localStorage.setItem(location.hash, JSON.stringify(that.expandedKey));
+    },
+    nodeChangeClose(node) {
+      const that = this;
+      that.expandedKey = that.expandedKey.filter((x) => x != node.id);
+      localStorage.setItem(location.hash, JSON.stringify(that.expandedKey));
+    },
     /**
      * @name: nodeClick
      * @description: 点击上报事件
@@ -212,7 +213,14 @@ export default defineComponent({
     nodeClick(node) {
       let outputKey = this.outputKey || "menuList_output";
       let data = {};
+      const that = this;
       data[outputKey] = JSON.parse(JSON.stringify(node));
+      if (this.clickItemFunc) {
+        this.clickItemFunc(that, node);
+      }
+      // if (that.expandedKey.indexOf(node.id)) {
+      //   that.expandedKey = that.expandedKey.filter((x) => x != node.id);
+      // } else that.expandedKey.push(node.id);
       setData(this, data);
     },
 
@@ -225,12 +233,17 @@ export default defineComponent({
     async init() {
       if (this.treeDataFunc) {
         let that = this;
+        that.expandedKey = Array.from(
+          new Set(JSON.parse(localStorage.getItem(location.hash)))
+        );
         that.treeData = await that.treeDataFunc(that);
       }
       const that = this;
+
       setTimeout(() => {
         const el = document.querySelector(`.box_${that.random} .custom-tree-node`);
         if (el && "click" in el) el["click"]();
+        that.$emit("ready");
       }, 100);
     },
 
@@ -240,16 +253,16 @@ export default defineComponent({
       this.searchResult =
         res.length > 1
           ? res.reduce((pre, item) => {
-              let children = [];
-              if (item.children) {
-                children = item.children;
-                delete item.children;
-              }
-              if (!pre.length) return [pre].concat(item).concat(children);
-              else {
-                return pre.concat(item).concat(children);
-              }
-            })
+            let children = [];
+            if (item.children) {
+              children = item.children;
+              delete item.children;
+            }
+            if (!pre.length) return [pre].concat(item).concat(children);
+            else {
+              return pre.concat(item).concat(children);
+            }
+          })
           : res;
     },
 
@@ -294,18 +307,22 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   transition: all 0.3s;
+
   ::v-deep .el-tree-node__label {
-    width: calc(100% - 24px);
+    width: calc(100% - 12px);
   }
+
   .searchBar {
     display: flex;
   }
+
   .content {
     width: 100%;
-    min-height: 100%;
     height: auto;
+    max-height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
+
     .searchItem {
       margin: 4px 18px;
       width: calc(100% - 16px);
@@ -330,12 +347,24 @@ export default defineComponent({
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+
   .text {
-    width: calc(100% - 40px);
+    width: 140px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: left;
   }
+}
+
+::v-deep .el-tree--highlight-current .el-tree-node>.el-tree-node__content {
+  transition: all 0.2s;
+}
+
+::v-deep .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+  background-color: var(--el-color-primary);
+  border-radius: 6px;
+  color: #fff;
+  margin: 3px 0px;
 }
 </style>

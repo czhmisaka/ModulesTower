@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-09-22 20:05:21
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-27 20:17:20
- * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/DynamicIsland.vue
+ * @LastEditTime: 2023-10-08 10:20:26
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/cell/info/DynamicIsland.vue
 -->
 
 <template>

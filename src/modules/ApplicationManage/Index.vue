@@ -1,25 +1,19 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-27 20:18:10
- * @FilePath: /configforpagedemo/src/modules/userManage/Index.vue
+ * @LastEditTime: 2023-11-03 15:38:16
+ * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/Index.vue
 -->
 
 <template>
-  <div
-    :style="{
-      width: 'calc(100% - 24px)',
-      height: 'calc(100%)',
-      background: 'rgba(0,0,0,0)',
-      overflow: 'hidden',
-    }"
-  >
-    <gridDesktop
-      :grid-col-num="desktopData.gridColNum"
-      :desktopData="desktopDataList"
-      :component-lists="component"
-      :cus-style="desktopData?.cusStyle"
-    />
+  <div :style="{
+    width: `calc(100% - ${desktopData.cusStyle.margin})`,
+    height: 'calc(100%)',
+    background: 'rgba(0,0,0,0)',
+    overflow: 'hidden',
+  }">
+    <gridDesktop :grid-col-num="desktopData.gridColNum" :desktopData="desktopDataList" :component-lists="component"
+      :cus-style="desktopData?.cusStyle" :noAnimate="true" />
   </div>
 </template>
 
@@ -29,7 +23,9 @@ import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
 import { isValidKey } from "@/utils/index";
 import { GetAllUser } from "@/utils/api/user/user";
+import { timeConsole } from "@/main";
 
+console.log(PageConfig, "PageConfig");
 export default defineComponent({
   components: {
     gridDesktop,
@@ -42,6 +38,7 @@ export default defineComponent({
   },
   methods: {
     async init() {
+      timeConsole.checkTime("index页面");
       if (this.$route) {
         let PageName = "";
         if (this.$route.meta && this.$route.meta.PageName) {
@@ -52,7 +49,7 @@ export default defineComponent({
         } else {
           PageName = String(
             this.$route.path.split("/")[this.$route.path.split("/").length - 1]
-          );
+          ).toUpperCase();
         }
         if (Object.keys(PageConfig).indexOf(PageName) > -1) {
           let res = PageConfig[PageName];
@@ -60,6 +57,7 @@ export default defineComponent({
           this.desktopDataList = await this.desktopData.desktopData();
         }
       }
+      timeConsole.checkTime("index页面");
     },
   },
   watch: {

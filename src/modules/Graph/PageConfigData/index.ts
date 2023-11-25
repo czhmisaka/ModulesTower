@@ -1,11 +1,12 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-22 18:12:53
- * @FilePath: /configforpagedemo/src/modules/Graph/PageConfigData/index.ts
+ * @LastEditTime: 2023-09-15 16:16:51
+ * @FilePath: /lcdp_fe_setup/src/modules/Graph/PageConfigData/index.ts
  */
 
 import { mainDesktop } from "./main";
+import { threemainDesktop } from "./3dmain";
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { isValidKey } from "@/utils/index";
 
@@ -22,10 +23,15 @@ const base = {
 };
 
 const pageConfig = {
-  // main: {
-  //   desktopData: mainDesktop,
-  //   ...base,
-  // },
+  main: {
+    desktopData: mainDesktop,
+    ...base,
+  },
+  three: {
+    desktopData: threemainDesktop,
+    ...base,
+    InRouter: true,
+  },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

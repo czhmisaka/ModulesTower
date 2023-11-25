@@ -1,7 +1,7 @@
 /*
- * @Date: 2022-11-21 16:13:14
+ * @Date: 2023-02-13 09:16:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 19:56:16
+ * @LastEditTime: 2023-02-27 18:35:45
  * @FilePath: /configforpagedemo/src/router/modules/home.ts
  */
 import type { RouteConfigsTable } from "/#/index";
@@ -13,7 +13,7 @@ const homeRouter: RouteConfigsTable = {
   component: Layout,
   meta: {
     icon: "home-filled",
-    title: "所有模块",
+    title: "首页",
     rank: 0,
   },
   children: [

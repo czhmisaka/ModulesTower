@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 09:23:25
- * @FilePath: /configforpagedemo/src/modules/userManage/output.ts
+ * @LastEditTime: 2023-07-04 14:01:36
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/output.ts
  */
 export const moduleInfo = {
   name: "userManage",

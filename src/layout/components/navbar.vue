@@ -1,12 +1,47 @@
 <script setup lang="ts">
 import Search from "./search/index.vue";
 import Notice from "./notice/index.vue";
+import { getConfig } from "@/utils/config/appConfig";
 import mixNav from "./sidebar/mixNav.vue";
 import { useNav } from "@/layout/hooks/useNav";
 import Breadcrumb from "./sidebar/breadCrumb.vue";
 import topCollapse from "./sidebar/topCollapse.vue";
 import { useModuleHook } from "@/store/modules/module";
-
+import { useUserStore, useUserStoreHook } from "@/store/modules/user";
+import userInfoCard from "@/modules/userManage/component/userCard/userInfoCard.vue";
+import { userFieldStorage } from "@/modules/userManage/PageConfigData/user/userValueManage";
+import { userTableCellStorage } from "@/modules/userManage/PageConfigData/workteam";
+import { onMounted, reactive } from "vue";
+import { post } from "@/utils/api/requests";
+import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
+import { toRefs } from "vue";
+import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+import { btnActionTemplate } from "@/modules/userManage/types";
+import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
+import { useAppStoreHook } from "@/store/modules/app";
+import { removeToken } from "@/utils/auth";
+import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import { resetRouter } from "@/router";
+import { useRouter } from "vue-router";
+import { loginPage } from "@/router/index";
+import modulesTag from './modules/modulesTag.vue';
+import { ElMessage } from 'element-plus';
+import {
+  useDark,
+  debounce,
+  useGlobal,
+  storageLocal,
+  storageSession,
+} from "@pureadmin/utils";
+const {
+  body,
+  dataTheme,
+  layoutTheme,
+  themeColors,
+  dataThemeChange,
+  setEpThemeColor,
+  setLayoutThemeColor,
+} = useDataThemeChange();
 const {
   layout,
   device,
@@ -17,54 +52,82 @@ const {
   avatarsStyle,
   toggleSideBar,
 } = useNav();
+const userInfo = reactive({ data: null, userTemplate: [] });
+userInfo.data = async () => {
+  return await useUserStoreHook().getOptions();
+};
+onMounted(async () => {
+  const userFieldTemplate = await (await userFieldStorage()).getAll();
+  const userTemplate = [
+    ...userTableCellStorage.getByKeyArr(["name", "icon", "mobile"]),
+    ...userFieldTemplate,
+  ];
+  userInfo.userTemplate = userTemplate;
+});
+function toggleClass(flag: boolean, clsName: string, target?: HTMLElement) {
+  const targetEl = target || document.body;
+  let { className } = targetEl;
+  className = className.replace(clsName, "").trim();
+  targetEl.className = flag ? `${className} ${clsName} ` : className;
+}
+const router = useRouter();
 
-const { moduleList, checkModule } = useModuleHook();
+const loginOutBtn = btnMaker("登出", btnActionTemplate.Function, {
+  elType: "danger",
+  function: async (that, data) => {
+    await post("/web/usc/logout", {});
+    removeToken();
+    storageLocal.clear();
+    storageSession.clear();
+    const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
+    useAppStoreHook().setLayout(Layout);
+    setEpThemeColor(EpThemeColor);
+    useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
+    toggleClass(Grey, "html-grey", document.querySelector("html"));
+    toggleClass(Weak, "html-weakness", document.querySelector("html"));
+    router.push(loginPage);
+    resetRouter();
+  },
+});
+
+const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
+  icon: 'UserFilled',
+  elType: 'primary',
+  function: async (that, data) => {
+    ElMessage.warning('组件正在开发中')
+  }
+})
 </script>
 
 <template>
-  <div
-    class="navbar bg-[#fff] shadow-sm shadow-[rgba(0, 21, 41, 0.08)] dark:shadow-[#0d0d0d]"
-  >
-    <topCollapse
-      v-if="device === 'mobile'"
-      class="hamburger-container"
-      :is-active="pureApp.sidebar.opened"
-      @toggleClick="toggleSideBar"
-    />
+  <div class="navbar bg-[#fff] shadow-sm shadow-[rgba(0, 21, 41, 0.08)] dark:shadow-[#0d0d0d]">
+    <topCollapse v-if="device === 'mobile'" class="hamburger-container" :is-active="pureApp.sidebar.opened"
+      @toggleClick="toggleSideBar" />
 
-    <Breadcrumb
-      v-if="layout !== 'mix' && device !== 'mobile'"
-      class="breadcrumb-container"
-    />
+    <Breadcrumb v-if="layout !== 'mix' && device !== 'mobile'" class="breadcrumb-container" />
 
     <mixNav v-if="layout === 'mix'" />
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
+      <!-- 模块切换 -->
+      <modulesTag />
       <!-- 菜单搜索 -->
-      <Search />
+      <!-- <Search /> -->
       <!-- 通知 -->
       <Notice id="header-notice" />
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img
-            src="https://avatars.githubusercontent.com/u/22533472?v=4"
-            :style="avatarsStyle"
-          />
           <p v-if="username" class="dark:text-white">
             {{ username }}
+            <el-icon style="transform: translateY(2px);">
+              <ArrowDown />
+            </el-icon>
           </p>
         </span>
         <template #dropdown>
-          <!-- 模块选择操作 -->
-          <el-dropdown-menu class="logout">
-            <el-dropdown-item
-              v-for="(item, index) in moduleList"
-              @click="checkModule(index)"
-            >
-              {{ item.name }}
-            </el-dropdown-item>
-          </el-dropdown-menu>
+          <userInfoCard class="userInfoCard" :userInfo="userInfo.data" :showTemplate="userInfo.userTemplate"
+            :main-action-btn-list="[toUserCenterBtn]" :btnList="[loginOutBtn]" />
         </template>
       </el-dropdown>
       <span class="set-icon navbar-bg-hover" title="打开项目配置" @click="onPanel">
@@ -91,6 +154,7 @@ const { moduleList, checkModule } = useModuleHook();
     display: flex;
     min-width: 280px;
     height: 48px;
+    height: 100%;
     align-items: center;
     color: #000000d9;
     justify-content: flex-end;
@@ -123,12 +187,17 @@ const { moduleList, checkModule } = useModuleHook();
 }
 
 .logout {
-  max-width: 120px;
+  max-width: 200px;
 
-  ::v-deep(.el-dropdown-menu__item) {
+  :deep(.el-dropdown-menu__item) {
     min-width: 100%;
     display: inline-flex;
     flex-wrap: wrap;
   }
+}
+
+.userInfoCard {
+  width: 200px !important;
+  margin: 6px;
 }
 </style>

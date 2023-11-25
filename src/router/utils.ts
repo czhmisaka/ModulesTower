@@ -28,6 +28,7 @@ const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 // 动态路由
 import { getAsyncRoutes } from "@/utils/api/admin/routes";
 import { useUserStoreHook } from "@/store/modules/user";
+import { getAction } from "./util";
 
 /** 按照路由中meta下的rank等级升序来排序路由 */
 function ascending(arr: any[]) {
@@ -147,13 +148,13 @@ function findRouteByPath(path: string, routes: RouteRecordRaw[]) {
   }
 }
 
+// 这个功能后续开启
 function addPathMatch() {
   if (!router.hasRoute("pathMatch")) {
     router.addRoute({
       path: "/:pathMatch(.*)",
       name: "pathMatch",
-      // redirect: "/error/404",
-      redirect: "/photoWebSiteModule/MAIN",
+      redirect: "/error/404",
     });
   }
 }
@@ -162,6 +163,15 @@ function addPathMatch() {
 function initRouter(noRefresh: boolean = false): Promise<Router> {
   return new Promise(async (resolve) => {
     getAsyncRoutes(noRefresh).then(async ({ data }) => {
+      const module = getAction();
+      const routesFromModule = (await module.getAllPageRouter()).filter(
+        (item) => {
+          return item.meta?.originData?.InRouter;
+        }
+      );
+      routesFromModule.map((x) => {
+        data.push(x);
+      });
       if (data.length === 0) {
         await usePermissionStoreHook().handleWholeMenus(data);
         resolve(router);
@@ -192,7 +202,8 @@ function initRouter(noRefresh: boolean = false): Promise<Router> {
         );
         await usePermissionStoreHook().handleWholeMenus(data);
       }
-      addPathMatch();
+      // 这个功能后续开启
+      // addPathMatch();
       resolve(router);
     });
   });

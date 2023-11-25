@@ -1,15 +1,15 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 20:44:26
- * @FilePath: /configforpagedemo/src/store/modules/user.ts
+ * @LastEditTime: 2023-10-09 14:41:49
+ * @FilePath: /lcdp_fe_setup/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
 import { userType } from "./types";
 import { routerArrays } from "@/layout/types";
 import { router, resetRouter } from "@/router";
-import { storageSession } from "@pureadmin/utils";
+import { storageLocal, storageSession, toggleClass } from "@pureadmin/utils";
 import {
   UserResult,
   RefreshTokenResult,
@@ -18,12 +18,17 @@ import {
 } from "@/utils/api/admin/user";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
-import { stringAnyObj } from "@/modules/userManage/types";
+import { btnActionTemplate, stringAnyObj } from "@/modules/userManage/types";
 import { menuInfoTemplate } from "@/components/menu/menuConfigTemplate";
-import { get, piwigoMethod } from "@/utils/api/requests";
+import { get, post } from "@/utils/api/requests";
 
 import { loginPage } from "@/router/index";
+import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm";
+import { getConfig } from "@/utils/config/appConfig";
+import data from "@iconify-icons/ep/edit";
+import { useAppStoreHook } from "./app";
 
+sessionStorage;
 export const useUserStore = defineStore({
   id: "pure-user",
   state: (): userType => ({
@@ -45,6 +50,7 @@ export const useUserStore = defineStore({
     currentPage: 0,
     isAdminFlag: false,
     options: {} as stringAnyObj,
+    isLoading: false,
   }),
   actions: {
     /** 存储用户名 */
@@ -66,13 +72,26 @@ export const useUserStore = defineStore({
     /** 登入 */
     async loginByUsername(query) {
       return new Promise<UserResult>(async (resolve, reject) => {
-        // let res = await getLogin(query);
-        let preLogin = await piwigoMethod({
-          method: "pwg.session.login",
-          ...query,
+        let res = await getLogin(query).catch((e) => {
+          reject(e);
         });
-        let data = await this.loadOption();
-        resolve(data);
+        if (res && res.data) {
+          let data = {
+            ...res.data,
+            accessToken: res.data.token,
+            refreshToken: res.data.token,
+            roles: ["admin"],
+            expires: new Date(
+              new Date().getTime() + 4 * 365 * 24 * 86400 * 1000
+            ).getTime(),
+          };
+          this.options = data;
+          this.isAdminFlag = res.data.adminFlag;
+          setToken(data);
+          localStorage.setItem("user-info", JSON.stringify(data));
+          resolve(data);
+          this.getOptions();
+        }
       });
     },
 
@@ -88,47 +107,52 @@ export const useUserStore = defineStore({
       resetRouter();
     },
 
-    /** 获取用户详情 */
-    async getOptions() {
-      if (Object.keys(this.options).length == 0) {
-        await this.loadOption();
-      }
-      return this.options;
+    getLogOutBtn() {
+      return btnMaker("登出", btnActionTemplate.Function, {
+        elType: "danger",
+        function: async (that, data) => {
+          await post("/web/usc/logout", {});
+          removeToken();
+          storageLocal.clear();
+          storageSession.clear();
+          const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } =
+            getConfig();
+          useAppStoreHook().setLayout(Layout);
+          useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
+          toggleClass(Grey, "html-grey", document.querySelector("html"));
+          toggleClass(Weak, "html-weakness", document.querySelector("html"));
+          router.push(loginPage);
+          useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
+          resetRouter();
+        },
+      });
     },
 
-    async loadOption() {
-      if (!this.options || Object.keys(this.options).length == 0) {
-        let res = await piwigoMethod({
-          method: "pwg.session.getStatus",
-        });
-        res = {
-          success: res.stat == "ok",
-          data: {
-            ...res.result,
-            token: res.result.pwg_token,
-          },
+    /** 获取用户详情 */
+    async getOptions() {
+      if (Object.keys(this.options).length == 0 && this.isLoading == false) {
+        this.isLoading = true;
+        let res = await get("/web/usc/user/select/loginUser", {});
+        this.username = res.data.name;
+        this.options = {
+          ...res.data,
+          accessToken: res.data.token,
+          refreshToken: res.data.token,
+          username: res.data.name,
+          roles: ["admin"],
+          expires: new Date(new Date().getTime() + 19999999).getTime(),
         };
-        if (res && res.success && res.data) {
-          let data = {
-            ...res.data,
-            accessToken: res.data.token,
-            refreshToken: res.data.token,
-            roles: ["admin"],
-            expires: new Date(new Date().getTime() + 19999999),
-          };
-          let res_userInfo = await piwigoMethod({
-            method: "pwg.users.getList",
-            username: data.username,
-          });
-          this.options = {
-            ...data,
-            ...res_userInfo.result.users[0],
-          };
-          this.isAdminFlag = res.data.loginAdminFlag;
-          setToken(this.options);
-          return this.options;
-        }
-      } else return this.options;
+      } else if (
+        Object.keys(this.options).length == 0 &&
+        this.isLoading == true
+      ) {
+        return await new Promise((r, j) => {
+          setTimeout(() => {
+            r(this.options);
+          }, 3000);
+        });
+      }
+      return this.options;
     },
 
     /** 刷新`token` */

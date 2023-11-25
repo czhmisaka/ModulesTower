@@ -116,7 +116,7 @@ const layoutHeader = defineComponent({
       {
         default: () => [
           !pureSetting.hiddenSideBar &&
-          (layout.value.includes("vertical") || layout.value.includes("mix"))
+            (layout.value.includes("vertical") || layout.value.includes("mix"))
             ? h(navbar)
             : null,
           !pureSetting.hiddenSideBar && layout.value.includes("horizontal")
@@ -132,20 +132,20 @@ const layoutHeader = defineComponent({
 
 <template>
   <div v-if="!$route.meta.Fullscreen" :class="['app-wrapper', set.classes]" v-resize>
-    <div
-      v-show="
-        set.device === 'mobile' && set.sidebar.opened && layout.includes('vertical')
-      "
-      class="app-mask"
-      @click="useAppStoreHook().toggleSideBar()"
-    />
-    <Vertical
-      v-show="
+    <div v-show="set.device === 'mobile' && set.sidebar.opened && layout.includes('vertical')
+      " class="app-mask" @click="useAppStoreHook().toggleSideBar()" />
+    <Vertical v-show="(!$route.meta.NoMenu) &&
+      !pureSetting.hiddenSideBar &&
+      (layout.includes('vertical') || layout.includes('mix'))
+      " />
+    <!-- 
+      这一段是用来调试的
+      <div style="position: fixed;top:0px;left:0px;background:black;color:white;z-index: 9159165156156165189098">
+      {{ (!$route.meta.NoMenu) ||
         !pureSetting.hiddenSideBar &&
-        (layout.includes('vertical') || layout.includes('mix'))
-      "
-    />
-    <div :class="['main-container', pureSetting.hiddenSideBar ? 'main-hidden' : '']">
+        (layout.includes('vertical') || layout.includes('mix')) }}
+    </div> -->
+    <div :class="['main-container', ($route.meta.NoMenu || pureSetting.hiddenSideBar) ? 'main-hidden' : '']">
       <div v-if="set.fixedHeader">
         <layout-header />
         <!-- 主体内容 -->

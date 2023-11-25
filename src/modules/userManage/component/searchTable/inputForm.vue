@@ -1,92 +1,83 @@
 <!--
  * @Date: 2022-11-11 09:35:29
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 14:32:44
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/inputForm.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-11-15 12:16:21
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
-  <div
-    v-if="
-      (queryItemTemplate && queryItemTemplate.length > 0) ||
-      (btnList && btnList.length > 0) ||
-      !autoSearch
-    "
-  >
-    <cardBg
-      ref="formBox"
-      class="formBox"
-      :cus-style="{
-        padding: '12px',
-        height: 'auto',
-        paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '12px' : '0px',
-      }"
-    >
-      <VueForm
-        v-model="formData"
-        :style="{
-          textAlign: 'left',
-        }"
-        :schema="schema"
-        :ui-schema="uiSchema"
-        :formProps="formProps"
-        @change="onChange"
-      >
-        <div
-          v-if="(btnList && btnList.length > 0) || !autoSearch"
-          slot-scope="{ formData }"
-          :style="{ textAlign: 'right' }"
-        >
-          <el-button
-            class="btn"
-            v-if="!autoSearch"
-            @click="refreshData(-1)"
-            icon="RefreshRight"
-            >重置</el-button
-          >
-          <el-button
-            class="btn"
-            v-if="!autoSearch"
-            type="primary"
-            @click="handleSubmit(formData)"
-            icon="Position"
-            >搜索</el-button
-          >
-          <div
-            v-for="item in (btnList || []).filter((btn) =>
-              btn && btn.isShow
-                ? btn.isShow({ ...formData, _selectedList: selectedList }, btn)
-                : true
-            )"
-            class="floatLeft"
-          >
-            <el-button
-              :loading="item.isLoading"
-              @click="btnClick(item)"
-              :type="item.elType"
-              :icon="item.icon"
-            >
+  <div v-if="(queryItemTemplate && queryItemTemplate.length > 0) ||
+    (btnList && btnList.length > 0) ||
+    !autoSearch
+    ">
+    <cardBg ref="formBox" class="formBox" :cus-style="{
+      padding: '0px',
+      height: 'auto',
+      paddingBottom: (btnList && btnList.length > 0) || !autoSearch ? '12px' : '0px',
+      'border-radius': '6px',
+      border: '0px solid',
+      filter: 'none',
+      'box-shadow': 'none',
+      display: 'inline-block',
+    }">
+      <VueForm v-model="formData" :style="{
+        textAlign: 'left',
+      }" :schema="schema" :ui-schema="uiSchema" :formProps="formProps" @change="onChange">
+        <div v-if="(btnList && btnList.length > 0) || !autoSearch" slot-scope="{ formData }"
+          :style="{ textAlign: 'right' }">
+          <el-button class="btn" v-if="!autoSearch && queryItemTemplate && queryItemTemplate.length > 0"
+            @click="btnClick(changeFuncBtn)" :icon="isCard ? 'Document' : 'Grid'" plain></el-button>
+          <el-button class="btn" v-if="!autoSearch && queryItemTemplate && queryItemTemplate.length > 0"
+            @click="refreshData(-1)" icon="RefreshRight" plain>重置</el-button>
+          <el-button class="btn" v-if="!autoSearch" plain type="primary" @click="handleSubmit(formData)"
+            style="margin-left: 0px" icon="Position">搜索</el-button>
+          <div v-for="(item, index) in (btnList || []).filter((btn) =>
+            btn && btn.isShow
+              ? btn.isShow({ ...formData, _selectedList: selectedList }, btn)
+              : true
+          )" :key="index + 'btn'" class="floatLeft" :style="item.style ? item.style : ''">
+            <!--  :on-success="item.uploadInfo.onsuccess"
+            :on-error="item.uploadInfo.onerror"
+            :on-exceed="item.uploadInfo.onexceed" -->
+            <el-upload ref="uploadRef" :headers="getDownLoadRequestHeaders()" class="upload-demo"
+              :action="actionUrl + (item.uploadInfo ? item.uploadInfo.action : '')"
+              :limit="item.uploadInfo ? item.uploadInfo.limit : 1" :data="item.uploadInfo ? item.uploadInfo?.data : {}"
+              :on-success="(response, file, fileList) => {
+                return btnClick(item, response);
+              }
+                " :on-error="(response, file, fileList) => {
+    return btnClick(item, response);
+  }
+    " :on-exceed="(response, file, fileList) => {
+    return btnClick(item, response);
+  }
+    " :show-file-list="false" v-if="item.type == btnActionTemplate.UploadFunction">
+              <el-button plain icon="plus" type="primary">{{ item.label }}</el-button>
+            </el-upload>
+            <el-button v-else :loading="item.isLoading" @click="btnClick(item)" :disabled="item.isDisable({ ...formData, _selectedList: selectedList }, item)
+              " :type="item.elType
+    ? typeof item.elType != 'string'
+      ? item.elType(formData)
+      : item.elType
+    : ''
+    " plain :icon="item.icon">
               {{ item.label }}
             </el-button>
           </div>
         </div>
       </VueForm>
       <div class="TopRight" v-if="isNeedClose">
-        <iconCell
-          :name="isOpen ? 'ArrowDownBold' : 'ArrowUpBold'"
-          @click="changeOpen"
-          :iconOption="{
-            fontSize: '12px',
-          }"
-        />
+        <iconCell :name="isOpen ? 'ArrowDownBold' : 'ArrowUpBold'" @click="changeOpen" :iconOption="{
+          fontSize: '12px',
+        }" />
       </div>
     </cardBg>
-    <el-divider
+    <!-- <el-divider
       :style="{
         opacity: 0,
-        width: 'calc(100% - 24px)',
+        width: 'calc(100% - 12px)',
         margin: '6px',
       }"
-    />
+    /> -->
   </div>
 </template>
 
@@ -101,8 +92,15 @@ import {
   tableCellTemplate,
   stringAnyObj,
   btnCellTemplate,
+  btnActionTemplate,
 } from "@/modules/userManage/types";
+import { getDownLoadRequestHeaders } from "@/utils/api/user/header";
+import { getPreUrl } from "@/utils/api/requests";
+import { btnMaker } from './drawerForm';
+import { changeCardProperties } from "@/components/basicComponents/grid/module/cardApi";
+const VITE_PROXY_DOMAIN_REAL = getPreUrl();
 let interval = null;
+
 export default defineComponent({
   name: "表单组件",
   props: [
@@ -112,6 +110,7 @@ export default defineComponent({
     "btnList",
     "autoSearch",
     "selectedList",
+    "isCard"
   ],
   watch: {
     query: {
@@ -125,7 +124,6 @@ export default defineComponent({
       handler(val) {
         this.initForm(val);
       },
-      deep: true,
       immediate: true,
     },
   },
@@ -160,6 +158,17 @@ export default defineComponent({
         type: "object",
         properties: {},
       },
+      btnActionTemplate,
+      actionUrl: VITE_PROXY_DOMAIN_REAL,
+      changeFuncBtn: btnMaker('', btnActionTemplate.Function, {
+        function: async (that, data) => {
+          changeCardProperties(that, {
+            searchTable: {
+              isCard: !that.isCard,
+            },
+          });
+        }
+      })
     };
   },
 
@@ -183,6 +192,9 @@ export default defineComponent({
   },
 
   methods: {
+    getDownLoadRequestHeaders() {
+      return getDownLoadRequestHeaders();
+    },
     /**
      * @name: 初始化搜索用表单和对象
      * @description: initForm
@@ -193,7 +205,7 @@ export default defineComponent({
       if (Object.keys(this.query).length > 0) {
       }
       let properties = {} as stringAnyObj;
-      properties = await propertiesMaker(queryItemTemplate, this);
+      properties = await propertiesMaker(queryItemTemplate, this, false);
       this.schema.properties = properties;
     },
 
@@ -214,8 +226,8 @@ export default defineComponent({
      * @Date: 2022-11-21 19:03:17
      * @param {*} btn
      */
-    btnClick(btn: btnCellTemplate) {
-      this.$emit("btnClick", btn);
+    btnClick(btn: btnCellTemplate, res?: stringAnyObj) {
+      this.$emit("btnClick", btn, res);
     },
 
     changeOpen() {
@@ -229,7 +241,8 @@ export default defineComponent({
       if (val === -1) {
         this.formData = {};
         this.$emit("inputChange", {});
-        this.$emit("refresh");
+        // 按照7月11号的要求，删除了重置直接导致的刷新
+        // this.$emit("refresh");
         this.$nextTick().then(() => {
           this.handleSubmit();
         });
@@ -242,6 +255,18 @@ export default defineComponent({
       } else {
         this.formData = val;
       }
+    },
+    addFileCreate(e) {
+      console.log(e, "success");
+      this.$emit("inputChange", e);
+    },
+    errorFile(e) {
+      console.log(e, "err");
+      this.$emit("inputChange", e);
+    },
+    exceedFile(e) {
+      console.log(e, "exceed");
+      this.$emit("inputChange", e);
     },
   },
 });
@@ -262,10 +287,12 @@ export default defineComponent({
   right: 0px;
   margin: 18px;
 }
+
 .btn {
   float: right;
   margin-left: 6px;
 }
+
 .floatLeft {
   float: left;
   margin-right: 6px;

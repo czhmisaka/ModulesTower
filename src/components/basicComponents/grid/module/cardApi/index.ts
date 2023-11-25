@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-23 18:38:48
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/index.ts
+ * @LastEditTime: 2023-11-21 16:54:44
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
 import {
@@ -12,6 +12,7 @@ import {
   gridSizeCell,
 } from "../dataTemplate";
 import { deepClone } from "./deepClone";
+import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 
 /**
  * @name: checkContext
@@ -26,14 +27,14 @@ export const checkContext = (
   value: { [key: string]: any }
 ) => {
   if (Object.keys(value).length == 0)
-    console.error("setData_数据上报错误:", "当前上报数据为空");
+    console.error("数据上报错误:", "当前上报数据为空");
   else if (!content) console.error("setData_数据上报错误:", "没有组件对象");
   else return true;
 };
 
 /**
  * @name: deepMerge
- * @description: 合并两个对象，如有存在相同的key,则target优先
+ * @description: 合并两个对象，如有存在相同的key,则target优先,不要删除注释
  * @authors: CZH
  * @Date: 2022-08-23 23:58:35
  * @param {any} target
@@ -41,6 +42,7 @@ export const checkContext = (
  */
 export const deepMerge = (target: any, other: any) => {
   const targetToString = Object.prototype.toString.call(target);
+  // console.log(target, "option ", other);
   if (targetToString === "[object Object]") {
     for (let [key, val] of Object.entries(other)) {
       if (key in target) {
@@ -190,25 +192,34 @@ export const changeCardSize = (
  */
 export const changeCardProperties = (
   content: { [key: string]: any },
-  value: { [key: string]: any }
+  value: { [key: string]: any },
+  noMerge = false
 ) => {
   if (!checkContext(content, value)) return;
-  try {
-    let func = content["$emit"] ? "$emit" : "emit";
-    let data = {} as gridCellOptions;
-    Object.keys(value).map((name: string) => {
+  // try {
+  let func = content["$emit"] ? "$emit" : "emit";
+  let data = {} as gridCellOptions;
+  Object.keys(value).map((name: string) => {
+    if (noMerge) {
+      data[name] = value[name];
+    } else {
       data[name] = {
         options: {
           props: value[name],
         },
       };
-    });
-    content[func]("onChange", deepClone(data), {
-      type: [cardOnChangeType.cardConfigChange],
-    });
-  } catch (err) {
-    console.error("changeVisible 错误:", err, content, value);
-  }
+    }
+  });
+  content[func]("onChange", data, {
+    type: [
+      noMerge
+        ? cardOnChangeType.cardConfigChangeNoMerge
+        : cardOnChangeType.cardConfigChange,
+    ],
+  });
+  // } catch (err) {
+  //   console.error("changeVisible 错误:", err, content, value);
+  // }
 };
 
 /**
@@ -239,7 +250,7 @@ export const refreshDesktop = (content: { [key: string]: any }) => {
  * @authors: CZH
  * @Date: 2022-12-05 19:32:21
  */
-export const hightLightComponent = (
+export const highLightComponent = (
   content: { [key: string]: any },
   value: string[] = []
 ) => {
@@ -247,7 +258,48 @@ export const hightLightComponent = (
   try {
     let func = content["$emit"] ? "$emit" : "emit";
     content[func]("onChange", value, {
-      type: [cardOnChangeType.hightLightCard],
+      type: [cardOnChangeType.highLightCard],
+    });
+  } catch (err) {
+    console.error("hightLightComponent 错误:", err, content, value);
+  }
+};
+
+/**
+ * @name: addGridCell
+ * @description: 添加一个组件
+ * @authors: CZH
+ * @Date: 2022-12-05 19:32:21
+ */
+export const addGridCell = (
+  content: { [key: string]: any },
+  value: gridCellTemplate
+) => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    content[func]("onChange", value, {
+      type: [cardOnChangeType.cardAdd],
+    });
+  } catch (err) {
+    console.error("hightLightComponent 错误:", err, content, value);
+  }
+};
+
+/**
+ * @name: removeGridCell
+ * @description: 删除一个组件
+ * @authors: CZH
+ * @Date: 2022-12-05 19:32:21
+ */
+export const removeGridCell = (
+  content: { [key: string]: any },
+  value?: string[]
+) => {
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    content[func]("onChange", value, {
+      type: [cardOnChangeType.cardDelete],
     });
   } catch (err) {
     console.error("hightLightComponent 错误:", err, content, value);
@@ -267,7 +319,7 @@ export const upToTopDataChange = (
   if (!checkContext(content, value)) return;
   try {
     let func = content["$emit"] ? "$emit" : "emit";
-    content[func]("onChange", deepClone(value), {
+    content[func]("onChange", value, {
       type: [cardOnChangeType.upOnChange],
     });
   } catch (err) {

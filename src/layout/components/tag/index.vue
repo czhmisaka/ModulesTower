@@ -481,6 +481,12 @@ onMounted(() => {
     }, 200)
   );
 });
+
+const { nowModule } = useModuleHook();
+// const list = flatChildrenArr(nowModule.children);
+// tagList = tagList.filter((x) => {
+//   return list.map((c) => c.path).indexOf(x.path) > 0;
+// });
 </script>
 
 <template>
@@ -504,6 +510,7 @@ onMounted(() => {
           @mouseleave.prevent="onMouseleave(index)"
           @click="tagOnClick(item)"
         >
+          <!-- <span v-if="list.map((x) => x.path).indexOf(item.path) > -1"> -->
           <router-link
             :to="item.path"
             class="dark:!text-text_color_primary dark:hover:!text-primary"

@@ -1,8 +1,8 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-09 19:08:44
- * @FilePath: /configforpagedemo/src/main.ts
+ * @LastEditTime: 2023-11-20 14:44:00
+ * @FilePath: /lcdp_fe_setup/src/main.ts
  */
 let num = 0;
 
@@ -13,9 +13,12 @@ import iconCell from "./components/basicComponents/cell/icon/iconCell.vue";
 import router from "./router";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
+import { useUserStoreHook } from "./store/modules/user";
 
 import { MotionPlugin } from "@vueuse/motion";
-import { getAction } from "@/router/util";
+
+import { getAction, timeChecker } from "@/router/util";
+
 import * as Icons from "@element-plus/icons-vue";
 import utils from "./utils";
 import Vue3DraggableResizable from "vue3-draggable-resizable";
@@ -23,6 +26,8 @@ import { getServerConfig } from "@/utils/config/appConfig";
 import { injectResponsiveStorage } from "@/utils/responsive";
 import { setupStore } from "@/store";
 
+export let timeConsole = new timeChecker("模块生成");
+// useUserStoreHook().getOptions();
 const app = createApp(App);
 
 // 引入重置样式
@@ -70,7 +75,7 @@ getServerConfig(app).then(async (config) => {
   await router.isReady();
   injectResponsiveStorage(app, config);
   setupStore(app);
-  app.config.globalProperties.$modules = getAction();
+  app.config.globalProperties.$modules = await getAction();
   app.config.globalProperties.$utils = utils;
   app.use(MotionPlugin).use(ElementPlus, { zIndex: 100000 });
   app.mount("#app");

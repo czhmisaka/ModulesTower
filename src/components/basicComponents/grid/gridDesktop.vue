@@ -1,108 +1,56 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 19:54:57
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/gridDesktop.vue
+ * @LastEditTime: 2023-11-20 14:45:30
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
 <template>
-  <div
-    :ref="'screenId_' + idRandom"
-    :id="'screenId_' + idRandom"
-    :style="{
-      overflow: cusStyle.wholeScreen ? 'hidden' : 'auto',
-    }"
-    class="baseGrid"
-  >
-    <grid-layout
-      :layout="gridListToLayout()"
-      :col-num="gridColNum"
-      :row-height="gridRowNumAndUnit().blockSize"
-      :responsive="false"
-      :isDraggable="baseData.editable"
-      :isResizable="false"
-      :vertical-compact="false"
-      :prevent-collision="false"
-      :use-css-transforms="true"
-      :maxRows="cusStyle.maxRows || 30"
-      :margin="[gridRowNumAndUnit().margin, gridRowNumAndUnit().margin]"
-    >
-      <div
-        :class="'grayBg ' + (hightLightComponentsList.length > 0 ? 'grayBg_Active' : '')"
-        :style="{
-          zIndex: hightLightComponentsList.length > 0 ? 20000 : -1,
-          width: hightLightControler.show ? '100vw' : '0px',
-          height: hightLightControler.show ? '100vh' : '0px',
-        }"
-      ></div>
-      <grid-item
-        v-for="(item, index) in gridListToLayout()"
-        :x="item.x"
-        :y="item.y"
-        :w="item.w"
-        :h="item.h"
-        :i="item.i"
-        :key="item.i"
-        @move="gridItemOnMove"
-        @resize="gridItemOnResize"
-        class="grid-item"
-        :style="{
+  <div :ref="'screenId_' + idRandom" :id="'screenId_' + idRandom" :style="{
+    overflow: cusStyle.wholeScreen ? 'hidden' : 'auto',
+  }" class="baseGrid">
+    <!-- {{ gridList.map(x => x.label) }} -->
+    <grid-layout :layout="gridListComputed()" :col-num="gridColNum" :row-height="gridRowNumAndUnit.blockSize"
+      :responsive="false" :isDraggable="baseData.editable" :isResizable="false" :vertical-compact="false"
+      :prevent-collision="false" :use-css-transforms="true" :maxRows="cusStyle.maxRows || 30"
+      :margin="[gridRowNumAndUnit.margin, gridRowNumAndUnit.margin]">
+      <div :class="'grayBg ' + (hightLightComponentsList.length > 0 ? 'grayBg_Active' : '')" :style="{
+        zIndex: hightLightComponentsList.length > 0 ? 20000 : -1,
+        width: hightLightControler.show ? '100vw' : '0px',
+        height: hightLightControler.show ? '100vh' : '0px',
+      }"></div>
+      <grid-item v-for="(item, index) in gridListComputed()" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i"
+        :key="item.i" @move="gridItemOnMove" @resize="gridItemOnResize" class="grid-item" :style="{
           ...gridItemStyle(gridList[index]),
-          transition: baseData.editable
-            ? fastMode
-              ? 'max-width 0.4s, width 0.3s , height 0.3s'
-              : ''
-            : fastMode
-            ? 'max-width 0.4s, transform 0.4s , width 0.3s , height 0.3s'
-            : '',
-        }"
-      >
-        <card
-          :ref="'card_' + index"
-          :detail="{ ...gridList[index], index }"
-          :baseData="baseData"
-          :sizeUnit="gridRowNumAndUnit()"
-          :gridList="gridList"
-          :componentLists="componentLists"
-          @onChange="(value, options) => cardOnChange(index, value, options)"
-        />
+          transition: (gridList[index].options.noAnimate) ? '' : (noAnimate
+            ? ''
+            : baseData.editable
+              ? fastMode
+                ? 'max-width 0.4s, width 0.3s , height 0.3s'
+                : ''
+              : fastMode
+                ? 'max-width 0.4s, transform 0.5s ease-in-out , width 0.3s , height 0.3s'
+                : '') + ' !important',
+        }">
+        <card :ref="'card_' + index" :detail="{ ...gridList[index], index }" :baseData="baseData"
+          :sizeUnit="gridRowNumAndUnit" :gridList="gridList" :componentLists="componentLists"
+          @onChange="(value, options) => cardOnChange(index, value, options)" />
       </grid-item>
     </grid-layout>
-    <componentsListModal
-      :gridList="gridList"
-      :componentLists="componentLists"
-      ref="componentsListModal"
-      @onChange="
-        (index, value) =>
-          cardOnChange(index, value, {
-            type: [cardOnChangeType.gridCardListonChange],
-          })
-      "
-    />
-    <cardEditModal
-      :detail="baseData._componentDetail"
-      ref="cardEdit"
-      :gridList="gridList"
-      :componentIndex="baseData._componentIndex"
-      :sizeUnit="gridRowNumAndUnit()"
-      :componentLists="componentLists"
-      @onChange="
-        (index, value) =>
-          cardOnChange(index, value, {
-            type: [cardOnChangeType.gridCardListonChange],
-          })
-      "
-    />
-    <component
-      v-for="item in Object.keys(PlugInComponents)"
-      :is="PlugInComponents[item]"
-      :ref="`PlugIn_${item}`"
-      :plugInData="plugInData[item]"
-      :baseData="baseData"
-      :gridList="gridList"
-      :componentLists="componentLists"
-      @onChange="(value, options) => cardOnChange(-1, value, options)"
-    ></component>
+    <componentsListModal :gridList="gridList" :componentLists="componentLists" ref="componentsListModal" @onChange="(index, value) =>
+      cardOnChange(index, value, {
+        type: [cardOnChangeType.gridCardListonChange],
+      })
+      " />
+    <cardEditModal :detail="baseData._componentDetail" ref="cardEdit" :gridList="gridList"
+      :componentIndex="baseData._componentIndex" :sizeUnit="gridRowNumAndUnit" :componentLists="componentLists" @onChange="(index, value) =>
+        cardOnChange(index, value, {
+          type: [cardOnChangeType.gridCardListonChange],
+        })
+        " />
+    <component v-for="item in Object.keys(PlugInComponents)" :is="PlugInComponents[item]" :ref="`PlugIn_${item}`"
+      :plugInData="plugInData[item]" :baseData="baseData" :gridList="gridList" :componentLists="componentLists"
+      :detail="{ label: item, index: -1 }" @onChange="(value, options) => cardOnChange(-1, value, options)"></component>
   </div>
 </template>
 
@@ -122,8 +70,84 @@ import componentsListModal from "@/components/basicComponents/grid/module/baseTo
 import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 import gridLayout from "./GridLayout/GridLayout.vue";
 import gridItem from "./GridLayout/GridItem.vue";
-
+import { takeRight } from "lodash";
+import { timeConsole } from "@/main";
+import { gridCell } from '../../../modules/userManage/component/searchTable/searchTable';
 let useAble = 0;
+function throttle(func, delay) {
+  let timer = null;
+  let lastTime = 0;
+  return function () {
+    const context = this;
+    const args = arguments;
+    const now = new Date().getTime();
+    if (now - lastTime >= delay) {
+      clearTimeout(timer);
+      func.apply(context, args);
+      lastTime = now;
+    } else {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        func.apply(context, args);
+        lastTime = now;
+      }, delay);
+    }
+  };
+}
+function fuck(that) {
+  let width = 0;
+  let height = 0;
+  if (that.$refs["screenId_" + that.idRandom]) {
+    width = that.$refs["screenId_" + that.idRandom].offsetWidth;
+    height = that.$refs["screenId_" + that.idRandom].offsetHeight;
+  }
+  let screen = {
+    width: width || document.body.offsetWidth,
+    height: height || document.body.offsetHeight,
+    rowNum: 0,
+    colNum: that.gridColNum,
+    unit: "vw",
+    blockSize: 0, // px单位的 单个grid单元大小
+    colSize: 0,
+    margin: that.cusStyle?.margin || 12,
+  };
+  if (that.cusStyle.wholeScreen == true) {
+    screen.rowNum = Math.floor(screen.width / (screen.height / that.gridColNum));
+    screen.unit = "vh";
+    // function throttle(func, delay) {
+    //   let timer = null;
+    //   let lastTime = 0;
+    //   return function () {
+    //     const context = this;
+    //     const args = arguments;
+    //     const now = new Date().getTime();
+    //     if (now - lastTime >= delay) {
+    //       clearTimeout(timer);
+    //       func.apply(context, args);
+    //       lastTime = now;
+    //     } else {
+    //       clearTimeout(timer);
+    //       timer = setTimeout(function () {
+    //         func.apply(context, args);
+    //         lastTime = now;
+    //       }, delay);
+    //     }
+    //   };
+    // }
+    let rowOrColKey = that.cusStyle.maxRows || that.gridColNum;
+    screen.blockSize = (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
+  } else {
+    screen.rowNum = Math.floor(screen.height / that.gridColNum);
+    screen.blockSize =
+      screen.unit == "vw"
+        ? (screen.width - that.gridColNum * that.cusStyle.margin - that.cusStyle.margin) /
+        that.gridColNum
+        : screen.height / that.gridColNum;
+  }
+  that.gridRowNumAndUnit = screen;
+}
+
+let fuckk = throttle(fuck, 50);
 export default defineComponent({
   name: "gridDesktop",
   components: {
@@ -140,7 +164,6 @@ export default defineComponent({
     };
   },
   props: {
-    // 自定样式
     cusStyle: {
       type: Object,
       default: () => {
@@ -169,7 +192,7 @@ export default defineComponent({
       default: 12,
     },
 
-    // 可以使用的组件列表
+    // 当前桌面使用的组件数据
     desktopData: {
       type: Array,
       default: () => {
@@ -177,6 +200,7 @@ export default defineComponent({
       },
     },
 
+    // 可以使用的组件列表
     componentLists: {
       type: Object,
       default: () => {
@@ -184,19 +208,58 @@ export default defineComponent({
       },
     },
 
+    // 动画加速模式 / gpu
     fastMode: {
       type: Boolean,
       default: true,
     },
 
+    // 无动画模式
+    noAnimate: {
+      type: Boolean,
+      default: true,
+    },
+
+    // 桌面配置方案预置数据
     preBaseData: {
       type: Object,
-      default: {},
+      default: () => {
+        return {} as { [key: string]: any };
+      },
+    },
+
+    modelValue: {
+      type: Object,
+      default: () => {
+        return {} as { [key: string]: any };
+      },
     },
   },
-  computed: {},
+  computed: {
+    gridListToLayoutGetter: {
+      set() { },
+      get() {
+        return this.gridListToLayout;
+      }
+    }
+  },
 
   watch: {
+    modelValue: {
+      handler(val) {
+        if (typeof val === "object" && val !== null)
+          this.baseData["modelValue"] = {
+            ...this.baseData["modelValue"],
+            ...val,
+          };
+        else if (typeof val === "string") {
+          this.baseData["modelValue"] = val;
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+    preBaseData(val) { },
     editable(val) {
       this.baseData.editable = val;
     },
@@ -209,7 +272,7 @@ export default defineComponent({
     return {
       cardOnChangeType,
       // 渲染用组件列表
-      gridList: [],
+      gridList: [] as gridCellTemplate[],
       // 更新组件用
       updateTimes: 0,
 
@@ -227,12 +290,7 @@ export default defineComponent({
         _componentIndex: -1,
       } as { [key: string]: any },
 
-      interval: null,
-      idRandom: useAble++,
-      componentBoxInfo: {
-        width: 0,
-        height: 0,
-      },
+      idRandom: (useAble += Math.random()),
 
       // 高光组件列表
       hightLightComponentsList: [] as string[],
@@ -240,6 +298,11 @@ export default defineComponent({
         show: false,
         timeOut: null,
       },
+
+      // 组件实际渲染用数据
+      gridListToLayout: [],
+
+      gridRowNumAndUnit: {} as any,
     };
   },
   methods: {
@@ -252,7 +315,8 @@ export default defineComponent({
     },
 
     // 输出gridLayout需要的数据
-    gridListToLayout() {
+    // gridListToLayout() {
+    gridListComputed() {
       const back: Array<any> = this.gridList.map(
         (item: gridCellTemplate, index: number) => {
           let cell = outPutPositionAndGridSize(item);
@@ -267,9 +331,23 @@ export default defineComponent({
           };
         }
       );
+      this.gridListToLayout = back;
       return back;
     },
 
+    getGridListComputed() {
+      return this.gridListToLayout;
+    },
+
+    /**
+     * @name: gridRowNum
+     * @description: 计算行数 和使用单位
+     * @authors: CZH
+     * @Date: 2022-05-04 18:14:23
+     */
+    gridRowNumAndUnitDeal() {
+      fuckk(this);
+    },
     // 移动gridItem
     gridItemOnMove(i: number, x: number, y: number): void {
       this.gridList[i].setPosition(x, y);
@@ -298,11 +376,10 @@ export default defineComponent({
       options.type.map(async (type) => {
         if (index != -1)
           console.log(
-            index != -1 && index < this.gridList.length
+            index < this.gridList.length
               ? "组件「" + this.gridList[index].labelNameCN + "」"
               : "桌面组件",
             "请求执行事件<" + type + ">",
-            // JSON.parse(JSON.stringify(value))
             value
           );
         else
@@ -316,7 +393,7 @@ export default defineComponent({
           }
           this.baseData = { ...this.baseData };
         } else if (type == cardOnChangeType.upOnChange) {
-          this.$emit("onChange", value);
+          this.$emit("update:modelValue", value);
         } else if (type == cardOnChangeType.forceRefresh) {
           const gridList = [...this.gridList];
           this.gridList = [];
@@ -327,12 +404,6 @@ export default defineComponent({
           await this.$nextTick();
           this.forceUpdateGridList();
           this.$forceUpdate();
-        } else if (type == cardOnChangeType.gridCardListonChange) {
-          if (index != -1) {
-            this.gridList[index] = value[index];
-          } else {
-            this.gridList = [...value];
-          }
         } else if (type == cardOnChangeType.cardConfigChange) {
           if (typeof value == "object") {
             const changeList = Object.keys(value);
@@ -355,7 +426,31 @@ export default defineComponent({
           } else {
             console.error("输入数据有误", value);
           }
-        } else if (type == cardOnChangeType.hightLightCard) {
+        } else if (type == cardOnChangeType.cardConfigChangeNoMerge) {
+          if (typeof value == "object") {
+            const changeList = Object.keys(value);
+            const needRefreshCardList = [] as number[];
+            // debugger;
+            this.gridList = this.gridList.map((card: gridCellTemplate, index: number) => {
+              changeList.map((x: string) => {
+                if (card.label == x) {
+                  needRefreshCardList.push(index);
+                  for (let c in value[x]) {
+                    card.options.props[c] = value[x][c];
+                  }
+                }
+              });
+              return card;
+            });
+            needRefreshCardList.map((item) => {
+              if (this.$refs["card_" + item] && this.$refs["card_" + item].length > 0) {
+                this.$refs["card_" + item][0].$forceUpdate();
+              }
+            });
+          } else {
+            console.error("输入数据有误", value);
+          }
+        } else if (type == cardOnChangeType.highLightCard) {
           if (this.hightLightControler.timeOut)
             clearTimeout(this.hightLightControler.timeOut);
           if (typeof value == "object" && value.length > 0) {
@@ -382,66 +477,51 @@ export default defineComponent({
           this.baseData._componentIndex = index;
           await this.$nextTick();
           this.$refs?.cardEdit?.open();
+        } else if (type == cardOnChangeType.gridCardListonChange) {
+          if (index != -1) {
+            this.gridList[index] = value[index];
+          } else {
+            this.gridList = [...value];
+          }
+        } else if (type == cardOnChangeType.cardAdd) {
+          // 这里写的尽量简单了，后期优化
+          if (value) {
+            this.gridList.push(value);
+          }
         } else if (type == cardOnChangeType.cardDelete) {
-          this.gridList.splice(index, 1);
+          if (value && value.length > 0) {
+            for (let i = this.gridList.length - 1; i > 0; i--) {
+              for (let label in value) {
+                if (value[label] == this.gridList[i].label) {
+                  this.gridList.splice(i, 1)
+                  break;
+                }
+              }
+            }
+          } else this.gridList.splice(index, 1).filter(Boolean);
         } else if (type == cardOnChangeType.openComponentsList) {
           this.$refs.componentsListModal.open();
         } else if (type == cardOnChangeType.moduleApi) {
           if (typeof value == "object") {
             for (let refs in value) {
               if (this.$refs[`PlugIn_${refs}`]) {
-                this.plugInData[refs] = value[refs];
                 const plugInComponent = this.$refs[`PlugIn_${refs}`][0];
-                if (plugInComponent && plugInComponent["open"]) {
-                  plugInComponent["open"]();
+                if (!value[refs]) {
+                  if (plugInComponent && plugInComponent["close"]) {
+                    plugInComponent["close"]();
+                  }
+                } else {
+                  this.plugInData[refs] = value[refs];
+                  if (plugInComponent && plugInComponent["open"]) {
+                    plugInComponent["open"]();
+                  }
                 }
               }
             }
           }
         }
       });
-    },
-
-    /**
-     * @name: gridRowNum
-     * @description: 计算行数 和使用单位
-     * @authors: CZH
-     * @Date: 2022-05-04 18:14:23
-     */
-    gridRowNumAndUnit() {
-      let width = 0;
-      let height = 0;
-      if (this.$refs["screenId_" + this.idRandom]) {
-        width = this.$refs["screenId_" + this.idRandom].offsetWidth;
-        height = this.$refs["screenId_" + this.idRandom].offsetHeight;
-      }
-      let screen = {
-        width: width || document.body.offsetWidth,
-        height: height || document.body.offsetHeight,
-        rowNum: 0,
-        colNum: this.gridColNum,
-        unit: "vw",
-        blockSize: 0, // px单位的 单个grid单元大小
-        colSize: 0,
-        margin: this.cusStyle?.margin || 12,
-      };
-      if (this.cusStyle.wholeScreen == true) {
-        screen.rowNum = Math.floor(screen.width / (screen.height / this.gridColNum));
-        screen.unit = "vh";
-        let rowOrColKey = this.cusStyle.maxRows || this.gridColNum;
-        screen.blockSize =
-          (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
-      } else {
-        screen.rowNum = Math.floor(screen.height / this.gridColNum);
-        screen.blockSize =
-          screen.unit == "vw"
-            ? (screen.width -
-                this.gridColNum * this.cusStyle.margin -
-                this.cusStyle.margin) /
-              this.gridColNum
-            : screen.height / this.gridColNum;
-      }
-      return screen;
+      // this.gridListComputed()
     },
 
     /**
@@ -476,50 +556,56 @@ export default defineComponent({
           };
         }
       }
+
       return style;
     },
 
     // 填充gridList
     forceUpdateGridList() {
       this.gridList = this.desktopData as Array<gridCellTemplate>;
+      // this.gridListComputed()
     },
   },
 
   async created() {
+    timeConsole.checkTime("gridDesktop");
     if (this.preBaseData && Object.keys(this.preBaseData).length > 0)
       Object.keys(this.preBaseData).map((key) => {
         this.baseData[key] = this.preBaseData[key];
       });
+
+    if (this.modelValue) {
+      this.baseData["modelValue"] = {
+        ...this.baseData["modelValue"],
+        ...this.modelValue,
+      };
+    }
+    this.forceUpdateGridList();
+
+    // 添加触发器
+    const that = this;
+    const data = {};
+    const name = "griddesktop_func_" + this.idRandom;
+    data[name] = that.gridRowNumAndUnitDeal;
+    window.addEventListener("resize", data[name]);
+  },
+
+  async unmounted() {
+    // 删除触发器
+    const that = this;
+    const data = {};
+    const name = "griddesktop_func_" + this.idRandom;
+    data[name] = that.gridRowNumAndUnitDeal;
+    window.removeEventListener("resize", data[name]);
   },
 
   async mounted() {
-    this.forceUpdateGridList();
     const that = this;
-    if (that.interval) clearInterval(that.interval);
-    this.interval = setInterval(async () => {
-      let width =
-        document.getElementById("screenId_" + that.idRandom)?.offsetWidth ||
-        document.body.offsetWidth;
-      let height =
-        document.getElementById("screenId_" + that.idRandom)?.offsetHeight ||
-        document.body.offsetHeight;
-      if (
-        that.componentBoxInfo?.width != width ||
-        that.componentBoxInfo?.height != height
-      ) {
-        that.$forceUpdate();
-        that.updateTimes++;
-        if (that.updateTimes > 99999) that.updateTimes = -11111;
-      }
-      that.componentBoxInfo = {
-        width: width,
-        height: height,
-      };
-    }, 500);
-  },
-
-  unmounted() {
-    if (this.interval) clearInterval(this.interval);
+    // that.gridRowNumAndUnitDeal();
+    setTimeout(() => {
+      that.gridRowNumAndUnitDeal();
+      timeConsole.checkTime("gridDesktop");
+    }, 100);
   },
 });
 </script>
@@ -531,33 +617,51 @@ export default defineComponent({
   display: block;
   position: relative;
 }
+
 .grayBg {
   transition: background-color 0.3s;
+  //background-image: radial-gradient(transparent 1px, var(--bg-color) 1px);
+  //background-size: 4px 4px;
+  //backdrop-filter: saturate(50%) blur(4px);
   background-color: rgba(0, 0, 0, 0);
   position: fixed;
+  background-image: radial-gradient(rgba(0, 0, 0, 0) 0px, rgb(0, 0, 0, 0.1) 0px);
+  background-size: 0px 0px;
+  border-bottom-color: rgb(220, 223, 230);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
   top: 0px;
   left: 0px;
 }
+
 .grayBg_Active {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.1);
+  background-size: 4px 4px;
+  background-image: radial-gradient(rgba(0, 0, 0, 0) 1px, rgba(180, 180, 180, 0.3) 1px);
 }
+
 @keyframes hoverFadeInOut {
   0% {
     background-color: rgba(0, 0, 0, 0);
   }
+
   50% {
     background-color: rgba(0, 0, 0, 0.5);
   }
+
   100% {
     background-color: rgba(0, 0, 0, 0);
   }
 }
+
 .bgGridCell {
   opacity: 0;
 }
+
 .grid-item {
   transition: opacity 0.4;
 }
+
 .bgGridCell:hover {
   animation: hoverFadeInOut 1.2s infinite;
 }

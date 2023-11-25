@@ -4,7 +4,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  isActive: false
+  isActive: false,
 });
 
 const emit = defineEmits<{

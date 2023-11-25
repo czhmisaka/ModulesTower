@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-21 16:13:14
- * @LastEditors: CZH
- * @LastEditTime: 2023-01-14 02:56:55
- * @FilePath: /configforpagedemo/src/utils/auth.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-11-01 15:03:26
+ * @FilePath: /lcdp_fe_setup/src/utils/auth.ts
  */
 import Cookies from "js-cookie";
 import { storageSession } from "@pureadmin/utils";
@@ -26,10 +26,15 @@ export const TokenKey = "authorized-token";
 
 /** 获取`token` */
 export function getToken(): DataInfo<number> {
-  // 此处与`TokenKey`相同，此写法解决初始化时`Cookies`中不存在`TokenKey`报错
-  return Cookies.get(TokenKey)
-    ? JSON.parse(Cookies.get(TokenKey))
-    : storageSession.getItem(sessionKey);
+  try {
+    // 此处与`TokenKey`相同，此写法解决初始化时`Cookies`中不存在`TokenKey`报错
+    return Cookies.get(TokenKey)
+      ? JSON.parse(Cookies.get(TokenKey))
+      : storageSession.getItem(sessionKey);
+  } catch (error) {
+    
+  }
+  
 }
 
 /**

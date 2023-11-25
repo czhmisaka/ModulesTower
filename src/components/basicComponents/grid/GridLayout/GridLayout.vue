@@ -1,16 +1,8 @@
 <template>
   <div ref="layoutContainer" class="vue-grid-layout" :style="mergedStyle">
     <slot></slot>
-    <GridItem
-      v-show="isDragging"
-      ref="gridItem"
-      class="vue-grid-placeholder"
-      :x="placeholder.x"
-      :y="placeholder.y"
-      :w="placeholder.w"
-      :h="placeholder.h"
-      :i="placeholder.i"
-    />
+    <GridItem v-show="isDragging" ref="gridItem" class="vue-grid-placeholder" :x="placeholder.x" :y="placeholder.y"
+      :w="placeholder.w" :h="placeholder.h" :i="placeholder.i" />
   </div>
 </template>
 <script lang="ts" setup>

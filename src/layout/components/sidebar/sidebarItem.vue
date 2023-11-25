@@ -117,7 +117,7 @@ function hasOneShowingChild(children: childrenType[] = [], parent: childrenType)
   }
 
   if (showingChildren.length === 1) {
-    return true;
+    return false;
   }
 
   if (showingChildren.length === 0) {
@@ -151,10 +151,12 @@ function resolvePath(routePath) {
     >
       <div class="sub-menu-icon" v-if="toRaw(props.item.meta.icon)">
         <component
+          :style="{ margin: '0px -3px' }"
           :is="
             useRenderIcon(
-              toRaw(onlyOneChild.meta.icon) ||
-                (props.item.meta && toRaw(props.item.meta.icon))
+              props.item.meta.icon[0] == '{'
+                ? JSON.parse(props.item.meta && toRaw(props.item.meta.icon))
+                : useRenderIcon(toRaw(props.item.meta.icon))
             )
           "
         />
@@ -213,7 +215,16 @@ function resolvePath(routePath) {
   <el-sub-menu v-else ref="subMenu" :index="resolvePath(props.item.path)">
     <template #title>
       <div v-if="toRaw(props.item.meta.icon)" class="sub-menu-icon">
-        <component :is="useRenderIcon(props.item.meta && toRaw(props.item.meta.icon))" />
+        <component
+          :style="{ margin: '0px -3px' }"
+          :is="
+            useRenderIcon(
+              props.item.meta.icon[0] == '{'
+                ? JSON.parse(props.item.meta && toRaw(props.item.meta.icon))
+                : useRenderIcon(toRaw(props.item.meta.icon))
+            )
+          "
+        />
       </div>
       <span v-if="layout === 'horizontal'">
         {{ props.item.meta.title }}

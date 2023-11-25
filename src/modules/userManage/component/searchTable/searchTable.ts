@@ -1,15 +1,19 @@
 /*
  * @Date: 2022-11-10 08:56:53
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-22 15:28:18
- * @FilePath: /configforpagedemo/src/modules/userManage/component/searchTable/searchTable.ts
+ * @LastEditors: Please set LastEditors
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import inputElement, { globalBaseCellDeal } from "./inputElement";
 import { useModuleHook } from "@/store/modules/module";
 import { useRemoteDictHook } from "@/store/modules/remoteDict";
-
+import { defineEmits } from "vue";
+import {
+  desktopDataTemplate,
+  gridDesktopPropsTemplate,
+} from "@/modules/userManage/types";
+import { defineComponent, h } from "vue";
 import {
   btnCellTemplate,
   stringAnyObj,
@@ -20,10 +24,17 @@ import {
   tableCellTemplate,
   formInputType,
 } from "@/modules/userManage/types";
+import { compile, VNode } from "vue";
+import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
+import { deepClone } from "@/utils";
+import { ElDrawer, ElDivider, ElButton } from "element-plus";
+import { customComponent } from "@/modules/userManage/types";
 
-const baseShowFunc = (data, key) => {
+const noDataIcon = "_";
+
+const baseShowFunc = (data, key, isPopover = false) => {
   if (data[key] != undefined) return data[key] + "";
-  else return "无数据";
+  else return noDataIcon;
 };
 
 /**
@@ -34,16 +45,25 @@ const baseShowFunc = (data, key) => {
  */
 export class SearchCellStorage {
   storage = [] as tableCellTemplate[];
+  labels = [] as string[];
+  keys = [] as string[];
   constructor(storage: tableCellTemplate[]) {
     this.storage = storage;
+    this.labels = storage.map((x) => {
+      return x.label;
+    });
+    this.keys = storage.map((x) => {
+      return x.key;
+    });
   }
-  getByLabel(label: string, options?: tableCellOptions) {
+
+  getByLabel(label: string, options: tableCellOptions = {}) {
     let back = {} as { [key: string]: any };
     this.storage.map((cell) => {
       if (label && label == cell.label) back = cell;
     });
     if (!back.label) return false;
-    if (options) return { ...back, ...options };
+    if (options) return deepMerge(options, back);
     else
       return {
         input: { type: formInputType.input },
@@ -58,10 +78,10 @@ export class SearchCellStorage {
    * @Date: 2022-11-30 15:35:47
    * @param {string} labelArr
    */
-  getByLabelArr(labelArr: string[]) {
+  getByLabelArr(labelArr: string[], options: tableCellOptions = {}) {
     let back = [];
     for (let key in labelArr) {
-      back.push(this.getByLabel(labelArr[key]));
+      back.push(this.getByLabel(labelArr[key], deepClone(options)));
     }
     return back.filter(Boolean);
   }
@@ -80,7 +100,7 @@ export class SearchCellStorage {
       if (key && key == cell.key) back = cell;
     });
     if (!back.key) return false;
-    if (options) return { ...back, ...options };
+    if (options) return deepMerge(options, back);
     else
       return {
         input: { type: formInputType.input },
@@ -95,10 +115,10 @@ export class SearchCellStorage {
    * @Date: 2022-11-30 15:36:15
    * @param {string} keyArr
    */
-  getByKeyArr(keyArr: string[]) {
+  getByKeyArr(keyArr: string[], options: tableCellOptions = {}) {
     let back = [];
     for (let key in keyArr) {
-      back.push(this.getByKey(keyArr[key]));
+      back.push(this.getByKey(keyArr[key], deepClone(options)));
     }
     return back.filter(Boolean);
   }
@@ -110,12 +130,13 @@ export class SearchCellStorage {
    * @Date: 2022-12-06 15:48:39
    * @param {string} keyArr
    */
-  getAll(expectKeyArr: string[] = []) {
+  getAll(expectKeyArr: string[] = [], options: tableCellOptions = {}) {
+    let allGetKey = this.storage.map((x) => x.key);
     if (expectKeyArr && expectKeyArr.length > 0)
-      return this.storage.filter((cell) => {
-        return expectKeyArr.indexOf(cell.key) == -1;
+      allGetKey = allGetKey.filter((x) => {
+        return expectKeyArr.indexOf(x) == -1;
       });
-    else return this.storage;
+    return this.getByKeyArr(allGetKey, deepClone(options));
   }
 
   /**
@@ -137,14 +158,17 @@ export class SearchCellStorage {
  * @Date: 2022-11-29 14:52:10
  * @param {stringAnyObj} options
  */
-export const DateCell = (options: stringAnyObj = {}): tableCellOptions => {
+export const DateCell = (
+  options: stringAnyObj = {},
+  inputOptions: stringAnyObj = {}
+): tableCellOptions => {
   return {
     ...showCell(showType.func, {
       showFunc: (data: any, key: string) =>
-        data[key] ? new Date(data[key]).toLocaleString() : " ",
+        data[key] ? new Date(data[key] * 1).toLocaleString() : noDataIcon,
       ...options,
     }),
-    ...searchCell(formInputType.datePicker),
+    ...searchCell(formInputType.datePicker, inputOptions),
   };
 };
 
@@ -216,8 +240,8 @@ export const searchCell = (
 };
 
 /**
- * @name: 函数名
- * @description: waitForWriting
+ * @name: 在线字典构建
+ * @description: remoteDictSelectSearchCell
  * @authors: CZH
  * @Date: 2023-02-13 18:06:59
  */
@@ -228,15 +252,32 @@ export const remoteDictSelectSearchCell = (dictKey: string) => {
         const remoteDictStore = useRemoteDictHook();
         remoteDictStore.getByKey(dictKey)[data[key]];
         return remoteDictStore.keyMap[dictKey]
-          ? remoteDictStore.keyMap[dictKey][data[key]]
-          : "";
+          ? remoteDictStore.keyMap[dictKey][data[key]] || noDataIcon
+          : noDataIcon;
       },
     }),
     ...searchCell(formInputType.remoteDictSelect, {
       dictKey,
+      onChangeFunc: async (that, data, key) => {
+        const remoteDictStore = useRemoteDictHook();
+        const result = remoteDictStore.keyMap[dictKey][data[key]];
+        if (!result) {
+          delete data[key];
+          data[key] = "未知数据或者已删除";
+        }
+      },
     }),
   } as tableCellOptions;
   return back;
+};
+
+export const colorfulIconCell = (
+  inputOptions?: tableCellOptionsInputPropertiesTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
+  return {
+    // ...searchCell(),
+  };
 };
 
 /**
@@ -275,9 +316,162 @@ export const actionCell = (
   tableCellOption.table = {
     type: showType.btnList,
     btnList: btnList,
+    fixed: "right",
     ...options,
   };
   return tableCellOption;
+};
+
+// 禁止操作cell
+export const disabledCell = () => {
+  return {
+    propertiesOption: {
+      "ui:options": {
+        disabled: true,
+      },
+    },
+  };
+};
+
+export const gridCell = (
+  girdCell: gridCellTemplate,
+  inputProperties?: tableCellOptionsInputPropertiesTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
+  return {
+    ...searchCell(formInputType.gridCellMaker, {
+      funcInputOptionsLoader: async () => {
+        return;
+      },
+    }),
+    ...showCell(showType.funcComponent, {
+      showFunc: (data, key) =>
+        defineComponent({
+          setup() {
+            return () => h(compile(data[key]));
+          },
+        }),
+      ...showOptions,
+    }),
+  };
+};
+
+export const gridDesktopCell = (
+  desktopDataTemplate: (
+    that: stringAnyObj
+  ) => Promise<gridDesktopPropsTemplate> | gridDesktopPropsTemplate,
+  options: stringAnyObj = {}
+) => {
+  return {
+    ...searchCell(formInputType.gridDesktop, {
+      inputOptions: {
+        style: {
+          height: "50vh",
+          maxHeight: "100vh",
+          width: "100%",
+        },
+        ...options,
+      },
+      funcInputOptionsLoader: async (that) => {
+        let data = await desktopDataTemplate(that);
+        return {
+          ...data,
+          desktopData: await data.desktopData(),
+        };
+      },
+    }),
+  };
+};
+
+/**
+ * @name: richTextCell
+ * @description: 富文本编辑匹配展示和输入的cell生成
+ * @authors: CZH
+ * @Date: 2023-04-25 10:18:19
+ */
+export const richTextCell = (
+  inputProperties?: tableCellOptionsInputPropertiesTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
+  return {
+    ...searchCell(formInputType.richTextArea, {
+      ...inputProperties,
+      funcInputOptionsLoader: () => {
+        return {};
+      },
+    }),
+    ...showCell(showType.funcComponent, {
+      showFunc: (data, key) =>
+        defineComponent({
+          setup() {
+            return () => h(compile(data[key]));
+          },
+        }),
+      ...showOptions,
+    }),
+  };
+};
+
+/**
+ * @name: tableCellTemplateCell
+ * @description: 一个用于嵌套json层级编辑的工具
+ * @authors: CZH
+ * @Date: 2023-09-25 19:24:18
+ */
+export const tableCellTemplateCell = (
+  tableCellTemplateList: tableCellTemplate[]
+) => {
+  return {
+    ...searchCell(formInputType.tableCellTemplate, {
+      funcInputOptionsLoader: (that) => {
+        return tableCellTemplateList;
+      },
+    }),
+  };
+};
+
+/**
+ * @name: htmlLinkCell
+ * @description: 只是让外观变得像是一个html链接，实际操作是一个按钮事件,不能用于输入表单的展示
+ * @authors: CZH
+ * @Date: 2023-04-25 10:34:31
+ */
+export const htmlLinkCell = (
+  btnCell: btnCellTemplate,
+  showOptions?: tableCellOptionsTableTemplate
+) => {
+  return {
+    ...showCell(showType.funcComponent, {
+      showFunc: (data, key) =>
+        defineComponent({
+          setup(props, { emit }) {
+            return () =>
+              h(
+                ElButton,
+                {
+                  type: "primary",
+                  link: true,
+                  onClick: () => {
+                    emit("click", btnCell);
+                  },
+                },
+                data[key]
+              );
+          },
+        }),
+      ...showOptions,
+    }),
+  };
+};
+
+export const customComponentMakerForSearchCell = (
+  customComponent: customComponent,
+  inputProperties?: tableCellOptionsInputPropertiesTemplate
+) => {
+  return searchCell(formInputType.customComponent, {
+    customComponent,
+    ...inputProperties,
+  });
 };
 
 /**
@@ -300,7 +494,7 @@ export const tableCellTemplateMaker = (
     table: {
       showFunc: baseShowFunc,
       type: showType.func,
-      sortable: true,
+      sortable: false,
       width: "auto",
       style: {
         maxHeight: "120px",
@@ -346,8 +540,8 @@ export const propertiesMaker = async (
     }
     if (input && input.propertiesOption) {
       properties[cell.key] = deepMerge(
-        properties[cell.key],
-        input.propertiesOption
+        input.propertiesOption,
+        properties[cell.key]
       );
     }
     if (properties[cell.key])

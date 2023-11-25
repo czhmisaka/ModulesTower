@@ -87,11 +87,12 @@ declare global {
     VITE_PUBLIC_PATH: string;
     VITE_PROXY_DOMAIN: string;
     VITE_PROXY_DOMAIN_REAL: string;
+    VITE_PROXY_DOMAIN_FLOW: string;
     VITE_ROUTER_HISTORY: string;
     VITE_LEGACY: boolean;
     VITE_CDN: boolean;
     VITE_COMPRESSION: ViteCompression;
-    VITE_MODE:string
+    VITE_MODE: string;
   }
 
   declare interface ServerConfigs {

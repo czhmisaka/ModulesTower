@@ -1,41 +1,83 @@
+/*
+ * @Date: 2023-02-06 08:57:34
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-11-13 16:38:59
+ */
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
-import { ElOption, ElScrollbar, ElSelect, ElTreeSelect } from "element-plus";
-import { defineComponent, h, ref, shallowRef, watchEffect } from "vue";
-import { inputElementTemplate, formInputType, stringAnyObj } from "../../types";
+import {
+  ElOption,
+  ElScrollbar,
+  ElSelect,
+  ElTreeSelect,
+  ElDivider,
+  ElButton,
+  ElMessage,
+  ElRadioGroup,
+  ElRadio
+} from "element-plus";
+import { defineComponent, h, onMounted, ref, shallowRef, watchEffect } from "vue";
+import { inputElementTemplate, formInputType, stringAnyObj, tableCellTemplate } from "../../types";
+import editor from "@/components/basicComponents/grid/module/baseToolComponents/editor.vue";
+import uploadFileList from "./uploadFileList.vue";
+import cascader from "./cascader.vue"
+
+import { getDownLoadRequestHeaders } from "@/utils/api/user/header";
+import { ElUpload } from "element-plus";
+import { useRemoteDictHook } from "@/store/modules/remoteDict";
+import { loadEnv } from "@build/index";
+import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
+import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
+import gridDesktop from "@/components/basicComponents/grid";
+import { values } from 'lodash';
+import { getPreUrl } from "@/utils/api/requests";
+import { componentMaker } from "./inputElementComponent/functionToComponent";
+import { propertiesMaker } from './searchTable';
+import { deepClone } from "@/components/basicComponents/grid/module/cardApi/deepClone";
 
 
-function base(cell) {
+function base(cell: tableCellTemplate) {
+  // console.log(cell, 'asd', cell.input)
   return {
-    // title: cell.label,
+    extraOptions: JSON.parse(JSON.stringify(cell.input)),
+    title: cell.label,
+    description: cell.input.description,
     type: "string",
     "ui:options": {
-      placeholder: "请输入" + cell.label,
-      style: {},
+      disabled: cell.input.disabled,
+      clearable: true,
     },
   } as stringAnyObj;
 }
 
-export const globalBaseCellDeal = (cell, cellProperties: stringAnyObj | Promise<stringAnyObj>, needTitle: boolean = false): stringAnyObj | Promise<stringAnyObj> => {
+export const globalBaseCellDeal = (
+  cell: tableCellTemplate,
+  cellProperties: stringAnyObj | Promise<stringAnyObj>,
+  needTitle: boolean = false
+): stringAnyObj | Promise<stringAnyObj> => {
   const globalBaseCell = {
+    'err:required': '请填写' + cell.label,
     "ui:options": {
-      title: needTitle ? cell.label : '',
+      title: needTitle ? cell.label : "",
       placeholder: "请输入" + cell.label,
       style: {
-        width: needTitle ? '360px' : '100%'
-      }
+        width: needTitle ? "360px" : "100%",
+        marginBottom: needTitle ? "6px" : '6px'
+      },
     },
-  }
-  return deepMerge(globalBaseCell, cellProperties)
-}
+  };
+  return deepMerge(cellProperties, globalBaseCell);
+};
 
 let inputElement = {} as {
-  [key: string]: inputElementTemplate;
+  [key in formInputType]: inputElementTemplate;
 };
 
 inputElement[formInputType.input] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
       type: "string",
+      ...cell.input?.inputOptions,
     };
   },
 };
@@ -43,28 +85,59 @@ inputElement[formInputType.input] = {
 inputElement[formInputType.mobile] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
       type: "string",
+      minLength: 11,
+      maxLength: 11,
+      ...cell.input?.inputOptions,
+      // pattern
     };
   },
 };
 
-
-inputElement[formInputType.number] = {
+inputElement[formInputType.switch] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
+      type: "boolean",
+      ...cell.input?.inputOptions,
+    };
+  },
+}
+
+inputElement[formInputType.number] = {
+  properties: async (that, cell) => {
+    return {
+      ...base(cell),
       title: cell.label,
       type: "number",
+      ...cell.input?.inputOptions,
     };
   },
 };
 
-
+inputElement[formInputType.textarea] = {
+  properties: (that, cell) => {
+    return {
+      ...base(cell),
+      title: cell.label,
+      type: "string",
+      "ui:options": {
+        type: "textarea",
+        disabled: cell.input.disabled,
+      },
+      ...cell.input?.inputOptions,
+    }
+  },
+};
 
 inputElement[formInputType.datePicker] = {
   properties: (that, cell) => {
     return {
+      ...base(cell),
       type: "number",
       format: "date",
+      ...cell.input?.inputOptions,
     };
   },
 };
@@ -75,7 +148,8 @@ inputElement[formInputType.upload] = {
       ...base(cell),
       "ui:widget": "UploadWidget",
       "ui:options": {
-        "action": cell.input.action || '/api/web/file/upload',
+        'headers': getDownLoadRequestHeaders(),
+        "action": cell.input.action || '/api/web/sys/file/upload',
       },
     }
     let attrs = {
@@ -96,7 +170,8 @@ inputElement[formInputType.uploadImage] = {
       ...base(cell),
       "ui:widget": "UploadWidget",
       "ui:options": {
-        "action": cell.input.action || '/api/web/file/upload',
+        'headers': getDownLoadRequestHeaders(),
+        "action": cell.input.action || '/api/web/sys/file/upload',
       },
     }
     let attrs = {
@@ -114,31 +189,72 @@ inputElement[formInputType.uploadImage] = {
 inputElement[formInputType.datePickerRanger] = {
   properties: (that, cell) => {
     return {
-      "type": "array",
-      "format": "date",
-      "items": {
-        "type": "number"
-      }
-    }
-  }
-}
-
-inputElement[formInputType.radio] = {
-  properties: (that, cell) => {
-    return {
       ...base(cell),
-      "ui:widget": "SelectWidget",
-      "ui:options": {
-        placeholder: cell.label + "开关",
-        enum: ['true', 'false'],
-        enumNames: ['开', '关']
+
+      type: "array",
+      format: "date",
+      items: {
+        type: "number",
       },
     };
   },
 };
 
+inputElement[formInputType.checkBox] = {
+  properties: (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        enum: input?.inputOptions.map(x => x.value),
+        enumNames: input?.inputOptions.map(x => x.label),
+      },
+      "ui:widget": "CheckboxesWidget"
+    } as stringAnyObj;
 
+    return properties;
+  }
+}
 
+inputElement[formInputType.radio] = {
+  properties: (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": defineComponent({
+        props: [
+          "modelValue"
+        ],
+        setup(props, context) {
+          return () => [
+            h(ElRadioGroup,
+              {
+                ...props,
+                onChange: (e) => {
+                  context.emit("update:modelValue", e);
+                },
+              },
+              () =>
+                input?.inputOptions.map((x) => {
+                  return h(ElRadio, {
+                    label: x.value,
+                    key: x.value
+                  }, x.label)
+                })
+            )
+          ]
+        }
+
+      })
+    } as stringAnyObj;
+
+    return properties;
+  },
+};
 
 inputElement[formInputType.idCard] = {
   properties: (that, cell) => {
@@ -150,7 +266,7 @@ inputElement[formInputType.idCard] = {
 
 inputElement[formInputType.select] = {
   properties: async (that, cell) => {
-    let properties = base(cell);
+    let properties = {}
     const { input } = cell;
     properties = {
       ...base(cell),
@@ -190,7 +306,7 @@ inputElement[formInputType.select] = {
 
 inputElement[formInputType.inputList] = {
   properties: async (that, cell) => {
-    let properties = base(cell);
+    let properties = {};
     const { input } = cell;
     properties = {
       ...base(cell),
@@ -235,6 +351,14 @@ inputElement[formInputType.treeSelectRemote] = {
   properties: async (that, cell) => {
     let properties = {
       ...base(cell),
+      type: "array",
+      items: {
+        type: 'string'
+      },
+      "ui:options": {
+        placeholder: "请输入" + cell.label,
+        style: {},
+      },
       "ui:widget": "elTreeSelect",
     } as stringAnyObj;
     const { input } = cell;
@@ -260,6 +384,9 @@ inputElement[formInputType.treeSelectRemote] = {
       attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
 
     Object.keys(attrs).map((x) => {
+      if (x == 'type') {
+        properties.type = attrs[x]
+      }
       properties["ui:" + x] = attrs[x];
     });
     return properties;
@@ -270,8 +397,11 @@ inputElement[formInputType.treeSelect] = {
   properties: async (that, cell) => {
     const { input } = cell;
     let properties = {
-      ...base(cell),
-      type: "string",
+      type: "array",
+      items: {
+        type: "string",
+      },
+      uniqueItems: true,
       "ui:widget": "elTreeSelect",
     } as stringAnyObj;
     if (input.inputOptions)
@@ -289,6 +419,7 @@ inputElement[formInputType.treeSelect] = {
       props: {
         label: "name",
         children: "children",
+        key: 'id'
       },
     } as stringAnyObj;
     if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
@@ -296,6 +427,9 @@ inputElement[formInputType.treeSelect] = {
       attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
 
     Object.keys(attrs).map((x) => {
+      if (x == 'type') {
+        properties.type = attrs[x]
+      }
       properties["ui:" + x] = attrs[x];
     })
     return properties;
@@ -308,7 +442,10 @@ inputElement[formInputType.searchList] = {
     const { input } = cell;
     let properties = {
       ...base(cell),
-      type: "string",
+      type: "array",
+      items: {
+        type: 'string'
+      },
       "ui:widget": defineComponent({
         props: [
           "style",
@@ -320,13 +457,14 @@ inputElement[formInputType.searchList] = {
           "reserveKeyword",
           "remoteMethod",
           "modelValue",
-          "placeholder"
+          "placeholder",
+          "clearable"
         ],
         setup(props, context) {
           let options = ref([]);
-          props["remoteMethod"]('').then(res => {
+          props["remoteMethod"]("").then(res => {
             options.value = res;
-          })
+          });
           return () => [
             h(
               ElSelect,
@@ -363,13 +501,14 @@ inputElement[formInputType.searchList] = {
     if (input.funcInputOptionsLoader)
       attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
     Object.keys(attrs).map((x) => {
+      if (x == 'type') {
+        properties.type = attrs[x]
+      }
       properties["ui:" + x] = attrs[x];
     });
     return properties;
   },
 };
-
-
 
 /**
  * @name: indexListForSwitch
@@ -385,19 +524,20 @@ inputElement[formInputType.indexListForSwitch] = {
       type: "string",
       "ui:widget": defineComponent({
         props: [
-          'height',
-          'maxHeight',
-          'native',
-          'always',
-          'minSize',
-          'noresize',
-          'scroll',
+          "height",
+          "maxHeight",
+          "native",
+          "always",
+          "minSize",
+          "noresize",
+          "scroll",
           "style",
           "class",
           "modelValue",
           "customRender"
         ],
         setup(props, context) {
+          // if()
           return () => [
             <ElScrollbar {...props}>
               {
@@ -429,48 +569,74 @@ inputElement[formInputType.indexListForSwitch] = {
   },
 };
 
+/**
+ * @name: underLine
+ * @description: 一条下划线，
+ * @authors: CZH
+ * @Date: 2023-03-23 22:08:39
+ */
+inputElement[formInputType.underLine] = {
+  properties: (that, cell) => {
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": defineComponent({
+        props: ["type", "size", "icon", "buttonName", "callBack"],
+        setup(props, context) {
+          return () => [<ElDivider></ElDivider>];
+        },
+      }),
+      "ui:options": {
+        style: {
+          width: "100%",
+          fontWeight: "900",
+        },
+      },
+    } as stringAnyObj;
+    return properties;
+  },
+};
 
 
 /**
- * @name: botton
+ * @name: button
  * @description: 一个按钮,反复执行true false，并以此来触发一些事件
  * @authors: CZH
  * @Date: 2022-12-14 14:15:24
  */
-inputElement[formInputType.botton] = {
+inputElement[formInputType.button] = {
   properties: async (that, cell) => {
     const { input } = cell;
     let properties = {
       ...base(cell),
       type: "string",
       "ui:widget": defineComponent({
-        props: [
-          'type',
-          'size',
-          'icon',
-          'buttonName',
-          'callBack'
-        ],
+        props: ["type", "size", "icon", "buttonName", "callBack", "modelValue"],
         setup(props, context) {
+          let a = false;
           return () => [
-            <el-button {...props} onClick={(event) => {
-              if (props.callBack)
-                props.callBack(that.formData)
-            }}>
+            <el-button
+              {...props}
+              onClick={(event) => {
+                if (props.callBack) props.callBack(that.formData);
+                a = !a;
+                context.emit("update:modelValue", a);
+              }}
+            >
               {props.buttonName}
-            </el-button>
-          ]
+            </el-button>,
+          ];
         },
       }),
       "ui:options": {
         style: {
-          width: '100%',
-          fontWeight: '900'
+          width: "100%",
+          fontWeight: "900",
         },
-      }
+      },
     } as stringAnyObj;
     let attrs = {
-      maxHeight: '400px'
+      maxHeight: "400px",
     };
     if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
     if (input.funcInputOptionsLoader)
@@ -482,13 +648,67 @@ inputElement[formInputType.botton] = {
   },
 };
 
+
+/**
+ * @name: tabSelect
+ * @description: tabSelect  radio 简化版本
+ * @authors: CZH
+ * @Date: 2022-12-14 14:15:24
+ */
+inputElement[formInputType.tabSelect] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": defineComponent({
+        props: ["map", "modelValue"],
+        setup(props, context) {
+          let a = false;
+          const list = ref(Object.keys(props.map).map(x => {
+            return {
+              label: props.map[x],
+              value: x,
+            }
+          }))
+          return () => list.value.map(x => {
+            return h(ElButton, {
+              onClick: () => {
+                console.log(x);
+                context.emit("update:modelValue", x.value);
+              }
+            }, [x.label])
+          })
+        },
+      }),
+      "ui:options": {
+        style: {
+          width: "100%",
+          fontWeight: "900",
+        },
+      },
+    } as stringAnyObj;
+    let attrs = {
+      maxHeight: "400px",
+    } as stringAnyObj;
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions, map: input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+};
+
 inputElement[formInputType.remoteDictSelect] = {
   properties: async (that, cell) => {
-    const { dictKey } = cell.input;
+    const { input } = cell
+    const { dictKey } = input;
     const { getByKey } = useRemoteDictHook();
-    let inputOptions = await getByKey(dictKey) as {
-      [key: string]: any
-    }
+    let inputOptions = (await getByKey(dictKey)) as {
+      [key: string]: any;
+    };
     let properties = {
       ...base(cell),
       type: "string",
@@ -498,6 +718,7 @@ inputElement[formInputType.remoteDictSelect] = {
         attrs: {
           clearable: true,
         },
+        placeholder: `请选择${cell.label}`
       },
       enum: Object.keys(inputOptions),
       enumNames: Object.keys(inputOptions).map(
@@ -508,17 +729,199 @@ inputElement[formInputType.remoteDictSelect] = {
   }
 }
 
+inputElement[formInputType.uploadFileList] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": uploadFileList,
+      "ui:options": {
+        style: {
+          width: "100%",
+          fontWeight: "900",
+        },
+      },
+    } as stringAnyObj;
+    let attrs = {};
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+};
+inputElement[formInputType.cascader] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": cascader,
+      "ui:options": {
+        style: {
+          width: "100%",
+          fontWeight: "900",
+        },
+      },
+    } as stringAnyObj;
+    let attrs = {
+      maxHeight: "400px",
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+}
+
+
+inputElement[formInputType.richTextArea] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": editor,
+      "ui:options": {
+        style: {
+          width: "99%",
+          fontWeight: "900",
+        },
+      },
+    } as stringAnyObj;
+    let attrs = {
+      maxHeight: "400px",
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+};
 
 
 
 // 预计接入 griddesktop 展示部分数据
-import gridDesktop from '@/components/basicComponents/grid/index';
-import { useRemoteDictHook } from '@/store/modules/remoteDict';
-inputElement[formInputType.component] = {
+inputElement[formInputType.gridDesktop] = {
   properties: async (that, cell) => {
     const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": gridDesktop,
+      "ui:options": {
+        style: {
+          width: "calc(100%)",
+          backGround: '#111',
+          fontWeight: "900",
+        },
+      },
+    } as stringAnyObj;
+    let attrs = {
+      // maxHeight: "400px",
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+};
 
+// 这个组件完全依照组件化方案开发，使用方式就是通过
+// in
+// 不知道当时在想什么
+inputElement[formInputType.gridCellMaker] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "string",
+      "ui:widget": card,
+      "ui:options": {
+        style: {
+          width: "100%",
+          fontWeight: "900",
+        },
+      },
+    } as stringAnyObj;
+    let attrs = {
+      maxHeight: "400px",
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+};
+
+
+
+
+
+/**
+ * @name: customComponent
+ * @description: 支持插入自定义组件
+ * @authors: CZH
+ * @Date: 2023-07-05 10:14:49
+ */
+inputElement[formInputType.customComponent] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: 'string',
+      "ui:widget": componentMaker(input.customComponent),
+      "ui:options": {}
+    }
+    let attrs = {};
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
   }
 }
+
+
+
+/**
+ * @name: tableCellTemplate
+ * @description: 嵌套表单
+ * @authors: CZH
+ * @Date: 2023-08-29 09:56:31
+ */
+inputElement[formInputType.tableCellTemplate] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      title: input.label,
+      type: 'object',
+      properties: await propertiesMaker((await input.funcInputOptionsLoader(that) as tableCellTemplate[]) || [], that, true),
+      ...input.inputOptions
+    }
+    return properties;
+  },
+}
+
+
+
 
 export default inputElement;

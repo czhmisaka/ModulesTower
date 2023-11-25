@@ -1,23 +1,39 @@
 /*
  * @Date: 2022-01-22 18:59:01
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-19 17:56:48
- * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-11-20 16:17:09
+ * @FilePath: /lcdp_fe_setup/src/utils/api/requests.ts
  */
 
 import axios from "axios";
 import { clearCookie, getCookie } from "./config/cookie";
-import { getHeaders } from "./user/header";
+import { getDownLoadRequestHeaders, getHeaders } from "./user/header";
 export const CancelToken: any = axios.CancelToken; // axios 的取消请求
 import { ElMessage } from "element-plus";
 import { useUserStoreHook } from "@/store/modules/user";
 import { stringAnyObj } from "@/modules/userManage/types";
+import { saveAs } from "file-saver";
 
 // development , production
 const Env = import.meta.env.VITE_MODE;
 const isDev = () => Env == "development";
 import { loadEnv } from "@build/index";
-const { VITE_PROXY_DOMAIN_REAL } = loadEnv();
+import { ElLoading } from "element-plus";
+import { getPureRequestHeaders } from "./user/header";
+import { timeConsole } from "@/main";
+import { useRoute, useRouter } from "vue-router";
+import router from "@/router";
+const { VITE_PROXY_DOMAIN_REAL, VITE_PROXY_DOMAIN_FLOW } = loadEnv();
+
+export function getPreUrl() {
+  // let domin = location.pathname.replaceAll("/", "");
+  // if (domin != "") domin = "/" + domin;
+  // return domin + VITE_PROXY_DOMAIN_REAL;
+  return VITE_PROXY_DOMAIN_REAL;
+}
+export function getFlowUrl() {
+  return VITE_PROXY_DOMAIN_FLOW;
+}
 
 export function isMobile() {
   if (
@@ -32,9 +48,9 @@ export function isMobile() {
 }
 
 let baseURL = isDev ? "/" : "/";
-const request = axios.create({
+export const request = axios.create({
   baseURL: baseURL, // 可以不需要
-  timeout: 100000000, // 超时时间
+  timeout: 100000000000000000, // 超时时间
   withCredentials: true,
   validateStatus() {
     return true;
@@ -61,10 +77,8 @@ const configString = (config: any) => {
         return config.url.indexOf(x) > -1 ? true : false;
       })
       .filter(Boolean).length > 0
-  ) {
+  )
     return `${config.url}_${config.method}_${config.data}_${Math.random()}`;
-  }
-  // return `${config.url}_${config.method}_${config.data}`;
   return `${config.url}_${config.method}_${config.data}_${Math.random()}`;
 };
 
@@ -100,35 +114,40 @@ request.interceptors.request.use((config) => {
 request.interceptors.response.use(
   (response) => {
     removeQueue(response.config);
-    const res = response.data;
+    let res = response.data;
+    if (res.status == 200) {
+      return Promise.resolve(res);
+    }
     if (
+      response.headers["content-type"] ==
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      (response.data &&
+        response.data.size &&
+        (response.data.type == "text/xml" ||
+          response.data.type == "application/force-download" ||
+          response.data.type == "application/octet-stream"))
+    ) {
+      return Promise.resolve(res);
+    } else if (
       (res.code === 200 && res.type != "error") ||
-      res.type == "success" ||
-      res.code == 0 ||
-      res.stat == "ok"
+      res.type == "success"
     ) {
       return Promise.resolve(res);
     } else if (res.code === 401) {
       // 未登录状态
-      ElMessage({
-        message: "登录过期啦",
-        type: "warning",
-      });
-      useUserStoreHook().logOut();
-    } else if ("err" in res && res.err == 401) {
-      // 未登录状态
-      ElMessage({
-        message: "登录过期啦",
-        type: "warning",
-      });
-      useUserStoreHook().logOut();
-    } else if ((res.code == 401 || res.code == 403) && res.stat == "fail") {
-      // 未登录状态
-      ElMessage({
-        message: "登录过期啦",
-        type: "warning",
-      });
-      useUserStoreHook().logOut();
+      const route = router.getRoutes();
+      const nowRoute = route.filter((x) => {
+        return (
+          window.location.hash.split("#")[1].indexOf(x.path.split("/:")[0]) >
+            -1 && x.path != "/"
+        );
+      })[0];
+      if (
+        nowRoute?.meta &&
+        (nowRoute?.meta["allPeopleCanSee"] || nowRoute?.meta["loginPage"])
+      ) {
+      } else useUserStoreHook().logOut();
+      return Promise.resolve({ data: {} });
     } else {
       if (res.message) ElMessage.error(res.message);
       return Promise.reject(res);
@@ -141,34 +160,215 @@ request.interceptors.response.use(
 );
 
 export const get = (url: string, params: any) => {
-  return request({
-    url: VITE_PROXY_DOMAIN_REAL + url,
+  let res = request({
+    url: getPreUrl() + url,
     method: "get",
     headers: getHeaders(),
     params,
-  }) as stringAnyObj;
+  }) as any;
+  return res;
 };
 
 export function post(url: string, data: object) {
   return request({
-    url: VITE_PROXY_DOMAIN_REAL + url,
+    url: getPreUrl() + url,
     headers: getHeaders(),
     method: "post",
     data,
+  }) as any;
+}
+
+export function post_formData(url: string, params: object) {
+  let formData = new FormData();
+  for (let key in params) {
+    if (params[key]) {
+      if (Array.isArray(params[key])) {
+        params[key].forEach((v: any) => {
+          if (v || v === 0 || v === "0") {
+            formData.append(key, v);
+          }
+        });
+      } else {
+        formData.append(key, params[key]);
+      }
+    }
+  }
+  console.log(formData,'pppppp')
+  return request({
+    url: getPreUrl() + url,
+    headers: getHeaders({
+      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+    }),
+    method: "post",
+    data: formData,
+  }) as any;
+}
+
+export function put(url: string, data: object) {
+  return request({
+    url: getPreUrl() + url,
+    headers: getHeaders(),
+    method: "put",
+    data,
+  }) as any;
+}
+
+export function del(url: string, params: any) {
+  return request({
+    url: getPreUrl() + url,
+    method: "delete",
+    headers: getHeaders(),
+    params,
   }) as stringAnyObj;
 }
 
-interface piwigoParams extends stringAnyObj {
-  method: string;
+/**
+ * 参数处理
+ * @param {*} params  参数
+ */
+export function tansParams(params) {
+  let result = "";
+  for (const propName of Object.keys(params)) {
+    const value = params[propName];
+    var part = encodeURIComponent(propName) + "=";
+    if (value !== null && value !== "" && typeof value !== "undefined") {
+      if (typeof value === "object") {
+        for (const key of Object.keys(value)) {
+          if (
+            value[key] !== null &&
+            value[key] !== "" &&
+            typeof value[key] !== "undefined"
+          ) {
+            let params = propName + "[" + key + "]";
+            var subPart = encodeURIComponent(params) + "=";
+            result += subPart + encodeURIComponent(value[key]) + "&";
+          }
+        }
+      } else {
+        result += part + encodeURIComponent(value) + "&";
+      }
+    }
+  }
+  return result;
 }
 
-export async function piwigoMethod(piwigoParams: piwigoParams) {
-  return await piwigoPost("/piwigo/ws.php?format=json", piwigoParams);
-}
-export function piwigoPost(url: string, params: object) {
-  let fd = new FormData();
-  for (let x in params) {
-    fd.append(x, params[x]);
+// 验证是否为blob格式
+export async function blobValidate(data) {
+  try {
+    const text = await data.text();
+    JSON.parse(text);
+    return false;
+  } catch (error) {
+    return true;
   }
-  return request.post(VITE_PROXY_DOMAIN_REAL + url, fd) as stringAnyObj;
 }
+
+// 通用下载方法
+export function download(url, filename = "hahahha", params, config = {}) {
+  let data = {
+    headers: {
+      ...getHeaders(),
+    },
+    responseType: "blob",
+    ...config,
+  };
+  return request
+    .post(
+      getPreUrl() +
+        url +
+        (url == "/cult/sysFile/download"
+          ? "?" +
+            Object.keys(params)
+              .map((x) => {
+                return x + "=" + params[x];
+              })
+              .join("&")
+          : ""),
+      params,
+      {
+        ...(data as stringAnyObj),
+      }
+    )
+    .then(async (data) => {
+      const blob = new Blob([data as unknown as any]);
+      saveAs(blob, filename);
+    })
+    .catch(async (err) => {
+      const blob = new Blob([err], {
+        type: "application/vnd.ms-excel; charset=utf-8",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "统计分析";
+      link.click();
+      URL.revokeObjectURL(link.href);
+      ElMessage.success("数据导出成功!");
+
+      // saveAs(blob, filename);
+    });
+}
+export function previewFile(url, params, config = {}) {
+  let data = {
+    headers: {
+      ...getHeaders(),
+    },
+    responseType: "blob",
+    ...config,
+  };
+  return request.get(
+    getPreUrl() +
+      url +
+      (url == "/cult/sysFile/download"
+        ? "?" +
+          Object.keys(params)
+            .map((x) => {
+              return x + "=" + params[x];
+            })
+            .join("&")
+        : ""),
+    {
+      ...(data as stringAnyObj),
+    }
+  );
+}
+// 通用下载方法
+export function downloadget(url, filename = "hahahha", params, config = {}) {
+  let data = {
+    headers: {
+      ...getHeaders(),
+    },
+    responseType: "blob",
+    ...config,
+  };
+  return request
+    .get(
+      getPreUrl() +
+        url +
+        (url == "/cult/sysFile/download"
+          ? "?" +
+            Object.keys(params)
+              .map((x) => {
+                return x + "=" + params[x];
+              })
+              .join("&")
+          : ""),
+      {
+        ...(data as stringAnyObj),
+      }
+    )
+    .then(async (data) => {
+      const blob = new Blob([data as unknown as any]);
+      saveAs(blob, filename);
+      // const reader = new FileReader();
+      // reader.readAsDataURL(data);
+      // const blob = new Blob([data as unknown as any]);
+      // saveAs(blob, filename);
+    })
+    .catch(async (err) => {
+      ElMessage.success("数据导出失败!");
+    });
+}
+export const uploadProps = {
+  action: getPreUrl() + "/cult/sysFile/upload",
+  headers: getDownLoadRequestHeaders(),
+};

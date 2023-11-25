@@ -1,83 +1,64 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-14 15:14:05
- * @FilePath: /configforpagedemo/src/modules/userManage/component/menuListRemote.vue
+ * @LastEditTime: 2023-11-02 16:21:36
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
-  <cardBg
-    :cusStyle="{
-      padding: '12px',
-    }"
-  >
+  <cardBg :cusStyle="{
+    padding: '12px',
+  }">
     <div :class="`menuBox box_${random}`">
       <div class="searchBar">
-        <el-input
-          :style="{
-            width: '100%',
-            marginRight: searchBtn || selectedKey != '' ? '6px' : '',
-          }"
-          v-model="selectedKey"
-          :size="size"
-          clearable
-        ></el-input>
-        <el-button
-          v-show="selectedKey && selectedKey.length > 0"
-          @click="search"
-          :size="size"
-          type="primary"
-        >
+        <el-input :style="{
+          width: '100%',
+          marginRight: searchBtn || selectedKey != '' ? '6px' : '',
+
+        }" :placeholder="searchFuncPlaceHolder || '搜索'" v-model="selectedKey" :size="size"
+          @keydown.enter.prevent="searchFuncByName ? searchByName() : search()" clearable></el-input>
+        <el-button v-show="selectedKey && selectedKey.length > 0" @click="searchFuncByName ? searchByName() : search()"
+          :size="size" plain type="primary">
           搜索
         </el-button>
-        <el-button
-          style="margin-left: 0px"
-          :size="size"
-          v-if="searchBtn && selectedKey.length == 0"
-          :loading="searchBtn.isLoading"
-          :type="searchBtn.elType"
-          @click="btnClick(searchBtn)"
-        >
+        <el-button style="margin-left: 0px" :size="size"
+          v-if="searchBtn && isBtnShow(searchBtn) && selectedKey.length == 0" :loading="searchBtn.isLoading"
+          :type="searchBtn.elType" plain @click="btnClick(searchBtn)">
           {{ searchBtn.label }}
         </el-button>
       </div>
 
       <!-- 这里展示的是搜索结果 -->
       <div class="content" v-if="searchResult.length != 0 && selectedKey">
-        <el-tree :data="searchResult" :props="defaultProps" @node-click="nodeClick">
-          <template #default="{ node, data }">
-            <div class="custom-tree-node">
-              <div class="text">{{ data[defaultProps["label"]] }}</div>
-              <el-button
-                v-if="clickItemDetailFunc"
-                text
-                size="small"
-                icon="More"
-                @click.stop="clickItemDetail(data)"
-              ></el-button>
+        <div v-for="item in searchResult">
+          <cardBg :title="item.label" :title-icon="item.icon" :cus-style="{
+            margin: '9px 3px',
+            width: 'calc(100% - 6px)',
+            borderRadius: '3px',
+            padding: '6px',
+            filter: 'drop-shadow(rgba(0, 0, 0, 0.05) 0px 0px 1px)',
+          }">
+            <div v-for="it in item.data" class="flexItem">
+              <div>
+                {{ it.label }}
+              </div>
+              <el-button v-if="item.btn" @click="btnClick(item.btn, it)" :type="item.btn.elType" :icon="item.btn.icon"
+                size="small" plain text>
+                {{ item.btn.label }}
+              </el-button>
             </div>
-          </template>
-        </el-tree>
+          </cardBg>
+        </div>
       </div>
 
       <!-- 这里展示的是默认树形结构 -->
       <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
-        <el-tree
-          v-model="treeData"
-          :props="defaultProps"
-          :lazy="true"
-          :load="treeDataFuncByLevel"
-          @node-click="nodeClick"
-        >
+        <el-tree v-model="treeData" :props="defaultProps" :lazy="true" :load="treeDataFuncByLevel"
+          @node-click="nodeClick">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ node.label }}</div>
-              <el-button
-                v-if="clickItemDetailFunc"
-                text
-                size="small"
-                icon="More"
-                @click.stop="clickItemDetail(data)"
-              ></el-button>
+              <el-button v-if="clickItemDetailFunc" text size="small" icon="More"
+                @click.stop="clickItemDetail(data)"></el-button>
             </div>
           </template>
         </el-tree>
@@ -96,8 +77,26 @@ import {
   propInfo,
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
-import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../types";
+import {
+  btnCellTemplate,
+  btnActionTemplate,
+  showType,
+  stringAnyObj,
+  tableCellTemplate,
+} from "../types";
+import * as Icons from "@element-plus/icons-vue";
 
+export type iconType = keyof typeof Icons;
+interface SearchResult {
+  label: string;
+  data: {
+    label: string;
+    [key: string]: any;
+  }[];
+  icon?: iconType;
+  detail?: tableCellTemplate[];
+  btn?: btnCellTemplate;
+}
 enum sizeTem {
   small = "small",
   large = "large",
@@ -134,6 +133,16 @@ export default defineComponent({
       description: "一般用于展示元素弹窗等",
       type: inputType.functionEditor,
     },
+    clickItemFunc: {
+      label: "点击元素详情事件",
+      description: "一般用于展示元素弹窗等",
+      type: inputType.functionEditor,
+    },
+    searchFuncByName: {
+      label: "搜索事件（名称）",
+      description: "一般用于复合搜索",
+      type: inputType.functionEditor,
+    },
     searchBtn: {
       label: "定制按钮1",
       type: inputType.obj,
@@ -155,7 +164,10 @@ export default defineComponent({
     "defaultProps",
     "treeDataFuncByLevel",
     "clickItemDetailFunc",
+    "clickItemFunc",
+    "searchFuncPlaceHolder",
     "searchBtn",
+    "searchFuncByName",
   ],
   components: { cardBg },
   watch: {
@@ -177,6 +189,11 @@ export default defineComponent({
     this.$emit("ready");
   },
   methods: {
+    isBtnShow(btn: btnCellTemplate) {
+      const that = this;
+      return btn.isShow(that, btn);
+    },
+
     /**
      * @name: nodeClick
      * @description: 点击上报事件
@@ -187,7 +204,11 @@ export default defineComponent({
     nodeClick(node) {
       let outputKey = this.outputKey || "menuList_output";
       let data = {};
+      const that = this;
       data[outputKey] = JSON.parse(JSON.stringify(node));
+      if (this.clickItemFunc) {
+        this.clickItemFunc(that, node);
+      }
       setData(this, data);
     },
 
@@ -201,29 +222,28 @@ export default defineComponent({
       const that = this;
       setTimeout(() => {
         const el = document.querySelector(`.box_${that.random} .custom-tree-node`);
-        if ("click" in el) el["click"]();
+        if ("click" in el) ((el as unknown) as any)["click"]();
       }, 500);
     },
 
-    async search(e) {
+    async search() {
       const that = this;
       const resolve = (res) => {
         that.searchResult =
           res.length > 1
             ? res.reduce((pre, item) => {
-                let children = [];
-                if (item.children) {
-                  children = item.children;
-                  delete item.children;
-                }
-                if (!pre.length) return [pre].concat(item).concat(children);
-                else {
-                  return pre.concat(item).concat(children);
-                }
-              })
+              let children = [];
+              if (item.children) {
+                children = item.children;
+                delete item.children;
+              }
+              if (!pre.length) return [pre].concat(item).concat(children);
+              else {
+                return pre.concat(item).concat(children);
+              }
+            })
             : res;
       };
-
       this.treeDataFuncByLevel({}, resolve, this.selectedKey);
     },
 
@@ -259,6 +279,13 @@ export default defineComponent({
       }
       btn["isLoading"] = false;
     },
+
+    async searchByName() {
+      if (this.searchFuncByName) {
+        let res = await this.searchFuncByName(this.selectedKey);
+        this.searchResult = res as SearchResult[];
+      }
+    },
   },
 });
 </script>
@@ -270,17 +297,20 @@ export default defineComponent({
   transition: all 0.3;
 
   ::v-deep .el-tree-node__label {
-    width: calc(100% - 24px);
+    width: calc(100% - 12px);
   }
+
   .searchBar {
     display: flex;
   }
+
   .content {
     width: 100%;
     height: auto;
     max-height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
+
     .searchItem {
       margin: 4px 18px;
       width: calc(100% - 16px);
@@ -305,6 +335,7 @@ export default defineComponent({
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+
   .text {
     width: calc(100% - 40px);
     overflow: hidden;
@@ -312,5 +343,27 @@ export default defineComponent({
     white-space: nowrap;
     text-align: left;
   }
+}
+
+.flexItem {
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  height: 24px;
+  line-height: 24px;
+  justify-content: space-between;
+  width: 100%;
+  color: #666;
+}
+
+::v-deep .el-tree--highlight-current .el-tree-node>.el-tree-node__content {
+  transition: all 0.2s;
+}
+
+::v-deep .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+  background-color: var(--el-color-primary);
+  border-radius: 6px;
+  color: #fff;
+  margin: 3px 0px;
 }
 </style>

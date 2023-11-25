@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-08 15:31:08
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-03 23:44:40
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/cardApi/deepClone.ts
+ * @LastEditTime: 2023-08-11 17:27:32
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/cardApi/deepClone.ts
  */
 // 判断类型
 function getType(target: any) {
@@ -25,6 +25,7 @@ const mapTag = "Map";
 const setTag = "Set";
 const arrayTag = "Array";
 const objectTag = "Object";
+const AsyncFunction = "AsyncFunction";
 
 //非引用类型
 const errorTag = "Error";
@@ -40,9 +41,6 @@ let deepTag = [mapTag, setTag, arrayTag, objectTag];
 export function deepClone(target: any, map = new WeakMap()) {
   let type = getType(target);
   let isRefrence = isRefrenceType(target);
-  if (typeof target == "function") {
-    return target;
-  }
   if (!isRefrence) {
     //如果是非引用类型 直接返回
     return target;

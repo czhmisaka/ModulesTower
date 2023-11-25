@@ -84,3 +84,24 @@ export const getPureRequestHeaders = (
   }
   return back;
 };
+export const getDownLoadRequestHeaders = (
+  options: {
+    [key: string]: any;
+  } = {}
+) => {
+  let DataInfo = getToken() || {};
+  const menuId = localStorage.getItem("menuId");
+  const equipment = isMobile();
+  let back = {
+    route: window.location.href.split("#")[1],
+    token: DataInfo["accessToken"], // 向后台发送的token
+    "ddm-parameter-encrypt": true,
+    menuId,
+    equipment,
+    ...options,
+  };
+  if (back["ddm-parameter-encrypt"] == true) {
+    delete back["ddm-parameter-encrypt"];
+  }
+  return back;
+};

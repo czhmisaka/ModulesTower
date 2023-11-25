@@ -22,13 +22,13 @@ const getBreadcrumb = (): void => {
   let currentRoute;
 
   if (Object.keys(route.query).length > 0) {
-    multiTags.forEach(item => {
+    multiTags.forEach((item) => {
       if (isEqual(route.query, item?.query)) {
         currentRoute = toRaw(item);
       }
     });
   } else if (Object.keys(route.params).length > 0) {
-    multiTags.forEach(item => {
+    multiTags.forEach((item) => {
       if (isEqual(route.params, item?.params)) {
         currentRoute = toRaw(item);
       }
@@ -41,7 +41,7 @@ const getBreadcrumb = (): void => {
   // 存放组成面包屑的数组
   let matched = [];
   // 获取每个父级路径对应的路由信息
-  parentRoutes.forEach(path => {
+  parentRoutes.forEach((path) => {
     if (path !== "/") matched.push(findRouteByPath(path, routes));
   });
 
@@ -49,18 +49,18 @@ const getBreadcrumb = (): void => {
 
   if (!isDashboard(matched[0])) {
     matched = [
-      {
-        path: "/welcome",
-        parentPath: "/",
-        meta: { title: "首页" }
-      } as unknown as RouteLocationMatched
+      // ({
+      //   path: "/welcome",
+      //   parentPath: "/",
+      //   meta: { title: "首页" },
+      // } as unknown) as RouteLocationMatched,
     ].concat(matched);
   }
 
   matched.forEach((item, index) => {
     if (currentRoute?.query || currentRoute?.params) return;
     if (item?.children) {
-      item.children.forEach(v => {
+      item.children.forEach((v) => {
         if (v?.meta?.title === item?.meta?.title) {
           matched.splice(index, 1);
         }
@@ -68,8 +68,8 @@ const getBreadcrumb = (): void => {
     }
   });
 
-  levelList.value = matched.filter(
-    item => item?.meta && item?.meta.title !== false
+  levelList.value = matched.filter((item, i) =>
+    i > 0 ? item?.meta && item?.meta.title !== false : false
   );
 };
 

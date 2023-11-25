@@ -1,0 +1,241 @@
+<!--
+ * @Date: 2022-11-11 10:18:58
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-10-23 16:59:31
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/info/infoTable.vue
+-->
+<template>
+  <div ref="tableBox" class="tableBox" v-loading="loading">
+    <ElTable v-if="dataList && dataList.length > 0" v-loading="loading" ref="tableController" :key="fuckKey"
+      :data="dataList" height="100%" :row-style="{ 'min-height': '60px', 'min-width': '100px' }"
+      :header-cell-style="isDark ? tableHeaderDark : tableHeader" :fit="true" :border="false" row-key="id"
+      @selection-change="selectPosition" style="cursor: default" lazy :load="load"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+      <ElTableColumn :selectable="judgeSelect" type="selection" align="center" fixed="left"
+        :sort-by="(row, index) => sortBy(row, index, item.key)"></ElTableColumn>
+      <ElTableColumn v-for="(item, index) in template" :key="index + 'tablecolumn'" :label="item.label"
+        :width="item.table?.width || 'auto'" :prop="item.key" :fixed="item.table.fixed">
+        <template #header>
+          <div class="ColumnHeader">
+            {{ item.label }}
+          </div>
+        </template>
+        <template #default="scope" v-if="item.table.type != showType.dataKey">
+          <div class="flexBox" :style="item.table?.style" v-if="item.table.type != showType.btnList">
+            <component v-if="item.table.type == showType.funcComponent" @btnClick="btnClick"
+              :is="item.table.showFunc(scope.row, item.key)" @click="(btns) => btnClick(btns, scope.row)"></component>
+            <el-popover v-else-if="item.table.type == showType.func" placement="top-start" trigger="hover"
+              :show-after="500" :content="item.table.showFunc(scope.row, item.key, true) + ''">
+              <template #reference>
+                {{ item.table.showFunc(scope.row, item.key) }}
+              </template>
+            </el-popover>
+          </div>
+          <div class="flexBox noOverflow" :style="item.table?.style" v-else>
+            <el-button v-if="!item.table.noDetail" size="small" link type="primary" @click="cellDblclick(scope.row)">
+              详情
+            </el-button>
+            <span v-for="(btns, index) in item.table.btnList" :key="index + 'btn'">
+              <el-button v-if="btns.isShow(scope.row, btns)"
+                :loading="loadingMap[btns.label + btns.showAbleKey + scope['$index']]"
+                :disabled="btns.isDisable(scope.row, item.key)" size="small" link
+                :type="btns.elType?btns.elType:(btns.isDisable(scope.row, item.key) ? 'info' : 'primary')"
+                @click="btnClick(btns, scope.row, scope)"
+                :style="btns.isDisable(scope.row, item.key)?'color:rgba(39, 58, 91, 0.6)':btns.btnColor?('color:'+btns.btnColor):''">
+                {{ btns.label }}
+              </el-button>
+            </span>
+          </div>
+        </template>
+      </ElTableColumn>
+    </ElTable>
+    <div class="centerImg" v-else>
+      <img src="../assets/noData.png">
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from "vue";
+import { ElButton, ElPopover, ElTable, ElTableColumn, ElTableV2 } from "element-plus";
+import { useDark } from "@pureadmin/utils";
+import {
+  btnCellTemplate,
+  btnActionTemplate,
+  showType,
+  stringAnyObj,
+  tableCellTemplate,
+} from "../../../types";
+
+export default defineComponent({
+  components: { ElTable, ElTableV2, ElTableColumn },
+  props: ["template", "loading", "dataList", "baseData", "load"],
+  data() {
+    return {
+      showType,
+      fuckKey: Math.random() * 100000,
+      selectedList: [] as any[],
+      loadingMap: {} as { [key: string]: boolean },
+    };
+  },
+  computed: {
+    columns() {
+      return this.template.map((item: tableCellTemplate) => {
+        return {
+          key: item.key,
+          title: item.label,
+          dataKey: item.key,
+          width: "120px",
+        };
+      });
+    },
+    tableHeader() {
+      return {
+        backgroundColor: "#f8f9fb",
+        fontWeight: 900,
+        color: "#333",
+      };
+    },
+    tableHeaderDark() {
+      return {
+        backgroundColor: "rgba(0,0,0,0.3)",
+        fontWeight: 900,
+        color: "#ddd",
+      };
+    },
+  },
+
+  methods: {
+    judgeSelect(row, index) {
+      if (row.unshow) {
+        return false; // 返回true该行可选，返回false则不可选
+      } else {
+        return true;
+      }
+    },
+
+    /**
+     * @name: cellDblclick
+     * @description: 行内双击事件
+     * @authors: CZH
+     * @Date: 2022-11-15 15:07:10
+     * @param {*} data
+     */
+    cellDblclick(data) {
+      let btnList = [];
+      this.template.map((item) => {
+        if (item.table.type == showType.btnList && item.table.btnList) {
+          item.table.btnList.map((btn) => {
+            btnList.push(btn);
+          });
+        }
+      });
+      this.$modules.getModuleApi()["userManage_openDrawerForm"](this, {
+        title: "详情",
+        queryItemTemplate: this.template,
+        btnList,
+        data,
+        noEdit: true,
+      });
+    },
+
+    close() {
+      this.$emit("search");
+    },
+
+    /**
+     * @name: selectPosition
+     * @description: 选择行变化
+     * @authors: CZH
+     * @Date: 2022-11-15 15:08:32
+     */
+    selectPosition(e) {
+      this.selectedList = e;
+      this.$emit("selectedChange", this.selectedList);
+    },
+
+    /**
+     * @name: tableHeight
+     * @description: 获取表格高度
+     * @authors: CZH
+     * @Date: 2022-11-15 17:20:46
+     */
+    tableHeight() {
+      if (this.$refs["tableBox"]) return this.$refs["tableBox"].offsetHeight;
+      else return null;
+    },
+
+    /**
+     * @name: btnClick
+     * @description: 按钮点击事件
+     * @authors: CZH
+     * @Date: 2022-12-02 09:27:05
+     * @param {*} btn
+     */
+    async btnClick(btn: btnCellTemplate, data?: stringAnyObj, index: any = {}) {
+      this.loadingMap[btn.label + btn.showAbleKey + index["$index"]] = true;
+      if (btn.type == btnActionTemplate.OpenDrawer) {
+        this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
+      } else if (btn.type == btnActionTemplate.Function && btn.function) {
+        let that = this;
+        await btn.function(that, data);
+        // this.$emit("search");
+      } else if (btn.type == btnActionTemplate.Url) {
+        window.open(btn.url);
+      }
+      this.loadingMap[btn.label + btn.showAbleKey + index["$index"]] = false;
+    },
+
+    sortBy(row, index, key) {
+      return row[key];
+    },
+  },
+
+  setup() {
+    const { isDark } = useDark();
+    return {
+      isDark,
+    };
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.tableBox {
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.flexBox {
+  display: contents;
+  float: left;
+  user-select: text;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.noOverflow {
+  overflow: hidden;
+  text-overflow: unset;
+}
+
+.ColumnHeader {
+  float: left;
+  width: calc(100% - 26px);
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.centerImg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

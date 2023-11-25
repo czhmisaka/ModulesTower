@@ -1,10 +1,11 @@
 /*
  * @Date: 2022-11-21 16:13:14
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-03 17:39:01
- * @FilePath: /configforpagedemo/src/router/modules/error.ts
+ * @LastEditTime: 2023-11-14 18:08:03
+ * @FilePath: /lcdp_fe_setup/src/router/modules/error.ts
  */
 import type { RouteConfigsTable } from "/#/index";
+import { wholeScreen } from "../../modules/ApplicationManage/PageConfigData/main";
 
 const errorRouter: RouteConfigsTable = {
   path: "/error",
@@ -32,6 +33,8 @@ const errorRouter: RouteConfigsTable = {
       meta: {
         title: "404",
         showLink: false,
+        wholeScreen: true,
+        Fullscreen: true,
       },
     },
     {

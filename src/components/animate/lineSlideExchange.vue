@@ -216,7 +216,6 @@ export default defineComponent({
   top: 0px;
   left: 0px;
   background: rgba(255, 255, 255, 0.1);
-  overflow: hidden;
   transition: all 1s ease-in-out;
   .rotateBox {
     position: absolute;

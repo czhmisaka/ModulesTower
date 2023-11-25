@@ -1,27 +1,21 @@
 <!--
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 19:55:00
- * @FilePath: /configforpagedemo/src/App.vue
+ * @LastEditTime: 2023-10-17 10:38:08
+ * @FilePath: /lcdp_fe_setup/src/App.vue
 -->
 <template>
   <el-config-provider :locale="currentLocale">
     <router-view />
   </el-config-provider>
-  <lineSlideExchange
-    ref="lineSlideExchange"
-    :linesNumber="linesNumber"
-    :rotate="rotate"
-    :start-color="sColor"
-    :end-color="eColor"
-    :speed="1.5"
-  />
+  <lineSlideExchange ref="lineSlideExchange" :linesNumber="linesNumber" :rotate="rotate" :start-color="sColor"
+    :end-color="eColor" :speed="1.5" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ElConfigProvider } from "element-plus";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
 import lineSlideExchange from "@/components/animate/lineSlideExchange.vue";
 import { useUserStoreHook } from "./store/modules/user";
 import { useLoading } from "@/store/modules/loading";
@@ -48,12 +42,12 @@ export default defineComponent({
       return zhCn;
     },
   },
-  async created() {},
+  async created() { },
   mounted() {
-    // const that = this;
-    // setInterval(() => {
+    const that = this;
+    // setTimeout(() => {
     //   console.log(that.$router.getRoutes());
-    // }, 3000);
+    // }, 2000);
   },
   methods: {},
 });
@@ -97,10 +91,12 @@ export default defineComponent({
   width: 6px;
   height: 6px;
 }
+
 *::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.02);
   border-radius: 3px;
 }
+
 *::-webkit-scrollbar-thumb {
   background: #e6e8eb;
   border-radius: 3px;

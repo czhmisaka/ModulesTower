@@ -1,32 +1,21 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-16 08:53:44
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
+ * @LastEditTime: 2023-11-21 15:45:35
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
 <template>
   <span>
-    <div
-      :class="'baseModal ' + (modalControl.isOpen ? 'open' : 'close')"
-      @click="close(true)"
-    >
+    <div :class="'baseModal ' + (modalControl.isOpen ? 'open' : 'close')" @click="close(true)">
       <div class="formModalBox" @click.stop="fuckNothing">
         <el-card header="组件详情" class="card">
           <el-form ref="form" v-on:submit.prevent>
             <el-form-item v-if="cardComponentDetail.name">
-              <el-descriptions
-                class="card"
-                v-if="baseComponentInfo"
-                :title="baseComponentInfo.labelNameCN || baseComponentInfo.labelNameCn"
-                direction="vertical"
-                :column="4"
-                border
-              >
-                <el-descriptions-item
-                  v-for="(item, index) in Object.keys(baseComponentInfo)"
-                  :label="item"
-                >
+              <el-descriptions class="card" v-if="baseComponentInfo"
+                :title="baseComponentInfo.labelNameCN || baseComponentInfo.labelNameCn" direction="vertical" :column="4"
+                border>
+                <el-descriptions-item v-for="(item, index) in Object.keys(baseComponentInfo)" :label="item">
                   {{ baseComponentInfo[item] }}
                 </el-descriptions-item>
               </el-descriptions>
@@ -36,33 +25,15 @@
         <el-card header="组件模式" class="card">
           <el-form ref="form" v-on:submit.prevent>
             <el-form-item label="模式">
-              <el-radio-group
-                v-model="cardComponentDetail.type"
-                size="large"
-                placeholder="组件加载模式"
-              >
-                <el-radio-button
-                  :label="item"
-                  :value="item"
-                  v-for="item in cardComponentType"
-                  :key="item + 'cardComponentType'"
-                />
+              <el-radio-group v-model="cardComponentDetail.type" size="large" placeholder="组件加载模式">
+                <el-radio-button :label="item" :value="item" v-for="item in cardComponentType"
+                  :key="item + 'cardComponentType'" />
               </el-radio-group>
             </el-form-item>
-            <el-form-item
-              label="固有组件"
-              v-if="cardComponentDetail.type == cardComponentType.componentList"
-            >
-              <el-select
-                v-model="cardComponentDetail.name"
-                placeholder="选择组件"
-                @change="componentLoaderChange"
-              >
-                <el-option
-                  v-for="(item, index) in Object.keys(componentList)"
-                  :value="item"
-                  :key="componentList[item].name + '_' + index"
-                >
+            <el-form-item label="固有组件" v-if="cardComponentDetail.type == cardComponentType.componentList">
+              <el-select v-model="cardComponentDetail.name" placeholder="选择组件" @change="componentLoaderChange">
+                <el-option v-for="(item, index) in Object.keys(componentList)" :value="item"
+                  :key="componentList[item].name + '_' + index">
                   {{
                     componentList[item].compontentInfo.label +
                     ":" +
@@ -71,38 +42,24 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item
-              label="代码"
-              v-if="cardComponentDetail.type == cardComponentType.fromData"
-            >
-              <Codemirror
-                v-model:value="cardComponentDetail.data"
-                :options="cmOptions"
-                border
-                placeholder="test placeholder"
-                :height="600"
-              />
+            <el-form-item label="代码" v-if="cardComponentDetail.type == cardComponentType.fromData">
+              <Codemirror v-model:value="cardComponentDetail.data" :options="cmOptions" border
+                placeholder="test placeholder" :height="600" />
             </el-form-item>
           </el-form>
         </el-card>
         <el-card header="组件属性" class="card">
           <el-form :model="componentsProps" v-on:submit.prevent>
-            <el-form-item
-              v-for="(formItem, index) in componentsPropsInputTemplate"
-              :key="index + '_FormItem'"
-              :label="formItem.label"
-            >
+            <el-form-item v-for="(formItem, index) in componentsPropsInputTemplate" :key="index + '_FormItem'"
+              :label="formItem.label">
               <el-input v-model="componentsProps[formItem.key]" />
             </el-form-item>
           </el-form>
         </el-card>
         <el-card header="组件权限" class="card">
           <el-form :model="componentsProps" v-on:submit.prevent>
-            <el-form-item
-              v-for="(formItem, index) in componentsPropsInputTemplate"
-              :key="index + '_FormItem'"
-              :label="formItem.label"
-            >
+            <el-form-item v-for="(formItem, index) in componentsPropsInputTemplate" :key="index + '_FormItem'"
+              :label="formItem.label">
               <el-select v-model="premission[index + '_FormItem']" placeholder="">
                 <el-option :label="'true'" :value="true"></el-option>
                 <el-option :label="'false'" :value="false"></el-option>
@@ -110,48 +67,24 @@
             </el-form-item>
           </el-form>
         </el-card>
-        <el-card
-          header="布局属性"
-          class="card"
-          v-if="componentsGridInfo && componentsGridInfo.default"
-        >
+        <el-card header="布局属性" class="card" v-if="componentsGridInfo && componentsGridInfo.default">
           <el-form :model="componentsGridInfo" v-on:submit.prevent>
             <el-form-item label="X轴距离">
-              <el-slider
-                v-model="componentsGridInfo.default.position.x"
-                :step="1"
-                :min="0"
-                :max="sizeUnit.colNum - componentsGridInfo.default.size.width"
-                show-stops
-              />
+              <el-slider v-model="componentsGridInfo.default.position.x" :step="1" :min="0"
+                :max="sizeUnit.colNum - componentsGridInfo.default.size.width" show-stops />
             </el-form-item>
             <el-form-item label="Y轴距离">
-              <el-slider
-                v-model="componentsGridInfo.default.position.y"
-                :step="1"
-                :min="0"
-                :max="componentsGridInfo.default.position.y + 6"
-                show-stops
-              />
+              <el-slider v-model="componentsGridInfo.default.position.y" :step="1" :min="0"
+                :max="componentsGridInfo.default.position.y + 6" show-stops />
             </el-form-item>
           </el-form>
           <el-form-item label="组件 宽">
-            <el-slider
-              v-model="componentsGridInfo.default.size.width"
-              :step="1"
-              :min="0"
-              :max="sizeUnit.colNum - componentsGridInfo.default.position.x"
-              show-stops
-            />
+            <el-slider v-model="componentsGridInfo.default.size.width" :step="1" :min="0"
+              :max="sizeUnit.colNum - componentsGridInfo.default.position.x" show-stops />
           </el-form-item>
           <el-form-item label="组件 高">
-            <el-slider
-              v-model="componentsGridInfo.default.size.height"
-              :step="1"
-              :min="1"
-              :max="componentsGridInfo.default.size.height + 6"
-              show-stops
-            />
+            <el-slider v-model="componentsGridInfo.default.size.height" :step="1" :min="1"
+              :max="componentsGridInfo.default.size.height + 6" show-stops />
           </el-form-item>
         </el-card>
         <div class="BtnList">
@@ -248,7 +181,7 @@ export default defineComponent({
       // componentList 模式属性预先加载
       if (this.detail.component.type == cardComponentType.componentList) {
         const props = componentGetter(this.detail.component, this.componentList)
-          .settngDetail.props;
+          ?.settngDetail?.props;
         for (let x in props) {
           this.componentsPropsInputTemplate.push({
             key: x,
@@ -354,7 +287,7 @@ export default defineComponent({
     },
 
     // 一个无用的函数
-    fuckNothing() {},
+    fuckNothing() { },
   },
 });
 </script>
@@ -373,6 +306,7 @@ export default defineComponent({
   transition: all 0.5s;
   display: flex;
   justify-content: center;
+
   .formModalBox {
     transform: scale(0.4);
   }
@@ -382,6 +316,7 @@ export default defineComponent({
   opacity: 1;
   z-index: 100000;
   transform: translate(0%);
+
   .formModalBox {
     transform: scale(1);
   }
@@ -390,6 +325,7 @@ export default defineComponent({
 .close {
   transform: translateX(100vw);
 }
+
 .formModalBox {
   transition: all 0.4s;
   position: absolute;
@@ -403,6 +339,7 @@ export default defineComponent({
   overflow-x: hidden;
   overflow-y: scroll;
   z-index: 1;
+
   .card {
     width: calc(100% - 20px);
     height: auto;
@@ -410,15 +347,17 @@ export default defineComponent({
     border-radius: 6px;
     text-align: left;
   }
+
   .BtnList {
     position: relative;
-    text-align: right;
+    text-align: left;
     bottom: 12px;
     width: 100%;
     right: 12px;
     width: auto;
     height: auto;
     margin-top: 30px;
+
     .btn {
       margin-right: 12px;
     }
@@ -426,8 +365,8 @@ export default defineComponent({
 }
 
 .cm-s-xq-dark .CodeMirror-line::selection,
-.cm-s-xq-dark .CodeMirror-line > span::selection,
-.cm-s-xq-dark .CodeMirror-line > span > span::selection {
+.cm-s-xq-dark .CodeMirror-line>span::selection,
+.cm-s-xq-dark .CodeMirror-line>span>span::selection {
   font-size: 14px;
   height: 30px;
   line-height: 30px;

@@ -1,8 +1,8 @@
 /*
- * @Date: 2023-02-06 20:25:09
+ * @Date: 2023-07-06 16:28:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-06 22:47:29
- * @FilePath: /configforpagedemo/src/modules/userManage/router/index.ts
+ * @LastEditTime: 2023-08-31 17:21:01
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/router/index.ts
  */
 import type { RouteConfigsTable } from "/#/index";
 import { defineAsyncComponent } from "vue";
@@ -42,4 +42,13 @@ export const routerCellMaker = (
   return routerCell;
 };
 
-export default [];
+export default [
+  routerCellMaker(
+    "/testPath",
+    "f_test",
+    defineAsyncComponent(() => import("@/views/welcome/index.vue")),
+    {
+      meta: {},
+    }
+  ),
+];

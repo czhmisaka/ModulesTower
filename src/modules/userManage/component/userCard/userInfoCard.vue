@@ -1,111 +1,83 @@
 <!--
  * @Date: 2023-02-13 10:25:34
- * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 17:49:08
- * @FilePath: /configforpagedemo/src/modules/userManage/component/userCard/userInfoCard.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-11-21 20:56:55
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/userCard/userInfoCard.vue
 -->
 <template>
-  <cardBg
-    @mouseenter="hightLight()"
-    @mouseleave="hightLight(false)"
-    :cusStyle="cardBgCusStyle"
-  >
-    <el-popover
-      ref="popoverRef"
-      placement="left-start"
-      :show-arrow="false"
-      :show-after="300"
-      :visible="isHover"
-      :width="400"
-    >
-      <template #reference>
-        <div
-          :style="{
-            width: '100%',
-            height: '100%',
-            overflow: 'auto',
-            overflowX: 'hidden',
-          }"
-        >
-          <div
-            class="wholeWidthBox"
-            :style="{
-              height: blockSizePercent(2),
-            }"
-            v-if="userInfoData['name']"
-          >
-            <el-image
-              :style="{
-                width: blockSizePercent(1.4),
-                height: blockSizePercent(1.4),
-                borderRadius: '50%',
-                margin: blockSizePercent(0.3),
-              }"
-              class="mainColorBorder"
-              :src="
-                userInfoData['icon'] ? userInfoData['icon'].replace('/lcdp', '/api') : ''
-              "
-              fit="cover"
-            />
-            <div
-              class="flexCol"
-              :style="{
-                width: `calc(100% - ${blockSizePercent(2)})`,
-                fontSize: blockSizePercent(0.2),
-              }"
-            >
-              <span class="name">
-                {{ userInfoData["name"] }}
-                <br />
-                <span class="mobile">{{ userInfoData["mobile"] }}</span>
-              </span>
-            </div>
-          </div>
-          <div class="btnList" :style="{}" v-if="btnList && btnList.length">
-            <div
-              v-for="item in btnList.filter((btn) =>
-                btn && btn.isShow
-                  ? btn.isShow(userInfoData, JSON.parse(JSON.stringify(btn)))
-                  : true
-              )"
-              style="float: left; margin-right: 6px"
-            >
-              <el-button
-                class="btn"
-                :loading="item.isLoading"
-                @click="btnClick(item)"
-                :type="item.elType"
-                :icon="item.icon"
-                :size="blockSizePercent(1, '') < 40 ? 'small' : 'default'"
-                :text="blockSizePercent(1, '') < 40"
-              >
-                {{ item.label }}
-              </el-button>
-            </div>
-          </div>
+  <cardBg :cusStyle="cardBgCusStyle">
+    <div :style="{
+      width: '180px',
+      height: '100%',
+      overflow: 'auto',
+      overflowX: 'hidden',
+    }">
+      <div class="wholeWidthBox" :style="{
+        height:
+          btnList && btnList.length > 0
+            ? blockSizePercent(2.3)
+            : blockSizePercent(2),
+      }" v-if="userInfoData['username']">
+        <el-image v-if="userInfoData['icon']
+          ? userInfoData['icon'].replace('/lcdp', '/api')
+          : ''
+          " :style="{
+    width: blockSizePercent(1.4),
+    height: blockSizePercent(1.4),
+    borderRadius: '50%',
+    margin: blockSizePercent(0.3),
+  }" class="mainColorBorder" :src="userpng" fit="cover" />
+
+        <!-- userInfoData['icon'] ? userInfoData['icon'].replace('/lcdp', '/api') : userpng -->
+        <div class="flexCol" :style="{
+          width: `calc(100% - ${blockSizePercent(2)})`,
+          fontSize: blockSizePercent(0.2),
+        }">
+          <span class="name">
+            {{ userInfoData["username"] }}
+            <br />
+            <!-- <span class="mobile">部门：{{ userInfoData["unitNames"] }}</span> -->
+            <span class="mobile">部门：{{ userInfoData['units'][0]?userInfoData['units'].name:'' }}</span>
+          </span>
         </div>
-      </template>
-      <div v-if="showTemplate && showTemplate.length > 0">
-        <el-form ref="form" v-on:submit.prevent :label-position="'left'" size="small">
-          <el-form-item
-            :label-width="'120px'"
-            :label="item.label"
-            v-for="item in showTemplate.filter((x) => x.table.type != showType.btnList)"
-          >
-            <span v-if="item.table.type == showType.funcComponent">
-              <component :is="item.table.showFunc(userInfoData, item.key)"></component>
-            </span>
-            <span v-else-if="item.table.type == showType.func">
-              {{ item.table.showFunc(userInfoData, item.key) }}
-            </span>
-          </el-form-item>
-        </el-form>
       </div>
-    </el-popover>
+    </div>
+
+  </cardBg>
+  <!-- mainActionBtnList -->
+  <cardBg :cusStyle="{ ...cardBgCusStyle, paddingTop: '9px' }" v-if="mainActionBtnList && mainActionBtnList.length">
+    <div class="btnList" :style="{}">
+      <div :key="index" v-for="(item, index) in mainActionBtnList.filter((btn) =>
+        btn && btn.isShow
+          ? btn.isShow(userInfoData, JSON.parse(JSON.stringify(btn)))
+          : true
+      )" style="float: left; margin-right: 6px">
+        <el-button class="btn" :loading="item.isLoading" @click="btnClick(item)" :type="item.elType" :icon="item.icon"
+          :size="blockSizePercent(1, '') as number < 40 ? 'small' : 'default'" plain>
+          {{ item.label }}
+        </el-button>
+      </div>
+    </div>
+  </cardBg>
+  <!-- BtnList -->
+  <cardBg :cusStyle="{ ...cardBgCusStyle, paddingTop: '9px' }" v-if="btnList && btnList.length">
+    <div class="btnList" :style="{}">
+      <div :key="index" v-for="(item, index) in btnList.filter((btn) =>
+        btn && btn.isShow
+          ? btn.isShow(userInfoData, JSON.parse(JSON.stringify(btn)))
+          : true
+      )" style="float: left; margin-right: 6px">
+        <el-button class="btn" :loading="item.isLoading" @click="btnClick(item)" :type="item.elType" :icon="item.icon"
+          :size="blockSizePercent(1, '') as number < 40 ? 'small' : 'default'" plain>
+          {{ item.label }}
+        </el-button>
+      </div>
+    </div>
   </cardBg>
 </template>
-
 <script lang="ts">
+import userpng from "@/assets/img/user.png";
+
 import { defineComponent, ref, watch, onMounted, toRefs } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import {
@@ -116,8 +88,6 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import {
   setData,
-  changeVisible,
-  hightLightComponent,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { useUserStoreHook } from "@/store/modules/user";
 
@@ -149,6 +119,10 @@ export default defineComponent({
       description: "需要输出SearchStorage构建的对象",
       type: inputType.array,
     },
+    mainActionBtnList: {
+      label: "主要操作按钮列表",
+      type: inputType.array,
+    },
     btnList: {
       label: "按钮列表",
       type: inputType.array,
@@ -162,6 +136,7 @@ export default defineComponent({
   },
 
   props: [
+    "mainActionBtnList",
     "btnList",
     "userInfo",
     "showTemplate",
@@ -177,6 +152,7 @@ export default defineComponent({
 
   data: () => {
     return {
+      userpng,
       userInfoData: {},
       showType,
       isHover: false,
@@ -191,6 +167,8 @@ export default defineComponent({
         transform: this.isHover ? "translate(6px ,6px)" : "",
         transition: "box-shadow 0.4s,transform 0.4s",
         overflow: "none",
+        margin: '6px',
+        width: 'calc( 180px + 12px)'
       };
       Object.keys(data).map((x) => {
         if (!data[x]) delete data[x];
@@ -201,8 +179,8 @@ export default defineComponent({
 
   methods: {
     hightLight(value = true) {
-      hightLightComponent(this, value ? [this.detail.label] : []);
-      this.isHover = value;
+      // hightLightComponent(this, value ? [this.detail.label] : []);
+      // this.isHover = value;
     },
     /**
      * @name: btnClick
@@ -228,7 +206,6 @@ export default defineComponent({
     this.$emit("ready", true);
     if (this.userInfo) {
       this.userInfoData = await this.userInfo();
-      console.log(this.userInfoData);
     }
     this.$emit("ready");
   },
@@ -237,12 +214,13 @@ export default defineComponent({
 
     // 方便获取 尺寸
     const blockSizePercent = (num, unit = "px"): string | number => {
-      const size = gridInfo.value.gridInfo.default.size.width;
-      const sizeChangeRate = size / 3 / 2;
-      return sizeUnit.value["blockSize"] * num * sizeChangeRate + unit;
+      // const size = gridInfo.value.gridInfo.default.size.width;
+      // const sizeChangeRate = size / 3 / 2;
+      // return sizeUnit.value["blockSize"] * num * sizeChangeRate + unit;
+      return 30 * num + unit;
     };
 
-    return { sizeUnit, gridInfo, blockSizePercent };
+    return { blockSizePercent };
   },
 });
 </script>
@@ -253,30 +231,35 @@ export default defineComponent({
   display: flex;
   justify-content: flex-start;
 }
+
 .mainColorBorder {
-  border: 1px white solid;
-  box-shadow: 0px 0px 4px var(--el-color-primary);
+  display: inline-block;
+  border: 2px white solid;
+  box-shadow: 0px 0px 2px $subMenuActiveBg;
 }
 
 .flexCol {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+
   .name {
     font-size: 1.6em;
     font-weight: bolder;
+
     .mobile {
       font-size: 0.8;
       font-weight: 100;
     }
   }
 }
+
 .btnList {
-  width: calc(100%);
-  height: 40px;
-  position: absolute;
-  bottom: 0px;
-  margin-bottom: 6px;
+  display: inline-block;
+  margin-bottom: -6px;
+  position: relative;
+  width: 100%;
+
   .btn {
     bottom: 0px;
     position: absolute;

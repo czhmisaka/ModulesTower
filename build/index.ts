@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-21 16:13:14
- * @LastEditors: CZH
- * @LastEditTime: 2022-11-22 17:26:12
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-10-07 15:03:12
  * @FilePath: /configforpagedemo/build/index.ts
  */
 /** 处理环境变量 */
@@ -12,6 +12,7 @@ const warpperEnv = (envConf: Recordable, mode: string): ViteEnv => {
     VITE_PUBLIC_PATH: "",
     VITE_PROXY_DOMAIN: "",
     VITE_PROXY_DOMAIN_REAL: "",
+    VITE_PROXY_DOMAIN_FLOW:"",
     VITE_ROUTER_HISTORY: "",
     VITE_LEGACY: false,
     VITE_CDN: false,

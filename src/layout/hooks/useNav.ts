@@ -90,7 +90,7 @@ export function useNav() {
     /** 找到当前路由的信息 */
     function findCurrentRoute(indexPath: string, routes) {
       if (!routes) return console.error(errorInfo);
-      return routes.map(item => {
+      return routes.map((item) => {
         if (item.path === indexPath) {
           if (item.redirect) {
             findCurrentRoute(item.redirect, item.children);
@@ -98,7 +98,7 @@ export function useNav() {
             /** 切换左侧菜单 通知标签页 */
             emitter.emit("changLayoutRoute", {
               indexPath,
-              parentPath
+              parentPath,
             });
           }
         } else {
@@ -132,6 +132,6 @@ export function useNav() {
     isCollapse,
     pureApp,
     username,
-    avatarsStyle
+    avatarsStyle,
   };
 }

@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-01-22 19:23:46
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-18 16:18:28
- * @FilePath: /configforpagedemo/src/components/basicComponents/cell/icon/iconCell.vue
+ * @LastEditTime: 2023-10-24 10:54:40
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/cell/icon/iconCell.vue
 -->
 <script lang="tsx">
 import { getIcon } from "@/utils";
@@ -47,7 +47,7 @@ export default defineComponent({
     if (detail.value && "gridInfo" in detail.value)
       length =
         detail.value.gridInfo.default.size.width >
-        detail.value.gridInfo.default.size.height
+          detail.value.gridInfo.default.size.height
           ? detail.value.gridInfo.default.size.height
           : detail.value.gridInfo.default.size.width;
     context.emit("ready");

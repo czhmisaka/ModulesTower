@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-05-29 11:25:08
  * @LastEditors: CZH
- * @LastEditTime: 2022-08-27 17:25:52
- * @FilePath: /configforpagedemo/src/components/basicComponents/cell/icon/icon.vue
+ * @LastEditTime: 2023-10-25 20:20:21
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/cell/icon/icon.vue
 -->
 <script lang="ts">
 import { defineComponent, h, toRefs } from "vue";
@@ -20,7 +20,8 @@ export default defineComponent({
       h(
         cardBg,
         {
-          ondblclick: (e: any) => {
+          // ondblclick: (e: any) => {
+          onclick: (e: any) => {
             if (typeof onClickFunc.value == "function")
               onClickFunc.value({ props, context, e });
             else if (typeof onClickFunc.value == "string") {
@@ -43,26 +44,26 @@ export default defineComponent({
         () =>
           props.tips
             ? h(
-                ElPopover,
-                {
-                  trigger: "hover",
-                  content: props.tips,
-                  width: "auto",
-                },
-                {
-                  reference: () =>
-                    h(iconCell, {
-                      name: props.name,
-                      sizeUnit: props.sizeUnit,
-                      detail: props.detail,
-                    }),
-                }
-              )
+              ElPopover,
+              {
+                trigger: "hover",
+                content: props.tips,
+                width: "auto",
+              },
+              {
+                reference: () =>
+                  h(iconCell, {
+                    name: props.name,
+                    sizeUnit: props.sizeUnit,
+                    detail: props.detail,
+                  }),
+              }
+            )
             : h(iconCell, {
-                name: props.name,
-                sizeUnit: props.sizeUnit,
-                detail: props.detail,
-              })
+              name: props.name,
+              sizeUnit: props.sizeUnit,
+              detail: props.detail,
+            })
       ),
     ];
   },

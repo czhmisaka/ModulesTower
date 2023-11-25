@@ -1,12 +1,8 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
-<<<<<<< HEAD
- * @LastEditTime: 2023-02-28 20:23:31
-=======
- * @LastEditTime: 2023-02-28 16:52:40
->>>>>>> add_vuePureAdmin
- * @FilePath: /configforpagedemo/src/router/index.ts
+ * @LastEditTime: 2023-11-21 15:12:13
+ * @FilePath: /lcdp_fe_setup/src/router/index.ts
  */
 
 import {
@@ -19,14 +15,19 @@ import {
   createWebHashHistory,
   RouteRecordNormalized,
 } from "vue-router";
-
-import { getAction } from "./util";
+import { emitter } from "@/utils/mitt";
+import {
+  routerCellMaker,
+  getModuleFromView,
+  modulesCellTemplate,
+  getAction,
+} from "./util";
 import { isMobile } from "../utils/Env";
 import { getConfig } from "@/utils/config/appConfig";
 
 import { toRouteType } from "./types";
 import NProgress from "@/utils/progress";
-import { findIndex } from "lodash-unified";
+import { findIndex, now } from "lodash-unified";
 import { sessionKey, type DataInfo } from "@/utils/auth";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
@@ -52,12 +53,10 @@ import homeRouter from "./modules/home";
 import errorRouter from "./modules/error";
 import remainingRouter from "./modules/remaining";
 import { RouteConfigsTable } from "../../types/index";
+import { baseModuleRouter } from "./util";
 import { useModuleHook } from "@/store/modules/module";
-import { useTags } from "@/layout/hooks/useTag";
+import { timeConsole } from "@/main";
 
-// let baseModuleRoutes = await getAction()["getAllPageRouter"]();
-
-// homeRouter.children = homeRouter.children.concat(baseModuleRoutes);
 // 路由存放
 const routes = [homeRouter, errorRouter];
 
@@ -111,6 +110,7 @@ export const loginPage = router
   .map((x) => x.path)[0];
 
 router.beforeEach((to: toRouteType, _from, next) => {
+  timeConsole.checkTime("路由守卫1", to.path);
   if (to.meta?.keepAlive) {
     const newMatched = to.matched;
     handleAliveRoute(newMatched, "add");
@@ -132,7 +132,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
       else document.title = item.meta.title as string;
     });
   }
-  if (userInfo) {
+  if (userInfo && Object.keys(userInfo).length > 0) {
     // 无权限跳转403页面
     if (to.meta?.roles && !isOneOfArray(to.meta?.roles, userInfo?.roles)) {
       next({ path: "/error/403" });
@@ -188,6 +188,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
       next();
     }
   }
+  timeConsole.checkTime("路由守卫1");
 });
 
 router.afterEach(() => {
@@ -196,28 +197,61 @@ router.afterEach(() => {
 
 let interval = null;
 
+const getNowModulePage = () => {
+  const nowModules = useModuleHook().nowModule;
+  if (
+    nowModules.children &&
+    nowModules.children.length > 0 &&
+    nowModules.children[0].children &&
+    nowModules.children[0].children.length > 0
+  ) {
+    return nowModules.children[0].children[0];
+  } else if (
+    nowModules.children &&
+    nowModules.children.length > 0 &&
+    nowModules.children[0]
+  ) {
+    return nowModules.children[0];
+  }
+  return false;
+};
+
 // 路由守卫
 // 控制默认到index界面执行匹配
-// router.beforeEach(async (to, from, next) => {
-//   let meta = {} as { [key: string]: any };
-//   if (to.matched && to.matched.length > 1) {
-//     meta = to.matched[1].meta;
-//     useModuleHook().checkPage(to.matched[1].meta);
-//   } else if (to.matched.length == 0) {
-//     if (decodeURI(to.path).split("/").length > 0) {
-//       const routes = router.getRoutes();
-//       const path = decodeURI(to.path);
-//       if (routes.map((x) => x.path).indexOf(path) != -1)
-//         routes.map((cell) => {
-//           if (cell.path == path) next(cell);
-//         });
-//       else {
-//         next();
-//         // await useModuleHook().searchToPage(path);
-//       }
-//     }
-//   }
-//   next();
-// });
+router.beforeEach(async (to, from, next) => {
+  timeConsole.checkTime("路由守卫2", to.path);
+  let meta = {} as { [key: string]: any };
+  const page = getNowModulePage();
+  if (to.path == "/" && page) {
+    next({
+      path: page.path,
+    });
+  } else if (to.path == "/welcome" && page) {
+    router.replace(page.path);
+    next();
+  } else if (to.matched && to.matched.length > 1) {
+    meta = to.matched[1].meta;
+    useModuleHook().checkPage(to.matched[1].meta);
+    next();
+  } else if (to.matched.length == 0) {
+    if (decodeURI(to.path).split("/").length > 0) {
+      const routes = router.getRoutes();
+      const path = decodeURI(to.path);
+      if (routes.map((x) => x.path).indexOf(path) != -1)
+        routes.map((cell) => {
+          if (cell.path == path) next({ ...to, ...cell });
+        });
+      else {
+        await useModuleHook().searchToPage(path);
+        const isThatAPage = useModuleHook().isThatAPage(to.path);
+        if (isThatAPage) next();
+        else next({ path: "/error/404" });
+      }
+    }
+  } else {
+    next();
+  }
+  timeConsole.checkTime("路由守卫2");
+});
 
 export default router;

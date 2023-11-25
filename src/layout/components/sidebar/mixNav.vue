@@ -2,10 +2,11 @@
 import Search from "../search/index.vue";
 import Notice from "../notice/index.vue";
 import { useNav } from "@/layout/hooks/useNav";
-import { ref, toRaw, watch, onMounted, nextTick } from "vue";
+import { ref, toRaw, watch, onMounted, nextTick, reactive, toRefs } from "vue";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { getParentPaths, findRouteByPath } from "@/router/utils";
 import { usePermissionStoreHook } from "@/store/modules/permission";
+import userInfoCard from "@/modules/userManage/component/userCard/userInfoCard.vue";
 
 const menuRef = ref();
 let defaultActive = ref(null);
@@ -19,17 +20,14 @@ const {
   menuSelect,
   resolvePath,
   username,
-  avatarsStyle
+  avatarsStyle,
 } = useNav();
 
 function getDefaultActive(routePath) {
   const wholeMenus = usePermissionStoreHook().wholeMenus;
   /** 当前路由的父级路径 */
   const parentRoutes = getParentPaths(routePath, wholeMenus)[0];
-  defaultActive.value = findRouteByPath(
-    parentRoutes,
-    wholeMenus
-  )?.children[0]?.path;
+  defaultActive.value = findRouteByPath(parentRoutes, wholeMenus)?.children[0]?.path;
 }
 
 onMounted(() => {
@@ -46,6 +44,24 @@ watch(
     getDefaultActive(route.path);
   }
 );
+const { moduleList, checkModule } = useModuleHook();
+const { nowModule } = toRefs(useModuleHook());
+const userInfo = reactive({ data: null, userTemplate: [] });
+userInfo.data = async () => {
+  return await useUserStoreHook().getOptions();
+};
+onMounted(async () => {
+  const userFieldTemplate = await (await userFieldStorage()).getAll();
+  const userTemplate = [
+    ...userTableCellStorage.getByKeyArr(["name", "icon", "mobile"]),
+    ...userFieldTemplate,
+  ];
+  userInfo.userTemplate = userTemplate;
+});
+import { userTableCellStorage } from "@/modules/userManage/PageConfigData/main";
+import { userFieldStorage } from "@/modules/userManage/PageConfigData/user/userValueManage";
+import { useModuleHook } from "@/store/modules/module";
+import { useUserStoreHook } from "@/store/modules/user";
 </script>
 
 <template>
@@ -56,7 +72,7 @@ watch(
       mode="horizontal"
       class="horizontal-header-menu"
       :default-active="defaultActive"
-      @select="indexPath => menuSelect(indexPath, routers)"
+      @select="(indexPath) => menuSelect(indexPath, routers)"
     >
       <el-menu-item
         v-for="route in usePermissionStoreHook().wholeMenus"
@@ -64,13 +80,8 @@ watch(
         :index="resolvePath(route) || route.redirect"
       >
         <template #title>
-          <div
-            v-if="toRaw(route.meta.icon)"
-            :class="['sub-menu-icon', route.meta.icon]"
-          >
-            <component
-              :is="useRenderIcon(route.meta && toRaw(route.meta.icon))"
-            />
+          <div v-if="toRaw(route.meta.icon)" :class="['sub-menu-icon', route.meta.icon]">
+            <component :is="useRenderIcon(route.meta && toRaw(route.meta.icon))" />
           </div>
           <span class="select-none">{{ route.meta.title }}</span>
           <FontIcon
@@ -92,29 +103,49 @@ watch(
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img
+          <!-- <img
             src="https://avatars.githubusercontent.com/u/22533472?v=4"
             :style="avatarsStyle"
-          />
-          <p v-if="username" class="dark:text-white">{{ username }}</p>
+          /> -->
+          <p v-if="username" class="dark:text-white">
+            {{ username }}
+          </p>
         </span>
         <template #dropdown>
-          <el-dropdown-menu class="logout">
-            <el-dropdown-item @click="logout">
-              <IconifyIconOffline
-                icon="logout-circle-r-line"
-                style="margin: 5px"
-              />
-              退出系统
-            </el-dropdown-item>
-          </el-dropdown-menu>
+          <userInfoCard
+            class="userInfoCard"
+            :userInfo="userInfo.data"
+            :showTemplate="userInfo.userTemplate"
+          />
+          <!-- 模块选择操作 -->
+          <cardBg
+            :class="`modulesItem ${
+              nowModule.name == item.name ? 'modulesItem_active' : ''
+            }`"
+            :cus-style="{
+              display: 'flex',
+              backgroundImage: `linear-gradient(135deg, ${
+                item.icon[0] == '{' ? JSON.parse(item.icon).color : 'rgba(0,0,0,0.05)'
+              } -200%, rgba(0,0,0,0) 40%)`,
+              backdropFilter: 'saturate(50%) blur(4px)',
+            }"
+            v-for="(item, index) in moduleList"
+            @click="nowModule.name != item.name ? checkModule(index) : ''"
+          >
+            <component
+              :size="'16px'"
+              :style="{ margin: '2px 6px 0px 0px', lineHeight: '1em' }"
+              :is="
+                useRenderIcon(
+                  item.icon[0] == '{' ? JSON.parse(item.icon) : useRenderIcon(item.icon)
+                )
+              "
+            />
+            {{ item.name }}
+          </cardBg>
         </template>
       </el-dropdown>
-      <span
-        class="set-icon navbar-bg-hover"
-        title="打开项目配置"
-        @click="onPanel"
-      >
+      <span class="set-icon navbar-bg-hover" title="打开项目配置" @click="onPanel">
         <IconifyIconOffline icon="setting" />
       </span>
     </div>
@@ -130,5 +161,38 @@ watch(
     display: inline-flex;
     flex-wrap: wrap;
   }
+}
+
+.horizontal-header-right {
+  display: flex;
+  min-width: 280px !important;
+  height: 48px;
+  align-items: center;
+  color: #000000d9;
+  justify-content: flex-end;
+}
+
+.userInfoCard {
+  width: 200px !important;
+  height: 80px !important;
+  margin: 6px;
+}
+
+.modulesItem {
+  margin: 0 6px 6px;
+  padding: 6px 12px;
+  width: calc(100% - 12px) !important;
+  transition: all 0.4s;
+  cursor: pointer;
+  font-weight: 600;
+  background-repeat: no-repeat !important;
+  background-size: 100% !important;
+  background-position: -40px !important;
+}
+.modulesItem:hover {
+  background-position: 0px !important;
+}
+.modulesItem_active {
+  background-position: 0px !important;
 }
 </style>

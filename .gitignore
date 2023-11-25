@@ -1,8 +1,8 @@
 .DS_Store
 node_modules
-/dist
+/dist/*
+dist.zip
 /test
-.cache
 
 package-lock.json
 # local env files

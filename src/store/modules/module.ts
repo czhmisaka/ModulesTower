@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-28 20:33:47
- * @FilePath: /configforpagedemo/src/store/modules/module.ts
+ * @LastEditTime: 2023-11-21 15:13:10
+ * @FilePath: /lcdp_fe_setup/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
@@ -12,14 +12,17 @@ import { useRouter } from "vue-router";
 
 import {
   flatChildrenArr,
-  getAction,
   getModuleFromView,
   modulesCellTemplate,
+  timeChecker,
 } from "@/router/util";
 import { RouteConfigsTable, routerMeta } from "../../../types";
-import { get } from "@/utils/api/requests";
+import { get, post } from "@/utils/api/requests";
 import { useMultiTagsStoreHook } from "./multiTags";
 import { useUserStoreHook } from "@/store/modules/user";
+import { isUrl } from "@pureadmin/utils";
+import { timeConsole } from "@/main";
+import modulesLIst from "@/layout/components/modules/modulesLIst.vue";
 
 let licenseMap = {};
 let showAbleKeyMap = {};
@@ -83,6 +86,8 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
     return false;
   }
 
+  if (cell.showLink == false) return false;
+
   // 判断是否需要处理子节点
   if (cell.children && cell.children.length > 0)
     cell.children = cell.children
@@ -116,43 +121,77 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
 
   // 补充meta
   if (!cell.meta || typeof cell.meta != "object") {
-    let meta = {
-      title: cell.name,
-      icon: cell.icon,
-      menuId: cell.id,
-    };
-    cell.meta = meta;
+    if (typeof cell.meta == "string" && cell.meta != "") {
+      let data = {};
+      data = JSON.parse(cell.meta.replaceAll("'", '"'));
+      cell.meta = {
+        title: cell.name,
+        icon: cell.icon,
+        menuId: cell.id,
+        ...data,
+      };
+    } else {
+      let meta = {
+        title: cell.name,
+        icon: cell.icon,
+        menuId: cell.id,
+      };
+      cell.meta = meta;
+    }
   }
 
   // 补充path
   if (cell.urls && cell.urls.length > 0) {
     cell["path"] = cell.urls[0];
     if (cell.type == 3) {
-      for (let i = 0; i < routerBackup.length; i++) {
-        if (routerBackup[i].path == cell.path) {
-          // 获取目标路由
-          let backup = routerBackup[i];
-
-          // 补充基本信息
-          let nameList = getFatherNameList(wholeCellList, cell.parentId);
-          cell.component = backup.component;
-          cell.path = "/" + nameList.join("/") + "/" + cell.name;
-
-          cell.meta = {
-            ...backup.meta,
-            ...cell.meta,
-            PageName: cell.urls[0],
-            showLink: cell.showLink,
-          };
-          break;
+      if (isUrl(cell["path"])) {
+        cell.meta = {
+          ...cell.meta,
+          frameSrc: cell.path,
+        };
+        cell.path = "/" + cell.name;
+      } else
+        for (let i = 0; i < routerBackup.length; i++) {
+          if (routerBackup[i].path == cell.path) {
+            // 获取目标路由
+            let backup = routerBackup[i];
+            // 补充基本信息
+            let nameList = getFatherNameList(wholeCellList, cell.parentId);
+            cell.component = backup.component;
+            cell.path = "/" + nameList.join("/") + "/" + cell.name;
+            cell.meta = {
+              ...backup.meta,
+              ...cell.meta,
+              PageName: cell.urls[0],
+              showLink: cell.showLink,
+            };
+            break;
+          }
         }
-      }
     }
   } else {
     cell["path"] = "/" + cell.name;
   }
   return cell;
 }
+
+const getNowModulePage = (nowModules) => {
+  if (
+    nowModules.children &&
+    nowModules.children.length > 0 &&
+    nowModules.children[0].children &&
+    nowModules.children[0].children.length > 0
+  ) {
+    return nowModules.children[0].children[0];
+  } else if (
+    nowModules.children &&
+    nowModules.children.length > 0 &&
+    nowModules.children[0]
+  ) {
+    return nowModules.children[0];
+  }
+  return false;
+};
 
 export const moduleStore = defineStore({
   id: "module-info",
@@ -171,36 +210,53 @@ export const moduleStore = defineStore({
     isLoading: false,
   }),
   actions: {
+    async clear() {
+      this.moduleList = [];
+      this.pageList = [];
+      this.routerBackup = [];
+      this.nowModule = {};
+      this.nowPage = {};
+      this.nowLicense = [];
+      this.nowShowAbleKey = [];
+      this.userInfo = {
+        loginAdminFlag: false,
+      };
+      this.isLoading = false;
+    },
+
     async init(resData) {
+      timeConsole.checkTime("处理路由");
       this.isLoading = false;
       let moduleList = [];
       this.userInfo = await useUserStoreHook().getOptions();
 
+      timeConsole.checkTime("处理路由-预加载");
       // 注入各个模块的展示界面
-      this.initRouterBackup();
+      await this.initRouterBackup();
+      timeConsole.checkTime("处理路由-预加载");
 
+      timeConsole.checkTime("处理路由-预处理");
       // 预处理
       resData.map((x) => {
         moduleList.push(dealAsyncMenuList(x, this.routerBackup, resData));
       });
-
       this.moduleList = moduleList
         .filter(Boolean)
         .sort((a, b) => a.orderNumber - b.orderNumber);
-
+      timeConsole.checkTime("处理路由-预处理");
       // 默认加载第一个模块
       if (this.moduleList.length > 0) {
         this.nowModule = this.moduleList[0];
       }
-      this.nowModule = { children: this.routerBackup };
       this.isLoading = true;
+      timeConsole.checkTime("处理路由");
     },
 
     checkWhichIsNowModule() {},
 
-    initRouterBackup() {
+    async initRouterBackup() {
       // 注入各个模块的展示界面
-      const moduleList = getModuleFromView(true);
+      const moduleList = await getModuleFromView(false);
       let baseModuleRouterList = [] as RouteConfigsTable[];
       moduleList.map((module: modulesCellTemplate, index: number) => {
         module.routers.map((route: RouteConfigsTable, i: number) => {
@@ -215,7 +271,11 @@ export const moduleStore = defineStore({
     },
 
     // 切换moduleList
-    async checkModule(number: number = 0, path = "/") {
+    async checkModule(
+      number: number = 0,
+      path = "/",
+      needOpenNew: Boolean = false
+    ) {
       if (number > this.moduleList.length - 1)
         number = this.moduleList.length - 1;
       this.nowModule = this.moduleList[number];
@@ -228,31 +288,25 @@ export const moduleStore = defineStore({
           });
         }, 100);
       }
-      initRouter(true).then(async (router) => {
-        if (router && path != "/") {
-          if (
-            router
-              .getRoutes()
-              .map((x) => x.path)
-              .indexOf(path)
-          ) {
-            router.replace(
-              router.getRoutes()[
-                router
-                  .getRoutes()
-                  .map((x) => x.path)
-                  .indexOf(path)
-              ]
-            );
-          }
-        } else {
-          router.replace(this.nowModule.children[0].children[0]);
+
+      // 此处按照产品的要求，打开一个新的页面展示与当前模块不一致的情况
+      // if (needOpenNew) {
+      // 这一段是测试用的
+      if (false) {
+        const targetPage = getNowModulePage(this.nowModule);
+        if (targetPage) {
+          const path = `${location.href.split("#")[0]}#${targetPage.path}`;
+          window.open(path);
         }
-      });
+      } else {
+        let router = await initRouter(true);
+        router.push(path);
+      }
       return this.nowModule;
     },
 
     async searchToPage(pagePath: string) {
+      timeConsole.checkTime("searchToPage");
       let targetModuleIndex = -1;
       for (let i = 0; i < this.moduleList.length; i++) {
         const pageList = flatChildrenArr(this.moduleList[i].children);
@@ -263,8 +317,26 @@ export const moduleStore = defineStore({
         });
       }
       if (targetModuleIndex != -1)
-        // await this.checkModule(targetModuleIndex, pagePath);
-        return;
+        await this.checkModule(targetModuleIndex, pagePath);
+      timeConsole.checkTime("searchToPage");
+      return targetModuleIndex == -1 ? false : true;
+    },
+
+    isThatAPage(path) {
+      path = decodeURI(path);
+      // 直接前往当前模块的首页
+      if (path == "/") return true;
+      let page = false;
+      let pageList = [];
+      this.moduleList.map((x) => {
+        pageList = pageList.concat(flatChildrenArr(x.children));
+      });
+      pageList.map((x) => {
+        if (x.path == path) page = x;
+      });
+      // 首次匹配前触发模块加载操作，故不处理
+      if (pageList.length == 0) return true;
+      return page;
     },
 
     // 切换路由需要记录

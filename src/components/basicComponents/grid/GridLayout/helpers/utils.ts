@@ -80,7 +80,7 @@ export function compact(layout: Layout, verticalCompact: boolean): Layout {
     let l = sorted[i];
 
     // Don't move static elements
-    if (!l.static) {
+    if (!l || !l.static) {
       l = compactItem(compareWith, l, verticalCompact);
 
       // Add to comparison array. We only collide with items before this one.
@@ -332,6 +332,7 @@ export function setTransform(
   height: number
 ) {
   // Replace unitless items with px
+  // const translate = `margin:${left || 3}px ${(top < 0 ? 0 : top) || 3}px`;
   const translate =
     "translate3d(" + left + "px," + (top < 0 ? 0 : top) + "px, 0)";
   return {

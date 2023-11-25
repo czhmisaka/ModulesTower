@@ -1,9 +1,15 @@
+<!--
+ * @Date: 2023-05-30 10:47:09
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-08-23 14:33:30
+ * @FilePath: /lcdp_fe_setup/src/layout/frameView.vue
+-->
 <script lang="ts" setup>
 import { useRoute } from "vue-router";
 import { ref, unref, onMounted, nextTick } from "vue";
 
 defineOptions({
-  name: "FrameView"
+  name: "FrameView",
 });
 
 const loading = ref(true);
@@ -50,7 +56,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .frame {
-  height: calc(100vh - 88px);
+  height: calc(100vh - 50px);
   z-index: 998;
 
   .frame-iframe {
@@ -64,5 +70,6 @@ onMounted(() => {
 
 .main-content {
   margin: 2px 0 0 !important;
+  width: 100% !important;
 }
 </style>

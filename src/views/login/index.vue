@@ -13,6 +13,8 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 import { useModuleHook } from "@/store/modules/module";
+import { Base64 } from "js-base64";
+import { post, get } from "@/utils/api/requests";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
@@ -30,12 +32,17 @@ initStorage();
 const { dataTheme, dataThemeChange } = useDataThemeChange();
 dataThemeChange();
 // 使用全局项目名称
-const { title } = useNav();
+// const { title } = useNav();
+
+const title = "集智低代码应用集成平台";
 
 const ruleForm = reactive({
-  username: "czhmisaka",
-  password: "czhmisaka",
+  username: "",
+  password: "",
+  captcha: "",
 });
+const imageCode = ref("");
+const imageCodeId = ref("");
 
 const onLogin = async (formEl: FormInstance | undefined) => {
   loading.value = true;
@@ -43,8 +50,14 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   try {
     await formEl.validate((valid, fields) => {
       if (valid) {
+        const obj = {
+          username: ruleForm.username,
+          password: Base64.encode(ruleForm.password),
+          captchaId: imageCodeId.value,
+          captcha: ruleForm.captcha,
+        };
         useUserStoreHook()
-          .loginByUsername({ username: ruleForm.username, password: ruleForm.password })
+          .loginByUsername(obj)
           .then((res) => {
             if (res && res["token"]) {
               // 获取后端路由
@@ -54,6 +67,12 @@ const onLogin = async (formEl: FormInstance | undefined) => {
                 const module = useModuleHook();
                 router.push("/");
               });
+            }
+          })
+          .catch((err) => {
+            if (err.code == 12000 || err.code == 11001) {
+              ruleForm.captcha = "";
+              reqGetImageCode();
             }
           });
       } else {
@@ -67,6 +86,12 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   }
 };
 
+const reqGetImageCode = async () => {
+  let res = await get("/web/usc/createCaptcha", {});
+  imageCode.value = `data:image/png;base64,${res.data.image}`;
+  imageCodeId.value = res.data.id;
+};
+
 /** 使用公共函数，避免`removeEventListener`失效 */
 function onkeypress({ code }: KeyboardEvent) {
   if (code === "Enter") {
@@ -75,6 +100,7 @@ function onkeypress({ code }: KeyboardEvent) {
 }
 
 onMounted(() => {
+  reqGetImageCode();
   window.document.addEventListener("keypress", onkeypress);
 });
 
@@ -105,6 +131,7 @@ onBeforeUnmount(() => {
           <el-form ref="ruleFormRef" :model="ruleForm" :rules="loginRules" size="large">
             <Motion :delay="100">
               <el-form-item
+                class="formItem"
                 :rules="[
                   {
                     required: true,
@@ -124,13 +151,31 @@ onBeforeUnmount(() => {
             </Motion>
 
             <Motion :delay="150">
-              <el-form-item prop="password">
+              <el-form-item class="formItem" prop="password">
                 <el-input
                   clearable
                   show-password
                   v-model="ruleForm.password"
                   placeholder="密码"
                   :prefix-icon="useRenderIcon('lock')"
+                />
+              </el-form-item>
+            </Motion>
+            <Motion :delay="200">
+              <el-form-item class="formItem" prop="captcha">
+                <el-input
+                  style="width: 260px"
+                  clearable
+                  v-model="ruleForm.captcha"
+                  placeholder="验证码"
+                  :prefix-icon="useRenderIcon('lock')"
+                />
+                <img
+                  style="margin-left: 10px"
+                  class="img-code"
+                  :src="imageCode"
+                  alt="图片验证码"
+                  @click="reqGetImageCode"
                 />
               </el-form-item>
             </Motion>
@@ -160,5 +205,8 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 :deep(.el-input-group__append, .el-input-group__prepend) {
   padding: 0;
+}
+.formItem {
+  margin-bottom: 12px;
 }
 </style>

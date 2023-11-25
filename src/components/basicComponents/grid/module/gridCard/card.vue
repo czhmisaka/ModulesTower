@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-04-29 15:02:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-27 00:01:54
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/card.vue
+ * @LastEditTime: 2023-11-22 15:01:59
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/gridCard/card.vue
 -->
 <script lang="ts">
 import cardBox from "./module/cardBox.vue";
@@ -15,10 +15,6 @@ import {
 } from "./../dataTemplate";
 import { ElIcon } from "element-plus";
 import { componentLists } from "./module/componentLists";
-import { deviceDetection, useDark, useGlobal } from "@pureadmin/utils";
-
-import { hightLightComponent } from "@/components/basicComponents/grid/module/cardApi/index";
-
 export default defineComponent({
   name: "gridCardBox",
   emits: ["onChange", "openComponentsList"],
@@ -60,7 +56,6 @@ export default defineComponent({
     let isLoading = ref(true);
     const { sizeUnit, detail } = toRefs(props);
 
-    const { isDark } = useDark();
     // 判断动画尺寸
     const editShakeName = (size: { width: number; height: number }): string => {
       const { width, height } = size;
@@ -74,18 +69,15 @@ export default defineComponent({
     const isShow = () => {
       let back =
         Object.keys(props.detail.options).indexOf("showInGridDesktop") != -1
-          ? props.detail.options.showInGridDesktop
-            ? true
-            : false
+          ? props.detail.options.showInGridDesktop ? true : false
           : true;
       return back;
     };
 
-    // 测试用全局高亮
-    const highLight = ref(true);
-    const delay = ref(500);
-    let timeoutIn = null as any;
-    let timeoutOut = null as any;
+    const component = componentGetter(props.detail.component, {
+      ...props.componentLists,
+      ...componentLists,
+    }).component;
 
     return () => [
       h(
@@ -95,12 +87,12 @@ export default defineComponent({
             width: "100%",
             height: "100%",
             userSelect: "none",
-            transition: isShow() ? "opacity 0.4s,margin 1s" : "opacity 0.4,margin 0.6s",
-            margin: isShow() ? "0px" : "0px 0px 0px -30px",
+            transition: isShow() ? "opacity 0.2s,margin 0.3s !important" : "opacity 0.3,margin 0.2s !important",
+            margin: isShow() ? "0px" : "0px 0px 0px -10px",
             opacity: isShow() ? 1 : 0,
             Animation: props.baseData.editable
               ? editShakeName(props.detail.gridInfo.default.size) +
-                " 0.3s ease-in-out infinite"
+              " 0.3s ease-in-out infinite"
               : "none",
           },
           class: props.detail.options.closeCardAnimate ? "" : "hoverTime",
@@ -108,76 +100,66 @@ export default defineComponent({
         [
           isShow()
             ? h(
-                "div",
-                {
-                  style: {
-                    position: "absolute",
-                    width: "100%",
-                    height: "100%",
-                    top: 0,
-                    left: 0,
-                    background: isDark.value ? "rgba(33,33,33,1)" : "rgba(255,255,255,1)",
-                    borderRadius: "12px",
-                    zIndex: isLoading.value ? 100000 : -1,
-                    display: "flex",
-                    opacity: isLoading.value ? 1 : 0,
-                  },
+              "div",
+              {
+                style: {
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                  top: 0,
+                  left: 0,
+                  background: "rgba(255,255,255,1)",
+                  borderRadius: "12px",
+                  zIndex: isLoading.value ? 100000 : -1,
+                  display: "flex",
+                  opacity: isLoading.value ? 1 : 0,
                 },
-                [
-                  h(
-                    ElIcon,
-                    {
-                      style: {
-                        top: "50%",
-                        left: "50%",
-                        margin: "-" + sizeUnit.value.blockSize * 0.25 + "px",
-                        fontSize: sizeUnit.value.blockSize * 0.5 + "px",
-                      },
-                      class: "is-loading",
+              },
+              [
+                h(
+                  ElIcon,
+                  {
+                    style: {
+                      top: "50%",
+                      left: "50%",
+                      margin: "-" + sizeUnit.value.blockSize * 0.25 + "px",
+                      fontSize: sizeUnit.value.blockSize * 0.5 + "px",
                     },
-                    () => h(getIcon("Loading"))
-                  ),
-                ]
-              )
+                    class: "is-loading",
+                  },
+                  () => h(getIcon("Loading"))
+                ),
+              ]
+            )
             : null,
           props.baseData.editable && !props?.detail?.options?.isSettingTool
             ? h(cardBox, {
-                style: {
-                  width: "100%",
-                  height: "100%",
-                  zIndex:
-                    props.baseData.editable && !props?.detail?.options?.isSettingTool
-                      ? "100000000000"
-                      : "-1",
-                  // background:
-                  //   props.baseData.editable && !props?.detail?.options?.isSettingTool
-                  //     ? "white"
-                  //     : "black",
-                },
-                blockSize: props.sizeUnit.blockSize,
-                detail: props.detail,
-                sizeUnit: props.sizeUnit,
-                onOnChange: (
-                  value: { [key: string]: any },
-                  options: { [key: string]: any }
-                ) => {
-                  context.emit("onChange", value, options);
-                },
-              })
+              style: {
+                width: "100%",
+                height: "100%",
+                zIndex:
+                  props.baseData.editable && !props?.detail?.options?.isSettingTool
+                    ? "100000000000"
+                    : "-1",
+              },
+              blockSize: props.sizeUnit.blockSize,
+              detail: props.detail,
+              sizeUnit: props.sizeUnit,
+              onOnChange: (
+                value: { [key: string]: any },
+                options: { [key: string]: any }
+              ) => {
+                context.emit("onChange", value, options);
+              },
+            })
             : null,
           h(
-            componentGetter(props.detail.component, {
-              ...props.componentLists,
-              ...componentLists,
-            }).component,
+            component,
             {
               onOnChange: (key: string, value: any, options: { [key: string]: any }) => {
                 context.emit("onChange", key, value, options);
               },
               onReady: (e = false) => {
-                console.log(
-                  `组件【${props.detail.labelNameCN || props.detail.label}】准备就绪`
-                );
                 isLoading.value = e;
               },
               baseData: props.baseData,
@@ -205,40 +187,51 @@ export default defineComponent({
   0% {
     transform: rotate(0deg);
   }
+
   33% {
     transform: rotate(-0.2deg);
   }
+
   66% {
     transform: rotate(0.2deg);
   }
+
   100% {
     transform: rotate(0deg);
   }
 }
+
 @keyframes editShakeS_GRID_CARD_BOX {
   0% {
     transform: rotate(0deg);
   }
+
   33% {
     transform: rotate(-1deg);
   }
+
   66% {
     transform: rotate(1deg);
   }
+
   100% {
     transform: rotate(0deg);
   }
 }
+
 @keyframes editShakeM_GRID_CARD_BOX {
   0% {
     transform: rotate(0deg);
   }
+
   33% {
     transform: rotate(-0.5deg);
   }
+
   66% {
     transform: rotate(0.5deg);
   }
+
   100% {
     transform: rotate(0deg);
   }
