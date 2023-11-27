@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 14:31:12
+ * @LastEditTime: 2023-11-27 10:10:27
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/infoTable.vue
 -->
 <template>
@@ -46,8 +46,8 @@
               : []
             ).filter((x, i) => {
               return i < 10;
-            })" :loading="loadingMap[btns.label + btns.showAbleKey + scope['$index']]" size="small" link
-              type="primary" @click="btnClick(btns, scope.row, scope)">
+            })" :loading="loadingMap[btns.label + btns.showAbleKey + scope['$index']]" size="small" link type="primary"
+              @click="btnClick(btns, scope.row, scope)">
               {{ btns.label }}
             </el-button>
           </div>
@@ -61,8 +61,6 @@
 import { defineComponent, ref } from "vue";
 import { ElButton, ElPopover, ElTable, ElTableColumn } from "element-plus";
 import { useDark } from "@pureadmin/utils";
-import loading from "element-plus/es/components/loading";
-import tableHeader from "element-plus/es/components/table/src/table-header";
 import { btnCellTemplate, btnActionTemplate, showType, stringAnyObj } from "../../types";
 import { cardOnChangeType } from "@/components/basicComponents/grid/module/dataTemplate";
 export default defineComponent({

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-08-08 21:32:39
+ * @LastEditTime: 2023-11-27 09:39:10
  * @FilePath: /ConfigForDesktopPage/vite.config.js
  */
 import { loadEnv } from "vite";
@@ -63,7 +63,7 @@ export default ({ mode, command }) => {
         "@build": pathResolve("build"),
         fs: require.resolve("rollup-plugin-node-builtins/src/es6/util.js"),
       },
-      extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
+      extensions: [".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
     },
     plugins: [
       ViteRequireContext(),
@@ -110,7 +110,7 @@ export default ({ mode, command }) => {
     },
     server: {
       strictPort: false,
-      port: 9050,
+      port: 9040,
       proxy: {
         "/api_api_xcb/": {
           name: "dev",

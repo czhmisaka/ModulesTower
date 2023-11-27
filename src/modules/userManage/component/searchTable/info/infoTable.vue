@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-18 22:32:55
+ * @LastEditTime: 2023-11-27 10:10:25
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/info/infoTable.vue
 -->
 <template>
@@ -61,8 +61,6 @@
 import { defineComponent, ref } from "vue";
 import { ElButton, ElPopover, ElTable, ElTableColumn } from "element-plus";
 import { useDark } from "@pureadmin/utils";
-import loading from "element-plus/es/components/loading";
-import tableHeader from "element-plus/es/components/table/src/table-header";
 import { showType, btnCellTemplate, stringAnyObj, btnActionTemplate } from "@/modules/userManage/types";
 export default defineComponent({
   components: { ElTable, ElTableColumn },
