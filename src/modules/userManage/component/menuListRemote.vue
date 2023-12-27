@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-02 16:21:36
+ * @LastEditTime: 2023-11-30 17:06:19
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuListRemote.vue
 -->
 <template>
@@ -9,7 +9,7 @@
     padding: '12px',
   }">
     <div :class="`menuBox box_${random}`">
-      <div class="searchBar">
+      <div class="searchBar" v-if="searchFuncByName">
         <el-input :style="{
           width: '100%',
           marginRight: searchBtn || selectedKey != '' ? '6px' : '',
@@ -52,12 +52,13 @@
 
       <!-- 这里展示的是默认树形结构 -->
       <div class="content" v-if="searchResult.length == 0 && selectedKey == ''">
-        <el-tree v-model="treeData" :props="defaultProps" :lazy="true" :load="treeDataFuncByLevel"
-          @node-click="nodeClick">
+        <el-tree ref="fuckElTree" v-model="treeData" :props="defaultProps" :lazy="true" :load="treeDataFuncByLevelFunc"
+          :show-checkbox="showCheckbox" @node-click="nodeClick" @check="checkChange" :node-key="'id'"
+          :check-strictly="checkStrictly">
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ node.label }}</div>
-              <el-button v-if="clickItemDetailFunc" text size="small" icon="More"
+              <el-button v-if="clickItemDetailFunc" text size="small" icon="More" class="btns"
                 @click.stop="clickItemDetail(data)"></el-button>
             </div>
           </template>
@@ -133,6 +134,10 @@ export default defineComponent({
       description: "一般用于展示元素弹窗等",
       type: inputType.functionEditor,
     },
+    showCheckbox: {
+      label: '树形结构选择',
+      type: inputType.boolean
+    },
     clickItemFunc: {
       label: "点击元素详情事件",
       description: "一般用于展示元素弹窗等",
@@ -146,6 +151,10 @@ export default defineComponent({
     searchBtn: {
       label: "定制按钮1",
       type: inputType.obj,
+    },
+    selectListChangeFunc: {
+      label: '选项变换后处理函数',
+      type: inputType.functionEditor
     },
   } as propInfo,
 
@@ -161,6 +170,7 @@ export default defineComponent({
     "baseData",
     "sizeUnit",
     "outputKey",
+    "showCheckbox",
     "defaultProps",
     "treeDataFuncByLevel",
     "clickItemDetailFunc",
@@ -168,6 +178,8 @@ export default defineComponent({
     "searchFuncPlaceHolder",
     "searchBtn",
     "searchFuncByName",
+    "selectListChangeFunc",
+    "checkStrictly"
   ],
   components: { cardBg },
   watch: {
@@ -177,6 +189,7 @@ export default defineComponent({
   },
   data: () => {
     return {
+      selectedList: [],
       treeData: [],
       searchResult: [],
       selectedKey: "",
@@ -201,13 +214,13 @@ export default defineComponent({
      * @Date: 2022-11-09 16:55:30
      * @param {*} node
      */
-    nodeClick(node) {
+    async nodeClick(node) {
       let outputKey = this.outputKey || "menuList_output";
       let data = {};
       const that = this;
       data[outputKey] = JSON.parse(JSON.stringify(node));
       if (this.clickItemFunc) {
-        this.clickItemFunc(that, node);
+        await this.clickItemFunc(that, node);
       }
       setData(this, data);
     },
@@ -244,7 +257,11 @@ export default defineComponent({
             })
             : res;
       };
-      this.treeDataFuncByLevel({}, resolve, this.selectedKey);
+      this.treeDataFuncByLevel({}, resolve, this.selectedKey, this);
+    },
+
+    async treeDataFuncByLevelFunc(node, resolve, key) {
+      await this.treeDataFuncByLevel(node, resolve, key, this);
     },
 
     /**
@@ -257,6 +274,10 @@ export default defineComponent({
     async clickItemDetail(data) {
       const that = this;
       if (this.clickItemDetailFunc) this.clickItemDetailFunc(that, data);
+    },
+
+    checkChange(checkedNodes, checkedKeys, halfCheckedNodes, halfCheckedKeys) {
+      this.selectListChangeFunc(this, checkedNodes, checkedKeys, halfCheckedNodes, halfCheckedKeys)
     },
 
     /**
@@ -342,6 +363,11 @@ export default defineComponent({
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: left;
+  }
+
+  .btns {
+    position: absolute;
+    right: 0px;
   }
 }
 

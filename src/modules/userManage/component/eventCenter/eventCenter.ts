@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-10-11 16:19:26
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-31 09:41:16
+ * @LastEditTime: 2023-11-29 14:25:08
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/eventCenter/eventCenter.ts
  */
 
@@ -22,7 +22,7 @@ export enum eventTriggerType {
 
 export const eventCenterCell = (
   type: eventTriggerType,
-  event: any,
+  event: (that: any, baseData: stringAnyObj) => Promise<any> | any,
   key: string = "eventCenter",
   options: stringAnyObj = {}
 ): gridCellTemplate => {

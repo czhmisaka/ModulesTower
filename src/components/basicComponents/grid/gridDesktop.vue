@@ -1,15 +1,16 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-20 14:45:30
+ * @LastEditTime: 2023-12-15 15:16:00
  * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
 <template>
   <div :ref="'screenId_' + idRandom" :id="'screenId_' + idRandom" :style="{
     overflow: cusStyle.wholeScreen ? 'hidden' : 'auto',
+    ...(cusStyle['desktopStyle'] || {})
   }" class="baseGrid">
-    <!-- {{ gridList.map(x => x.label) }} -->
+    <!-- <div style="position:fixed;top:0px;z-index: 10000000;">{{ gridList.map(x => x.label) }} </div>-->
     <grid-layout :layout="gridListComputed()" :col-num="gridColNum" :row-height="gridRowNumAndUnit.blockSize"
       :responsive="false" :isDraggable="baseData.editable" :isResizable="false" :vertical-compact="false"
       :prevent-collision="false" :use-css-transforms="true" :maxRows="cusStyle.maxRows || 30"
@@ -73,6 +74,7 @@ import gridItem from "./GridLayout/GridItem.vue";
 import { takeRight } from "lodash";
 import { timeConsole } from "@/main";
 import { gridCell } from '../../../modules/userManage/component/searchTable/searchTable';
+import { deepClone } from '../../../utils/index';
 let useAble = 0;
 function throttle(func, delay) {
   let timer = null;
@@ -235,14 +237,7 @@ export default defineComponent({
       },
     },
   },
-  computed: {
-    gridListToLayoutGetter: {
-      set() { },
-      get() {
-        return this.gridListToLayout;
-      }
-    }
-  },
+  computed: {},
 
   watch: {
     modelValue: {
@@ -487,6 +482,8 @@ export default defineComponent({
           // 这里写的尽量简单了，后期优化
           if (value) {
             this.gridList.push(value);
+          } else {
+            console.error('请勿添加空组件')
           }
         } else if (type == cardOnChangeType.cardDelete) {
           if (value && value.length > 0) {
@@ -511,6 +508,7 @@ export default defineComponent({
                     plugInComponent["close"]();
                   }
                 } else {
+
                   this.plugInData[refs] = value[refs];
                   if (plugInComponent && plugInComponent["open"]) {
                     plugInComponent["open"]();
@@ -519,6 +517,11 @@ export default defineComponent({
               }
             }
           }
+        } else if (type == cardOnChangeType.upEmit) {
+          if (value && Object.keys(value).length > 0)
+            Object.keys(value).map(x => {
+              this.$emit(x, value[x])
+            })
         }
       });
       // this.gridListComputed()

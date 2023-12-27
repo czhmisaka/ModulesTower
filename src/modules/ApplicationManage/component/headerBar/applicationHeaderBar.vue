@@ -3,14 +3,13 @@
 <!--
  * @Date: 2023-10-09 10:22:33
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-13 16:11:52
- * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/headerBar/applicationHeaderBar.vue
+ * @LastEditTime: 2023-12-20 13:56:42
+ * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/component/headerBar/applicationHeaderBar.vue
 -->
 <template>
   <CardBg :cusStyle="{
     width: '100%',
     padding: '0px',
-    borderRadius: '6px',
     overflow: 'hidden',
     transition: 'all 0.3s',
     filter: ' drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.1))'
@@ -65,7 +64,7 @@
         <div class="btnList">
           <span v-for="( btns, index ) in  btnList " :key="index + 'btn'">
             <el-button v-if="btns.isShow(applicationInfo, btns)"
-              :loading="loadingMap[btns.label + btns.showAbleKey + index]" style="margin-right: 3px;cursor:pointer" link
+              :loading="loadingMap[btns.label + btns.showAbleKey + index]" style="margin-right: 3px;cursor:pointer"
               :disabled="btns.isDisable(applicationInfo, '')" size="small" :type="btns.elType
                 ? typeof btns.elType != 'string'
                   ? btns.elType(applicationInfo)
@@ -90,8 +89,6 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import userInfoCard from "@/modules/userManage/component/userCard/userInfoCard.vue";
 import { useUserStore, useUserStoreHook } from "@/store/modules/user";
-import { userFieldStorage } from "@/modules/userManage/PageConfigData/user/userValueManage";
-import { userTableCellStorage } from "@/modules/userManage/PageConfigData/workteam";
 import { ApplicationInfoTemplate, stringAnyObj } from '../../types';
 import { IconType } from '../../../userManage/component/searchTable/inputElementComponent/iconPicker';
 import { getIcon } from "@/utils";

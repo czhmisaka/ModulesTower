@@ -1,8 +1,9 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-23 09:45:00
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.vue
+ * @LastEditTime: 2023-12-25 22:07:39
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
+ * @FuckToUi: 改这么多图啥呢，又不好看
 -->
 <template>
   <cardBg ref="mainBox" :cusStyle="{
@@ -12,15 +13,16 @@
       :queryItemTemplate="searchItemTemplate" :selectedList="selectedList" @inputChange="queryChange" :btn-list="btnList"
       :autoSearch="autoSearch" v-if="screenStatus" />
     <inputForm ref="inputBox" :query="query" @search="search" @refresh="refresh" @btnClick="btnClick"
-      :queryItemTemplate="searchItemTemplate" :selectedList="selectedList" @inputChange="queryChange" :btn-list="btnList"
-      :autoSearch="autoSearch" :isCard="isCard" v-else />
+      :noTableEdit="noTableEdit" :queryItemTemplate="searchItemTemplate" :selectedList="selectedList"
+      @inputChange="queryChange" :btn-list="btnList" :modeChange="modeChange" :autoSearch="autoSearch" :isCard="isCard"
+      v-else />
     <infoTable v-if="!isCard" :template="showItemTemplate" :data-list="PageData?.data" :loading="isLoading"
-      @search="search" @refresh="refresh" :style="{
+      :rowHeightKey="rowHeightKey" :canSelect="isCanSelect()" @search="search" @refresh="refresh" :style="{
         height: TableHeight + 'px',
-      }" :load="load" :baseData="baseData" @selectedChange="selectedChange"
+      }" :load="load" :baseData="baseData" @selectedChange="selectedChange" :defalutSelectedList="selectedList"
       @onChange="(value, options) => $emit('onChange', value, options)" />
     <cardList v-else-if="isCard" :template="showItemTemplate" :data-list="PageData?.data" :loading="isLoading"
-      :height="TableHeight" @search="search" @refresh="refresh" :style="{
+      :canSelect="isCanSelect()" :height="TableHeight" @search="search" @refresh="refresh" :style="{
         height: TableHeight + 'px',
       }" :cardFunc="cardFunc" :load="load" :baseData="baseData" @selectedChange="selectedChange"
       @onChange="(value, options) => $emit('onChange', value, options)" />
@@ -28,7 +30,7 @@
       marginTop: '6px',
       float: 'right',
     }" v-if="PageData.total" v-model:current-page="PageData.pageNumber" v-model:page-size="PageData.pageSize"
-      :page-sizes="[5, 10, 20, 30, 40, 100]" :small="true" :background="true"
+      :page-sizes="[5, 10, 20, 30, 40, 100, 200]" :small="true" :background="true"
       layout="total, sizes, prev, pager, next, jumper" :total="PageData.total"
       @size-change="(e) => search({ pageSize: e })" @current-change="(e) => search({ pageNumber: e })"
       :hide-on-single-page="false" />
@@ -61,7 +63,8 @@ import {
 } from "@/modules/userManage/types";
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
 import { timeConsole } from "@/main";
-
+import { useUserStore, useUserStoreHook } from '../../../../store/modules/user';
+import { changeCardProperties } from '../../../../components/basicComponents/grid/module/cardApi/index';
 
 let useAble = 0;
 
@@ -163,6 +166,17 @@ export default defineComponent({
       label: '卡片模式渲染方式',
       type: inputType.functionEditor
     },
+    canSelect: {
+      label: '是否可以选择列表项',
+      description: '默认为true',
+      type: inputType.boolean,
+    },
+
+    // 以下功能需要组合使用构造checkBox 选择机制
+    selectedChangeFunc: {
+      label: '选择改变时触发的函数',
+      type: inputType.functionEditor
+    },
   } as propInfo,
 
   baseProps: {
@@ -171,6 +185,7 @@ export default defineComponent({
     searchFunc: (data) => {
       return [data];
     },
+    canSelect: true,
     showItemTemplate: [tableCellTemplateMaker("HELLO WORLD", "helloworld")],
     searchItemTemplate: [tableCellTemplateMaker("HELLO WORLD", "helloworld")],
     btnList: [],
@@ -205,11 +220,19 @@ export default defineComponent({
     "searchItemTemplate",
     "searchKeyWithBaseData",
     "btnList",
+    "canSelect",
+    // 真tmd的脑子有病
+    "selectedChangeFunc",
+    // 结束
+    "noTableEdit",
     "autoSearch",
     "pageConfig",
     "load",
+    "modeChange",
     "isCard",
     "cardFunc",
+    // 用来规范行高
+    "rowHeightKey",
     "screenStatus"
   ],
   components: { cardBg, inputForm, infoTable, sideDialogForm, cardList: cardlist, screenInputform },
@@ -224,7 +247,7 @@ export default defineComponent({
 
       isReady: false,
 
-      // 当前选择项
+      // 当前选择项 
       selectedList: [],
 
       // 计算列表可用高度
@@ -239,6 +262,7 @@ export default defineComponent({
   async created() {
     timeConsole.checkTime("searchTable");
     this.isReady = false;
+    await this.loadUserConfig();
     await this.initData();
     this.isReady = true;
     this.$emit("ready");
@@ -250,6 +274,7 @@ export default defineComponent({
     const that = this;
     const data = {};
     const name = "searchTable_func_" + this.idRandom;
+    // 初始化已经选择的数据
     data[name] = that.changeSize;
     window.addEventListener("resize", data[name]);
     let num = 0;
@@ -270,6 +295,38 @@ export default defineComponent({
   },
 
   methods: {
+    async loadUserConfig() {
+      const config = await useUserStoreHook().getPageConfig(this.detail.label)
+      let data = {
+        rowHeightKey: 32
+      }
+      if (config['showItemTemplate']) {
+        const configMap = config['showItemTemplate']
+        data['showItemTemplate'] = configMap.map(x => {
+          this.showItemTemplate.map(b => {
+            if (b.key == x.key && b.label == x.label) {
+              x = {
+                ...b,
+                showAble: x.showAble
+              }
+            }
+          })
+          return x
+        })
+      }
+      if (config['rowHeightKey']) {
+        data.rowHeightKey = config['rowHeightKey']
+      }
+      let keyData = {}
+      keyData[this.detail.label] = data
+      changeCardProperties(this, keyData)
+    },
+
+    isCanSelect() {
+      if (this.canSelect === false) return false
+      else return true
+    },
+
     changeSize() {
       fuckk(this);
     },
@@ -333,6 +390,8 @@ export default defineComponent({
 
     async selectedChange(selectedList: any[]) {
       this.selectedList = selectedList;
+      // 触发选择事件
+      if (this['selectedChangeFunc']) await this.selectedChangeFunc(this, this.selectedList, this.PageData.data)
     },
 
     /**
@@ -371,7 +430,6 @@ export default defineComponent({
         } catch (e) {
           console.error("【searchTable】组件search事件报错", e, result);
         } finally {
-          this.selectedChange([]);
           this.isLoading = false;
         }
       }

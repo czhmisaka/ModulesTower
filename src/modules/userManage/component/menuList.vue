@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-02 16:03:58
+ * @LastEditTime: 2023-11-29 17:32:09
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -33,7 +33,7 @@
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ data[defaultProps["label"]] }}</div>
-              <el-button v-if="clickItemDetailFunc" text size="small" icon="More"
+              <el-button v-if="clickItemDetailFunc" text size="small" icon="More" class="btns"
                 @click.stop="clickItemDetail(data)"></el-button>
             </div>
           </template>
@@ -48,7 +48,7 @@
           <template #default="{ node, data }">
             <div class="custom-tree-node">
               <div class="text">{{ data[defaultProps["label"]] }}</div>
-              <el-button v-if="clickItemDetailFunc" text size="small" icon="More"
+              <el-button v-if="clickItemDetailFunc" text size="small" icon="More" class="btns"
                 @click.stop="clickItemDetail(data)"></el-button>
             </div>
           </template>
@@ -181,7 +181,8 @@ export default defineComponent({
       const that = this;
       this.$nextTick(() => {
         this.$refs.elTree.setCurrentKey(node.id);
-        this.clickItemFunc(that, node);
+        if (this.clickItemFunc)
+          this.clickItemFunc(that, node);
       });
     }
   },
@@ -220,7 +221,7 @@ export default defineComponent({
       }
       // if (that.expandedKey.indexOf(node.id)) {
       //   that.expandedKey = that.expandedKey.filter((x) => x != node.id);
-      // } else that.expandedKey.push(node.id);
+      // } else that.expandedKey.push(node.id)
       setData(this, data);
     },
 
@@ -354,6 +355,11 @@ export default defineComponent({
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: left;
+  }
+
+  .btns {
+    position: absolute;
+    right: 0px;
   }
 }
 

@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-09 14:41:49
- * @FilePath: /lcdp_fe_setup/src/store/modules/user.ts
+ * @LastEditTime: 2023-12-24 21:41:57
+ * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
@@ -27,8 +27,29 @@ import { btnMaker } from "@/modules/userManage/component/searchTable/drawerForm"
 import { getConfig } from "@/utils/config/appConfig";
 import data from "@iconify-icons/ep/edit";
 import { useAppStoreHook } from "./app";
+import { useCacheHook } from "./cache";
 
 sessionStorage;
+
+useCacheHook().setup("loginUserInfo", async () => {
+  // return await get("/web/usc/user/select/loginUser", {});
+  return await get("/admin/base/comm/person", {});
+});
+interface userPageConfigData extends stringAnyObj {
+  searchTableConfig: {
+    [key: string]: {
+      showItemTemplate: [];
+      searchItemTemplate: [];
+    };
+  };
+}
+
+useCacheHook().setup("pageConfigForUser", async () => {
+  let string = await get("/admin/base/sys/user/getPageConfig", {});
+  if (string.data == "") return {};
+  else return JSON.parse(string.data || "{}");
+});
+
 export const useUserStore = defineStore({
   id: "pure-user",
   state: (): userType => ({
@@ -79,14 +100,10 @@ export const useUserStore = defineStore({
           let data = {
             ...res.data,
             accessToken: res.data.token,
-            refreshToken: res.data.token,
             roles: ["admin"],
-            expires: new Date(
-              new Date().getTime() + 4 * 365 * 24 * 86400 * 1000
-            ).getTime(),
           };
           this.options = data;
-          this.isAdminFlag = res.data.adminFlag;
+          this.isAdminFlag = true;
           setToken(data);
           localStorage.setItem("user-info", JSON.stringify(data));
           resolve(data);
@@ -96,14 +113,21 @@ export const useUserStore = defineStore({
     },
 
     /** 前端登出（不调用接口） */
-    logOut() {
+    async logOut() {
       this.username = "";
       this.roles = [];
       this.menuList = [];
+      await post("/admin/base/comm/logout", {});
       removeToken();
+      storageLocal.clear();
+      storageSession.clear();
+      const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
+      useAppStoreHook().setLayout(Layout);
+      useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
+      toggleClass(Grey, "html-grey", document.querySelector("html"));
+      toggleClass(Weak, "html-weakness", document.querySelector("html"));
       router.push(loginPage);
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
-      localStorage.setItem("user-info", "");
       resetRouter();
     },
 
@@ -111,48 +135,56 @@ export const useUserStore = defineStore({
       return btnMaker("登出", btnActionTemplate.Function, {
         elType: "danger",
         function: async (that, data) => {
-          await post("/web/usc/logout", {});
-          removeToken();
-          storageLocal.clear();
-          storageSession.clear();
-          const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } =
-            getConfig();
-          useAppStoreHook().setLayout(Layout);
-          useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
-          toggleClass(Grey, "html-grey", document.querySelector("html"));
-          toggleClass(Weak, "html-weakness", document.querySelector("html"));
-          router.push(loginPage);
-          useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
-          resetRouter();
+          await this.logOut();
         },
       });
     },
 
     /** 获取用户详情 */
     async getOptions() {
-      if (Object.keys(this.options).length == 0 && this.isLoading == false) {
-        this.isLoading = true;
-        let res = await get("/web/usc/user/select/loginUser", {});
-        this.username = res.data.name;
-        this.options = {
-          ...res.data,
-          accessToken: res.data.token,
-          refreshToken: res.data.token,
-          username: res.data.name,
-          roles: ["admin"],
-          expires: new Date(new Date().getTime() + 19999999).getTime(),
-        };
-      } else if (
-        Object.keys(this.options).length == 0 &&
-        this.isLoading == true
-      ) {
-        return await new Promise((r, j) => {
-          setTimeout(() => {
-            r(this.options);
-          }, 3000);
-        });
-      }
+      let res = await useCacheHook().getDataByKey("loginUserInfo");
+      this.username = res?.data?.name;
+      this.options = {
+        ...res?.data,
+        accessToken: res?.data?.token,
+        refreshToken: res?.data?.token,
+        username: res?.data?.name,
+        roles: ["admin"],
+        expires: new Date(new Date().getTime() + 19999999).getTime(),
+      };
       return this.options;
+    },
+
+    async getPageConfig(compName: string) {
+      const menuId = localStorage.getItem("menuId");
+      let config = await useCacheHook().getDataByKey("pageConfigForUser");
+      console.log(config, "configasd");
+      return !compName && config
+        ? config
+        : !config[compName]
+        ? {}
+        : !config[compName][menuId]
+        ? {}
+        : config[compName][menuId];
+    },
+
+    async clearPageConfig() {},
+    async setPageConfig(
+      compKey,
+      configData,
+      menuId = localStorage.getItem("menuId") as string
+    ) {
+      let config = await this.getPageConfig();
+      console.log("修改时获取到的config", config, config[compKey]);
+      if (!config[compKey]) {
+        config[compKey] = {};
+      }
+      config[compKey][menuId] = configData;
+      let res = await post("/admin/base/sys/user/setPageConfig", {
+        config: JSON.stringify(config),
+      });
+      useCacheHook().setRefresh("pageConfigForUser");
+      return res;
     },
 
     /** 刷新`token` */

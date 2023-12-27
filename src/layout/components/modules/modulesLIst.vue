@@ -1,14 +1,12 @@
 <!--
  * @Date: 2023-09-13 14:37:37
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-11-13 16:35:21
- * @FilePath: /lcdp_fe_setup/src/layout/components/modules/modulesLIst.vue
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-12-22 12:57:45
+ * @FilePath: /ConfigForDesktopPage/src/layout/components/modules/modulesLIst.vue
 -->
 <script setup lang="ts">
 import { useModuleHook } from "@/store/modules/module";
 import { useUserStoreHook } from "@/store/modules/user";
-import { userFieldStorage } from "@/modules/userManage/PageConfigData/user/userValueManage";
-import { userTableCellStorage } from "@/modules/userManage/PageConfigData/workteam";
 import { onMounted, reactive } from "vue";
 import { toRefs } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
@@ -24,22 +22,22 @@ const { nowModule } = toRefs(useModuleHook());
     :cus-style="{
       display: 'flex',
       backgroundImage: `linear-gradient(135deg, ${
-        item.icon[0] == '{' ? JSON.parse(item.icon).color : 'rgba(0,0,0,0.05)'
+        item.icon && item.icon[0] == '{' ? JSON.parse(item.icon).color : 'rgba(0,0,0,0.05)'
       } -150%, rgba(0,0,0,0) 50%)`,
       backdropFilter: 'saturate(50%) blur(4px)',
     }"
     v-for="(item, index) in moduleList"
     @click="nowModule.name != item.name ? checkModule(index, '/', true) : ''"
   >
-    <component
+    <!-- <component
       :size="'16px'"
       :style="{ margin: '2px 6px 0px 0px', lineHeight: '1em' }"
       :is="
         useRenderIcon(
-          item.icon[0] == '{' ? JSON.parse(item.icon) : useRenderIcon(item.icon)
+          item.icon && item.icon[0] == '{' ? JSON.parse(item.icon) : useRenderIcon(item.icon)
         )
       "
-    />
+    /> -->
     {{ item.name }}
   </cardBg>
 </template>

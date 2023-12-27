@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
- * @LastEditors: Please set LastEditors
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.ts
+ * @LastEditors: CZH
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
@@ -27,15 +27,17 @@ import {
 import { compile, VNode } from "vue";
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { deepClone } from "@/utils";
-import { ElDrawer, ElDivider, ElButton } from "element-plus";
+import { ElDrawer, ElDivider, ElButton, ElMessage } from "element-plus";
 import { customComponent } from "@/modules/userManage/types";
 
-const noDataIcon = "_";
+const noDataIcon = "-";
 
 const baseShowFunc = (data, key, isPopover = false) => {
-  if (data[key] != undefined) return data[key] + "";
+  if (data[key] && data[key] != undefined) return data[key] + "";
   else return noDataIcon;
 };
+
+
 
 /**
  * @name: searchCellStorage
@@ -44,20 +46,25 @@ const baseShowFunc = (data, key, isPopover = false) => {
  * @Date: 2022-11-10 09:33:04
  */
 export class SearchCellStorage {
+  
   storage = [] as tableCellTemplate[];
-  labels = [] as string[];
-  keys = [] as string[];
+  // labels = new Object();
+  labels = {} as {[key:string]:string};
+  keys = {} as {[key:string]:string};
   constructor(storage: tableCellTemplate[]) {
     this.storage = storage;
-    this.labels = storage.map((x) => {
-      return x.label;
-    });
-    this.keys = storage.map((x) => {
-      return x.key;
-    });
+    storage.map((x:tableCellTemplate)=>{
+      this.labels[x.label] = x.label;
+      this.keys[x.label] = x.key;
+    })
+    console.log(this.labels,'asd')
   }
 
-  getByLabel(label: string, options: tableCellOptions = {}) {
+  getProps(){
+    return this.labels 
+  }
+  
+  getByLabel<T extends keyof typeof this['labels']>(label: T, options: tableCellOptions = {}) {
     let back = {} as { [key: string]: any };
     this.storage.map((cell) => {
       if (label && label == cell.label) back = cell;
@@ -148,6 +155,8 @@ export class SearchCellStorage {
    */
   push(cell: tableCellTemplate) {
     this.storage.push(cell);
+    this.labels[cell.label] = cell.label
+    this.keys[cell.key] = cell.key  
   }
 }
 
@@ -263,7 +272,7 @@ export const remoteDictSelectSearchCell = (dictKey: string) => {
         const result = remoteDictStore.keyMap[dictKey][data[key]];
         if (!result) {
           delete data[key];
-          data[key] = "未知数据或者已删除";
+          data[key] = "";
         }
       },
     }),
@@ -491,6 +500,7 @@ export const tableCellTemplateMaker = (
   let back = {
     label,
     key,
+    showAble: true,
     table: {
       showFunc: baseShowFunc,
       type: showType.func,
@@ -504,7 +514,7 @@ export const tableCellTemplateMaker = (
       type: formInputType.input,
     },
     ...options,
-  };
+  } as tableCellTemplate;
   return back;
 };
 
@@ -576,4 +586,44 @@ export const uiSchemaMaker = async (
     }
   }
   return uiSchema;
+};
+
+enum checkType {}
+interface checkerOptions {
+  type: checkType;
+}
+
+/**
+ * @name: requireChecker
+ * @description: 辅助检查,当表单结果不符合需求时返回false
+ * @authors: CZH为
+ * @Date: 2023-12-05 10:12:49
+ */
+export const requireChecker = async (
+  that: stringAnyObj,
+  otherCheckerList: checkerOptions[] = []
+): Promise<boolean> => {
+  // 基础检查 - schema require
+  console.log(that, otherCheckerList, "start checker");
+  let form = null;
+  if (that.$refs["VueForm"]) form = that.$refs["VueForm"].$$uiFormRef;
+  if (form) await form.validate().catch(() => false);
+
+  const { schema, formData } = that;
+  const { required, properties } = schema;
+  const formKeys = Object.keys(properties);
+  const getKeyLabel = (key) => {
+    return properties[key].title || key;
+  };
+  let back = true;
+  if (required && required.length > 0) {
+    required.map((x) => {
+      if (!formData[x] && formKeys.indexOf(x) != -1) {
+        back = false;
+        ElMessage.warning(`【${getKeyLabel(x)}】不能空`);
+      }
+    });
+  }
+  console.log("fuck", back);
+  return back;
 };

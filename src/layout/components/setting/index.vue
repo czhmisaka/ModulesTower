@@ -25,6 +25,9 @@ import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
 import { loginPage } from "@/router/index";
 import { post } from "@/utils/api/requests";
+import { useCardStyleConfigHook } from '../../../store/modules/cardStyleConfig';
+import { ElDivider } from 'element-plus';
+import { useUserStoreHook } from '../../../store/modules/user';
 
 const router = useRouter();
 const { device } = useNav();
@@ -55,6 +58,11 @@ if (unref(layoutTheme)) {
   });
   setLayoutModel(layout);
 }
+
+// 配置卡片圆角 - 圆润卡片
+const setBorderRadius = (e) => useCardStyleConfigHook().set('borderRadius', e)
+// 配置默认间距
+const setMargin = (e) => useCardStyleConfigHook().set('margin', e)
 
 /** 默认灵动模式 */
 const markValue = ref($storage.configure?.showModel ?? "smart");
@@ -123,20 +131,7 @@ const multiTagsCacheChange = () => {
 
 /** 清空缓存并返回登录页 */
 async function onReset() {
-  await post("/web/usc/logout", {});
-  removeToken();
-  storageLocal.clear();
-
-  storageSession.clear();
-  const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
-  useAppStoreHook().setLayout(Layout);
-  setEpThemeColor(EpThemeColor);
-  useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
-  toggleClass(Grey, "html-grey", document.querySelector("html"));
-  toggleClass(Weak, "html-weakness", document.querySelector("html"));
-  router.push(loginPage);
-  useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
-  resetRouter();
+  await useUserStoreHook().logOut()
 }
 
 function onChange(label) {
@@ -223,55 +218,29 @@ nextTick(() => {
 <template>
   <panel>
     <el-divider>主题</el-divider>
-    <el-switch
-      v-model="dataTheme"
-      inline-prompt
-      class="pure-datatheme"
-      :active-icon="dayIcon"
-      :inactive-icon="darkIcon"
-      @change="dataThemeChange"
-    />
+    <el-switch v-model="dataTheme" inline-prompt class="pure-datatheme" :active-icon="dayIcon" :inactive-icon="darkIcon"
+      @change="dataThemeChange" />
 
     <el-divider>导航栏模式</el-divider>
     <ul class="pure-theme">
       <el-tooltip class="item" content="左侧模式" placement="bottom">
-        <li
-          :class="layoutTheme.layout === 'vertical' ? $style.isSelect : ''"
-          ref="verticalRef"
-          @click="setLayoutModel('vertical')"
-        >
+        <li :class="layoutTheme.layout === 'vertical' ? $style.isSelect : ''" ref="verticalRef"
+          @click="setLayoutModel('vertical')">
           <div />
           <div />
         </li>
       </el-tooltip>
 
-      <el-tooltip
-        v-if="device !== 'mobile'"
-        class="item"
-        content="顶部模式"
-        placement="bottom"
-      >
-        <li
-          :class="layoutTheme.layout === 'horizontal' ? $style.isSelect : ''"
-          ref="horizontalRef"
-          @click="setLayoutModel('horizontal')"
-        >
+      <el-tooltip v-if="device !== 'mobile'" class="item" content="顶部模式" placement="bottom">
+        <li :class="layoutTheme.layout === 'horizontal' ? $style.isSelect : ''" ref="horizontalRef"
+          @click="setLayoutModel('horizontal')">
           <div />
           <div />
         </li>
       </el-tooltip>
 
-      <el-tooltip
-        v-if="device !== 'mobile'"
-        class="item"
-        content="混合模式"
-        placement="bottom"
-      >
-        <li
-          :class="layoutTheme.layout === 'mix' ? $style.isSelect : ''"
-          ref="mixRef"
-          @click="setLayoutModel('mix')"
-        >
+      <el-tooltip v-if="device !== 'mobile'" class="item" content="混合模式" placement="bottom">
+        <li :class="layoutTheme.layout === 'mix' ? $style.isSelect : ''" ref="mixRef" @click="setLayoutModel('mix')">
           <div />
           <div />
         </li>
@@ -280,18 +249,9 @@ nextTick(() => {
 
     <el-divider>主题色</el-divider>
     <ul class="theme-color">
-      <li
-        v-for="(item, index) in themeColors"
-        :key="index"
-        v-show="showThemeColors(item.themeColor)"
-        :style="getThemeColorStyle(item.color)"
-        @click="setLayoutThemeColor(item.themeColor)"
-      >
-        <el-icon
-          style="margin: 0.1em 0.1em 0 0"
-          :size="17"
-          :color="getThemeColor(item.themeColor)"
-        >
+      <li v-for="(item, index) in themeColors" :key="index" v-show="showThemeColors(item.themeColor)"
+        :style="getThemeColorStyle(item.color)" @click="setLayoutThemeColor(item.themeColor)">
+        <el-icon style="margin: 0.1em 0.1em 0 0" :size="17" :color="getThemeColor(item.themeColor)">
           <IconifyIconOffline icon="check" />
         </el-icon>
       </li>
@@ -301,60 +261,28 @@ nextTick(() => {
     <ul class="setting">
       <li>
         <span class="dark:text-white">灰色模式</span>
-        <el-switch
-          v-model="settings.greyVal"
-          inline-prompt
-          inactive-color="#a6a6a6"
-          active-text="开"
-          inactive-text="关"
-          @change="greyChange"
-        />
+        <el-switch v-model="settings.greyVal" inline-prompt inactive-color="#a6a6a6" active-text="开" inactive-text="关"
+          @change="greyChange" />
       </li>
       <li>
         <span class="dark:text-white">色弱模式</span>
-        <el-switch
-          v-model="settings.weakVal"
-          inline-prompt
-          inactive-color="#a6a6a6"
-          active-text="开"
-          inactive-text="关"
-          @change="weekChange"
-        />
+        <el-switch v-model="settings.weakVal" inline-prompt inactive-color="#a6a6a6" active-text="开" inactive-text="关"
+          @change="weekChange" />
       </li>
       <li>
         <span class="dark:text-white">隐藏标签页</span>
-        <el-switch
-          v-model="settings.tabsVal"
-          inline-prompt
-          inactive-color="#a6a6a6"
-          active-text="开"
-          inactive-text="关"
-          @change="tagsChange"
-        />
+        <el-switch v-model="settings.tabsVal" inline-prompt inactive-color="#a6a6a6" active-text="开" inactive-text="关"
+          @change="tagsChange" />
       </li>
       <li>
         <span class="dark:text-white">侧边栏Logo</span>
-        <el-switch
-          v-model="logoVal"
-          inline-prompt
-          :active-value="true"
-          :inactive-value="false"
-          inactive-color="#a6a6a6"
-          active-text="开"
-          inactive-text="关"
-          @change="logoChange"
-        />
+        <el-switch v-model="logoVal" inline-prompt :active-value="true" :inactive-value="false" inactive-color="#a6a6a6"
+          active-text="开" inactive-text="关" @change="logoChange" />
       </li>
       <li>
         <span class="dark:text-white">标签页持久化</span>
-        <el-switch
-          v-model="settings.multiTagsCache"
-          inline-prompt
-          inactive-color="#a6a6a6"
-          active-text="开"
-          inactive-text="关"
-          @change="multiTagsCacheChange"
-        />
+        <el-switch v-model="settings.multiTagsCache" inline-prompt inactive-color="#a6a6a6" active-text="开"
+          inactive-text="关" @change="multiTagsCacheChange" />
       </li>
 
       <li>
@@ -365,15 +293,29 @@ nextTick(() => {
         </el-radio-group>
       </li>
     </ul>
-
+    <ElDivider>圆润卡片</ElDivider>
+    <ul class="theme-color">
+      <el-radio-group v-model="useCardStyleConfigHook().key.borderRadius" size="small" @change="setBorderRadius">
+        <el-radio label="none">无</el-radio>
+        <el-radio label="mini">迷你</el-radio>
+        <el-radio label="small">小</el-radio>
+        <el-radio label="normal">中</el-radio>
+        <el-radio label="large">大</el-radio>
+      </el-radio-group>
+    </ul>
+    <!-- <ElDivider>边距</ElDivider>
+    <ul class="theme-color">
+      <el-radio-group v-model="useCardStyleConfigHook().key.margin" size="small" @change="setMargin">
+        <el-radio label="none">无</el-radio>
+        <el-radio label="mini">迷你</el-radio>
+        <el-radio label="small">小</el-radio>
+        <el-radio label="normal">中</el-radio>
+        <el-radio label="large">大</el-radio>
+      </el-radio-group>
+    </ul> -->
     <el-divider />
     <el-button type="danger" style="width: 90%; margin: 24px 15px" @click="onReset">
-      <IconifyIconOffline
-        icon="fa-sign-out"
-        width="15"
-        height="15"
-        style="margin-right: 4px"
-      />
+      <IconifyIconOffline icon="fa-sign-out" width="15" height="15" style="margin-right: 4px" />
       清空缓存并返回登录页
     </el-button>
   </panel>

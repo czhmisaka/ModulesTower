@@ -58,6 +58,7 @@ export function useNav() {
   }
 
   function onPanel() {
+    console.log("onPanel");
     emitter.emit("openPanel");
   }
 

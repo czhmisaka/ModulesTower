@@ -1,20 +1,24 @@
 <!--
  * @Date: 2022-11-11 10:18:58
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-10-23 16:59:31
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-12-18 15:53:25
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/info/infoTable.vue
 -->
 <template>
-  <div ref="tableBox" class="tableBox" v-loading="loading">
+  <div ref="tableBox" class="tableBox" v-loading="loading" :style="{
+    boxShadow: cardStyle.get('shadow'),
+    borderRadius: cardStyle.get('borderRadius') + 'px',
+  }">
     <ElTable v-if="dataList && dataList.length > 0" v-loading="loading" ref="tableController" :key="fuckKey"
-      :data="dataList" height="100%" :row-style="{ 'min-height': '60px', 'min-width': '100px' }"
+      :data="dataList" height="100%"
+      :row-style="{ 'min-height': '60px', 'min-width': '100px', 'height': rowHeightKey + 'px' }"
       :header-cell-style="isDark ? tableHeaderDark : tableHeader" :fit="true" :border="false" row-key="id"
-      @selection-change="selectPosition" style="cursor: default" lazy :load="load"
+      @select-all="selectPosition" @select="selectPosition" style="cursor: default" lazy :load="load"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <ElTableColumn :selectable="judgeSelect" type="selection" align="center" fixed="left"
+      <ElTableColumn :selectable="judgeSelect" type="selection" align="center" fixed="left" v-if="canSelect"
         :sort-by="(row, index) => sortBy(row, index, item.key)"></ElTableColumn>
-      <ElTableColumn v-for="(item, index) in template" :key="index + 'tablecolumn'" :label="item.label"
-        :width="item.table?.width || 'auto'" :prop="item.key" :fixed="item.table.fixed">
+      <ElTableColumn v-for="(item, index) in template.filter(x => x.showAble)" :key="index + 'tablecolumn'"
+        :label="item.label" :width="item.table?.width || 'auto'" :prop="item.key" :fixed="item.table.fixed">
         <template #header>
           <div class="ColumnHeader">
             {{ item.label }}
@@ -39,9 +43,9 @@
               <el-button v-if="btns.isShow(scope.row, btns)"
                 :loading="loadingMap[btns.label + btns.showAbleKey + scope['$index']]"
                 :disabled="btns.isDisable(scope.row, item.key)" size="small" link
-                :type="btns.elType?btns.elType:(btns.isDisable(scope.row, item.key) ? 'info' : 'primary')"
+                :type="btns.elType ? btns.elType : (btns.isDisable(scope.row, item.key) ? 'info' : 'primary')"
                 @click="btnClick(btns, scope.row, scope)"
-                :style="btns.isDisable(scope.row, item.key)?'color:rgba(39, 58, 91, 0.6)':btns.btnColor?('color:'+btns.btnColor):''">
+                :style="btns.isDisable(scope.row, item.key) ? 'color:rgba(39, 58, 91, 0.6)' : btns.btnColor ? ('color:' + btns.btnColor) : ''">
                 {{ btns.label }}
               </el-button>
             </span>
@@ -59,6 +63,7 @@
 import { defineComponent, ref } from "vue";
 import { ElButton, ElPopover, ElTable, ElTableColumn, ElTableV2 } from "element-plus";
 import { useDark } from "@pureadmin/utils";
+import { useCardStyleConfigHook } from '../../../../../store/modules/cardStyleConfig';
 import {
   btnCellTemplate,
   btnActionTemplate,
@@ -69,26 +74,18 @@ import {
 
 export default defineComponent({
   components: { ElTable, ElTableV2, ElTableColumn },
-  props: ["template", "loading", "dataList", "baseData", "load"],
+  props: ["template", "loading", "dataList", "baseData", "load", 'defalutSelectedList', 'canSelect', 'rowHeightKey'],
   data() {
     return {
       showType,
       fuckKey: Math.random() * 100000,
       selectedList: [] as any[],
       loadingMap: {} as { [key: string]: boolean },
+      cardStyle: useCardStyleConfigHook()
     };
   },
+
   computed: {
-    columns() {
-      return this.template.map((item: tableCellTemplate) => {
-        return {
-          key: item.key,
-          title: item.label,
-          dataKey: item.key,
-          width: "120px",
-        };
-      });
-    },
     tableHeader() {
       return {
         backgroundColor: "#f8f9fb",
@@ -104,8 +101,57 @@ export default defineComponent({
       };
     },
   },
-
+  watch: {
+    defalutSelectedList: {
+      handler(val) {
+        this.initSelected()
+      },
+      immediate: true,
+      deep: true
+    },
+  },
+  async mounted() {
+    this.initSelected()
+  },
   methods: {
+    async initSelected() {
+      let table = await new Promise((r, j) => {
+        let interval = setInterval(() => {
+          const table = this.$refs['tableController']
+          if (table) {
+            clearInterval(interval)
+            r(table)
+          }
+        }, 100)
+      }) as any
+      let needDeal = []
+      let needDelete = []
+      const isSelected = table.getSelectionRows().map(x => x.value)
+      let thisDataList = this.dataList || []
+      const dataList = thisDataList.map(x => x.value)
+      const thisDefaultSelectedList = this.defalutSelectedList || []
+      thisDefaultSelectedList.map(x => {
+        if (dataList.indexOf(x.value) > -1 && isSelected.indexOf(x.value) == -1) {
+          needDeal.push(x.value)
+        }
+      })
+      dataList.map(x => {
+        if (isSelected.indexOf(x) != -1 && thisDefaultSelectedList.map(c => c.value).indexOf(x) == -1) {
+          needDelete.push(x)
+        }
+      })
+
+      if (needDeal.length > 0 || needDelete.length > 0) {
+        table.clearSelection()
+        thisDataList.map(x => {
+          if (needDeal.indexOf(x.value) != -1)
+            table.toggleRowSelection(x, true)
+          if (needDelete.indexOf(x.value) != -1)
+            table.toggleRowSelection(x, false)
+        })
+      }
+    },
+
     judgeSelect(row, index) {
       if (row.unshow) {
         return false; // 返回true该行可选，返回false则不可选
@@ -150,6 +196,7 @@ export default defineComponent({
      * @Date: 2022-11-15 15:08:32
      */
     selectPosition(e) {
+      console.log('init infotable')
       this.selectedList = e;
       this.$emit("selectedChange", this.selectedList);
     },
@@ -202,10 +249,10 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .tableBox {
-  height: 100%;
-  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  // box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  overflow: hidden;
 }
 
 .flexBox {
@@ -231,6 +278,7 @@ export default defineComponent({
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .centerImg {
   width: 100%;
   height: 100%;

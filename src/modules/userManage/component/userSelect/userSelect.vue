@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-09-15 09:36:44
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-24 20:27:28
+ * @LastEditTime: 2023-12-05 09:41:36
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/userSelect/userSelect.vue
 -->
 <template>
@@ -11,7 +11,7 @@
     <el-form v-if="selectPropsList && selectPropsList.length > 0">
       <el-form-item v-for="item in selectPropsList" :label="item.label">
         <el-tag v-for="tag in selectData[item.key || item.label]" :type="item.color || 'primary'"
-          style="margin-left: 6px;" closable @close="delFunc(item.key, tag)">
+          style="margin-left: 6px;margin-bottom:3px;margin-top: 3px;" closable @close="delFunc(item.key, tag)">
           {{ tag.label }}
         </el-tag>
       </el-form-item>

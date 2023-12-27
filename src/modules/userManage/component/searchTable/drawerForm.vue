@@ -1,49 +1,67 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-13 16:38:46
+ * @LastEditTime: 2023-12-19 15:27:20
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
   <el-drawer v-if="plugInData" v-model="isOpen" :title="plugInData.title"
     :size="`${plugInData.size || (isMobile() ? 100 : 50)}%`" :with-header="plugInData.title ? true : false"
-    :append-to-body="true" :close-on-click-modal="true" :show-close="true" @close="fuckClose">
-    <div style="display: none">{{ formData }}</div>
+    :append-to-body="true" :close-on-click-modal="true" :show-close="true" @close="fuckClose" :style="`border-radius: ${borderRadius
+      }px;margin: ${margin
+      }px;height: calc(100vh - ${2 * margin
+      }px);box-shadow: rgba(0, 0, 0, 0.1) -6px 6px 12px, inset rgba(0,0,0,0.05) -3px 3px 12px 0px;${plugInData['bgColor'] ? 'background:' + plugInData['bgColor'] + ';' : ''}${plugInData['fullscreenGridDesktop'] ? 'transition:all 0s;' : ''
+      }
+      `">
     <div :class="'formBody ' +
-      (!plugInData.btnList || plugInData.btnList.length == 0 ? 'formBody_noBtn' : '')
+      (!plugInData.btnList || plugInData.btnList.length == 0 ? 'formBody_noBtn ' : ' ') +
+      (plugInData['fullscreenGridDesktop'] ? 'formBody_fullScreen ' : ' ')
       " v-if="isOpen && plugInData['gridDesktop'] && plugInData['gridDesktopConfig']">
       <div :style="{
         width: 'calc(100%)',
-        height: 'calc(100%)',
+        height: 'calc(100% - 24px) !important',
         background: 'rgba(0,0,0,0)',
         overflow: 'hidden',
       }">
         <gridDesktop ref="gridDesktop" :grid-col-num="plugInData['gridDesktopConfig'].gridColNum"
           :desktopData="desktopDataList" :preBaseData="plugInData['gridDesktopConfig'].preBaseData"
-          :component-lists="component" :cus-style="plugInData['gridDesktopConfig']?.cusStyle" v-model="formData" />
+          :component-lists="component" :cus-style="plugInData['gridDesktopConfig']?.cusStyle" v-model="formData"
+          @close="close" />
       </div>
     </div>
-    <div :class="'formBody ' +
+    <div :class="'formBody elForm_formbody' +
       (!plugInData.btnList || plugInData.btnList.length == 0 ? 'formBody_noBtn' : '')
       " v-else-if="isOpen && !plugInData['noEdit']">
       <!--  调试模式 -->
       <!-- {{ formData }} -->
       <!-- {{ schema }} -->
       <el-scrollbar>
-        <VueForm v-if="isOpen" v-model="formData" :style="{
+        <VueForm ref="VueForm" v-if="isOpen" v-model="formData" :style="{
           textAlign: 'top',
         }" :schema="schema" :ui-schema="uiSchema" :formProps="formProps">
           <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
         </VueForm>
       </el-scrollbar>
     </div>
-    <div :class="'formBody ' +
+    <div :class="'formBody elForm_formbody' +
       (!plugInData.btnList || plugInData.btnList.length == 0 ? 'formBody_noBtn' : '')
       " v-else-if="isOpen">
       <el-form ref="form" v-on:submit.prevent :label-position="'left'">
         <el-form-item :label-width="'120px'" :label="item.label" v-for="(item, index) in queryItemTemplate.filter(
           (x) => x.table.type != showType.btnList
         )" :key="index + 'el-form'">
+          <template #label="it">
+            <div :style="{
+              width: '100%',
+              fontWeight: 'bold',
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginLeft: '1em'
+            }">
+              <div> {{ it.label }}</div>
+              <div>:</div>
+            </div>
+          </template>
           <span v-if="item.table.type == showType.dataKey">
             {{ plugInData["data"][item.key] }}
           </span>
@@ -56,7 +74,8 @@
         </el-form-item>
       </el-form>
     </div>
-    <div :style="{ textAlign: 'left' }" v-if="isOpen && plugInData.btnList && plugInData.btnList.length > 0">
+    <div :style="{ textAlign: 'left' }"
+      v-if="isOpen && plugInData.btnList && plugInData.btnList.length > 0 && !plugInData['fullscreenGridDesktop']">
       <el-divider></el-divider>
       <div v-for="(item, index) in plugInData.btnList.filter((btn) =>
         btn && btn.isShow ? btn.isShow(formData, JSON.parse(JSON.stringify(btn))) : true
@@ -101,7 +120,6 @@ import {
   btnCellTemplate,
   showType,
   tableCellTemplate,
-  tableCellOptions,
 } from "@/modules/userManage/types";
 import drawerForm from "./drawerForm.vue";
 import { isMobile } from "@/utils/Env";
@@ -110,6 +128,7 @@ import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataT
 import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { getPreUrl } from "@/utils/api/requests";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
+import { useCardStyleConfigHook } from "@/store/modules/cardStyleConfig";
 const VITE_PROXY_DOMAIN_REAL = getPreUrl();
 let formDataForCheck = {};
 export default defineComponent({
@@ -147,7 +166,8 @@ export default defineComponent({
       formFooter: {
         show: false,
       },
-
+      margin: useCardStyleConfigHook().get('margin'),
+      borderRadius: useCardStyleConfigHook().get('borderRadius'),
       formProps: {
         layoutColumn: 1,
         inlineFooter: false,
@@ -301,7 +321,7 @@ export default defineComponent({
   content: "";
   height: 1px;
   display: block;
-  width: 100%;
+  width: 101.8%;
   transform: translateY(1em);
 }
 
@@ -323,7 +343,17 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .formBody {
+  height: calc(100% - 56px);
+  // 这写的什么几把玩意
+  //margin: -24px -10px 0;
+  margin-bottom: -24px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.elForm_formbody {
   height: calc(100% - 85px);
+  margin: 0px !important;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -331,5 +361,9 @@ export default defineComponent({
 .formBody_noBtn {
   height: calc(100%) !important;
   overflow-y: auto;
+}
+
+.formBody_fullScreen {
+  margin: 0px;
 }
 </style>

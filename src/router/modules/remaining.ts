@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-04 18:33:26
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-23 13:59:19
+ * @LastEditTime: 2023-12-06 22:23:10
  * @FilePath: /ConfigForDesktopPage/src/router/modules/remaining.ts
  */
 import type { RouteConfigsTable } from "/#/index";
@@ -35,7 +35,7 @@ const remainingRouter: Array<RouteConfigsTable> = [
         component: () => import("@/layout/redirect.vue"),
       },
     ],
-  },
+  }
 ];
 
 export default remainingRouter;

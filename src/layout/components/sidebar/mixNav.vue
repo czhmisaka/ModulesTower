@@ -50,16 +50,6 @@ const userInfo = reactive({ data: null, userTemplate: [] });
 userInfo.data = async () => {
   return await useUserStoreHook().getOptions();
 };
-onMounted(async () => {
-  const userFieldTemplate = await (await userFieldStorage()).getAll();
-  const userTemplate = [
-    ...userTableCellStorage.getByKeyArr(["name", "icon", "mobile"]),
-    ...userFieldTemplate,
-  ];
-  userInfo.userTemplate = userTemplate;
-});
-import { userTableCellStorage } from "@/modules/userManage/PageConfigData/main";
-import { userFieldStorage } from "@/modules/userManage/PageConfigData/user/userValueManage";
 import { useModuleHook } from "@/store/modules/module";
 import { useUserStoreHook } from "@/store/modules/user";
 </script>

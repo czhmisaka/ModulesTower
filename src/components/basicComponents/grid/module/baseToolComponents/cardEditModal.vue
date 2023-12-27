@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-21 15:45:35
- * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
+ * @LastEditTime: 2023-12-23 11:54:28
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
 <template>
@@ -173,15 +173,16 @@ export default defineComponent({
      * @authors: CZH
      * @Date: 2022-06-28 21:53:23
      */
-    getPropsData() {
+    async getPropsData() {
       // 拆分组件属性,设置表单数据
       this.componentsPropsInputTemplate = [];
       this.componentsProps = { ...this.detail.options.props };
-
       // componentList 模式属性预先加载
       if (this.detail.component.type == cardComponentType.componentList) {
         const props = componentGetter(this.detail.component, this.componentList)
-          ?.settngDetail?.props;
+          ?.settingDetail?.props;
+        console.log(props, componentGetter(this.detail.component, this.componentList), 'asdFuck')
+
         for (let x in props) {
           this.componentsPropsInputTemplate.push({
             key: x,
@@ -248,7 +249,7 @@ export default defineComponent({
      * @Date: 2022-06-28 21:53:14
      */
     async open() {
-      this.getPropsData();
+      await this.getPropsData();
       await this.$nextTick();
       this.modalControl.isOpen = true;
     },
@@ -366,6 +367,7 @@ export default defineComponent({
 
 .cm-s-xq-dark .CodeMirror-line::selection,
 .cm-s-xq-dark .CodeMirror-line>span::selection,
+
 .cm-s-xq-dark .CodeMirror-line>span>span::selection {
   font-size: 14px;
   height: 30px;

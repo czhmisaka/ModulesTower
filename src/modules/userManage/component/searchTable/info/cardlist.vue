@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-09-08 15:59:49
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-09 17:19:02
+ * @LastEditTime: 2023-12-07 10:21:24
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/info/cardlist.vue
 -->
 <template>
@@ -78,7 +78,7 @@ import { translate } from 'element-plus';
 export default defineComponent({
   name: "cardList",
   components: { cardBg },
-  props: ["template", "loading", "dataList", "baseData", "load", 'cardFunc', 'height'],
+  props: ["template", "loading", "dataList", "baseData", "load", 'cardFunc', 'height', 'canSelect'],
   data: () => {
     return {
       loading: false,
@@ -176,10 +176,7 @@ export default defineComponent({
       }
     }
 
-    .el-form-item {
-      height: 12px;
-      margin-bottom: 12px;
-    }
+    .el-form-item {}
 
     ::v-deep .el-form-item__content {
       line-height: 24px;

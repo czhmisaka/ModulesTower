@@ -237,3 +237,4 @@ export default defineComponent({
   }
 }
 </style>
+../dataTemplate

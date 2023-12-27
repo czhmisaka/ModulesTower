@@ -49,3 +49,4 @@ export default defineComponent({
   },
 });
 </script>
+../dataTemplate

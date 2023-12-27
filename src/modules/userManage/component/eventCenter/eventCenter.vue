@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-10-11 16:02:44
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-30 17:34:58
+ * @LastEditTime: 2023-12-07 16:15:30
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/eventCenter/eventCenter.vue
 -->
 
@@ -15,6 +15,7 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { eventTriggerType } from './eventCenter';
 import { removeGridCell } from '../../../../components/basicComponents/grid/module/cardApi/index';
+import { inputType } from '../../../../components/basicComponents/grid/module/dataTemplate';
 
 
 export default defineComponent({
@@ -27,14 +28,25 @@ export default defineComponent({
         },
     } as componentInfo,
 
-    propsDetail: {} as propInfo,
+    propsDetail: {
+        event: {
+            label: '事件',
+            type: inputType.functionEditor
+        },
+        triggerType: {
+            label: '触发类型',
+            type: inputType.text
+        },
+        stop: {
+            label: '停止标识',
+            type: inputType.boolean
+        },
+    } as propInfo,
     props: ['baseData', 'gridList', 'event', 'triggerType', 'stop'],
     watch: {
         baseData: {
             handler(val) {
-                if (this.triggerType == eventTriggerType.onBaseDataChange) {
-
-                }
+                if (this.triggerType == eventTriggerType.onBaseDataChange) { }
             }
         },
 

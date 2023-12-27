@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-01 11:13:34
- * @FilePath: /configforpagedemo/src/utils/api/admin/user.ts
+ * @LastEditTime: 2023-12-17 22:04:31
+ * @FilePath: /ConfigForDesktopPage/src/utils/api/admin/user.ts
  */
 import { http } from "../../http";
 import { post } from "../requests";
@@ -51,17 +51,9 @@ const terminalType = {
 /** 登录 */
 export const getLogin = async (data?: object) => {
   // return http.request<UserResult>("post", "/login", { data });
-  return await post("/web/usc/login", {
-    lcdp: data,
-    terminalType: deviceDetection() ? 2 : 1,
-  });
-};
-
-export const getMenuList = async () => {
-  let menuList = [] as menuInfoTemplate[];
-  let res = await post("/web/usc/menu/list", {});
-  menuList = res.data;
-  return menuList;
+  return await post('/admin/base/open/login',{
+    ...data,
+  })
 };
 
 /** 刷新token */

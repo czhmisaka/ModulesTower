@@ -161,11 +161,11 @@ const layoutHeader = defineComponent({
       </el-scrollbar>
     </div>
     <!-- 系统设置 -->
-    <setting />
   </div>
   <div v-else :class="['app-wrapper']" v-resize>
     <app-main :fixed-header="false" />
   </div>
+  <setting />
 </template>
 
 <style lang="scss" scoped>

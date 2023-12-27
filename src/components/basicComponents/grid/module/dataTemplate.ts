@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-22 10:49:52
+ * @LastEditTime: 2023-12-15 15:05:12
  * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
@@ -23,6 +23,7 @@ export enum cardOnChangeType {
   openComponentsList = "openComponentsList",
   moduleApi = "moduleApi",
   highLightCard = "highLightCard",
+  upEmit = "upEmit",
 }
 
 export const gridSizeConfig = (
@@ -225,6 +226,12 @@ export const componentGetter = (
 ): any => {
   switch (component.type) {
     case cardComponentType.componentList:
+      // console.log(
+      //   "fuckcomponentList",
+      //   Object.keys(componentLists).indexOf(component.name),
+      //   componentLists,
+      //   component.name
+      // );
       if (Object.keys(componentLists).indexOf(component.name) > -1) {
         return componentLists[component.name];
       } else {

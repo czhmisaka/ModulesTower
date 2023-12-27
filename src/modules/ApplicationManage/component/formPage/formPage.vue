@@ -1,8 +1,8 @@
 
 <!--
  * @Date: 2022-11-09 11:19:57
- * @LastEditors: CZH
- * @LastEditTime: 2023-11-22 09:21:32
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-12-01 14:44:19
  * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/formPage/formPage.vue
 -->
 <template>
@@ -132,7 +132,7 @@ export default defineComponent({
 
   propsDetail: {
     title: {
-      label: "表单展示模板",
+      label: "表单展示模版",
       description: "一次性获取所有数据",
       type: inputType.text,
     },
@@ -146,12 +146,12 @@ export default defineComponent({
       type: inputType.obj,
     },
     showItemTemplate: {
-      label: "表单展示模板",
+      label: "表单展示模版",
       description: "一次性获取所有数据",
       type: inputType.functionEditor,
     },
     formInputTemplate: {
-      label: "表单输入模板",
+      label: "表单输入模版",
       type: inputType.obj,
     },
     btnList: {
@@ -238,23 +238,21 @@ export default defineComponent({
       }
       if (this.formDataFunc)
         this.formData = await this.formDataFunc(this);
-      console.log('初始化字段', this.formData)
     },
 
     async btnClick(btn: btnCellTemplate) {
       btn["isLoading"] = true;
-      if (btn.type == btnActionTemplate.OpenDrawer) {
+      if (btn.type == btnActionTemplate.OpenDrawer)
         this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
-      } else if (btn.type == btnActionTemplate.Function && btn.function) {
+      else if (btn.type == btnActionTemplate.Function && btn.function) {
         let that = this;
         try {
           await btn.function(that, that.formData);
         }
         catch { }
         this.$emit("search");
-      } else if (btn.type == btnActionTemplate.Url) {
+      } else if (btn.type == btnActionTemplate.Url)
         window.open(btn.url);
-      }
       btn["isLoading"] = false;
     },
 

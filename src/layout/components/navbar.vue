@@ -9,8 +9,6 @@ import topCollapse from "./sidebar/topCollapse.vue";
 import { useModuleHook } from "@/store/modules/module";
 import { useUserStore, useUserStoreHook } from "@/store/modules/user";
 import userInfoCard from "@/modules/userManage/component/userCard/userInfoCard.vue";
-import { userFieldStorage } from "@/modules/userManage/PageConfigData/user/userValueManage";
-import { userTableCellStorage } from "@/modules/userManage/PageConfigData/workteam";
 import { onMounted, reactive } from "vue";
 import { post } from "@/utils/api/requests";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
@@ -54,15 +52,10 @@ const {
 } = useNav();
 const userInfo = reactive({ data: null, userTemplate: [] });
 userInfo.data = async () => {
-  return await useUserStoreHook().getOptions();
+  let data = await useUserStoreHook().getOptions();
+  return data
 };
 onMounted(async () => {
-  const userFieldTemplate = await (await userFieldStorage()).getAll();
-  const userTemplate = [
-    ...userTableCellStorage.getByKeyArr(["name", "icon", "mobile"]),
-    ...userFieldTemplate,
-  ];
-  userInfo.userTemplate = userTemplate;
 });
 function toggleClass(flag: boolean, clsName: string, target?: HTMLElement) {
   const targetEl = target || document.body;
@@ -72,23 +65,7 @@ function toggleClass(flag: boolean, clsName: string, target?: HTMLElement) {
 }
 const router = useRouter();
 
-const loginOutBtn = btnMaker("登出", btnActionTemplate.Function, {
-  elType: "danger",
-  function: async (that, data) => {
-    await post("/web/usc/logout", {});
-    removeToken();
-    storageLocal.clear();
-    storageSession.clear();
-    const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
-    useAppStoreHook().setLayout(Layout);
-    setEpThemeColor(EpThemeColor);
-    useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
-    toggleClass(Grey, "html-grey", document.querySelector("html"));
-    toggleClass(Weak, "html-weakness", document.querySelector("html"));
-    router.push(loginPage);
-    resetRouter();
-  },
-});
+const loginOutBtn = useUserStoreHook().getLogOutBtn()
 
 const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
   icon: 'UserFilled',

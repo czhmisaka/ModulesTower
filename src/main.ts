@@ -1,11 +1,11 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-20 14:44:00
+ * @LastEditTime: 2023-12-06 17:21:06
  * @FilePath: /lcdp_fe_setup/src/main.ts
  */
 let num = 0;
-
+import { useCardStyleConfigHook } from "./store/modules/cardStyleConfig";
 import { createApp, Directive } from "vue";
 import App from "./App.vue";
 import iconCell from "./components/basicComponents/cell/icon/iconCell.vue";
@@ -79,6 +79,7 @@ getServerConfig(app).then(async (config) => {
   app.config.globalProperties.$utils = utils;
   app.use(MotionPlugin).use(ElementPlus, { zIndex: 100000 });
   app.mount("#app");
+  useCardStyleConfigHook().init();
 });
 
 import "animate.css";

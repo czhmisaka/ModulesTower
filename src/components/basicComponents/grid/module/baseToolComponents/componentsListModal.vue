@@ -1,31 +1,19 @@
 <!--
  * @Date: 2022-05-30 10:48:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-02-15 19:53:23
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue
+ * @LastEditTime: 2023-12-07 15:29:02
+ * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/baseToolComponents/componentsListModal.vue
 -->
 
 <template>
-  <div
-    :class="'background ' + (modalStatus.isOpen ? 'open' : 'close')"
-    @click="modalStatus.isOpen = false"
-  >
-    <div class="content" @click.stop="() => {}">
-      <div
-        class="cell"
-        v-for="(item, index) in Object.keys({ ...componentMap, ...componentLists })"
-        :key="index + '_component'"
-        :style="{
+  <div :class="'background ' + (modalStatus.isOpen ? 'open' : 'close')" @click="modalStatus.isOpen = false">
+    <div class="content" @click.stop="() => { }">
+      <div class="cell" v-for="(item, index) in Object.keys({ ...componentMap, ...componentLists })"
+        :key="index + '_component'" :style="{
           cursor: 'pointer',
           userSelect: 'none',
-        }"
-        @dblclick="addComponent(item)"
-        @touchend="addComponent(item)"
-      >
-        <componentsIconCard
-          :cardComponents="{ ...componentMap, ...componentLists }[item]"
-          :sizeUnit="sizeUnit"
-        />
+        }" @dblclick="addComponent(item)" @touchend="addComponent(item)">
+        <componentsIconCard :cardComponents="{ ...componentMap, ...componentLists }[item]" :sizeUnit="sizeUnit" />
       </div>
     </div>
   </div>
@@ -70,6 +58,7 @@ export default defineComponent({
       const comp = { ...this.componentMap, ...this.componentLists }[
         name
       ] as CardComponentTemplate;
+      console.error(JSON.parse(JSON.stringify(comp.settingDetail.baseProps)))
       let newComp: gridCellTemplate = gridCellMaker(
         name,
         name,
@@ -80,7 +69,7 @@ export default defineComponent({
         },
         {
           props: {
-            ...comp.settngDetail.baseProps,
+            ...comp.settingDetail.baseProps,
           },
         }
       );
@@ -118,6 +107,7 @@ export default defineComponent({
   transition: all 0.5s;
   display: flex;
   justify-content: center;
+
   .content {
     width: 80vw;
     height: 80vh;
@@ -132,6 +122,7 @@ export default defineComponent({
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
+
     .cell {
       width: 16vw;
       height: 16vw;
@@ -149,20 +140,24 @@ export default defineComponent({
     height: 10px;
     background-color: rgba(255, 255, 255, 0.2);
   }
+
   .content::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.2);
   }
+
   .content::-webkit-scrollbar-thumb {
     border-radius: 10px;
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: #555;
   }
 }
+
 .open {
   opacity: 1;
   z-index: 100000;
   transform: translate(0%);
+
   .formModalBox {
     transform: scale(1);
   }

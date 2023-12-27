@@ -1,15 +1,14 @@
 /*
  * @Date: 2022-11-04 17:22:52
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-04 09:38:55
- * @FilePath: /configforpagedemo/src/store/modules/permission.ts
+ * @LastEditTime: 2023-12-17 20:49:29
+ * @FilePath: /ConfigForDesktopPage/src/store/modules/permission.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
 import { cacheType } from "./types";
 import { constantMenus } from "@/router";
 import { ascending, filterTree, filterNoPermissionTree } from "@/router/utils";
-import { getMenuList } from "@/utils/api/admin/user";
 
 let menuList = [];
 export const usePermissionStore = defineStore({
@@ -25,7 +24,6 @@ export const usePermissionStore = defineStore({
   actions: {
     /** 组装整体路由生成的菜单 */
     async handleWholeMenus(routes: any[]) {
-      // if (menuList.length == 0) menuList = await getMenuList();
       this.wholeMenus = filterNoPermissionTree(
         filterTree(ascending(this.constantMenus.concat(routes)))
       );

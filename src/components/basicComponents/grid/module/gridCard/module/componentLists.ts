@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-05-06 09:09:06
  * @LastEditors: CZH
- * @LastEditTime: 2022-12-06 08:51:57
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
+ * @LastEditTime: 2023-12-23 11:43:55
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/gridCard/module/componentLists.ts
  */
 import { defineAsyncComponent } from "vue";
 import {
@@ -10,7 +10,7 @@ import {
   inputType,
   gridSizeMaker,
   CardComponentTemplate,
-} from "./../../dataTemplate";
+} from "../../dataTemplate";
 
 export const componentLists: { [key: string]: CardComponentTemplate } = {
   iconCell: cardComponentMaker(
@@ -64,6 +64,27 @@ export const componentLists: { [key: string]: CardComponentTemplate } = {
       key: "icon",
       description:
         "输入图标名称,展示对应图标,基于ElementPlus的图标库,点击时触发对应自定义事件",
+      gridInfo: {
+        small: gridSizeMaker(1, 1),
+      },
+    }
+  ),
+  btn: cardComponentMaker(
+    defineAsyncComponent(
+      () => import("@/components/basicComponents/cell/icon/btn.vue")
+    ),
+    {},
+    {
+      name: "Position",
+      onClickFunc: (content: any) => {
+        const { props, context, e } = content;
+      },
+    },
+    {
+      label: "Button",
+      labelNameCN: "按钮触发器",
+      key: "btn",
+      description: "使用elbutton 组件内嵌,点击时触发对应自定义事件",
       gridInfo: {
         small: gridSizeMaker(1, 1),
       },

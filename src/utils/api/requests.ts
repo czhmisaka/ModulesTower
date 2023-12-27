@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-01-22 18:59:01
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-11-20 16:17:09
- * @FilePath: /lcdp_fe_setup/src/utils/api/requests.ts
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-12-24 21:18:54
+ * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
 import axios from "axios";
@@ -26,9 +26,6 @@ import router from "@/router";
 const { VITE_PROXY_DOMAIN_REAL, VITE_PROXY_DOMAIN_FLOW } = loadEnv();
 
 export function getPreUrl() {
-  // let domin = location.pathname.replaceAll("/", "");
-  // if (domin != "") domin = "/" + domin;
-  // return domin + VITE_PROXY_DOMAIN_REAL;
   return VITE_PROXY_DOMAIN_REAL;
 }
 export function getFlowUrl() {
@@ -115,25 +112,9 @@ request.interceptors.response.use(
   (response) => {
     removeQueue(response.config);
     let res = response.data;
-    if (res.status == 200) {
+    if (res.status == 200 ||res.code === 1000) {
       return Promise.resolve(res);
-    }
-    if (
-      response.headers["content-type"] ==
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-      (response.data &&
-        response.data.size &&
-        (response.data.type == "text/xml" ||
-          response.data.type == "application/force-download" ||
-          response.data.type == "application/octet-stream"))
-    ) {
-      return Promise.resolve(res);
-    } else if (
-      (res.code === 200 && res.type != "error") ||
-      res.type == "success"
-    ) {
-      return Promise.resolve(res);
-    } else if (res.code === 401) {
+    } else if (response.status == 401 ||res.code === 401) {
       // 未登录状态
       const route = router.getRoutes();
       const nowRoute = route.filter((x) => {
@@ -193,7 +174,6 @@ export function post_formData(url: string, params: object) {
       }
     }
   }
-  console.log(formData,'pppppp')
   return request({
     url: getPreUrl() + url,
     headers: getHeaders({

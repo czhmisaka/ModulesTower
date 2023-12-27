@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-05-30 10:47:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-10 15:01:15
+ * @LastEditTime: 2023-12-06 17:08:04
  * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/sideMenu/sideMenu.vue
 -->
 <script lang="ts">
@@ -76,7 +76,6 @@ export default defineComponent({
   <cardBg ref="mainBox" :cusStyle="{
     width: '100%',
     padding: '0px',
-    borderRadius: '6px',
     overflow: 'hidden',
     paddingTop: '0px'
   }">

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-11-20 18:52:44
+ * @LastEditTime: 2023-11-23 09:01:59
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -289,15 +289,15 @@ export default defineComponent({
       await this.initForm(this.queryItemTemplate);
     },
     initScreenForm(queryItemTemplate: tableCellTemplate[] = this.queryItemTemplate){
-      this.checkboxScreenGroup = []
-      console.log(queryItemTemplate,'queryItemTemplate')
+      const array = [];
       this.screenFormList = queryItemTemplate.map(item=>{
-        this.checkboxScreenGroup.push(item.key)
+        array.push(item.key)
         return {
           label:item.label,
           key: item.key,
         }
       })
+      this.checkboxScreenGroup = array
     },
     getDownLoadRequestHeaders() {
       return getDownLoadRequestHeaders();

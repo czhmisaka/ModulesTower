@@ -1,12 +1,13 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-19 14:11:43
- * @FilePath: /lcdp_fe_setup/src/utils/api/admin/routes.ts
+ * @LastEditTime: 2023-12-24 22:48:17
+ * @FilePath: /ConfigForDesktopPage/src/utils/api/admin/routes.ts
  */
 import { useModuleHook } from "@/store/modules/module";
 import { http } from "../../http";
 import { get, post } from "../requests";
+import { getModuleFromView } from "@/router/util";
 
 type Result = {
   success: boolean;
@@ -21,8 +22,29 @@ export const getAsyncRoutes = async (noRefresh: boolean = false) => {
     };
   } else {
     let data = [];
-    let res = await post("/web/usc/menu/list/role", {});
-    await module.init(res.data);
+    // let res = await post("/web/usc/menu/list/role", {});
+    // let res = await get('/admin/base/comm/permmenu',{})
+    // await module.init(res.data);
+    let moduleList = (await getModuleFromView())
+      .map((x) => {
+        return x.routers[0].children.length > 0 ? x.routers[0] : false;
+      })
+      .filter(Boolean);
+    moduleList = moduleList.map((module) => {
+      return {
+        ...module,
+        type:1,
+        children: module.children.map((x) => {
+          return {
+            ...x,
+            type:3,
+            urls: [x.path],
+          };
+        }),
+      };
+    });
+    await module.init(moduleList);
+    console.log(useModuleHook().moduleList,'asdasdas')
     return {
       data: module.nowModule.children || [],
     };

@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2023-01-16 16:47:31
- * @FilePath: /configforpagedemo/src/utils/api/user/header.ts
+ * @LastEditTime: 2023-12-24 21:17:20
+ * @FilePath: /ConfigForDesktopPage/src/utils/api/user/header.ts
  */
 
 import { getCookie } from "./cookie";
@@ -34,7 +34,8 @@ const getheaderTemplate = () => {
   const equipment = isMobile();
   let back = {
     route: window.location.href.split("#")[1],
-    token: DataInfo["accessToken"], // 向后台发送的token
+    // token: DataInfo["accessToken"], // 向后台发送的token
+    Authorization:DataInfo['accessToken'],
     "Content-Type": "application/json;charset=utf-8",
     "ddm-parameter-encrypt": true,
     menuId,

@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-21 15:13:10
- * @FilePath: /lcdp_fe_setup/src/store/modules/module.ts
+ * @LastEditTime: 2023-12-23 12:54:37
+ * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
 import { store } from "@/store";
@@ -150,8 +150,9 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
           frameSrc: cell.path,
         };
         cell.path = "/" + cell.name;
-      } else
+      } else{
         for (let i = 0; i < routerBackup.length; i++) {
+
           if (routerBackup[i].path == cell.path) {
             // 获取目标路由
             let backup = routerBackup[i];
@@ -162,12 +163,13 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
             cell.meta = {
               ...backup.meta,
               ...cell.meta,
-              PageName: cell.urls[0],
+              PageName: cell.urls[0]||cell.path,
               showLink: cell.showLink,
             };
             break;
           }
         }
+      }
     }
   } else {
     cell["path"] = "/" + cell.name;

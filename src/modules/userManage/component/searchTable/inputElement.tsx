@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-06 08:57:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-13 16:38:59
+ * @LastEditTime: 2023-12-13 16:52:22
  */
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import {
@@ -425,7 +425,6 @@ inputElement[formInputType.treeSelect] = {
     if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
     if (input.funcInputOptionsLoader)
       attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
-
     Object.keys(attrs).map((x) => {
       if (x == 'type') {
         properties.type = attrs[x]
@@ -448,6 +447,8 @@ inputElement[formInputType.searchList] = {
       },
       "ui:widget": defineComponent({
         props: [
+          "props",
+          "needTreeMode",
           "style",
           "class",
           "readonly",
@@ -458,16 +459,19 @@ inputElement[formInputType.searchList] = {
           "remoteMethod",
           "modelValue",
           "placeholder",
-          "clearable"
+          "clearable",
+          'lazy',
+          'load'
         ],
         setup(props, context) {
           let options = ref([]);
           props["remoteMethod"]("").then(res => {
             options.value = res;
           });
+          console.log(props.needTreeMode, 'needTreeMode')
           return () => [
             h(
-              ElSelect,
+              props.needTreeMode ? ElTreeSelect : ElSelect,
               {
                 ...props,
                 placeholder: props.placeholder.replace('输入', '选择'),
@@ -496,6 +500,7 @@ inputElement[formInputType.searchList] = {
       filterable: true,
       remote: true,
       reserveKeyword: true,
+      remoteMethod: async () => { return [] }
     };
     if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
     if (input.funcInputOptionsLoader)
@@ -509,6 +514,86 @@ inputElement[formInputType.searchList] = {
     return properties;
   },
 };
+
+
+
+
+// 搜索用searchList
+inputElement[formInputType.searchTree] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "array",
+      items: {
+        type: 'string'
+      },
+      "ui:widget": defineComponent({
+        props: [
+          "props",
+          "needTreeMode",
+          "style",
+          "class",
+          "readonly",
+          "multiple",
+          "filterable",
+          "remote",
+          "reserveKeyword",
+          "remoteMethod",
+          "modelValue",
+          "placeholder",
+          "clearable",
+          "showCheckBox",
+          'lazy',
+          'load'
+        ],
+        setup(props, context) {
+          let options = ref([]);
+          props["remoteMethod"]("").then(res => {
+            options.value = res;
+          });
+          console.log(props.needTreeMode, 'needTreeMode')
+          return () => [
+            h(
+              ElTreeSelect,
+              {
+                data: options.value,
+                ...props,
+                placeholder: props.placeholder.replace('输入', '选择'),
+                remoteMethod: async (query) => {
+                  options.value = await props["remoteMethod"](query)
+                },
+                "onUpdate:modelValue": (e) => {
+                  context.emit("update:modelValue", e);
+                },
+              }
+            ),
+          ];
+        },
+      }),
+    } as stringAnyObj;
+    let attrs = {
+      multiple: true,
+      filterable: true,
+      remote: true,
+      reserveKeyword: true,
+      remoteMethod: async () => { return [] }
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      if (x == 'type') {
+        properties.type = attrs[x]
+      }
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+};
+
+
+
 
 /**
  * @name: indexListForSwitch

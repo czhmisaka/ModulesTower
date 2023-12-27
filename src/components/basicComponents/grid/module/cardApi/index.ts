@@ -1,10 +1,11 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-21 16:54:44
+ * @LastEditTime: 2023-12-15 15:14:31
  * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
+import { stringAnyObj } from "@/modules/ApplicationManage/types";
 import {
   cardOnChangeType,
   gridCellOptions,
@@ -321,6 +322,27 @@ export const upToTopDataChange = (
     let func = content["$emit"] ? "$emit" : "emit";
     content[func]("onChange", value, {
       type: [cardOnChangeType.upOnChange],
+    });
+  } catch (err) {
+    console.error("upToTopDataChange 错误:", err, content, value);
+  }
+};
+
+/**
+ * @name: upToTopDataChange
+ * @description: 触发 griddesktop 的onchange 上报事件
+ * @authors: CZH
+ * @Date: 2023-02-08 10:35:37
+ */
+export const upEmit = (
+  content: { [key: string]: any },
+  value: { [key: string]: stringAnyObj }
+) => {
+  if (!checkContext(content, value)) return;
+  try {
+    let func = content["$emit"] ? "$emit" : "emit";
+    content[func]("onChange", value, {
+      type: [cardOnChangeType.upEmit],
     });
   } catch (err) {
     console.error("upToTopDataChange 错误:", err, content, value);

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-29 11:25:08
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-25 20:20:21
+ * @LastEditTime: 2023-12-15 14:25:56
  * @FilePath: /lcdp_fe_setup/src/components/basicComponents/cell/icon/icon.vue
 -->
 <script lang="ts">
@@ -12,7 +12,7 @@ import iconCell from "@/components/basicComponents/cell/icon/iconCell.vue";
 import { ElPopover } from "element-plus";
 export default defineComponent({
   mixins: [baseComponents],
-  props: ["name", "sizeUnit", "onClickFunc", "tips", "detail"],
+  props: ["name", "sizeUnit", "onClickFunc", "tips", "detail", 'title'],
   setup(props, context) {
     context.emit("ready");
     const { onClickFunc } = toRefs(props);
@@ -59,11 +59,11 @@ export default defineComponent({
                   }),
               }
             )
-            : h(iconCell, {
+            : [props.title, props.name ? h(iconCell, {
               name: props.name,
               sizeUnit: props.sizeUnit,
               detail: props.detail,
-            })
+            }) : null]
       ),
     ];
   },

@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-21 15:48:56
- * @FilePath: /lcdp_fe_setup/src/router/util.ts
+ * @LastEditTime: 2023-12-22 16:46:10
+ * @FilePath: /ConfigForDesktopPage/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
 import { CardComponentTemplate } from "../components/basicComponents/grid/module/dataTemplate";
@@ -19,7 +19,7 @@ export const timeChecker = class {
   checkTimeMap: stringAnyObj;
   checkNumMap: stringAnyObj;
   showConsole: boolean;
-  constructor(name, showConsole: boolean = true) {
+  constructor(name, showConsole: boolean = false) {
     this.name = name;
     this.startTime = new Date().getTime();
     this.checkTimeMap = {};
@@ -165,7 +165,7 @@ let action = {} as stringAnyObj;
  * @param {*} basePath
  */
 export const getModuleFromView = async (init = false) => {
-  timeConsole.checkTime("模块加载");
+  timeConsole.checkTime("模块加载", "开始");
   if (!init) {
     await new Promise((res) => {
       let interval = setInterval(() => {
@@ -176,7 +176,7 @@ export const getModuleFromView = async (init = false) => {
             moduleList.filter((x) => x.components).length
         ) {
           clearInterval(interval);
-          timeConsole.checkTime("模块加载", "fake");
+          timeConsole.checkTime("模块加载", "fake等待");
           res(true);
         }
       }, 30);
@@ -190,6 +190,7 @@ export const getModuleFromView = async (init = false) => {
   // fuck 迁移这种规模的代码都有点困难 -- czh 20230618
   // 好消息，现在我们改成了import(试图) -- czh 20230706
   // TMD为什么组件加载时间这么长，请不要把组件当成页面写 -- czh 20231120
+  // 需要完善组件加载逻辑，避免首次载入所有组件 -- czh 
   moduleList = [] as modulesCellTemplate[];
   const importModule = import.meta.glob("@/modules/**", {});
   const requireList = Object.keys(importModule) as string[];
@@ -416,7 +417,7 @@ export const getModuleFromView = async (init = false) => {
           moduleList.filter((x) => x.components).length
       ) {
         clearInterval(interval);
-        timeConsole.checkTime("模块加载");
+        timeConsole.checkTime("模块加载", "实际结束");
         res(true);
       }
     }, 30);

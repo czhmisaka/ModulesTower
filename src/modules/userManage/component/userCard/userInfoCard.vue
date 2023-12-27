@@ -1,13 +1,13 @@
 <!--
  * @Date: 2023-02-13 10:25:34
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-11-21 20:56:55
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/userCard/userInfoCard.vue
+ * @LastEditors: CZH
+ * @LastEditTime: 2023-12-22 17:16:40
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/userCard/userInfoCard.vue
 -->
 <template>
   <cardBg :cusStyle="cardBgCusStyle">
     <div :style="{
-      width: '180px',
+      width: '280px',
       height: '100%',
       overflow: 'auto',
       overflowX: 'hidden',
@@ -28,7 +28,6 @@
     margin: blockSizePercent(0.3),
   }" class="mainColorBorder" :src="userpng" fit="cover" />
 
-        <!-- userInfoData['icon'] ? userInfoData['icon'].replace('/lcdp', '/api') : userpng -->
         <div class="flexCol" :style="{
           width: `calc(100% - ${blockSizePercent(2)})`,
           fontSize: blockSizePercent(0.2),
@@ -36,8 +35,7 @@
           <span class="name">
             {{ userInfoData["username"] }}
             <br />
-            <!-- <span class="mobile">部门：{{ userInfoData["unitNames"] }}</span> -->
-            <span class="mobile">部门：{{ userInfoData['units'][0]?userInfoData['units'].name:'' }}</span>
+            <span class="mobile">部门：{{ userInfoData['units'] && userInfoData['units'][0] ? userInfoData['units'][0].name : '' }}</span>
           </span>
         </div>
       </div>
@@ -168,7 +166,7 @@ export default defineComponent({
         transition: "box-shadow 0.4s,transform 0.4s",
         overflow: "none",
         margin: '6px',
-        width: 'calc( 180px + 12px)'
+        width: 'calc( 230px + 12px)'
       };
       Object.keys(data).map((x) => {
         if (!data[x]) delete data[x];
@@ -204,19 +202,12 @@ export default defineComponent({
 
   async mounted() {
     this.$emit("ready", true);
-    if (this.userInfo) {
-      this.userInfoData = await this.userInfo();
-    }
+    if (this.userInfo) this.userInfoData = await this.userInfo();
     this.$emit("ready");
   },
   setup(props, context) {
-    const { sizeUnit, detail: gridInfo } = toRefs(props);
-
     // 方便获取 尺寸
     const blockSizePercent = (num, unit = "px"): string | number => {
-      // const size = gridInfo.value.gridInfo.default.size.width;
-      // const sizeChangeRate = size / 3 / 2;
-      // return sizeUnit.value["blockSize"] * num * sizeChangeRate + unit;
       return 30 * num + unit;
     };
 
