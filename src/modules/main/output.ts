@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2022-11-24 10:05:27
- * @FilePath: /configforpagedemo/src/modules/main/output.ts
+ * @LastEditTime: 2023-12-27 21:10:25
+ * @FilePath: /ConfigForDesktopPage/src/modules/main/output.ts
  */
 export const moduleInfo = {
   name: "main",
@@ -13,7 +13,8 @@ export const moduleInfo = {
 };
 
 
-export const output = {
+export const output = async ()=>{
+  return {};
 };
 
 // 模组打包配置

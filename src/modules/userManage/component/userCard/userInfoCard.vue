@@ -99,7 +99,7 @@ import {
 } from "@/modules/userManage/types";
 export default defineComponent({
   componentInfo: {
-    labelNameCn: "用户信息展示组件",
+    labelNameCN: "用户信息展示组件",
     key: "userInfoCard",
     description: "展示用户信息",
     gridInfo: {

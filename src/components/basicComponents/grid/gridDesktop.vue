@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-15 15:16:00
- * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/gridDesktop.vue
+ * @LastEditTime: 2023-12-27 21:02:37
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
 <template>
@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import { defineComponent, shallowRef } from "vue";
-import { getAction } from "@/router/util";
+import { getAction } from '@/router/util';
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import cardEditModal from "@/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue";
 import { testData } from "./module/testData";
@@ -72,9 +72,9 @@ import card from "@/components/basicComponents/grid/module/gridCard/card.vue";
 import gridLayout from "./GridLayout/GridLayout.vue";
 import gridItem from "./GridLayout/GridItem.vue";
 import { takeRight } from "lodash";
-import { timeConsole } from "@/main";
 import { gridCell } from '../../../modules/userManage/component/searchTable/searchTable';
 import { deepClone } from '../../../utils/index';
+import { timeConsole } from '@/router/util'
 let useAble = 0;
 function throttle(func, delay) {
   let timer = null;

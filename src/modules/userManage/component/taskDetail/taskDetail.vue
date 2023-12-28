@@ -45,7 +45,7 @@ import {
 import { post, get } from "@/utils/api/requests";
 export default defineComponent({
     componentInfo: {
-        labelNameCn: "监控任务详情页面",
+        labelNameCN: "监控任务详情页面",
         key: "taskDetail",
         description:
             "",

@@ -106,7 +106,7 @@ enum sizeTem {
 const random = Math.floor(Math.random() * 10000000);
 export default defineComponent({
   componentInfo: {
-    labelNameCn: "菜单列表组件(远程数据)",
+    labelNameCN: "菜单列表组件(远程数据)",
     key: "menuListRemote",
     description: "更具输入的menuData展示列表，点击输出对应的单元对象",
     gridInfo: {

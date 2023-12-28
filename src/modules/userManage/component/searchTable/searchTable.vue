@@ -62,7 +62,7 @@ import {
   btnActionTemplate,
 } from "@/modules/userManage/types";
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
-import { timeConsole } from "@/main";
+import { timeConsole } from '@/router/util'
 import { useUserStore, useUserStoreHook } from '../../../../store/modules/user';
 import { changeCardProperties } from '../../../../components/basicComponents/grid/module/cardApi/index';
 
@@ -112,7 +112,7 @@ let num = true
 let fuckk = throttle(fuck, 200);
 export default defineComponent({
   componentInfo: {
-    labelNameCn: "搜索列表组件",
+    labelNameCN: "搜索列表组件",
     key: "searchTable",
     description:
       "搜索列表组件，可以监听baseData内的参数作为搜索传参数，支持对接不同风格的表单搜索组件",

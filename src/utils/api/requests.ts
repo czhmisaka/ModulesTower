@@ -20,7 +20,7 @@ const isDev = () => Env == "development";
 import { loadEnv } from "@build/index";
 import { ElLoading } from "element-plus";
 import { getPureRequestHeaders } from "./user/header";
-import { timeConsole } from "@/main";
+import { timeConsole } from '@/router/util'
 import { useRoute, useRouter } from "vue-router";
 import router from "@/router";
 const { VITE_PROXY_DOMAIN_REAL, VITE_PROXY_DOMAIN_FLOW } = loadEnv();

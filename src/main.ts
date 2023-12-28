@@ -1,24 +1,19 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-06 17:21:06
- * @FilePath: /lcdp_fe_setup/src/main.ts
+ * @LastEditTime: 2023-12-27 21:00:13
+ * @FilePath: /ConfigForDesktopPage/src/main.ts
  */
-let num = 0;
+import { getAction, getModuleFromView, timeChecker } from "@/router/util";
 import { useCardStyleConfigHook } from "./store/modules/cardStyleConfig";
 import { createApp, Directive } from "vue";
 import App from "./App.vue";
 import iconCell from "./components/basicComponents/cell/icon/iconCell.vue";
-
 import router from "./router";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import { useUserStoreHook } from "./store/modules/user";
-
 import { MotionPlugin } from "@vueuse/motion";
-
-import { getAction, timeChecker } from "@/router/util";
-
 import * as Icons from "@element-plus/icons-vue";
 import utils from "./utils";
 import Vue3DraggableResizable from "vue3-draggable-resizable";
@@ -26,7 +21,6 @@ import { getServerConfig } from "@/utils/config/appConfig";
 import { injectResponsiveStorage } from "@/utils/responsive";
 import { setupStore } from "@/store";
 
-export let timeConsole = new timeChecker("模块生成");
 // useUserStoreHook().getOptions();
 const app = createApp(App);
 
@@ -60,17 +54,16 @@ Object.keys(directives).forEach((key) => {
 // 全局注册按钮级别权限组件
 import { Auth } from "@/components/ReAuth";
 app.component("Auth", Auth);
-
 for (let x in Icons) {
   if (utils.isValidKey(x, Icons)) {
     app.component(x, Icons[x]);
   } else {
   }
 }
-
 app.component("vue-drag-resize", Vue3DraggableResizable);
-
 getServerConfig(app).then(async (config) => {
+  const moduleList = await getModuleFromView(true);
+  console.log(moduleList, "PageName");
   app.use(router);
   await router.isReady();
   injectResponsiveStorage(app, config);

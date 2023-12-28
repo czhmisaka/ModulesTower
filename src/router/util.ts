@@ -1,16 +1,14 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-22 16:46:10
- * @FilePath: /ConfigForDesktopPage/src/router/util.ts
+ * @LastEditTime: 2023-12-27 20:50:23
+ * @FilePath: /lcdp_fe_setup/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
 import { CardComponentTemplate } from "../components/basicComponents/grid/module/dataTemplate";
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
-import { transformSync } from "@babel/core";
 import { desktopDataTemplate, stringAnyObj } from "@/modules/userManage/types";
-import { timeConsole } from "@/main";
 
 // 函数执行时间计算
 export const timeChecker = class {
@@ -75,6 +73,8 @@ export const timeChecker = class {
     }
   };
 };
+
+export let timeConsole = new timeChecker("模块生成");
 
 /**
  * @name: metaInfoTemplate
@@ -176,10 +176,10 @@ export const getModuleFromView = async (init = false) => {
             moduleList.filter((x) => x.components).length
         ) {
           clearInterval(interval);
-          timeConsole.checkTime("模块加载", "fake等待");
+          timeConsole.checkTime("模块加载", "实际结束");
           res(true);
         }
-      }, 30);
+      }, 100);
     });
     return moduleList;
   }
@@ -190,7 +190,6 @@ export const getModuleFromView = async (init = false) => {
   // fuck 迁移这种规模的代码都有点困难 -- czh 20230618
   // 好消息，现在我们改成了import(试图) -- czh 20230706
   // TMD为什么组件加载时间这么长，请不要把组件当成页面写 -- czh 20231120
-  // 需要完善组件加载逻辑，避免首次载入所有组件 -- czh 
   moduleList = [] as modulesCellTemplate[];
   const importModule = import.meta.glob("@/modules/**", {});
   const requireList = Object.keys(importModule) as string[];
@@ -326,32 +325,6 @@ export const getModuleFromView = async (init = false) => {
   // 等待组件加载
   Promise.all(compDealPromiseList);
 
-  // 处理outPut文件
-  dealRequireList(
-    (dealName, len) => dealName == output && len == 5,
-    (fileName: string) => {
-      const moduleName = getModuleName(fileName);
-      moduleList.map(async (module: modulesCellTemplate) => {
-        if (module.name == moduleName) {
-          const output = (await importModule[fileName]()) as stringAnyObj;
-          if (output["output"]) module.output = output["output"];
-          if (output["moduleInfo"]) {
-            const moduleInfo = output["moduleInfo"];
-            module.baseInfo = {
-              ...module.baseInfo,
-              ...moduleInfo,
-            };
-            module.routers[0].meta = {
-              ...module.routers[0].meta,
-              ...moduleInfo,
-            };
-          }
-        }
-        return module;
-      });
-    }
-  );
-
   // 添加默认路由方案 (output配置中可以关闭)
   dealRequireList(
     (dealName, len) => dealName == pageConfigData,
@@ -364,26 +337,46 @@ export const getModuleFromView = async (init = false) => {
             module.pageMap[x] = pageMap[x];
           }
           Object.keys(pageMap).map((pageName: string) => {
+            const componentOptions = () =>
+              import(`@/modules/${moduleName}/Index.vue`);
+            const options = {
+              meta: {
+                originData: {
+                  ...pageMap[pageName],
+                  desktopData: null,
+                },
+                ...pageMap[pageName]["cusStyle"],
+                title: pageMap[pageName]["name"] || moduleName + "_" + pageName,
+              },
+            };
             module.routers[0].children.push(
               routerCellMaker(
                 `/${moduleName}/${pageName}`,
                 pageMap[pageName]["name"]
                   ? moduleName + "_" + pageMap[pageName]["name"]
                   : moduleName + "_" + pageName,
-                () => import(`@/modules/${moduleName}/Index.vue`),
-                {
-                  meta: {
-                    originData: {
-                      ...pageMap[pageName],
-                      desktopData: null,
-                    },
-                    ...pageMap[pageName]["cusStyle"],
-                    title:
-                      pageMap[pageName]["name"] || moduleName + "_" + pageName,
-                  },
-                }
+                componentOptions,
+                options
               )
             );
+            if (pageMap[pageName]["RouterPath"]) {
+              module.routers.push(
+                routerCellMaker(
+                  pageMap[pageName]["RouterPath"],
+                  pageMap[pageName]["name"]
+                    ? moduleName + "_" + pageMap[pageName]["name"]
+                    : moduleName + "_" + pageName,
+                  componentOptions,
+                  {
+                    ...options,
+                    meta: {
+                      ...options.meta,
+                      PageName: pageName,
+                    },
+                  }
+                )
+              );
+            }
           });
         }
         return module;
@@ -402,6 +395,32 @@ export const getModuleFromView = async (init = false) => {
             ...module.routers,
             ...(await requireModule(fileName)).default,
           ];
+        }
+        return module;
+      });
+    }
+  );
+
+  // 处理outPut文件
+  dealRequireList(
+    (dealName, len) => dealName == output && len == 5,
+    (fileName: string) => {
+      const moduleName = getModuleName(fileName);
+      moduleList.map(async (module: modulesCellTemplate) => {
+        if (module.name == moduleName) {
+          const output = (await importModule[fileName]()) as stringAnyObj;
+          if (output["output"]) module.output = await output.output();
+          if (output["moduleInfo"]) {
+            const moduleInfo = output["moduleInfo"];
+            module.baseInfo = {
+              ...module.baseInfo,
+              ...moduleInfo,
+            };
+            module.routers[0].meta = {
+              ...module.routers[0].meta,
+              ...moduleInfo,
+            };
+          }
         }
         return module;
       });
@@ -481,6 +500,7 @@ export const getAction = () => {
         }
       }
     });
+
     return back;
   };
 

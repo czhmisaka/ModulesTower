@@ -34,7 +34,7 @@ export default defineComponent({
   components: { cardBg },
 
   componentInfo: {
-    labelNameCn: "人员选择 - 展示组件",
+    labelNameCN: "人员选择 - 展示组件",
     key: "userSelect",
     description: "展示当前选择的人员，部门，角色等信息，可通过配置方式修改选择方式",
     gridInfo: {

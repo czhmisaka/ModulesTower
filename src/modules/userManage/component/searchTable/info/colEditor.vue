@@ -38,7 +38,7 @@ import { deepClone } from '@/utils';
 
 export default defineComponent({
     componentInfo: {
-        labelNameCn: "表单列排序",
+        labelNameCN: "表单列排序",
         key: "colEditor",
         description: "表单列排序菜单",
         gridInfo: {},

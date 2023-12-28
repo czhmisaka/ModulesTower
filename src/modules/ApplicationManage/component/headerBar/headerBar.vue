@@ -28,7 +28,7 @@ import { useUserStore, useUserStoreHook } from "@/store/modules/user";
 import Navbar from "@/layout/components/navbar.vue";
 export default defineComponent({
   componentInfo: {
-    labelNameCn: "头部导航条",
+    labelNameCN: "头部导航条",
     key: "headerBar",
     description: "头部导航条",
     gridInfo: {

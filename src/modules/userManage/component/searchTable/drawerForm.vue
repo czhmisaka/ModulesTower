@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-19 15:27:20
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/drawerForm.vue
+ * @LastEditTime: 2023-12-28 12:43:54
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
   <el-drawer v-if="plugInData" v-model="isOpen" :title="plugInData.title"

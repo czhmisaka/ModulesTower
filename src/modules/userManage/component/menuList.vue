@@ -80,7 +80,7 @@ enum sizeTem {
 
 export default defineComponent({
   componentInfo: {
-    labelNameCn: "菜单列表组件",
+    labelNameCN: "菜单列表组件",
     key: "menuList",
     description: "更具输入的menuData展示列表，点击输出对应的单元对象",
     gridInfo: {

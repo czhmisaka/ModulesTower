@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-08 18:24:27
- * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/output.ts
+ * @LastEditTime: 2023-12-27 21:10:17
+ * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/output.ts
  */
 export const moduleInfo = {
   name: "ApplicationManage",
@@ -11,7 +11,9 @@ export const moduleInfo = {
   author: "czh",
 };
 
-export const output = {};
+export const output = async () => {
+  return {};
+};
 
 // 模组打包配置
 export const modulePackConfig = {};

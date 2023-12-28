@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-25 21:40:59
+ * @LastEditTime: 2023-12-28 12:41:23
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
@@ -26,9 +26,10 @@ let pageConfig = {
     cusStyle: {
       ...base.cusStyle,
       wholeScreen: true,
+      maxRows:8,
       Fullscreen:true
     },
-    menuId:'12312'
+    menuId:'12'
   },
 } as { [key: string]: desktopDataTemplate };
 

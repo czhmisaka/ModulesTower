@@ -20,7 +20,7 @@ import { propInfo } from '../../../../components/basicComponents/grid/module/dat
 export default defineComponent({
   components: { cardBg, sideMenuCell },
   componentInfo: {
-    labelNameCn: "侧边菜单",
+    labelNameCN: "侧边菜单",
     key: "sideMenu",
     description: "展示侧边菜单",
     gridInfo: {

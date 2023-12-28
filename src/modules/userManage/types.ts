@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-13 16:37:00
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/types.ts
+ * @LastEditTime: 2023-12-27 23:08:26
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/types.ts
  */
 
 import {
@@ -59,11 +59,17 @@ export interface drawerProps {
   data?: stringAnyObj;
   //  true 纯数据展示模式
   noEdit?: boolean;
+
+  // true 开启全屏幕桌面模式，此时的按钮列表会隐藏
+  fullscreenGridDesktop?: boolean;
   //  true 开启桌面模式 （需要搭配 gridDesktopConfig 属性使用
   gridDesktop?: boolean;
   gridDesktopConfig?: desktopDataTemplate;
   // 表单输入服务
   queryItemTemplate?: tableCellOptions[];
+
+  // 弹窗背景色
+  bgColor?: string;
 
   // 针对当前表单的按钮服务
   btnList?: btnCellTemplate[];
@@ -75,8 +81,14 @@ export interface cusStyle {
   wholeScreen: boolean;
   maxRows: number;
   margin: number;
+  // 全屏显示???这个忘了，应该是有问题的，回头改一下
   Fullscreen?: boolean;
+  // 展示在菜单中
   showLink?: boolean;
+  // 所有用户可见，避免无权限跳转
+  allPeopleCanSee?: boolean;
+  //
+  noUserAndMenu?: boolean;
 }
 
 /**
@@ -88,14 +100,22 @@ export interface cusStyle {
 export interface desktopDataTemplate {
   [key: string]: any;
   desktopData?: () => Promise<gridCellTemplate[]> | gridCellTemplate[];
+  // 列宽
   gridColNum?: number;
+  // 自定义样式
   cusStyle?: cusStyle;
+  // 预先载入的baseData
   preBaseData?: stringAnyObj;
   permission?: stringAnyObj[];
   dataPermission?: stringAnyObj[];
+  // 当前页面使用的按钮列表（用于按钮权限处理）
   btnList?: btnCellTemplate[];
+  // 全屏显示，去除menu和header
   Fullscreen?: boolean;
+  // 直接载入路由配置
   InRouter?: boolean;
+  // 自定义path
+  RouterPath?: string;
 }
 
 export interface gridDesktopPropsTemplate extends desktopDataTemplate {
@@ -232,6 +252,8 @@ export enum showType {
 export interface tableCellTemplate extends tableCellOptions {
   label: string;
   key: string;
+  // 可用于表单可见判断
+  showAble: boolean;
   [key: string]: any;
 }
 
@@ -266,6 +288,7 @@ export enum formInputType {
   treeSelect = "treeSelect",
   treeSelectRemote = "treeSelectRemote",
   searchList = "searchList",
+  searchTree = "searchTree",
   indexListForSwitch = "indexListForSwitch",
   button = "button",
   searchTable = "searchTable",

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-23 11:41:24
+ * @LastEditTime: 2023-12-28 09:29:22
  * @FilePath: /ConfigForDesktopPage/src/store/modules/cache.ts
  */
 import { defineStore } from "pinia";
@@ -40,9 +40,17 @@ export const cacheStore = defineStore({
       else return false;
     },
 
-    // 提示若已有数据应当刷新
-    setRefresh(key) {
-      if (this.isInCache(key)) this.keyLoadMap[key] = loadStatus.isInit;
+    // 提示若已有数据应当刷新 // 可以用于刷新全局缓存数据
+    setRefresh(key = "") {
+      if (key == "") {
+        for (const key in this.keyLoadMap) {
+          delete this.data[key];
+          this.keyLoadMap[key] = loadStatus.isLoading;
+        }
+      } else if (this.isInCache(key)) {
+        delete this.data[key];
+        this.keyLoadMap[key] = loadStatus.isInit;
+      }
     },
 
     // 注册需要缓存的数据和key
@@ -74,6 +82,9 @@ export const cacheStore = defineStore({
         // 缓存出错 // 可能超时等
         if (status == loadStatus.error) return null;
       } else return null;
+
+      // 调试用的，别乱开，开了每次都会重新执行数据获取函数 // 用于排查数据为能及时更新的问题
+      // this.setRefresh(key);
     },
 
     // 等待数据获取
@@ -121,8 +132,20 @@ export const cacheStore = defineStore({
       return this.data[key];
     },
 
-    // 清除key和data
-    async clear(key) {},
+    // 清除某个key // 或者全部清空
+    async clear(key = "") {
+      if (key == "") {
+        this.data = {};
+        this.keyLoadMap = {};
+        this.dataLoadFuncMap = {};
+        return true;
+      } else if (this.isInCache(key)) {
+        delete this.dataLoadFuncMap[key];
+        delete this.keyLoadMap[key];
+        delete this.data[key];
+        return true;
+      } else return false;
+    },
   },
 });
 

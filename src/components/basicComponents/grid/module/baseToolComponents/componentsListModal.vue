@@ -73,15 +73,15 @@ export default defineComponent({
           },
         }
       );
-      if (comp.compontentInfo && comp.compontentInfo.group == "settingTool") {
+      if (comp.componentInfo && comp.componentInfo.group == "settingTool") {
         newComp.options = {
           ...newComp.options,
           isSettingTool: true,
         };
       }
-      if (comp.compontentInfo && comp.compontentInfo.gridInfo) {
+      if (comp.componentInfo && comp.componentInfo.gridInfo) {
         const size =
-          comp.compontentInfo.gridInfo[Object.keys(comp.compontentInfo.gridInfo)[0]];
+          comp.componentInfo.gridInfo[Object.keys(comp.componentInfo.gridInfo)[0]];
         newComp.setSize(size.width, size.height);
       }
       this.modalStatus.isOpen = false;

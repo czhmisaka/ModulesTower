@@ -14,7 +14,7 @@ import { useCardStyleConfigHook } from '../../../../store/modules/cardStyleConfi
 import { componentInfo, gridSizeMaker } from '../../../../components/basicComponents/grid/module/dataTemplate';
 export default defineComponent({
     componentInfo: {
-        labelNameCn: "滑块组件",
+        labelNameCN: "滑块组件",
         key: "slider",
         description: '滑块组件',
         gridInfo: {

@@ -122,7 +122,7 @@ let formDataForCheck = {};
 
 export default defineComponent({
   componentInfo: {
-    labelNameCn: "表单页面",
+    labelNameCN: "表单页面",
     key: "formPage",
     description: "",
     gridInfo: {

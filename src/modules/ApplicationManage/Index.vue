@@ -1,9 +1,10 @@
 <!--
- * @Date: 2021-12-30 17:48:16
+ * @Date: 2023-12-27 20:42:06
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-03 15:38:16
- * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/Index.vue
+ * @LastEditTime: 2023-12-27 20:59:24
+ * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/Index.vue
 -->
+
 
 <template>
   <div :style="{
@@ -12,8 +13,9 @@
     background: 'rgba(0,0,0,0)',
     overflow: 'hidden',
   }">
-    <gridDesktop :grid-col-num="desktopData.gridColNum" :desktopData="desktopDataList" :component-lists="component"
-      :cus-style="desktopData?.cusStyle" :noAnimate="true" />
+    <gridDesktop v-if="Object.keys(componentList).length > 0" :grid-col-num="desktopData.gridColNum"
+      :desktopData="desktopDataList" :component-lists="componentList" :cus-style="desktopData?.cusStyle"
+      :noAnimate="true" />
   </div>
 </template>
 
@@ -23,18 +25,21 @@ import { defineComponent } from "vue";
 import { PageConfig } from "./PageConfigData/index";
 import { isValidKey } from "@/utils/index";
 import { GetAllUser } from "@/utils/api/user/user";
-import { timeConsole } from "@/main";
+import { timeConsole } from "@/router/util";
+import { getAction, getModuleFromView } from '../../router/util';
 
-console.log(PageConfig, "PageConfig");
 export default defineComponent({
   components: {
     gridDesktop,
   },
-
-  computed: {
-    component() {
-      return this.$modules.getAllComponents();
-    },
+  data() {
+    return {
+      desktopDataList: [],
+      desktopData: PageConfig[Object.keys(PageConfig)[0]],
+      Env: {},
+      dataText: "",
+      componentList: []
+    }
   },
   methods: {
     async init() {
@@ -68,16 +73,13 @@ export default defineComponent({
       deep: true,
     },
   },
-  data: () => {
-    return {
-      desktopDataList: [],
-      desktopData: PageConfig[Object.keys(PageConfig)[0]],
-      Env: {},
-      dataText: "",
-    };
+  async created() {
+    await getModuleFromView(false)
+    this.componentList = await getAction().getAllComponents()
+    this.init();
   },
   async mounted() {
-    this.init();
+    // this.init();
   },
 });
 </script>

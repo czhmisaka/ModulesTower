@@ -193,15 +193,15 @@ export const cardComponentMaker = (
   component: any,
   props: propInfo = {},
   baseProps: { [key: string]: any } = {},
-  compontentInfo: componentInfo = {}
+  componentInfo: componentInfo = {}
 ): CardComponentTemplate => {
   let cardComponent = {
-    name: compontentInfo.label,
+    name: componentInfo.label,
     settingDetail: {
       props,
       baseProps,
     },
-    compontentInfo,
+    componentInfo,
     component,
   } as CardComponentTemplate;
   return cardComponent;

@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-08-15 22:13:06
- * @FilePath: /lcdp_fe_setup/src/modules/main/PageConfigData/main.ts
+ * @LastEditTime: 2023-12-27 21:11:54
+ * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/main.ts
  */
 
 import {
@@ -18,6 +18,50 @@ import {
   changeCardProperties,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { setSize } from "../../../components/basicComponents/grid/module/util";
+
+export const gridEditList = [
+  gridCellMaker(
+    "editable",
+    "编辑",
+    {},
+    {
+      name: "setting_editable",
+      type: cardComponentType.componentList,
+    },
+    {
+      isSettingTool: true,
+    }
+  )
+    .setPosition(1, 0)
+    .setSize(1, 1),
+  gridCellMaker(
+    "openComponents",
+    "打开组件菜单",
+    {},
+    {
+      type: cardComponentType.componentList,
+      name: "icon",
+    },
+    {
+      isSettingTool: true,
+      props: {
+        name: "Grid",
+        onClickFunc: (content: any) => {
+          const { context } = content;
+          context.emit(
+            "onChange",
+            {},
+            {
+              type: [cardOnChangeType.openComponentsList],
+            }
+          );
+        },
+      },
+    }
+  )
+    .setPosition(0, 0)
+    .setSize(1, 1),
+];
 
 let fucker = true;
 export const mainDesktop = () => [

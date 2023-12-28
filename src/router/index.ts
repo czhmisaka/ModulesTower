@@ -55,7 +55,7 @@ import remainingRouter from "./modules/remaining";
 import { RouteConfigsTable } from "../../types/index";
 import { baseModuleRouter } from "./util";
 import { useModuleHook } from "@/store/modules/module";
-import { timeConsole } from "@/main";
+import { timeConsole } from '@/router/util'
 
 // 路由存放
 const routes = [homeRouter, errorRouter];

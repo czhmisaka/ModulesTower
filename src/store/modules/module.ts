@@ -21,7 +21,7 @@ import { get, post } from "@/utils/api/requests";
 import { useMultiTagsStoreHook } from "./multiTags";
 import { useUserStoreHook } from "@/store/modules/user";
 import { isUrl } from "@pureadmin/utils";
-import { timeConsole } from "@/main";
+import { timeConsole } from '@/router/util'
 import modulesLIst from "@/layout/components/modules/modulesLIst.vue";
 
 let licenseMap = {};

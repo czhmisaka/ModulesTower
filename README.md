@@ -325,7 +325,7 @@ export const cardComponentMaker = (
         }
     },
     baseProps: { [key: string]: any },
-    compontentInfo: {
+    componentInfo: {
         description?: string,
         label?: string,
         group?: string,
@@ -335,12 +335,12 @@ export const cardComponentMaker = (
     } = {},
 ): CardComponentTemplate => {
     let cardComponent = {
-        name: compontentInfo.label,
+        name: componentInfo.label,
         settngDetail: {
             props,
             baseProps,
         },
-        compontentInfo,
+        componentInfo,
         component,
     } as CardComponentTemplate;
     return cardComponent;

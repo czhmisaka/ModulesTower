@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-23 11:54:28
+ * @LastEditTime: 2023-12-27 23:25:06
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -9,20 +9,20 @@
   <span>
     <div :class="'baseModal ' + (modalControl.isOpen ? 'open' : 'close')" @click="close(true)">
       <div class="formModalBox" @click.stop="fuckNothing">
-        <el-card header="组件详情" class="card">
+        <cardBg :cus-style="cusStyle">
+          <el-divider content-position="left">{{ baseComponentInfo.labelNameCN }}</el-divider>
           <el-form ref="form" v-on:submit.prevent>
             <el-form-item v-if="cardComponentDetail.name">
-              <el-descriptions class="card" v-if="baseComponentInfo"
-                :title="baseComponentInfo.labelNameCN || baseComponentInfo.labelNameCn" direction="vertical" :column="4"
-                border>
+              <el-descriptions class="card" v-if="baseComponentInfo" direction="vertical" :column="4" border>
                 <el-descriptions-item v-for="(item, index) in Object.keys(baseComponentInfo)" :label="item">
                   {{ baseComponentInfo[item] }}
                 </el-descriptions-item>
               </el-descriptions>
             </el-form-item>
           </el-form>
-        </el-card>
-        <el-card header="组件模式" class="card">
+        </cardBg>
+        <cardBg :cus-style="cusStyle">
+          <el-divider content-position="left">组件模式</el-divider>
           <el-form ref="form" v-on:submit.prevent>
             <el-form-item label="模式">
               <el-radio-group v-model="cardComponentDetail.type" size="large" placeholder="组件加载模式">
@@ -35,9 +35,9 @@
                 <el-option v-for="(item, index) in Object.keys(componentList)" :value="item"
                   :key="componentList[item].name + '_' + index">
                   {{
-                    componentList[item].compontentInfo.label +
+                    componentList[item].componentInfo.label +
                     ":" +
-                    componentList[item].compontentInfo.description
+                    componentList[item].componentInfo.description
                   }}
                 </el-option>
               </el-select>
@@ -47,16 +47,20 @@
                 placeholder="test placeholder" :height="600" />
             </el-form-item>
           </el-form>
-        </el-card>
-        <el-card header="组件属性" class="card">
+        </cardBg>
+        <cardBg :cus-style="cusStyle">
+          <el-divider content-position="left">组件属性</el-divider>
+
           <el-form :model="componentsProps" v-on:submit.prevent>
             <el-form-item v-for="(formItem, index) in componentsPropsInputTemplate" :key="index + '_FormItem'"
               :label="formItem.label">
               <el-input v-model="componentsProps[formItem.key]" />
             </el-form-item>
           </el-form>
-        </el-card>
-        <el-card header="组件权限" class="card">
+        </cardBg>
+        <cardBg :cus-style="cusStyle">
+          <el-divider content-position="left">组件权限</el-divider>
+
           <el-form :model="componentsProps" v-on:submit.prevent>
             <el-form-item v-for="(formItem, index) in componentsPropsInputTemplate" :key="index + '_FormItem'"
               :label="formItem.label">
@@ -66,8 +70,10 @@
               </el-select>
             </el-form-item>
           </el-form>
-        </el-card>
-        <el-card header="布局属性" class="card" v-if="componentsGridInfo && componentsGridInfo.default">
+        </cardBg>
+        <cardBg :cus-style="cusStyle" v-if="componentsGridInfo && componentsGridInfo.default">
+          <el-divider content-position="left">布局属性</el-divider>
+
           <el-form :model="componentsGridInfo" v-on:submit.prevent>
             <el-form-item label="X轴距离">
               <el-slider v-model="componentsGridInfo.default.position.x" :step="1" :min="0"
@@ -86,11 +92,11 @@
             <el-slider v-model="componentsGridInfo.default.size.height" :step="1" :min="1"
               :max="componentsGridInfo.default.size.height + 6" show-stops />
           </el-form-item>
-        </el-card>
-        <div class="BtnList">
+        </cardBg>
+        <cardBg :cus-style="{ ...cusStyle, paddingTop: '12px' }">
           <el-button class="btn" type="primary" @click="close(true)">保存</el-button>
           <el-button @click="close">取消</el-button>
-        </div>
+        </cardBg>
       </div>
     </div>
   </span>
@@ -109,11 +115,13 @@ import { defineComponent } from "vue";
 // 引入编辑器
 import Codemirror from "codemirror-editor-vue3";
 import { componentInfo } from "../dataTemplate";
+import cardBg from '@/components/basicComponents/cell/card/cardBg.vue';
 
 export default defineComponent({
   name: "cardEditModal",
   components: {
     Codemirror,
+    cardBg
   },
   props: ["detail", "gridList", "componentIndex", "sizeUnit", "componentLists"],
   computed: {
@@ -126,7 +134,7 @@ export default defineComponent({
     },
     baseComponentInfo() {
       if (Object.keys(this.componentList).indexOf(this.cardComponentDetail.name) > -1)
-        return this.componentList[this.cardComponentDetail.name]["compontentInfo"];
+        return this.componentList[this.cardComponentDetail.name]["componentInfo"];
       else return {};
     },
   },
@@ -164,6 +172,14 @@ export default defineComponent({
         foldGutter: true, // Code folding
         styleActiveLine: true, // Display the style of the selected row
       },
+
+      cusStyle: {
+        'height': 'auto',
+        'margin': '12px',
+        'width': 'calc(100% - 24px)',
+        'padding': '12px',
+        'padding-top': '0px',
+      }
     };
   },
   methods: {
@@ -367,7 +383,6 @@ export default defineComponent({
 
 .cm-s-xq-dark .CodeMirror-line::selection,
 .cm-s-xq-dark .CodeMirror-line>span::selection,
-
 .cm-s-xq-dark .CodeMirror-line>span>span::selection {
   font-size: 14px;
   height: 30px;

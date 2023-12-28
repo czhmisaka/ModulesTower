@@ -20,7 +20,7 @@ import { inputType } from '../../../../components/basicComponents/grid/module/da
 
 export default defineComponent({
     componentInfo: {
-        labelNameCn: "事件触发器",
+        labelNameCN: "事件触发器",
         key: "eventCenters",
         description: "一个用于触发事件的工具",
         gridInfo: {

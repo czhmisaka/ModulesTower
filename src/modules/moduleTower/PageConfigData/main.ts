@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-26 01:16:40
+ * @LastEditTime: 2023-12-28 12:36:41
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/main.ts
  */
 
@@ -17,78 +17,64 @@ import {
   changeCardSize,
   changeCardPosition,
   changeCardProperties,
+  highLightComponent
 } from "@/components/basicComponents/grid/module/cardApi/index";
-import { setSize } from "../../../components/basicComponents/grid/module/util";
-import { btnActionTemplate, drawerProps, stringAnyObj, tableCellTemplate } from "@/modules/userManage/types";
+import {
+  setSize,
+  setPosition,
+} from "../../../components/basicComponents/grid/module/util";
+import {
+  btnActionTemplate,
+  drawerProps,
+  stringAnyObj,
+  tableCellTemplate,
+} from "@/modules/userManage/types";
 import { post } from "@/utils/api/requests";
 import {
   SearchCellStorage,
   actionCell,
   tableCellTemplateMaker,
 } from "@/modules/userManage/component/searchTable/searchTable";
-import { btnMaker, openDrawerFormEasy } from "@/modules/userManage/component/searchTable/drawerForm";
+import {
+  btnMaker,
+  openDrawerFormEasy,
+} from "@/modules/userManage/component/searchTable/drawerForm";
 import { list } from "postcss";
+import { gridEditList } from "@/modules/main/PageConfigData/main";
+import { mqttDeviceListDesktop, openDrawerforMqttDeviceListDesktop } from "./mqtt/mqttDeviceList";
 
 export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
-  // const 设备字段存储库 = [
-  const 设备字段存储库 = new SearchCellStorage([
-    tableCellTemplateMaker("clientId", "clientId"),
-    tableCellTemplateMaker("createTime", "createTime"),
-    tableCellTemplateMaker("icon", "icon"),
-    tableCellTemplateMaker("id", "id"),
-    tableCellTemplateMaker("name", "name"),
-    tableCellTemplateMaker("status", "status"),
-    tableCellTemplateMaker("uniqueId", "uniqueId"),
-    tableCellTemplateMaker("updateTime", "updateTime"),
-  ]);
-  // ]
+  
+  // 加载mqtt设备列表
+  const mqttDeviceListGridCard = (await mqttDeviceListDesktop());
+  mqttDeviceListGridCard.map((x)=>{
+    x.options.showInGridDesktop = false
+  })
 
-  const 编辑设备 = btnMaker("编辑", btnActionTemplate.Function, {
-    icon: "Edit",
-    function: async (that, data) => {
-      let drawerProps = {
-        title:'编辑',
-        queryItemTemplate:设备字段存储库.getByKeyArr(['name','uniqueId'])
-      } as drawerProps;
-      openDrawerFormEasy(that,drawerProps)
-    },
-  });
-  const 操作栏 = tableCellTemplateMaker("操作", "asd", actionCell([编辑设备], {}));
-  设备字段存储库.push(操作栏)
-  const {labels ,keys} = 设备字段存储库
-  const fuck = 设备字段存储库.getProps()
-  console.log(labels,keys,'asasdasdd')
+
   return [
     gridCellMaker(
-      "searchTable",
-      "搜索结果列表",
+      "openMqttDeviceList",
+      "打开mqtt列表",
       {},
       {
-        name: "userManage_searchTable",
         type: cardComponentType.componentList,
+        name: "userManage_button",
       },
       {
+        isSettingTool: true,
         props: {
-          modeChange: true,
-          // isCard:true,
-          searchItemTemplate: [],
-          showItemTemplate: 设备字段存储库.getAll(),
-          searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            let res = await post("/admin/iot/device/searchByName", {
-              ...query,
-            });
-            return {
-              ...res.data,
-              ...res.data.pagination,
-            };
+          type: "primary",
+          label: "设备列表",
+          icon: "",
+          onClickFunc: async ({ context, props }) => {
+            openDrawerforMqttDeviceListDesktop(context)
           },
-          btnList: [],
-          autoSearch: false,
         },
-        isSettingTool: false,
       }
     )
-      .setPosition(0, 0)
-      .setSize(12, 8),
+      .setSize(2, 1)
+      .setPosition(0, 2),
+    // ...gridEditList,
   ];
 };

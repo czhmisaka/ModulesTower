@@ -96,7 +96,7 @@ import icon from '@/components/ReIcon/src/icon.vue';
 import { ElTag, ElButton } from 'element-plus';
 export default defineComponent({
   componentInfo: {
-    labelNameCn: "应用信息头部导航条",
+    labelNameCN: "应用信息头部导航条",
     key: "applicationHeaderBar",
     description: "应用信息头部导航条",
     gridInfo: {
