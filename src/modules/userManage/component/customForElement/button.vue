@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-05-29 11:25:08
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-18 10:38:28
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/customForElement/button.vue
+ * @LastEditTime: 2023-12-28 13:54:49
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/customForElement/button.vue
 -->
 <script lang="ts">
 import { defineComponent, h, toRefs } from "vue";
@@ -57,7 +57,7 @@ export default defineComponent({
           },
           ...props
         },
-        () => [props.label])
+        props.label ? () => [props.label] : null)
     ];
   },
 });

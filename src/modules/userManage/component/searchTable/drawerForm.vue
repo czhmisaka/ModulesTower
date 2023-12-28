@@ -1,15 +1,15 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 12:43:54
+ * @LastEditTime: 2023-12-28 13:27:16
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
   <el-drawer v-if="plugInData" v-model="isOpen" :title="plugInData.title"
     :size="`${plugInData.size || (isMobile() ? 100 : 50)}%`" :with-header="plugInData.title ? true : false"
     :append-to-body="true" :close-on-click-modal="true" :show-close="true" @close="fuckClose" :style="`border-radius: ${borderRadius
-      }px;margin: ${margin
-      }px;height: calc(100vh - ${2 * margin
+      }px;margin: ${plugInData['fullscreenGridDesktop'] ? 0 : margin
+      }px;height: calc(100vh - ${2 * (plugInData['fullscreenGridDesktop'] ? 0 : margin)
       }px);box-shadow: rgba(0, 0, 0, 0.1) -6px 6px 12px, inset rgba(0,0,0,0.05) -3px 3px 12px 0px;${plugInData['bgColor'] ? 'background:' + plugInData['bgColor'] + ';' : ''}${plugInData['fullscreenGridDesktop'] ? 'transition:all 0s;' : ''
       }
       `">
@@ -19,7 +19,7 @@
       " v-if="isOpen && plugInData['gridDesktop'] && plugInData['gridDesktopConfig']">
       <div :style="{
         width: 'calc(100%)',
-        height: 'calc(100% - 24px) !important',
+        height: 'calc(100%) !important',
         background: 'rgba(0,0,0,0)',
         overflow: 'hidden',
       }">

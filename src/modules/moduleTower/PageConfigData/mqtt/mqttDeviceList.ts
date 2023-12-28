@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 12:43:00
+ * @LastEditTime: 2023-12-28 13:56:03
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/mqttDeviceList.ts
  */
 
@@ -42,7 +42,54 @@ import { gridEditList } from "@/modules/main/PageConfigData/main";
 import {
   eventCenterCell,
   eventTriggerType,
+  windowResizeChecker,
 } from "@/modules/userManage/component/eventCenter/eventCenter";
+const wholeScreen = {
+  size: {
+    width: 12,
+    height: 8,
+  },
+};
+export function getXpx(vw) {
+  return vw / (document.body.clientWidth / wholeScreen.size.width);
+}
+export function getYpx(vh) {
+  return vh / (document.body.clientHeight / wholeScreen.size.height);
+}
+
+const sizeGetter = () => {
+  return {
+    mqttDeviceList: {
+      width: wholeScreen.size.width - getXpx(60),
+      height: wholeScreen.size.height,
+    },
+    closeDesktop: {
+      width: getXpx(60),
+      height: getYpx(60),
+    },
+  };
+};
+const positionGetter = () => {
+  return {
+    mqttDeviceList: {
+      x:0,
+      y:0
+    },
+    closeDesktop: {
+      x: wholeScreen.size.width - getXpx(60), 
+      y: 0
+    },
+  };
+};
+
+let timeOut = null as any;
+const windowResize = windowResizeChecker(async (that, baseData) => {
+  if (timeOut) clearTimeout(timeOut);
+  timeOut = setTimeout(() => {
+    changeCardSize(that, sizeGetter());
+    changeCardPosition(that, positionGetter());
+  }, 50);
+}, "windowResize");
 
 export const mqttDeviceListDesktop = async (): Promise<gridCellTemplate[]> => {
   const 设备字段存储库 = new SearchCellStorage([
@@ -102,7 +149,8 @@ export const mqttDeviceListDesktop = async (): Promise<gridCellTemplate[]> => {
       }
     )
       .setPosition(0, 0)
-      .setSize(11, 8),
+      .setSize( sizeGetter().mqttDeviceList.width,sizeGetter().mqttDeviceList.height),
+      windowResize,
   ];
 };
 
@@ -117,21 +165,21 @@ export const openDrawerforMqttDeviceListDesktop = async (that) => {
           {},
           {
             type: cardComponentType.componentList,
-            name: "icon",
+            name: "userManage_button",
           },
           {
             isSettingTool: true,
             props: {
-              name:'Close',
+              icon: "Close",
               onClickFunc: async ({ context, props }) => {
-                removeGridCell(th,['openMqttDeviceList'])
-                closeDrawerFormEasy(th)
+                removeGridCell(th, ["openMqttDeviceList"]);
+                closeDrawerFormEasy(th);
               },
             },
           }
         )
-          .setSize(1, 1)
-          .setPosition(11, 0);
+          .setSize(sizeGetter().closeDesktop.width, sizeGetter().closeDesktop.height)
+          .setPosition(positionGetter().closeDesktop.x, positionGetter().closeDesktop.y);
       };
       openDrawerFormEasy(that, {
         gridDesktop: true,
@@ -143,16 +191,17 @@ export const openDrawerforMqttDeviceListDesktop = async (that) => {
           desktopData: async () => {
             return [...(await mqttDeviceListDesktop()), closeBtn(that)];
           },
-          gridColNum: 12,
+          gridColNum: wholeScreen.size.width,
           cusStyle: {
             wholeScreen: true,
             Fullscreen: true,
-            maxRows: 8,
-            margin: 12,
+            maxRows: wholeScreen.size.height,
+            margin: 0,
           },
         },
       });
-    },'openMqttDeviceList'
+    },
+    "openMqttDeviceList"
   );
   addGridCell(that, init);
 };

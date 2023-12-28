@@ -1,13 +1,13 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 12:41:23
+ * @LastEditTime: 2023-12-28 14:02:48
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/index.ts
  */
-import { mainDesktop } from "./main";
 import { isValidKey } from "@/utils/index";
-
 import { desktopDataTemplate } from "@/modules/userManage/types";
+import { MqttPageConfig } from "./main";
+
 
 export const base = {
   gridColNum: 12,
@@ -19,18 +19,7 @@ export const base = {
   },
 };
 let pageConfig = {
-  MAIN: {
-    name:'MQTT设备列表',
-    desktopData: mainDesktop,
-    gridColNum: 12,
-    cusStyle: {
-      ...base.cusStyle,
-      wholeScreen: true,
-      maxRows:8,
-      Fullscreen:true
-    },
-    menuId:'12'
-  },
+  ...MqttPageConfig  
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {
