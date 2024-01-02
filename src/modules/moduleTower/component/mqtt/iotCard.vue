@@ -1,31 +1,31 @@
 <!--
  * @Date: 2022-07-24 15:31:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 13:58:30
+ * @LastEditTime: 2023-12-29 13:59:06
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotCard.vue
 -->
 <template>
-    <cardBg>
-        <!-- {{ cardComponents.componentInfo.labelNameCN }} -->
+    <cardBg v-if="Object.keys(deviceInfoLocal).length > 0" @click="onClick" @mouseenter="hoverIn" @mouseleave="hoverOut"
+        style="cursor: pointer;">
         <el-divider content-position="left">
             <div class="flex">
-                <div class="text top">{{ deviceInfo?.componentInfo?.labelNameCN || deviceInfo.name }}</div>
+                <div class="text top">{{ deviceInfoLocal.name }}</div>
                 <div class="text bottom">
-                    {{ deviceInfo.name }}
+                    {{ deviceInfoLocal.nameEn }}
                 </div>
             </div>
         </el-divider>
         <div class="word">
             <div class="title">
-                组件包：
+                功能：
             </div>
             <div class="text">
-                {{ deviceInfo?.componentInfo?.label?.split('_')[0] || '系统组件' }}
+                {{ `【${deviceInfoLocal.service.join('】【')}】` || "暂无" }}
             </div>
         </div>
         <div class="word">
             <div class="text">
-                {{ deviceInfo?.componentInfo?.description }}
+                {{ deviceInfoLocal.description }}
             </div>
         </div>
     </cardBg>
@@ -34,11 +34,73 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+import { componentInfo, gridSizeMaker, propInfo, inputType } from '../../../../components/basicComponents/grid/module/dataTemplate';
+import { IotDeviceTemplate } from './iotCard';
+import { changeCardProperties } from '../../../../components/basicComponents/grid/module/cardApi/index';
 
 export default defineComponent({
-    props: ["deviceInfo", "sizeUnit", 'baseData', 'detail'],
+    name: 'iotCard',
+    componentInfo: {
+        label: 'iotCard',
+        labelNameCN: 'iot卡片',
+        description: '用于展示iot设备的标准信息',
+        gridInfo: {
+            middle: gridSizeMaker(2, 3)
+        },
+    } as componentInfo,
+    propsDetail: {
+        deviceInfo: {
+            label: "设备信息",
+            type: inputType.obj
+        },
+        isLoading: {
+            label: "加载状态",
+            description: "true为正在加载",
+            type: inputType.boolean
+        },
+    } as propInfo,
+    props: ["deviceInfo", "sizeUnit", 'baseData', 'detail', 'hoverInFunc', 'hoverOutFunc', 'clickFunc'],
     components: { cardBg },
-    mounted() {},
+    watch: {
+        deviceInfo: {
+            handler(newVal) {
+                this.deviceInfoLocal = newVal;
+            },
+            deep: true
+        }
+    },
+    data() {
+        return {
+            deviceInfoLocal: {} as IotDeviceTemplate,
+            isHover: false
+        }
+    },
+    mounted() {
+        this.$emit('ready')
+        this.deviceInfoLocal = this.deviceInfo;
+    },
+    methods: {
+
+        async onClick() {
+            if (!this.clickFunc) return false
+            await this.clickFunc(this, this.deviceInfoLocal)
+        },
+
+        async hoverIn() {
+            if (!this.hoverInFunc && !this.isHover) return false
+            const that = this
+            setTimeout(() => {
+                that.isHover = true
+            }, 500)
+            await this.hoverInFunc(this, this.deviceInfoLocal)
+        },
+
+        async hoverOut() {
+            if (!this.hoverOutFunc && this.isHover) return false
+            this.isHover = false
+            await this.hoverOutFunc(this, this.deviceInfoLocal)
+        }
+    }
 });
 </script>
   
@@ -60,7 +122,6 @@ export default defineComponent({
     .bottom {
         font-size: 8px;
         font-weight: 100;
-        cursor: copy;
     }
 }
 
