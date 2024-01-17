@@ -1,1 +1,0 @@
-import{bj as t,bk as n}from"./index-51f9d840.js";let a=function(e){return e}({});const p=(e="iotDeviceInfoCard",r,o)=>t(e,e,{},{type:n.componentList,name:"iotCard"},{props:{deviceInfo:r,...o}});export{a as IotDeviceType,p as iotCardGridCellMaker};

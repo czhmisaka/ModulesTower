@@ -1,1 +1,0 @@
-import{A as e,J as n,K as o,Q as s,N as t}from"./index-51f9d840.js";const a=t("h1",null,"ICDP-FE",-1),_=t("h1",null,"\u6D4B\u8BD5\u9875\u9762",-1),c=e({name:"Welcome"}),p=e({...c,setup(l){return(u,r)=>(n(),o(s,null,[a,_],64))}});export{p as default};

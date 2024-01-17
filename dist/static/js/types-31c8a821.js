@@ -1,1 +1,0 @@
-var E=(u=>(u[u.\u81EA\u5EFA=1]="\u81EA\u5EFA",u[u.\u96C6\u6210=2]="\u96C6\u6210",u))(E||{}),r=(u=>(u[u.\u672A\u53D1\u5E03=0]="\u672A\u53D1\u5E03",u[u.\u5DF2\u53D1\u5E03=1]="\u5DF2\u53D1\u5E03",u))(r||{});const A={};export{r as applicationStatus,E as applicationType,A as default};
