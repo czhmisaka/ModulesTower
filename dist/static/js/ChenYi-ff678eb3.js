@@ -1,0 +1,1 @@
+import{bj as e,bk as a}from"./index-51f9d840.js";const i=()=>[e("elcard1","\u5361\u7247",{},{name:"elcard",type:a.componentList},{props:{isBlack:!1,img:"/img/dada.jpeg"}}).setPosition(0,.5).setSize(4,6.5)];export{i as ChenYi};

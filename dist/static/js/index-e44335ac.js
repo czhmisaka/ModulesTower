@@ -1,0 +1,1 @@
+import{bb as a}from"./index-51f9d840.js";const i={gridColNum:12,cusStyle:{wholeScreen:!0,maxRows:8,margin:6}},o={};let t={};Object.keys(o).map(e=>{a(e,o)&&(t[String(e).toUpperCase()]=o[e])});const r={...t};export{r as PageConfig,i as base};

@@ -1,0 +1,1 @@
+import{menuCellActionTemplate as r}from"./types-e13bfcdf.js";const i=(e="",t="/",n,l={},o=r.RouterPush)=>({icon:n,title:e,type:o,key:t,options:{...l}}),c=(e="",t,n=[],l={})=>({icon:t,title:e,key:"1",type:r.MenuCellList,options:{path:"/",...l},children:n}),u={};export{u as default,c as sideMenuCellListMaker,i as sideMenuCellMaker};

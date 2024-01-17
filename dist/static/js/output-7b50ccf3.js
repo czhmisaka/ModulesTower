@@ -1,0 +1,1 @@
+const u={name:"main",title:"\u6A21\u5757\u529F\u80FD\u5C55\u793A",icon:"EL_ElemeFilled",info:"\u5C55\u793A\u5404\u79CD\u6A21\u5757\u4EE5\u53CA\u57FA\u7840cardApi",author:"czh"},o=async()=>({}),n={};export{u as moduleInfo,n as modulePackConfig,o as output};
