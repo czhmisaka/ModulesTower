@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-29 15:35:32
+ * @LastEditTime: 2024-01-13 10:22:18
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
@@ -27,7 +27,9 @@ import {
   windowResizeChecker,
 } from "@/modules/userManage/component/eventCenter/eventCenter";
 import { IotDeviceTemplate, iotCardGridCellMaker } from "./iotCard";
+
 import { iotServiceCardGridCellMaker } from "./service/service";
+import { getIotDeviceCellGridDesktopCardComponent } from "./iotGridCell/iotGridCell";
 
 const wholeScreen = {
   size: {
@@ -35,54 +37,54 @@ const wholeScreen = {
     height: 8,
   },
 };
-export function getXpx(vw) {
-  return vw / (document.body.clientWidth / wholeScreen.size.width);
-}
-export function getYpx(vh) {
-  return vh / (document.body.clientHeight / wholeScreen.size.height);
-}
+// export function getXpx(vw) {
+//   return vw / (document.body.clientWidth / wholeScreen.size.width);
+// }
+// export function getYpx(vh) {
+//   return vh / (document.body.clientHeight / wholeScreen.size.height);
+// }
 
-const sizeGetter = () => {
-  return {
-    iotInfo: {
-      width: getXpx(200),
-      height: getYpx(200),
-    },
-    iotServiceCard: {
-      width: getXpx(300),
-      height: wholeScreen.size.height,
-    },
-    closeDesktop: {
-      width: getXpx(60),
-      height: getYpx(60),
-    },
-  };
-};
-const positionGetter = () => {
-  return {
-    iotInfo: {
-      x: 0,
-      y: 0,
-    },
-    iotServiceCard: {
-      x: getXpx(200),
-      y: 0,
-    },
-    closeDesktop: {
-      x: wholeScreen.size.width - getXpx(60),
-      y: 0,
-    },
-  };
-};
+// const sizeGetter = () => {
+//   return {
+//     iotInfo: {
+//       width: getXpx(200),
+//       height: getYpx(200),
+//     },
+//     iotServiceCard: {
+//       width: getXpx(300),
+//       height: wholeScreen.size.height,
+//     },
+//     closeDesktop: {
+//       width: getXpx(60),
+//       height: getYpx(60),
+//     },
+//   };
+// };
+// const positionGetter = () => {
+//   return {
+//     iotInfo: {
+//       x: 0,
+//       y: 0,
+//     },
+//     iotServiceCard: {
+//       x: getXpx(200),
+//       y: 0,
+//     },
+//     closeDesktop: {
+//       x: wholeScreen.size.width - getXpx(60),
+//       y: 0,
+//     },
+//   };
+// };
 
-let timeOut = null as any;
-const windowResize = windowResizeChecker(async (that, baseData) => {
-  if (timeOut) clearTimeout(timeOut);
-  timeOut = setTimeout(() => {
-    changeCardSize(that, sizeGetter());
-    changeCardPosition(that, positionGetter());
-  }, 50);
-}, "windowResize");
+// let timeOut = null as any;
+// const windowResize = windowResizeChecker(async (that, baseData) => {
+//   if (timeOut) clearTimeout(timeOut);
+//   timeOut = setTimeout(() => {
+//     changeCardSize(that, sizeGetter());
+//     changeCardPosition(that, positionGetter());
+//   }, 50);
+// }, "windowResize");
 
 export const iotCardServiceDesktop = async () => {
   return [] as gridCellTemplate[];
@@ -93,23 +95,32 @@ export const openDrawerForIotCardServiceDesktop = async (
   that,
   IotCardInfo: IotDeviceTemplate
 ) => {
-  // 构建IotCard
-  const infoCardSize = sizeGetter().iotInfo;
-  const infoCardPosition = positionGetter().iotInfo;
+  // // 构建IotCard
+  // const infoCardSize = sizeGetter().iotInfo;
+  // const infoCardPosition = positionGetter().iotInfo;
   const iotInfoCardGridCell = iotCardGridCellMaker("iotInfo", IotCardInfo)
-    .setSize(infoCardSize.width, infoCardSize.height)
-    .setPosition(infoCardPosition.x, infoCardPosition.y);
+  .setSize(2,2.5).setPosition(0,0)
+    // .setSize(infoCardSize.width, infoCardSize.height)
+    // .setPosition(infoCardPosition.x, infoCardPosition.y);
 
   // 构建IotServiceCard
-  const iotServiceCardSize = sizeGetter().iotServiceCard;
-  const iotServiceCardPosition = positionGetter().iotServiceCard;
+  // const iotServiceCardSize = sizeGetter().iotServiceCard;
+  // const iotServiceCardPosition = positionGetter().iotServiceCard;
   const iotServiceCardGridCell = iotServiceCardGridCellMaker(
     "iotServiceCard",
     IotCardInfo
-  )
-    .setSize(iotServiceCardSize.width, iotServiceCardSize.height)
-    .setPosition(iotServiceCardPosition.x, iotServiceCardPosition.y);
+  ).setSize(2,4).setPosition(2,0)
+    // .setSize(iotServiceCardSize.width, iotServiceCardSize.height)
+    // .setPosition(iotServiceCardPosition.x, iotServiceCardPosition.y);
 
+  // 构建gridCell
+  let gridCellList = [] as gridCellTemplate[]
+  if(IotCardInfo.gridCell){
+    IotCardInfo.gridCell.map(x=>{
+      gridCellList.push(getIotDeviceCellGridDesktopCardComponent(x))
+    })
+  }
+  console.log('asd',gridCellList)
   const init = eventCenterCell(
     eventTriggerType.onMounted,
     async (that, data) => {
@@ -134,12 +145,14 @@ export const openDrawerForIotCardServiceDesktop = async (
           }
         )
           .setSize(
-            sizeGetter().closeDesktop.width,
-            sizeGetter().closeDesktop.height
+            0.5,0.5
+            // sizeGetter().closeDesktop.width,
+            // sizeGetter().closeDesktop.height
           )
           .setPosition(
-            positionGetter().closeDesktop.x,
-            positionGetter().closeDesktop.y
+            11.5,0
+            // positionGetter().closeDesktop.x,
+            // positionGetter().closeDesktop.y
           );
       };
       openDrawerFormEasy(that, {
@@ -154,13 +167,14 @@ export const openDrawerForIotCardServiceDesktop = async (
               iotInfoCardGridCell,
               iotServiceCardGridCell,
               ...(await iotCardServiceDesktop()),
+              ...gridCellList,
               closeBtn(that),
-              windowResize,
+              // windowResize,
             ];
           },
           gridColNum: wholeScreen.size.width,
           cusStyle: {
-            wholeScreen: true,
+            wholeScreen: false,
             Fullscreen: true,
             maxRows: wholeScreen.size.height,
             margin: 0,

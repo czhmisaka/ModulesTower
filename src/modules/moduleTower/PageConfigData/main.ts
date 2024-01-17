@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-29 16:07:50
+ * @LastEditTime: 2024-01-13 10:46:15
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/main.ts
  */
 
@@ -34,6 +34,7 @@ import {
   IotDeviceServiceType,
   iotServiceCardGridCellMaker,
 } from "../component/mqtt/service/service";
+import { IotDeviceCellGridDesktopType } from "../component/mqtt/iotGridCell/iotGridCell";
 
 const wholeScreen = {
   size: {
@@ -146,6 +147,23 @@ export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
         IotDeviceServiceType.getStreamData,
       ],
       description: "一张用于基础测试的esp32",
+      gridCell: [
+        {
+          data: {
+            props: {
+              label: "LED",
+            },
+          },
+          type: IotDeviceCellGridDesktopType.switchCard,
+          sendKey: "testid1",
+          gridInfo: {
+            width: 1,
+            height: 1,
+            x: 4,
+            y: 3,
+          },
+        },
+      ],
     },
     {
       clickFunc: async (that, data) => {
@@ -163,29 +181,29 @@ export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
       positionGetter().iotDeviceInfoCard.y
     );
 
-  const iotDeviceInfoCard2 = iotCardGridCellMaker(
-    "iotDeviceInfoCard2",
-    {
-      nameEn: "Esp32s3",
-      name: "高性能Esp32-s3",
-      service: [
-        IotDeviceServiceType.sendMsg,
-        IotDeviceServiceType.getStreamData,
-      ],
-      description: "一张用于高性能测试的Esp32-s3",
-    },
-    {
-      ...hoverFunc,
-    }
-  )
-    .setSize(
-      sizeGetter().iotDeviceInfoCard.width,
-      sizeGetter().iotDeviceInfoCard.height
-    )
-    .setPosition(
-      positionGetter().iotDeviceInfoCard2.x,
-      positionGetter().iotDeviceInfoCard2.y
-    );
+  // const iotDeviceInfoCard2 = iotCardGridCellMaker(
+  //   "iotDeviceInfoCard2",
+  //   {
+  //     nameEn: "Esp32s3",
+  //     name: "高性能Esp32-s3",
+  //     service: [
+  //       IotDeviceServiceType.sendMsg,
+  //       IotDeviceServiceType.getStreamData,
+  //     ],
+  //     description: "一张用于高性能测试的Esp32-s3",
+  //   },
+  //   {
+  //     ...hoverFunc,
+  //   }
+  // )
+  //   .setSize(
+  //     sizeGetter().iotDeviceInfoCard.width,
+  //     sizeGetter().iotDeviceInfoCard.height
+  //   )
+  //   .setPosition(
+  //     positionGetter().iotDeviceInfoCard2.x,
+  //     positionGetter().iotDeviceInfoCard2.y
+  //   );
 
   const iotServiceCardGridCell = iotServiceCardGridCellMaker(
     "iotServiceCard",
@@ -200,6 +218,7 @@ export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
     },
     false
   );
+
   return [
     gridCellMaker(
       "openMqttDeviceListBtn",
@@ -229,7 +248,7 @@ export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
         positionGetter().openMqttDeviceListBtn.x,
         positionGetter().openMqttDeviceListBtn.y
       ),
-    iotDeviceInfoCard2,
+    // iotDeviceInfoCard2,
     iotDeviceInfoCard,
     windowResize,
     iotServiceCardGridCell,

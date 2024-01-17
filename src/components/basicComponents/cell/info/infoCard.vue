@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-05-22 16:57:40
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-22 20:16:03
- * @FilePath: /configforpagedemo/src/components/basicComponents/cell/info/infoCard.vue
+ * @LastEditTime: 2024-01-17 13:45:11
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/cell/info/infoCard.vue
 -->
 <script lang="ts">
 import { defineComponent, h, toRefs } from "vue";
@@ -74,6 +74,8 @@ export default defineComponent({
               style: {
                 width: "100%",
                 height: "100%",
+                transition:'all 0.2s',
+                backgroundColor: isBlack.value ? "red" : "#ffffff",
                 backgroundImage: `url(${img.value})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",

@@ -1,9 +1,23 @@
 <!--
  * @Date: 2022-05-29 11:25:08
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 13:54:49
+ * @LastEditTime: 2024-01-17 21:48:03
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/customForElement/button.vue
 -->
+
+<template>
+  <el-button :style="{
+    cursor: 'pointer',
+    width: '100%',
+    height: '100%',
+    margin: '0px auto',
+    borderRadius:
+      useCardStyleConfigHook().get('borderRadius') + 'px',
+    ...cusStyle,
+  }" @click="click">
+    {{ label }}
+  </el-button>
+</template>
 <script lang="ts">
 import { defineComponent, h, toRefs } from "vue";
 import { baseComponents } from "@/components/basicComponents/grid/module/gridCard/baseCardComponentMixins";
@@ -13,6 +27,7 @@ import { ElPopover, ElButton } from 'element-plus';
 import { useCardStyleConfigHook } from '../../../../store/modules/cardStyleConfig';
 import { componentInfo, gridSizeMaker } from '../../../../components/basicComponents/grid/module/dataTemplate';
 export default defineComponent({
+  components: { ElButton },
   componentInfo: {
     labelNameCN: "按钮组件",
     key: "button",
@@ -23,42 +38,52 @@ export default defineComponent({
   } as componentInfo,
   mixins: [baseComponents],
   props: ["label", "type", 'loading', "sizeUnit", "onClickFunc", "icon", "detail", 'cusStyle'],
-  setup(props, context) {
-    context.emit("ready");
-    const { onClickFunc } = toRefs(props);
-    return () => [
-      h(
-        ElButton,
-        {
-          // ondblclick: (e: any) => {
-          onclick: (e: any) => {
-            if (typeof onClickFunc.value == "function")
-              onClickFunc.value({ props, context, e });
-            else if (typeof onClickFunc.value == "string") {
-              const func = eval(`()=>` + onClickFunc.value);
-              func()({ props, context, e });
-            }
-          },
-          ontouchend: (e: any) => {
-            if (typeof onClickFunc.value == "function")
-              onClickFunc.value({ props, context, e });
-            else if (typeof onClickFunc.value == "string") {
-              const func = eval(`()=>` + onClickFunc.value);
-              func()({ props, context, e });
-            }
-          },
-          style: {
-            cursor: "pointer",
-            width: '100%',
-            height: '100%',
-            margin: '0px auto',
-            borderRadius: useCardStyleConfigHook().get('borderRadius') + 'px',
-            ...props.cusStyle,
-          },
-          ...props
-        },
-        props.label ? () => [props.label] : null)
-    ];
+  mounted(){
+    this.$emit('ready')
   },
+  methods: {
+    useCardStyleConfigHook,
+    click() {
+      if (this.onClickFunc) {
+        this.onClickFunc(this)
+      }
+    }
+  },
+  //   context.emit("ready");
+  //   const { onClickFunc } = toRefs(props);
+  //   return () => [
+  //     h(
+  //       ElButton,
+  //       {
+  //         // ondblclick: (e: any) => {
+  //         onclick: (e: any) => {
+  //           if (typeof onClickFunc.value == "function")
+  //             onClickFunc.value({ props, context, e });
+  //           else if (typeof onClickFunc.value == "string") {
+  //             const func = eval(`()=>` + onClickFunc.value);
+  //             func()({ props, context, e });
+  //           }
+  //         },
+  //         ontouchend: (e: any) => {
+  //           if (typeof onClickFunc.value == "function")
+  //             onClickFunc.value({ props, context, e });
+  //           else if (typeof onClickFunc.value == "string") {
+  //             const func = eval(`()=>` + onClickFunc.value);
+  //             func()({ props, context, e });
+  //           }
+  //         },
+  //         style: {
+  //           cursor: "pointer",
+  //           width: '100%',
+  //           height: '100%',
+  //           margin: '0px auto',
+  //           borderRadius: useCardStyleConfigHook().get('borderRadius') + 'px',
+  //           ...props.cusStyle,
+  //         },
+  //         ...props
+  //       },
+  //       props.label ? () => [props.label] : null)
+  //   ];
+  // },
 });
 </script>

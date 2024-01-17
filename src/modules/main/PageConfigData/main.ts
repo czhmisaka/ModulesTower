@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-27 21:11:54
+ * @LastEditTime: 2024-01-17 19:55:49
  * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/main.ts
  */
 
@@ -32,7 +32,7 @@ export const gridEditList = [
       isSettingTool: true,
     }
   )
-    .setPosition(1, 0)
+    .setPosition(12, 7)
     .setSize(1, 1),
   gridCellMaker(
     "openComponents",

@@ -5,6 +5,12 @@
 @import "./dark.scss";
 @import "./tailwind.css";
 
+
+@font-face {
+  font-family: mFont;
+  src: url('/public/font331/1.ttf');
+}
+
 /* 自定义全局 CssVar */
 :root {
   --pure-transition-duration: 0.016s;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-23 13:08:47
+ * @LastEditTime: 2024-01-17 13:12:41
  * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
@@ -9,6 +9,7 @@ import { mobileDesktop } from "./mobile/mobile";
 import { isValidKey } from "@/utils/index";
 
 import { desktopDataTemplate } from "@/modules/userManage/types";
+import { eat } from "./eat";
 
 export const base = {
   gridColNum: 12,
@@ -20,6 +21,16 @@ export const base = {
   },
 };
 let pageConfig = {
+  EAT:{
+    desktopData:eat,
+    gridColNum: 24,
+    cusStyle: {
+      ...base.cusStyle,
+      wholeScreen: true,
+      maxRows:16,
+      Fullscreen:true
+    },
+  },
   MAIN: {
     desktopData: mainDesktop,
     gridColNum: 12,

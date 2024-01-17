@@ -1,14 +1,14 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-29 13:20:12
+ * @LastEditTime: 2024-01-11 21:44:46
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 import { cardUtil } from "./util";
 import { defineAsyncComponent, defineComponent, ref, h } from "vue";
 import { createApp } from "vue";
-import { componentLists } from './gridCard/module/componentLists';
+import { componentLists } from "./gridCard/module/componentLists";
 
 export enum cardOnChangeType {
   upOnChange = "upOnChange",
@@ -208,8 +208,6 @@ export const cardComponentMaker = (
   return cardComponent;
 };
 
-
-
 /**
  * @name: cardComponent
  * @description: waitForWriting
@@ -219,7 +217,7 @@ export const cardComponentMaker = (
 export interface cardComponent {
   name: string;
   type: cardComponentType;
-  data?: string;
+  data?: string | any;
   getFunc?: (data: any) => any;
 }
 
@@ -248,6 +246,7 @@ export const componentGetter = (
         component: createApp(eval("(()=>{return " + component.data + "})()")),
       };
     case cardComponentType.cusComponent:
+      return{  component: component.data}
       break;
   }
 };
