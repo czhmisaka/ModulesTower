@@ -1,19 +1,19 @@
 <!--
  * @Date: 2024-01-17 19:51:31
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-17 21:35:22
+ * @LastEditTime: 2024-01-18 12:59:54
  * @FilePath: /ConfigForDesktopPage/src/modules/main/component/nameCard.vue
 -->
 <template>
     <cardBg :cusStyle="{
-        backgroundColor: isBlack ? 'red' : '#fff',
+        backgroundColor: isBlack ? bgColor || 'red' : '#fff',
         color: isBlack ? '#fff' : '#000',
         transition: 'all 0.2s',
         display: 'flex',
         flexFlow: 'column',
         justifyContent: 'center',
-        fontFamily: 'mFont',
-        fontSize: detail?.gridInfo?.default?.size?.width * sizeUnit.blockSize / 6 + 'px'
+        fontFamily: 'mFont1',
+        fontSize: detail?.gridInfo?.default?.size?.width * sizeUnit.blockSize / 8 + 'px'
     }" @click="click">
         {{ title }}
     </cardBg>
@@ -31,14 +31,14 @@ import {
 
 export default defineComponent({
     components: { cardBg },
-    props: ['isBlack', 'title', 'detail', 'sizeUnit', 'clickFunc'],
+    props: ['isBlack', 'title', 'detail', 'sizeUnit', 'clickFunc', 'bgColor'],
     mounted() {
         this.$emit('ready')
         console.log(this.detail, this.sizeUnit)
     },
     methods: {
         click() {
-            if(this.clickFunc){
+            if (this.clickFunc) {
                 this.clickFunc(this)
             }
         }

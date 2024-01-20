@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-06-17 11:42:47
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-17 22:24:40
+ * @LastEditTime: 2024-01-18 13:08:16
  * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/eat.tsx
  */
 import {
@@ -235,7 +235,7 @@ export const eat = async () => {
       {
         isSettingTool: true,
         props: {
-          icon: "Search",
+          icon: "Coordinate",
           label: '抽一个',
           onClickFunc: (content: any) => {
             let a = Math.random() * nameArr.length + nameArr.length;
@@ -274,7 +274,8 @@ export const eat = async () => {
       {
         isSettingTool: true,
         props: {
-          icon: "Search",
+          type: 'primary',
+          icon: "Coordinate",
           label: '自定义配置',
           onClickFunc: (content: any) => {
             openDrawerFormEasy(content, {
@@ -300,7 +301,7 @@ export const eat = async () => {
                   icon: 'Position',
                   elType: 'primary',
                   function: async (that, data) => {
-                    if (await dobuleCheckBtnMaker('确认抽奖', `${data.type}共${data.maxTimes*1+1}人`, {
+                    if (await dobuleCheckBtnMaker('确认抽奖', `${data.type}共${data.maxTimes * 1 + 1}人`, {
                     }).catch(x => false)) {
                       that.isOpen = false
                       that.formData = {};
@@ -350,6 +351,78 @@ export const eat = async () => {
       }
     )
       .setPosition(10, 11)
+      .setSize(2, 1),
+    gridCellMaker(
+      "随机1",
+      "打开组件菜单",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "userManage_button",
+      },
+      {
+        isSettingTool: true,
+        props: {
+          label: '置灰已选',
+          type: 'info',
+          onClickFunc: (that: any) => {
+            let data = {}
+            isSelectedIndex.map(x => {
+              let key = 'elcard' + x;
+              data[key] = {
+                bgColor: '#666'
+              }
+            })
+            changeCardProperties(that, data)
+          },
+        },
+      }
+    )
+      .setPosition(10, 12)
+      .setSize(2, 1),
+    gridCellMaker(
+      "随机1",
+      "打开组件菜单",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "userManage_button",
+      },
+      {
+        isSettingTool: true,
+        props: {
+          label: '复原',
+          type: 'error',
+          onClickFunc: (that: any) => {
+            let data = {}
+            let size = {}
+            let position = {}
+            isSelected = []
+            isSelectedIndex = []
+            nameArr.map((x, i) => {
+              let key = 'elcard' + i
+              data[key] = {
+                title: x,
+                bgColor: 'red',
+                isBlack: false
+              }
+              size[key] = {
+                width: 2,
+                height: 1
+              }
+              position[key] = {
+                x: Math.floor(i / wholeScreen.height) * 2,
+                y: i % wholeScreen.height,
+              }
+            })
+            changeCardSize(that, size)
+            changeCardPosition(that, position)
+            changeCardProperties(that, data)
+          },
+        },
+      }
+    )
+      .setPosition(12, 12)
       .setSize(2, 1),
   ] as gridCellTemplate[];
 };

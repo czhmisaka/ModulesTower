@@ -1,12 +1,12 @@
 <!--
  * @Date: 2022-05-29 11:25:08
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-17 21:48:03
+ * @LastEditTime: 2024-01-20 22:06:44
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/customForElement/button.vue
 -->
 
 <template>
-  <el-button :style="{
+  <el-button :icon="icon" :loading="loading" :type="type" :style="{
     cursor: 'pointer',
     width: '100%',
     height: '100%',
@@ -38,7 +38,7 @@ export default defineComponent({
   } as componentInfo,
   mixins: [baseComponents],
   props: ["label", "type", 'loading', "sizeUnit", "onClickFunc", "icon", "detail", 'cusStyle'],
-  mounted(){
+  mounted() {
     this.$emit('ready')
   },
   methods: {
