@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-17 13:12:41
+ * @LastEditTime: 2024-01-20 22:07:59
  * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
@@ -28,7 +28,7 @@ let pageConfig = {
       ...base.cusStyle,
       wholeScreen: true,
       maxRows:16,
-      Fullscreen:true
+      Fullscreen:false
     },
   },
   MAIN: {
