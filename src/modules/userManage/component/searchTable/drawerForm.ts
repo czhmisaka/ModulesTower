@@ -1,6 +1,6 @@
 /*
  * @Date: 2022-11-21 08:55:57
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/drawerForm.ts
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.ts
  */
 
 export const OpenDrawerBtn = () => {};
@@ -117,7 +117,7 @@ export const dobuleCheckBtnMaker = (
   options: stringAnyObj = {}
 ) => {
   return new Promise((res, rej) => {
-    ElMessageBox.confirm(title?title:'删除', message?message:'删除', {
+    ElMessageBox.confirm(title ? title : "删除", message ? message : "删除", {
       type: "warning",
       confirmButtonText: "确定",
       cancelButtonText: "取消",
@@ -229,8 +229,8 @@ export const closeDrawerForm = (content: { [key: string]: any }) => {
  * @param {*} res
  */
 export const repBackMessageShow = (that, res) => {
-  if (res["message"] == "成功") {
-    that.$message.success(res["message"]);
+  if (res["message"] == "成功" || res["stat"] == "ok") {
+    that.$message.success(res["message"] || "成功");
     setTimeout(() => {
       that.close ? that.close() : refreshDesktop(that);
     }, 500);

@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-07-29 19:28:04
+ * @LastEditTime: 2024-01-21 01:06:06
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/collectionManage.ts
  */
 import {
@@ -150,7 +150,7 @@ export const collectionManage = async () => {
       },
       {
         props: {
-          searchItemTemplate: [],
+          searchItemTemplate: [tableCellTemplateMaker("关键词", "search")],
           showItemTemplate: categorysStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await piwigoMethod({
@@ -158,6 +158,13 @@ export const collectionManage = async () => {
               user_id: (await useUserStoreHook().getOptions())["id"],
             });
             let back = res.result.collections;
+            back = back.filter((x) => {
+              if (query.search)
+                return (
+                  x.name.toUpperCase().indexOf(query.search.toUpperCase()) > -1
+                );
+              else return true;
+            });
             return back;
           },
           btnList: [新增收藏夹, 批量删除收藏夹],

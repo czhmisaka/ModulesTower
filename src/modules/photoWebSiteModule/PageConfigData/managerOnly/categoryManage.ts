@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-18 22:30:24
+ * @LastEditTime: 2024-01-21 00:35:29
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/categoryManage.ts
  */
 import {
@@ -187,17 +187,21 @@ export const categoryManage = async () => {
       },
       {
         props: {
-          searchItemTemplate: [],
+          searchItemTemplate: [
+            tableCellTemplateMaker('关键词','search'),
+          ],
           showItemTemplate: categorysStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await piwigoMethod({
-              method: "pwg.categories.getList",
+              // method: "pwg.categories.getList",
+              method: "pwg.categories.getAdminList",
+              ...query
             });
             let back = res.result.categories;
             return back;
           },
           btnList: [新增相册],
-          autoSearch: true,
+          // autoSearch: true,
           cantSelect: true,
         },
         isSettingTool: false,
