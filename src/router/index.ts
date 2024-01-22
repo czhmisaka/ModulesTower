@@ -1,8 +1,8 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-21 15:12:13
- * @FilePath: /lcdp_fe_setup/src/router/index.ts
+ * @LastEditTime: 2024-01-22 13:42:00
+ * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
 import {

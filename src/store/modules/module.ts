@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-23 12:54:37
+ * @LastEditTime: 2024-01-22 14:26:09
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -21,8 +21,9 @@ import { get, post } from "@/utils/api/requests";
 import { useMultiTagsStoreHook } from "./multiTags";
 import { useUserStoreHook } from "@/store/modules/user";
 import { isUrl } from "@pureadmin/utils";
-import { timeConsole } from '@/router/util'
+import { timeConsole } from "@/router/util";
 import modulesLIst from "@/layout/components/modules/modulesLIst.vue";
+import path from "path";
 
 let licenseMap = {};
 let showAbleKeyMap = {};
@@ -144,26 +145,30 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
   if (cell.urls && cell.urls.length > 0) {
     cell["path"] = cell.urls[0];
     if (cell.type == 3) {
+      console.log(cell["path"], "fuck");
       if (isUrl(cell["path"])) {
         cell.meta = {
           ...cell.meta,
           frameSrc: cell.path,
         };
-        cell.path = "/" + cell.name;
-      } else{
+        if (cell.path[0] != "/") cell.path = "/" + cell.name;
+      } else {
         for (let i = 0; i < routerBackup.length; i++) {
-
           if (routerBackup[i].path == cell.path) {
             // 获取目标路由
             let backup = routerBackup[i];
             // 补充基本信息
             let nameList = getFatherNameList(wholeCellList, cell.parentId);
             cell.component = backup.component;
-            cell.path = "/" + nameList.join("/") + "/" + cell.name;
+            cell.path =
+              (nameList.length > 1 ? "/" + nameList.join("/") : "") +
+              "/" +
+              cell.name;
+            console.log("cell.path", cell.path, "nameList", nameList);
             cell.meta = {
               ...backup.meta,
               ...cell.meta,
-              PageName: cell.urls[0]||cell.path,
+              PageName: cell.urls[0] || cell.path,
               showLink: cell.showLink,
             };
             break;
@@ -334,8 +339,10 @@ export const moduleStore = defineStore({
         pageList = pageList.concat(flatChildrenArr(x.children));
       });
       pageList.map((x) => {
+        console.log(x.path, path, "asdasdasd");
         if (x.path == path) page = x;
       });
+
       // 首次匹配前触发模块加载操作，故不处理
       if (pageList.length == 0) return true;
       return page;

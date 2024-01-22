@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-13 10:46:15
+ * @LastEditTime: 2024-01-22 13:01:12
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/main.ts
  */
 
@@ -265,7 +265,7 @@ export const MqttPageConfig = {
       margin: 6,
       wholeScreen: true,
       maxRows: wholeScreen.size.height,
-      Fullscreen: true,
+      Fullscreen: false,
     },
     menuId: "12",
   },

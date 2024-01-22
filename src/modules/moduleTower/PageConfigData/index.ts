@@ -1,12 +1,13 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 14:02:48
+ * @LastEditTime: 2024-01-22 13:09:26
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/index.ts
  */
 import { isValidKey } from "@/utils/index";
 import { desktopDataTemplate } from "@/modules/userManage/types";
 import { MqttPageConfig } from "./main";
+import { iotInfoList } from "./mqtt/admin/iotInfoList";
 
 
 export const base = {
@@ -19,7 +20,12 @@ export const base = {
   },
 };
 let pageConfig = {
-  ...MqttPageConfig  
+  ...MqttPageConfig,
+  IotInfoList:{
+    ...base,
+    name:'设备列表',
+    desktopData: iotInfoList
+  },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

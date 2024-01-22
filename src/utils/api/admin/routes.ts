@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-24 22:48:17
+ * @LastEditTime: 2024-01-22 13:56:23
  * @FilePath: /ConfigForDesktopPage/src/utils/api/admin/routes.ts
  */
 import { useModuleHook } from "@/store/modules/module";
