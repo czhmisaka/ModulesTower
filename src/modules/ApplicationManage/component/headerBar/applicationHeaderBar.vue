@@ -3,8 +3,8 @@
 <!--
  * @Date: 2023-10-09 10:22:33
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-18 16:52:13
- * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/headerBar/applicationHeaderBar.vue
+ * @LastEditTime: 2024-01-23 08:39:36
+ * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/component/headerBar/applicationHeaderBar.vue
 -->
 <template>
   <CardBg :cusStyle="{
@@ -32,9 +32,7 @@ import {
   gridSizeMaker,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import userInfoCard from "@/modules/userManage/component/userCard/userInfoCard.vue";
-import { useUserStore, useUserStoreHook } from "@/store/modules/user";
-import { userFieldStorage } from "@/modules/userManage/PageConfigData/user/userValueManage";
-import { userTableCellStorage } from "@/modules/userManage/PageConfigData/workteam";
+import { useUserStore, useUserStoreHook } from "@/store/modules/user";  
 import { ApplicationInfoTemplate } from '../../types';
 
 export default defineComponent({

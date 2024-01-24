@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-10-09 10:22:33
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-09 15:55:06
- * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/headerBar/headerBar.vue
+ * @LastEditTime: 2024-01-22 22:18:06
+ * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/component/headerBar/headerBar.vue
 -->
 <template>
   <CardBg
@@ -50,8 +50,6 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import userInfoCard from "@/modules/userManage/component/userCard/userInfoCard.vue";
 import { useUserStore, useUserStoreHook } from "@/store/modules/user";
-import { userFieldStorage } from "@/modules/userManage/PageConfigData/user/userValueManage";
-import { userTableCellStorage } from "@/modules/userManage/PageConfigData/workteam";
 
 export default defineComponent({
   componentInfo: {
@@ -67,7 +65,6 @@ export default defineComponent({
   data: () => {
     return {
       userInfo: { data: null, userTemplate: [] },
-      loginOutBtn: useUserStoreHook().getLogOutBtn(),
     };
   },
   async mounted() {
@@ -75,10 +72,8 @@ export default defineComponent({
     this.userInfo.data = async () => {
       return data;
     };
-    const userFieldTemplate = await (await userFieldStorage()).getAll();
+    
     const userTemplate = [
-      ...userTableCellStorage.getByKeyArr(["name", "icon", "mobile"]),
-      ...userFieldTemplate,
     ];
     this.userInfo.userTemplate = userTemplate;
     this.$emit("ready");

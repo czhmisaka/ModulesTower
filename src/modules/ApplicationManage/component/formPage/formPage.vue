@@ -2,8 +2,8 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-20 18:35:39
- * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/formPage/formPage.vue
+ * @LastEditTime: 2024-01-22 22:12:56
+ * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/component/formPage/formPage.vue
 -->
 <template>
   <cardBg :cusStyle="{
@@ -19,7 +19,7 @@
       <el-scrollbar>
         <VueForm v-if="showTypeProp == 'edit'" v-model="formData" :style="{
           textAlign: 'top',
-        }" :schema="schema" :ui-schema="uiSchema" :formProps="formProps" @change="(e) => console.log(e)">
+        }" :schema="schema" :ui-schema="uiSchema" :formProps="formProps">
           <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
         </VueForm>
       </el-scrollbar>
@@ -83,10 +83,8 @@ import {
   uiSchemaMaker,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import VueForm from "@lljj/vue3-form-element";
-import { btnList } from "@/modules/knowledge/PageConfigData/template/templateDetail";
 import { showType, tableCellTemplate, btnCellTemplate, btnActionTemplate } from "@/modules/userManage/types";
 import { stringAnyObj } from '../../types';
-import { queryItemTemplateLocal } from '../../../knowledge/PageConfigData/template/templateDetail';
 import { deepClone } from "@/utils";
 let formDataForCheck = {};
 
