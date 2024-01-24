@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-13 10:22:18
+ * @LastEditTime: 2024-01-24 21:52:29
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
@@ -96,28 +96,21 @@ export const openDrawerForIotCardServiceDesktop = async (
   IotCardInfo: IotDeviceTemplate
 ) => {
   // // 构建IotCard
-  // const infoCardSize = sizeGetter().iotInfo;
-  // const infoCardPosition = positionGetter().iotInfo;
   const iotInfoCardGridCell = iotCardGridCellMaker("iotInfo", IotCardInfo)
   .setSize(2,2.5).setPosition(0,0)
-    // .setSize(infoCardSize.width, infoCardSize.height)
-    // .setPosition(infoCardPosition.x, infoCardPosition.y);
+
 
   // 构建IotServiceCard
-  // const iotServiceCardSize = sizeGetter().iotServiceCard;
-  // const iotServiceCardPosition = positionGetter().iotServiceCard;
   const iotServiceCardGridCell = iotServiceCardGridCellMaker(
     "iotServiceCard",
     IotCardInfo
   ).setSize(2,4).setPosition(2,0)
-    // .setSize(iotServiceCardSize.width, iotServiceCardSize.height)
-    // .setPosition(iotServiceCardPosition.x, iotServiceCardPosition.y);
 
   // 构建gridCell
   let gridCellList = [] as gridCellTemplate[]
   if(IotCardInfo.gridCell){
     IotCardInfo.gridCell.map(x=>{
-      gridCellList.push(getIotDeviceCellGridDesktopCardComponent(x))
+      gridCellList.push(getIotDeviceCellGridDesktopCardComponent(x,IotCardInfo ))
     })
   }
   console.log('asd',gridCellList)

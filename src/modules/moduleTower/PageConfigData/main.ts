@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-22 13:01:12
+ * @LastEditTime: 2024-01-24 22:44:17
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/main.ts
  */
 
@@ -35,6 +35,7 @@ import {
   iotServiceCardGridCellMaker,
 } from "../component/mqtt/service/service";
 import { IotDeviceCellGridDesktopType } from "../component/mqtt/iotGridCell/iotGridCell";
+import { post } from "@/utils/api/requests";
 
 const wholeScreen = {
   size: {
@@ -42,61 +43,10 @@ const wholeScreen = {
     height: 8,
   },
 };
-export function getXpx(vw) {
-  return vw / (document.body.clientWidth / wholeScreen.size.width);
-}
-export function getYpx(vh) {
-  return vh / (document.body.clientHeight / wholeScreen.size.height);
-}
 
-const sizeGetter = () => {
-  return {
-    iotDeviceInfoCard: {
-      width: getXpx(200),
-      height: getYpx(200),
-    },
-    iotDeviceInfoCard2: {
-      width: getXpx(200),
-      height: getYpx(200),
-    },
-    openMqttDeviceListBtn: {
-      width: getXpx(120),
-      height: getYpx(60),
-    },
-  };
+const iotCard = {
+  size: { width: 2, height: 2 },
 };
-const positionGetter = () => {
-  const size = sizeGetter();
-  return {
-    iotDeviceInfoCard: {
-      x:
-        0.5 * wholeScreen.size.width -
-        0.5 * size.openMqttDeviceListBtn.width -
-        size.iotDeviceInfoCard.width,
-      y: getYpx(100),
-    },
-    iotDeviceInfoCard2: {
-      x:
-        0.5 * wholeScreen.size.width -
-        0.5 * size.openMqttDeviceListBtn.width -
-        size.iotDeviceInfoCard.width * 2,
-      y: getYpx(100),
-    },
-    openMqttDeviceListBtn: {
-      x: 0.5 * wholeScreen.size.width - 0.5 * size.openMqttDeviceListBtn.width,
-      y: getYpx(100),
-    },
-  };
-};
-
-let timeOut = null as any;
-const windowResize = windowResizeChecker(async (that, baseData) => {
-  if (timeOut) clearTimeout(timeOut);
-  timeOut = setTimeout(() => {
-    changeCardSize(that, sizeGetter());
-    changeCardPosition(that, positionGetter());
-  }, 50);
-}, "windowResize");
 
 export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
   const hoverFunc = {
@@ -137,84 +87,30 @@ export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
       });
     },
   };
-  const iotDeviceInfoCard = iotCardGridCellMaker(
-    "iotDeviceInfoCard",
-    {
-      nameEn: "Esp32c3",
-      name: "测试用esp32",
-      service: [
-        IotDeviceServiceType.sendMsg,
-        IotDeviceServiceType.getStreamData,
-      ],
-      description: "一张用于基础测试的esp32",
-      gridCell: [
-        {
-          data: {
-            props: {
-              label: "LED",
-            },
-          },
-          type: IotDeviceCellGridDesktopType.switchCard,
-          sendKey: "testid1",
-          gridInfo: {
-            width: 1,
-            height: 1,
-            x: 4,
-            y: 3,
-          },
+
+  const iotCardGridCellList = (await post("/admin/iot/iot/list", {})).data
+    .map((x) => {
+      return {
+        ...x,
+        gridCell: JSON.parse(x.gridCell),
+        service: JSON.parse(x.service),
+      };
+    })
+    .map((data, i) => {
+      return iotCardGridCellMaker(data.mainTopic, data, {
+        clickFunc: async (that, data) => {
+          openDrawerForIotCardServiceDesktop(that, data);
         },
-      ],
-    },
-    {
-      clickFunc: async (that, data) => {
-        openDrawerForIotCardServiceDesktop(that, data);
-      },
-      ...hoverFunc,
-    }
-  )
-    .setSize(
-      sizeGetter().iotDeviceInfoCard.width,
-      sizeGetter().iotDeviceInfoCard.height
-    )
-    .setPosition(
-      positionGetter().iotDeviceInfoCard.x,
-      positionGetter().iotDeviceInfoCard.y
-    );
-
-  // const iotDeviceInfoCard2 = iotCardGridCellMaker(
-  //   "iotDeviceInfoCard2",
-  //   {
-  //     nameEn: "Esp32s3",
-  //     name: "高性能Esp32-s3",
-  //     service: [
-  //       IotDeviceServiceType.sendMsg,
-  //       IotDeviceServiceType.getStreamData,
-  //     ],
-  //     description: "一张用于高性能测试的Esp32-s3",
-  //   },
-  //   {
-  //     ...hoverFunc,
-  //   }
-  // )
-  //   .setSize(
-  //     sizeGetter().iotDeviceInfoCard.width,
-  //     sizeGetter().iotDeviceInfoCard.height
-  //   )
-  //   .setPosition(
-  //     positionGetter().iotDeviceInfoCard2.x,
-  //     positionGetter().iotDeviceInfoCard2.y
-  //   );
-
+        ...hoverFunc,
+      }).setPosition(
+        Math.floor(i / (wholeScreen.size.height/iotCard.size.height)),
+        i % (wholeScreen.size.height/iotCard.size.height) * iotCard.size.height
+      ).setSize(iotCard.size.width, iotCard.size.height)
+    });
   const iotServiceCardGridCell = iotServiceCardGridCellMaker(
     "iotServiceCard",
     {
-      nameEn: "Esp32c3",
-      name: "测试用esp32",
-      service: [
-        IotDeviceServiceType.sendMsg,
-        IotDeviceServiceType.getStreamData,
-      ],
-      description: "一张用于基础测试的esp32",
+      nameEn: "",
     },
     false
   );
@@ -240,19 +136,11 @@ export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
         },
       }
     )
-      .setSize(
-        sizeGetter().openMqttDeviceListBtn.width,
-        sizeGetter().openMqttDeviceListBtn.height
-      )
-      .setPosition(
-        positionGetter().openMqttDeviceListBtn.x,
-        positionGetter().openMqttDeviceListBtn.y
-      ),
-    // iotDeviceInfoCard2,
-    iotDeviceInfoCard,
-    windowResize,
+      .setSize(1, 1)
+      .setPosition(2, 2),
+    ...iotCardGridCellList,
     iotServiceCardGridCell,
-    ...gridEditList,
+    // ...gridEditList,
   ];
 };
 

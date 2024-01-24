@@ -1,13 +1,13 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 12:45:33
+ * @LastEditTime: 2024-01-24 21:48:08
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
 <template>
   <div :ref="'screenId_' + idRandom" :id="'screenId_' + idRandom" :style="{
-    overflow: cusStyle.wholeScreen ? 'hidden' : 'auto',
+    overflow: cusStyle.wholeScreen ? 'hidden' : '',
     ...(cusStyle['desktopStyle'] || {})
   }" class="baseGrid">
     <!-- <div style="position:fixed;top:0px;z-index: 10000000;">{{ gridList.map(x => x.label) }} </div>-->

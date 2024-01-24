@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-12 15:14:08
+ * @LastEditTime: 2024-01-24 21:53:27
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotCard.tsx
  */
 
@@ -41,6 +41,7 @@ export interface IotDeviceTemplate {
   description?: string;
   service?: IotDeviceServiceType[];
   gridCell?: IotDeviceGridDesktopCellTemplate[];
+  mainTopic?: string;
 }
 
 export enum IotDeviceType { }
