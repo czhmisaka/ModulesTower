@@ -1,14 +1,16 @@
 <!--
  * @Date: 2023-12-14 17:59:20
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-24 22:29:08
+ * @LastEditTime: 2024-01-25 22:54:22
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/info/colEditor.vue
 -->
 <template>
     <cardBg>
         <ElDivider content-position="left" style="width:calc(100% - 48px);margin-left:24px">{{ label }}</ElDivider>
-        <VueDraggable v-model="queryItemTemplateLocal" :animation="150" :group="groupName">
-            <div v-for=" item  in  queryItemTemplateLocal " :key="item.key">
+        <VueDraggable v-model="queryItemTemplateLocal" :animation="150" :group="groupName" filter=".filtered">
+            <div v-for=" item  in  queryItemTemplateLocal " :key="item.key" :class="{
+                filtered: item.disabled
+            }">
                 <cardBg :cus-style="{
                     width: 'calc(100% - 24px) ！important',
                     padding: '6px',
@@ -67,7 +69,7 @@ export default defineComponent({
             async handler(val) {
                 await this.onChange(this, val)
             },
-            deep: true
+            deep: true,
         }
     },
     data: () => {

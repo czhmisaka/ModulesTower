@@ -1,18 +1,13 @@
 <!--
  * @Date: 2023-07-21 17:14:55
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-07 14:40:58
+ * @LastEditTime: 2024-01-22 08:58:56
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/inputElementComponent/iconPicker.vue
 -->
 <template>
   <div>
-    <el-popover
-      placement="bottom"
-      title="选择图标"
-      width="510px"
-      trigger="click"
-      content="this is content, this is content, this is content"
-    >
+    <el-popover placement="bottom" title="选择图标" width="510px" trigger="click"
+      content="this is content, this is content, this is content">
       <template #reference>
         <el-button>
           <component v-if="selected" :is="useRenderIcon(selected)" />
@@ -21,77 +16,43 @@
       </template>
       <template #default>
         <div class="scrollBox">
-          <CardBg
-            title="图标颜色"
-            :cus-style="{
-              width: '480px',
-              height: 'auto',
-              padding: '6px',
-              overflow: 'none',
-              position: 'relative',
-              zIndex: '1211',
-            }"
-          >
-            <el-button
-              v-for="c in colors"
-              :color="c"
-              size="small"
-              style="margin-top: 6px"
-              @click="selected.color = c"
-              class="colorBox"
-            >
+          <CardBg title="图标颜色" :cus-style="{
+            width: '480px',
+            height: 'auto',
+            padding: '6px',
+            overflow: 'none',
+            position: 'relative',
+            zIndex: '1211',
+          }">
+            <el-button v-for="c in colors" :color="c" size="small" style="margin-top: 6px" @click="selected.color = c"
+              class="colorBox">
             </el-button>
-            <div
-              :style="{
-                display: 'inline-block',
-                transform: 'translate(8px, 5.5px)',
-              }"
-            >
-              <el-color-picker
-                :append-to-body="true"
-                :teleported="false"
-                size="small"
-                v-model="selected.color"
-              />
+            <div :style="{
+              display: 'inline-block',
+              transform: 'translate(8px, 5.5px)',
+            }">
+              <el-color-picker :append-to-body="true" :teleported="false" size="small" v-model="selected.color" />
             </div>
-            <div
-              :style="{
-                display: 'inline-block',
-                transform: 'translate(14px, 3.5px)',
-              }"
-            >
-              <el-button
-                type="default"
-                size="small"
-                plain
-                @click="
-                  selected.color = '';
-                  selected.src = '';
-                "
-              >
+            <div :style="{
+              display: 'inline-block',
+              transform: 'translate(14px, 3.5px)',
+            }">
+              <el-button type="default" size="small" plain @click="
+                selected.color = '';
+              selected.src = '';
+              ">
                 清除图标
               </el-button>
             </div>
           </CardBg>
-          <CardBg
-            title="系统图标"
-            :cus-style="{
-              marginTop: '6px',
-              width: '480px',
-              height: 'auto',
-              padding: '6px',
-            }"
-            class="flexBox"
-          >
-            <div
-              v-for="item in elIcons"
-              class="iconBox"
-              @click="selected = { ...selected, ...item }"
-            >
-              <component
-                :is="useRenderIcon({ ...item, color: selected.color })"
-                class="iconCell"
-              />
+          <CardBg title="系统图标" :cus-style="{
+            marginTop: '6px',
+            width: '480px',
+            height: 'auto',
+            padding: '6px',
+          }" class="flexBox">
+            <div v-for="item in elIcons" class="iconBox" @click="selected = { ...selected, ...item }">
+              <component :is="useRenderIcon({ ...item, color: selected.color })" class="iconCell" />
             </div>
           </CardBg>
         </div>
@@ -145,15 +106,14 @@ export default defineComponent({
   data: () => {
     return {
       elIcons,
-      colors: ["#409EFF", "#67C23A", "#E6A23C", "#F56C6C", "#909399", "#000"],
+      colors: ["#fff", "#409EFF", "#67C23A", "#E6A23C", "#F56C6C", "#909399", "#000"],
       selected: {} as iconTemplate,
     };
   },
   async mounted() {
-    // console.log(this.modelValue, "alue");
     try {
       this.selected = JSON.parse(this.modelValue);
-    } catch {}
+    } catch { }
   },
   methods: {
     useRenderIcon,
@@ -171,6 +131,7 @@ export default defineComponent({
   overflow-y: scroll;
   overflow-x: hidden;
 }
+
 .iconBox {
   float: left;
   width: 33px;
@@ -181,21 +142,25 @@ export default defineComponent({
   border-radius: 2px;
   border: 0px solid #ccc;
   transition: box-shadow 0.3s, transform 0.4s, border-radius 0.3s;
-  .iconCell {
-  }
+
+  .iconCell {}
 }
+
 .iconBox:hover {
   transform: translate(-1px, -1px);
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
 }
+
 .colorBox {
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s, transform 0.4s, border-radius 0.3s;
+  border-radius: 6px;
 }
 
 .colorBox:hover {
   transform: translate(-1px, -1px);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
 }
 </style>

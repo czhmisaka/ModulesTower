@@ -97,7 +97,8 @@ export const btnMaker = (
               return nowLicense.indexOf(x) == -1;
             })
             .filter(Boolean).length == 0;
-      if (nowShowAbleKey && nowShowAbleKey.length > 0)
+
+      if (apiList.length == 0 && nowShowAbleKey && nowShowAbleKey.length > 0)
         back = nowShowAbleKey.indexOf(showAbleKey) != -1;
       if (userInfo.adminFlag) back = true;
       return back && options.isShow ? options.isShow(data) : back;

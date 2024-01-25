@@ -1,49 +1,75 @@
 <!--
  * @Date: 2023-02-13 10:25:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-22 17:16:40
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/userCard/userInfoCard.vue
+ * @LastEditTime: 2024-01-15 18:55:43
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/userCard/userInfoCard.vue
 -->
 <template>
-  <cardBg :cusStyle="cardBgCusStyle">
+  <cardBg :cusStyle="cardBgCusStyle" class="userInfoCardBox">
     <div :style="{
-      width: '280px',
+      width: '100%',
       height: '100%',
       overflow: 'auto',
       overflowX: 'hidden',
     }">
       <div class="wholeWidthBox" :style="{
-        height:
-          btnList && btnList.length > 0
-            ? blockSizePercent(2.3)
-            : blockSizePercent(2),
+        height: 'auto'
       }" v-if="userInfoData['username']">
         <el-image v-if="userInfoData['icon']
           ? userInfoData['icon'].replace('/lcdp', '/api')
           : ''
           " :style="{
-    width: blockSizePercent(1.4),
-    height: blockSizePercent(1.4),
+    width: '42px',
+    height: '42px',
     borderRadius: '50%',
-    margin: blockSizePercent(0.3),
+    margin: '6px',
   }" class="mainColorBorder" :src="userpng" fit="cover" />
 
         <div class="flexCol" :style="{
-          width: `calc(100% - ${blockSizePercent(2)})`,
-          fontSize: blockSizePercent(0.2),
+          width: `120px`,
         }">
           <span class="name">
             {{ userInfoData["username"] }}
             <br />
-            <span class="mobile">部门：{{ userInfoData['units'] && userInfoData['units'][0] ? userInfoData['units'][0].name : '' }}</span>
+            <el-dropdown ref="dropdown1" trigger="click">
+              <el-tag class="mobile" effect="dark" style="text-wrap: wrap;
+            padding: 3px;
+            height: auto;
+            font-size: 8px;">
+                <!-- {{ userInfoData['units'][0] ? userInfoData['units'][0].name : '' }} -->
+                {{ userInfoData['units'].filter(x => x.id == userInfoData['loginUnitId'])[0].name }}
+              </el-tag>
+              <template #dropdown>
+                <cardBg>
+                  <el-dropdown-menu>
+                    <el-dropdown-item v-for="item in userInfoData['units']" style="padding: 6px;"
+                      @click="checkUnit(item.id)">
+                      <!-- {{ item.name }} -->
+
+                      <el-tag class="mobile" :effect="item.id == userInfoData['loginUnitId'] ? 'dark' : 'plain'"
+                        :type="item.id == userInfoData['loginUnitId'] ? 'default' : 'info'" style="
+                      text-wrap: wrap;
+                      padding: 3px;
+                      height: auto;
+                      font-size: 12px;">
+                        {{ item.name }}
+                      </el-tag>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </cardBg>
+              </template>
+            </el-dropdown>
+            <!-- <span class="mobile">部门：{{ userInfoData['units'][0] ? userInfoData['units'][0].name : '' }}</span> -->
           </span>
         </div>
       </div>
     </div>
 
   </cardBg>
+  <ElDivider class="userInfoCardDivider" />
   <!-- mainActionBtnList -->
-  <cardBg :cusStyle="{ ...cardBgCusStyle, paddingTop: '9px' }" v-if="mainActionBtnList && mainActionBtnList.length">
+  <cardBg class="userInfoCardBox" :cusStyle="{ ...cardBgCusStyle, padding: '3px 12px 6px 12px ' }"
+    v-if="mainActionBtnList && mainActionBtnList.length">
     <div class="btnList" :style="{}">
       <div :key="index" v-for="(item, index) in mainActionBtnList.filter((btn) =>
         btn && btn.isShow
@@ -51,14 +77,16 @@
           : true
       )" style="float: left; margin-right: 6px">
         <el-button class="btn" :loading="item.isLoading" @click="btnClick(item)" :type="item.elType" :icon="item.icon"
-          :size="blockSizePercent(1, '') as number < 40 ? 'small' : 'default'" plain>
+          :size="blockSizePercent(1, '') as number < 40 ? 'small' : 'default'" plain link>
           {{ item.label }}
         </el-button>
       </div>
     </div>
   </cardBg>
+  <ElDivider class="userInfoCardDivider" />
   <!-- BtnList -->
-  <cardBg :cusStyle="{ ...cardBgCusStyle, paddingTop: '9px' }" v-if="btnList && btnList.length">
+  <cardBg class="userInfoCardBox" :cusStyle="{ ...cardBgCusStyle, padding: '3px 12px 6px 12px ' }"
+    v-if="btnList && btnList.length">
     <div class="btnList" :style="{}">
       <div :key="index" v-for="(item, index) in btnList.filter((btn) =>
         btn && btn.isShow
@@ -66,7 +94,7 @@
           : true
       )" style="float: left; margin-right: 6px">
         <el-button class="btn" :loading="item.isLoading" @click="btnClick(item)" :type="item.elType" :icon="item.icon"
-          :size="blockSizePercent(1, '') as number < 40 ? 'small' : 'default'" plain>
+          :size="blockSizePercent(1, '') as number < 40 ? 'small' : 'default'" plain link>
           {{ item.label }}
         </el-button>
       </div>
@@ -88,6 +116,7 @@ import {
   setData,
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { useUserStoreHook } from "@/store/modules/user";
+import { ElDivider, ElMessage } from 'element-plus';
 
 import {
   btnActionTemplate,
@@ -97,6 +126,9 @@ import {
   tableCellTemplate,
   tableCellOptions,
 } from "@/modules/userManage/types";
+import { post } from "@/utils/api/requests";
+import { useCacheHook } from '../../../../store/modules/cache';
+import { Link } from '@element-plus/icons-vue';
 export default defineComponent({
   componentInfo: {
     labelNameCN: "用户信息展示组件",
@@ -160,13 +192,14 @@ export default defineComponent({
   computed: {
     cardBgCusStyle() {
       let data = {
-        padding: "6px",
+        padding: "12px",
         boxShadow: this.isHover ? "5px 5px 12px rgba(0,0,0,0.1) " : "",
         transform: this.isHover ? "translate(6px ,6px)" : "",
         transition: "box-shadow 0.4s,transform 0.4s",
         overflow: "none",
-        margin: '6px',
-        width: 'calc( 230px + 12px)'
+        width: '100%',
+        margin: '0px',
+        filter: 'none',
       };
       Object.keys(data).map((x) => {
         if (!data[x]) delete data[x];
@@ -176,6 +209,17 @@ export default defineComponent({
   },
 
   methods: {
+    // 选择部门
+    async checkUnit(id) {
+      console.log(id);
+      let res = await post(`/web/usc/switchUnit/${id}`, {})
+      useCacheHook().setup('loginUserInfo', async () => {
+        return res
+      })
+      if (this.userInfo) this.userInfoData = await this.userInfo();
+      ElMessage.success(res.message)
+    },
+
     hightLight(value = true) {
       // hightLightComponent(this, value ? [this.detail.label] : []);
       // this.isHover = value;
@@ -235,12 +279,12 @@ export default defineComponent({
   justify-content: space-around;
 
   .name {
-    font-size: 1.6em;
-    font-weight: bolder;
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1.4em;
 
     .mobile {
-      font-size: 0.8;
-      font-weight: 100;
+      cursor: pointer;
     }
   }
 }
@@ -255,5 +299,18 @@ export default defineComponent({
     bottom: 0px;
     position: absolute;
   }
+}
+
+.userInfoCardBox {
+  background: white !important;
+  color: $menuActiveBefore !important;
+  margin-top: 4px !important;
+  margin-bottom: 6px !important;
+}
+
+.userInfoCardDivider {
+  width: calc(100% - 24px);
+  padding: 0px;
+  margin: 0px 12px;
 }
 </style>

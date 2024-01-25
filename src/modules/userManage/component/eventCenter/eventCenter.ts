@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-10-11 16:19:26
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-30 21:29:21
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/eventCenter/eventCenter.ts
+ * @LastEditTime: 2023-12-29 16:11:50
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/eventCenter/eventCenter.ts
  */
 
 import {

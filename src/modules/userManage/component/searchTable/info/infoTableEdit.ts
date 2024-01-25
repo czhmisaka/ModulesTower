@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-12-14 16:04:48
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-26 15:16:20
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/info/infoTableEdit.ts
+ * @LastEditTime: 2024-01-02 18:02:49
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/info/infoTableEdit.ts
  */
 
 import {
@@ -37,6 +37,7 @@ import {
 } from "../../../../../components/basicComponents/grid/module/util";
 import {
   changeCardProperties,
+  setData,
   upEmit,
   upToTopDataChange,
 } from "@/components/basicComponents/grid/module/cardApi";
@@ -65,6 +66,12 @@ let rowHeightKey = 32 as string | number;
 export const openTableEditor = async (that: searchTableInfo, data) => {
   outputShowItemTemplate = [];
   rowHeightKey = that.rowHeightKey || 32;
+  const showItemTemplate = that.showItemTemplate.filter(
+    (x) => x.table.type != showType.btnList
+  );
+  const actionItemTemplate = that.showItemTemplate.filter(
+    (x) => x.table.type == showType.btnList
+  );
   // 表单编辑器
   const TableEditor = async (): Promise<gridCellTemplate[]> => {
     let gridCellList = [
@@ -109,9 +116,8 @@ export const openTableEditor = async (that: searchTableInfo, data) => {
         {
           props: {
             label: "展示列表配置",
-            queryItemTemplate: that.showItemTemplate,
+            queryItemTemplate: showItemTemplate,
             onChange: async (th, data) => {
-              console.log(data, "ads");
               let queryItemTemplateLocal = JSON.parse(
                 JSON.stringify(th.queryItemTemplateLocal)
               );
@@ -130,7 +136,7 @@ export const openTableEditor = async (that: searchTableInfo, data) => {
                   )[0]
                 );
               outputShowItemTemplate = [];
-              data.map((cell) => {
+              [...data, ...actionItemTemplate].map((cell) => {
                 that.showItemTemplate.map((target) => {
                   if (target.label == cell.label && target.key == cell.key)
                     outputShowItemTemplate.push({
@@ -138,6 +144,11 @@ export const openTableEditor = async (that: searchTableInfo, data) => {
                       showAble: cell.showAble,
                     } as tableCellTemplate);
                 });
+              });
+              setData(that, {
+                colEditor: {
+                  queryItemTemplate: outputShowItemTemplate,
+                },
               });
             },
           },

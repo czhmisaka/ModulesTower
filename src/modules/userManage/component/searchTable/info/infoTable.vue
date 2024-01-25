@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-18 15:53:25
+ * @LastEditTime: 2024-01-12 14:31:03
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/info/infoTable.vue
 -->
 <template>
@@ -12,13 +12,13 @@
     <ElTable v-if="dataList && dataList.length > 0" v-loading="loading" ref="tableController" :key="fuckKey"
       :data="dataList" height="100%"
       :row-style="{ 'min-height': '60px', 'min-width': '100px', 'height': rowHeightKey + 'px' }"
-      :header-cell-style="isDark ? tableHeaderDark : tableHeader" :fit="true" :border="false" row-key="id"
-      @select-all="selectPosition" @select="selectPosition" style="cursor: default" lazy :load="load"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+      :header-cell-style="isDark ? tableHeaderDark : tableHeader" :fit="true" :border="false"
+      :row-key="(row) => { return row.id + '' }" @select-all="selectPosition" @select="selectPosition"
+      style="cursor: default" lazy :load="load" :tree-props="{ children: 'children' }">
       <ElTableColumn :selectable="judgeSelect" type="selection" align="center" fixed="left" v-if="canSelect"
         :sort-by="(row, index) => sortBy(row, index, item.key)"></ElTableColumn>
       <ElTableColumn v-for="(item, index) in template.filter(x => x.showAble)" :key="index + 'tablecolumn'"
-        :label="item.label" :width="item.table?.width || 'auto'" :prop="item.key" :fixed="item.table.fixed">
+        :label="item.label" :width="item.table?.width || 'auto'" :prop="item.key" :fixed="item?.table?.fixed || 'right'">
         <template #header>
           <div class="ColumnHeader">
             {{ item.label }}
@@ -35,7 +35,7 @@
               </template>
             </el-popover>
           </div>
-          <div class="flexBox noOverflow" :style="item.table?.style" v-else>
+          <div class="flexBox noOverflow" :id="scope.row.id + '__ForExpand'" :style="item.table?.style" v-else>
             <el-button v-if="!item.table.noDetail" size="small" link type="primary" @click="cellDblclick(scope.row)">
               详情
             </el-button>
@@ -74,7 +74,7 @@ import {
 
 export default defineComponent({
   components: { ElTable, ElTableV2, ElTableColumn },
-  props: ["template", "loading", "dataList", "baseData", "load", 'defalutSelectedList', 'canSelect', 'rowHeightKey'],
+  props: ["template", "loading", "dataList", "baseData", "load", 'defalutSelectedList', 'canSelect', 'rowHeightKey', 'expandRowKeys'],
   data() {
     return {
       showType,
@@ -111,9 +111,43 @@ export default defineComponent({
     },
   },
   async mounted() {
-    this.initSelected()
+    if (this.defalutSelectedList)
+      await this.initSelected()
+    await this.initExpend()
   },
   methods: {
+    async initExpend() {
+      function toArray(itemList) {
+        let arr = [];
+        itemList.map((x) => {
+          let hasChildren = (x.children && x.children.length) > 0;
+          const children = x.children;
+          delete x.children;
+          arr.push({
+            ...x,
+          });
+          if (hasChildren)
+            toArray(children).map((x) => {
+              arr.push(x);
+            });
+        });
+        return arr;
+      }
+      const that = this
+      setTimeout(() => {
+        let num = 0
+        let fuck = setInterval(() => {
+          if (that.expandRowKeys && that.expandRowKeys.length > 0) {
+            const x = that.expandRowKeys[num]
+            if (document.getElementById(x + '__ForExpand')) {
+              document.getElementById(x + '__ForExpand').parentNode.parentNode.parentNode.childNodes[1].childNodes[0].getElementsByClassName('el-table__expand-icon')[0].click()
+              num++
+            } else clearInterval(fuck)
+          } else clearInterval(fuck)
+        }, 0)
+      }, 500)
+    },
+
     async initSelected() {
       let table = await new Promise((r, j) => {
         let interval = setInterval(() => {
@@ -196,7 +230,6 @@ export default defineComponent({
      * @Date: 2022-11-15 15:08:32
      */
     selectPosition(e) {
-      console.log('init infotable')
       this.selectedList = e;
       this.$emit("selectedChange", this.selectedList);
     },
@@ -214,23 +247,18 @@ export default defineComponent({
 
     /**
      * @name: btnClick
-     * @description: 按钮点击事件
+     * @description: 回报自定义按钮事件
      * @authors: CZH
-     * @Date: 2022-12-02 09:27:05
+     * @Date: 2022-11-21 19:03:17
      * @param {*} btn
      */
-    async btnClick(btn: btnCellTemplate, data?: stringAnyObj, index: any = {}) {
+    btnClick(btn: btnCellTemplate, res?: stringAnyObj, index: any = {}) {
       this.loadingMap[btn.label + btn.showAbleKey + index["$index"]] = true;
-      if (btn.type == btnActionTemplate.OpenDrawer) {
-        this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
-      } else if (btn.type == btnActionTemplate.Function && btn.function) {
-        let that = this;
-        await btn.function(that, data);
-        // this.$emit("search");
-      } else if (btn.type == btnActionTemplate.Url) {
-        window.open(btn.url);
-      }
-      this.loadingMap[btn.label + btn.showAbleKey + index["$index"]] = false;
+      this.$emit("btnClick", btn, { ...res });
+      const that = this
+      setTimeout(() => {
+        that.loadingMap[btn.label + btn.showAbleKey + index["$index"]] = false;
+      }, 500)
     },
 
     sortBy(row, index, key) {

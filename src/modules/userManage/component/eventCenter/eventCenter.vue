@@ -1,11 +1,10 @@
 <!--
  * @Date: 2023-10-11 16:02:44
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-07 16:15:30
+ * @LastEditTime: 2024-01-02 09:05:22
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/eventCenter/eventCenter.vue
 -->
 
-<template></template>
 <script lang="ts">
 import { defineComponent, watch } from "vue";
 import {
@@ -77,5 +76,3 @@ export default defineComponent({
     },
 })
 </script>
-
-<style scoped></style>

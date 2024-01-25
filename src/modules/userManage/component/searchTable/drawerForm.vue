@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 13:27:16
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
+ * @LastEditTime: 2024-01-23 17:10:26
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
   <el-drawer v-if="plugInData" v-model="isOpen" :title="plugInData.title"
@@ -36,7 +36,7 @@
       <!-- {{ formData }} -->
       <!-- {{ schema }} -->
       <el-scrollbar>
-        <VueForm ref="VueForm" v-if="isOpen" v-model="formData" :style="{
+        <VueForm ref="VueForm" v-if="isOpen && plugInData['queryItemTemplate']" v-model="formData" :style="{
           textAlign: 'top',
         }" :schema="schema" :ui-schema="uiSchema" :formProps="formProps">
           <div slot-scope="{ formData }" :style="{ textAlign: 'right' }"></div>
@@ -291,7 +291,7 @@ export default defineComponent({
       this.isReady = false;
       await this.$nextTick();
       if (this.plugInData["gridDesktop"] && this.plugInData["gridDesktopConfig"]) {
-        this.desktopDataList = await this.plugInData["gridDesktopConfig"].desktopData();
+        this.desktopDataList = await this.plugInData["gridDesktopConfig"].desktopData(this);
       } else if (this.plugInData["queryItemTemplate"]) {
         this.queryItemTemplate = this.plugInData["queryItemTemplate"]
           ? this.plugInData.queryItemTemplate
@@ -301,8 +301,8 @@ export default defineComponent({
             ...this.formProps,
             ...this.plugInData["formProps"],
           };
+        await this.initForm(this.queryItemTemplate);
       }
-      await this.initForm(this.queryItemTemplate);
       this.isReady = true;
       if (this.plugInData["data"]) this.formData = this.plugInData["data"];
       else this.formData = {};

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-09-08 15:59:49
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-07 10:21:24
+ * @LastEditTime: 2023-12-28 14:49:12
  * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/info/cardlist.vue
 -->
 <template>
@@ -88,25 +88,19 @@ export default defineComponent({
   },
   methods: {
     /**
-   * @name: btnClick
-   * @description: 按钮点击事件
-   * @authors: CZH
-   * @Date: 2022-12-02 09:27:05
-   * @param {*} btn
-   */
-    async btnClick(btn: btnCellTemplate, data?: stringAnyObj, index: any = {}) {
-      console.log(btn, 'asd2')
-      this.loadingMap[btn.label + btn.showAbleKey + index] = true;
-      if (btn.type == btnActionTemplate.OpenDrawer) {
-        this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
-      } else if (btn.type == btnActionTemplate.Function && btn.function) {
-        let that = this;
-        await btn.function(that, data);
-        // this.$emit("search");
-      } else if (btn.type == btnActionTemplate.Url) {
-        window.open(btn.url);
-      }
-      this.loadingMap[btn.label + btn.showAbleKey + index] = false;
+     * @name: btnClick
+     * @description: 回报自定义按钮事件
+     * @authors: CZH
+     * @Date: 2022-11-21 19:03:17
+     * @param {*} btn
+     */
+    btnClick(btn: btnCellTemplate, res?: stringAnyObj, index: any = {}) {
+      this.loadingMap[btn.label + btn.showAbleKey + index["$index"]] = true;
+      this.$emit("btnClick", btn, { ...res });
+      const that = this
+      setTimeout(() => {
+        that.loadingMap[btn.label + btn.showAbleKey + index["$index"]] = false;
+      }, 500)
     },
 
     /**

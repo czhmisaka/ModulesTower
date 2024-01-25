@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.ts
+ * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
@@ -37,8 +37,6 @@ const baseShowFunc = (data, key, isPopover = false) => {
   else return noDataIcon;
 };
 
-
-
 /**
  * @name: searchCellStorage
  * @description: 表单元素存储库构建工具
@@ -46,25 +44,20 @@ const baseShowFunc = (data, key, isPopover = false) => {
  * @Date: 2022-11-10 09:33:04
  */
 export class SearchCellStorage {
-  
   storage = [] as tableCellTemplate[];
-  // labels = new Object();
-  labels = {} as {[key:string]:string};
-  keys = {} as {[key:string]:string};
+  labels = [] as string[];
+  keys = [] as string[];
   constructor(storage: tableCellTemplate[]) {
     this.storage = storage;
-    storage.map((x:tableCellTemplate)=>{
-      this.labels[x.label] = x.label;
-      this.keys[x.label] = x.key;
-    })
-    console.log(this.labels,'asd')
+    this.labels = storage.map((x) => {
+      return x.label;
+    });
+    this.keys = storage.map((x) => {
+      return x.key;
+    });
   }
 
-  getProps(){
-    return this.labels 
-  }
-  
-  getByLabel<T extends keyof typeof this['labels']>(label: T, options: tableCellOptions = {}) {
+  getByLabel(label: string, options: tableCellOptions = {}) {
     let back = {} as { [key: string]: any };
     this.storage.map((cell) => {
       if (label && label == cell.label) back = cell;
@@ -155,8 +148,6 @@ export class SearchCellStorage {
    */
   push(cell: tableCellTemplate) {
     this.storage.push(cell);
-    this.labels[cell.label] = cell.label
-    this.keys[cell.key] = cell.key  
   }
 }
 

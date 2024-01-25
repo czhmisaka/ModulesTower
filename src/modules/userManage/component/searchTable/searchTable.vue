@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-25 22:07:39
+ * @LastEditTime: 2024-01-25 22:55:39
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
  * @FuckToUi: 改这么多图啥呢，又不好看
 -->
@@ -20,12 +20,13 @@
       :rowHeightKey="rowHeightKey" :canSelect="isCanSelect()" @search="search" @refresh="refresh" :style="{
         height: TableHeight + 'px',
       }" :load="load" :baseData="baseData" @selectedChange="selectedChange" :defalutSelectedList="selectedList"
-      @onChange="(value, options) => $emit('onChange', value, options)" />
+      :expandRowKeys="expandRowKeys" @onChange="(value, options) => $emit('onChange', value, options)"
+      @btnClick="btnClick" />
     <cardList v-else-if="isCard" :template="showItemTemplate" :data-list="PageData?.data" :loading="isLoading"
       :canSelect="isCanSelect()" :height="TableHeight" @search="search" @refresh="refresh" :style="{
         height: TableHeight + 'px',
       }" :cardFunc="cardFunc" :load="load" :baseData="baseData" @selectedChange="selectedChange"
-      @onChange="(value, options) => $emit('onChange', value, options)" />
+      @onChange="(value, options) => $emit('onChange', value, options)" @btnClick="btnClick" />
     <el-pagination :style="{
       marginTop: '6px',
       float: 'right',
@@ -62,7 +63,7 @@ import {
   btnActionTemplate,
 } from "@/modules/userManage/types";
 import { setData } from "@/components/basicComponents/grid/module/cardApi/index";
-import { timeConsole } from '@/router/util'
+import { timeConsole } from "@/router/util";
 import { useUserStore, useUserStoreHook } from '../../../../store/modules/user';
 import { changeCardProperties } from '../../../../components/basicComponents/grid/module/cardApi/index';
 
@@ -212,6 +213,7 @@ export default defineComponent({
   },
   props: [
     "defaultQuery",
+    "detail",
     "baseData",
     "sizeUnit",
     "detail",
@@ -224,6 +226,7 @@ export default defineComponent({
     // 真tmd的脑子有病
     "selectedChangeFunc",
     // 结束
+    // 是否可以编辑列选项
     "noTableEdit",
     "autoSearch",
     "pageConfig",
@@ -233,7 +236,8 @@ export default defineComponent({
     "cardFunc",
     // 用来规范行高
     "rowHeightKey",
-    "screenStatus"
+    "screenStatus",
+    "expandRowKeys"
   ],
   components: { cardBg, inputForm, infoTable, sideDialogForm, cardList: cardlist, screenInputform },
 
@@ -254,6 +258,7 @@ export default defineComponent({
       TableHeight: 500,
 
       interval: null,
+      interval1: null,
       baseDataForCheck: {},
       idRandom: (useAble += Math.random()),
     };
@@ -262,7 +267,7 @@ export default defineComponent({
   async created() {
     timeConsole.checkTime("searchTable");
     this.isReady = false;
-    await this.loadUserConfig();
+    // await this.loadUserConfig();
     await this.initData();
     this.isReady = true;
     this.$emit("ready");
@@ -278,10 +283,10 @@ export default defineComponent({
     data[name] = that.changeSize;
     window.addEventListener("resize", data[name]);
     let num = 0;
-    const interval = setInterval(() => {
+    this.interval1 = setInterval(() => {
       that.changeSize();
       num++;
-      if (num > 10) clearInterval(interval);
+      if (num > 100000000) clearInterval(that.interval1);
     }, 50);
     timeConsole.checkTime("searchTable");
   },
@@ -291,6 +296,7 @@ export default defineComponent({
     const data = {};
     const name = "searchTable_func_" + this.idRandom;
     data[name] = that.changeSize;
+    clearInterval(that.interval1);
     window.removeEventListener("resize", data[name]);
   },
 
@@ -300,25 +306,28 @@ export default defineComponent({
       let data = {
         rowHeightKey: 32
       }
-      if (config['showItemTemplate']) {
+      if (config['showItemTemplate'] && config['showItemTemplate'].length > 0) {
         const configMap = config['showItemTemplate']
         data['showItemTemplate'] = configMap.map(x => {
+          let find = false
           this.showItemTemplate.map(b => {
             if (b.key == x.key && b.label == x.label) {
+              find = true
               x = {
                 ...b,
                 showAble: x.showAble
               }
             }
           })
-          return x
-        })
+          return find ? x : null
+        }).filter(Boolean)
       }
       if (config['rowHeightKey']) {
         data.rowHeightKey = config['rowHeightKey']
       }
       let keyData = {}
       keyData[this.detail.label] = data
+      console.log(keyData, 'asd')
       changeCardProperties(this, keyData)
     },
 

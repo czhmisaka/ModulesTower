@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-22 13:42:00
+ * @LastEditTime: 2024-01-25 22:51:41
  * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
@@ -55,11 +55,10 @@ import remainingRouter from "./modules/remaining";
 import { RouteConfigsTable } from "../../types/index";
 import { baseModuleRouter } from "./util";
 import { useModuleHook } from "@/store/modules/module";
-import { timeConsole } from '@/router/util'
+import { timeConsole } from "@/router/util";
 
 // 路由存放
 const routes = [homeRouter, errorRouter];
-
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
   formatFlatteningRoutes(buildHierarchyTree(ascending(routes)))
@@ -110,6 +109,7 @@ export const loginPage = router
   .map((x) => x.path)[0];
 
 router.beforeEach((to: toRouteType, _from, next) => {
+  NProgress.start();
   timeConsole.checkTime("路由守卫1", to.path);
   if (to.meta?.keepAlive) {
     const newMatched = to.matched;
@@ -122,7 +122,6 @@ router.beforeEach((to: toRouteType, _from, next) => {
   const userInfo =
     storageSession.getItem<DataInfo<number>>(sessionKey) ||
     JSON.parse(localStorage.getItem("user-info") || "{}");
-  NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {
     to.matched.some((item) => {
@@ -171,11 +170,15 @@ router.beforeEach((to: toRouteType, _from, next) => {
               });
             }
           }
-          router.push(to.fullPath);
+          const isThatPage = useModuleHook().isThatAPage(to.path);
+          if (to.matched.length == 0 && isThatPage) {
+            router.push((isThatPage as any).path);
+          }
         });
       next();
     }
   } else {
+    console.log(to.path, to, "qwe");
     if (to.path !== loginPage) {
       if (whiteList.indexOf(to.path) !== -1) {
         next();
@@ -190,12 +193,6 @@ router.beforeEach((to: toRouteType, _from, next) => {
   }
   timeConsole.checkTime("路由守卫1");
 });
-
-router.afterEach(() => {
-  NProgress.done();
-});
-
-let interval = null;
 
 const getNowModulePage = () => {
   const nowModules = useModuleHook().nowModule;
@@ -254,4 +251,7 @@ router.beforeEach(async (to, from, next) => {
   timeConsole.checkTime("路由守卫2");
 });
 
+router.afterEach(() => {
+  NProgress.done();
+});
 export default router;
