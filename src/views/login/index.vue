@@ -87,7 +87,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
 };
 
 const reqGetImageCode = async () => {
-  let res = await get("/admin/base/open/captcha", {
+  let res = await get("admin/base/open/captcha", {
     width: 96,
     height: 32,
     color: '#ccc'

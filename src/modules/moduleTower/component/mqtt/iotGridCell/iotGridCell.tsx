@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-12 15:14:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-24 22:57:52
+ * @LastEditTime: 2024-01-25 13:58:58
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell.tsx
  */
 
@@ -29,9 +29,11 @@ export enum IotDeviceCellGridDesktopType {
     inputCard = "inputCard",
     // 多选一
     radioCard = "radioCard",
+    // 格栅状态展示
+    gridStatus = 'gridStatus',
 }
 
-const pushData = async (topic, data) => {
+export const pushData = async (topic, data) => {
     await post('/admin/iot/mqtt/publish', {
         uniqueId: topic,
         data
@@ -100,27 +102,35 @@ export function getIotDeviceCellGridDesktopCardComponent(
                     },
                 })
             }, gridCell.data)
-
         case IotDeviceCellGridDesktopType.inputCard:
             return gridCellMaker(name, name, {}, {
                 type: cardComponentType.cusComponent,
                 data: defineComponent({
+                    props: ['label'],
                     setup(props, context) {
                         context.emit("ready");
                         const word = ref('')
                         const click = () => {
-                            pushData(sendKey,preKey+word.value)
+                            pushData(sendKey, preKey + word.value)
                         }
                         return () => [<CardBgVue cusStyle={{
                             display: 'flex',
-                            padding:'12px',
+                            padding: '12px',
                             flexDirection: 'row',
                             justifyContent: 'space-arround',
                         }}>
+                            {props.label ? <ElDivider contentPosition='left' style={{
+                                fontWeight: 600
+                            }}>
+                                {props.label}
+                            </ElDivider> : null}
                             <ElInput vModel={word.value}></ElInput><ElButton onClick={click} size='small'>发送</ElButton>
                         </CardBgVue>]
                     },
                 })
             }, gridCell.data).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
-    }
+    
+        case IotDeviceCellGridDesktopType.sliderCard:
+
+        }
 }

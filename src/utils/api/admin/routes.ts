@@ -23,7 +23,7 @@ export const getAsyncRoutes = async (noRefresh: boolean = false) => {
   } else {
     let data = [];
     // let res = await post("/web/usc/menu/list/role", {});
-    // let res = await get('/admin/base/comm/permmenu',{})
+    // let res = await get('admin/base/comm/permmenu',{})
     // await module.init(res.data);
     let moduleList = (await getModuleFromView())
       .map((x) => {
