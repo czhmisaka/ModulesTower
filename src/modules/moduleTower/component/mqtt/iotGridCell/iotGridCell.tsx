@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-12 15:14:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-25 13:58:58
+ * @LastEditTime: 2024-01-27 20:59:19
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell.tsx
  */
 
@@ -11,6 +11,7 @@ import { post } from "@/utils/api/requests";
 import { ElButton, ElDivider, ElInput, ElSwitch } from "element-plus";
 import { defineComponent, ref } from "vue";
 import { IotDeviceCellOptionsTemplate, IotDeviceGridDesktopCellTemplate, IotDeviceTemplate } from "../iotCard";
+import { gridLightControlComponent, sliderComponent } from "./gridCellComponent";
 
 export enum IotDeviceCellGridDesktopType {
     // 文本展示
@@ -31,6 +32,8 @@ export enum IotDeviceCellGridDesktopType {
     radioCard = "radioCard",
     // 格栅状态展示
     gridStatus = 'gridStatus',
+    // 格栅光板控制 ws2812b
+    gridLightControl = 'gridLightControl',
 }
 
 export const pushData = async (topic, data) => {
@@ -90,7 +93,6 @@ export function getIotDeviceCellGridDesktopCardComponent(
                 },
                 gridCell.data
             ).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
-
         case IotDeviceCellGridDesktopType.buttonCard:
             return gridCellMaker('', '', {}, {
                 type: cardComponentType.cusComponent,
@@ -129,8 +131,11 @@ export function getIotDeviceCellGridDesktopCardComponent(
                     },
                 })
             }, gridCell.data).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
-    
-        case IotDeviceCellGridDesktopType.sliderCard:
 
-        }
+        case IotDeviceCellGridDesktopType.sliderCard:
+            return sliderComponent(gridCell, IotCardInfo)
+
+        case IotDeviceCellGridDesktopType.gridLightControl:
+            return gridLightControlComponent(gridCell, IotCardInfo)
+    }
 }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-24 22:44:17
+ * @LastEditTime: 2024-01-30 20:59:42
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/main.ts
  */
 
@@ -102,10 +102,13 @@ export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
           openDrawerForIotCardServiceDesktop(that, data);
         },
         ...hoverFunc,
-      }).setPosition(
-        Math.floor(i / (wholeScreen.size.height/iotCard.size.height)),
-        i % (wholeScreen.size.height/iotCard.size.height) * iotCard.size.height
-      ).setSize(iotCard.size.width, iotCard.size.height)
+      })
+        .setPosition(
+          Math.floor(i / (wholeScreen.size.height / iotCard.size.height))* iotCard.size.width,
+          (i % (wholeScreen.size.height / iotCard.size.height)) *
+            iotCard.size.height
+        )
+        .setSize(iotCard.size.width, iotCard.size.height);
     });
   const iotServiceCardGridCell = iotServiceCardGridCellMaker(
     "iotServiceCard",
@@ -151,7 +154,7 @@ export const MqttPageConfig = {
     gridColNum: wholeScreen.size.width,
     cusStyle: {
       margin: 6,
-      wholeScreen: true,
+      wholeScreen: false,
       maxRows: wholeScreen.size.height,
       Fullscreen: false,
     },

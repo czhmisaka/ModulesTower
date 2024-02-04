@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-07-24 15:31:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-29 13:59:06
+ * @LastEditTime: 2024-02-04 13:39:11
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotCard.vue
 -->
 <template>
@@ -37,6 +37,29 @@ import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import { componentInfo, gridSizeMaker, propInfo, inputType } from '../../../../components/basicComponents/grid/module/dataTemplate';
 import { IotDeviceTemplate } from './iotCard';
 import { changeCardProperties } from '../../../../components/basicComponents/grid/module/cardApi/index';
+import  mqttDefault  from './script/mqtt';
+const mqtt = mqttDefault.default
+console.log(mqtt, 'mqtt')
+
+const options = {
+  clean: true,
+  connectTimeout: 4000,
+  clientId: 'emqx_test',
+}
+const client  = mqtt.connect('mqtt://127.0.0.1:8083')
+client.on('connect', function () {
+  console.log('Connected')
+  client.subscribe('test', function (err) {
+    if (!err) {
+      client.publish('test', 'Hello mqtt')
+    }
+  })
+})
+
+client.on('message', function (topic, message) {
+  // message is Buffer
+  console.log(message.toString())
+})
 
 export default defineComponent({
     name: 'iotCard',

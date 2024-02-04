@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-02-13 10:25:34
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-15 18:55:43
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/userCard/userInfoCard.vue
+ * @LastEditTime: 2024-01-25 23:19:25
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/userCard/userInfoCard.vue
 -->
 <template>
   <cardBg :cusStyle="cardBgCusStyle" class="userInfoCardBox">
@@ -37,7 +37,7 @@
             height: auto;
             font-size: 8px;">
                 <!-- {{ userInfoData['units'][0] ? userInfoData['units'][0].name : '' }} -->
-                {{ userInfoData['units'].filter(x => x.id == userInfoData['loginUnitId'])[0].name }}
+                <!-- {{ userInfoData['units'].filter(x => x.id == userInfoData['loginUnitId'])[0].name }} -->
               </el-tag>
               <template #dropdown>
                 <cardBg>

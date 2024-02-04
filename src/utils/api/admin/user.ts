@@ -51,7 +51,7 @@ const terminalType = {
 /** 登录 */
 export const getLogin = async (data?: object) => {
   // return http.request<UserResult>("post", "/login", { data });
-  return await post('admin/base/open/login',{
+  return await post('/admin/base/open/login',{
     ...data,
   })
 };

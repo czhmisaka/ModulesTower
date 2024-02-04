@@ -33,7 +33,7 @@ sessionStorage;
 
 useCacheHook().setup("loginUserInfo", async () => {
   // return await get("/web/usc/user/select/loginUser", {});
-  return await get("admin/base/comm/person", {});
+  return await get("/admin/base/comm/person", {});
 });
 interface userPageConfigData extends stringAnyObj {
   searchTableConfig: {
@@ -45,7 +45,7 @@ interface userPageConfigData extends stringAnyObj {
 }
 
 useCacheHook().setup("pageConfigForUser", async () => {
-  let string = await get("admin/base/sys/user/getPageConfig", {});
+  let string = await get("/admin/base/sys/user/getPageConfig", {});
   if (string.data == "") return {};
   else return JSON.parse(string.data || "{}");
 });
@@ -117,7 +117,7 @@ export const useUserStore = defineStore({
       this.username = "";
       this.roles = [];
       this.menuList = [];
-      await post("admin/base/comm/logout", {});
+      await post("/admin/base/comm/logout", {});
       removeToken();
       storageLocal.clear();
       storageSession.clear();
@@ -180,7 +180,7 @@ export const useUserStore = defineStore({
         config[compKey] = {};
       }
       config[compKey][menuId] = configData;
-      let res = await post("admin/base/sys/user/setPageConfig", {
+      let res = await post("/admin/base/sys/user/setPageConfig", {
         config: JSON.stringify(config),
       });
       useCacheHook().setRefresh("pageConfigForUser");

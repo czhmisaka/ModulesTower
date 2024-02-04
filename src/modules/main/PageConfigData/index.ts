@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-20 22:07:59
+ * @LastEditTime: 2024-01-30 23:20:48
  * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
@@ -21,30 +21,30 @@ export const base = {
   },
 };
 let pageConfig = {
-  EAT:{
-    desktopData:eat,
-    gridColNum: 24,
-    cusStyle: {
-      ...base.cusStyle,
-      wholeScreen: true,
-      maxRows:16,
-      Fullscreen:false
-    },
-  },
-  MAIN: {
-    desktopData: mainDesktop,
-    gridColNum: 12,
-    cusStyle: {
-      ...base.cusStyle,
-      wholeScreen: false,
-      // Fullscreen:true
-    },
-  },
-  MOBILE: {
-    ...base,
-    desktopData: mobileDesktop,
-    gridColNum: 4,
-  },
+  // EAT:{
+  //   desktopData:eat,
+  //   gridColNum: 24,
+  //   cusStyle: {
+  //     ...base.cusStyle,
+  //     wholeScreen: true,
+  //     maxRows:16,
+  //     Fullscreen:false
+  //   },
+  // },
+  // MAIN: {
+  //   desktopData: mainDesktop,
+  //   gridColNum: 12,
+  //   cusStyle: {
+  //     ...base.cusStyle,
+  //     wholeScreen: false,
+  //     // Fullscreen:true
+  //   },
+  // },
+  // MOBILE: {
+  //   ...base,
+  //   desktopData: mobileDesktop,
+  //   gridColNum: 4,
+  // },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

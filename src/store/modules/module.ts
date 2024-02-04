@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-22 14:26:09
+ * @LastEditTime: 2024-01-25 23:05:01
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -23,7 +23,7 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { isUrl } from "@pureadmin/utils";
 import { timeConsole } from "@/router/util";
 import modulesLIst from "@/layout/components/modules/modulesLIst.vue";
-import path from "path";
+import { modulesLIst } from '@/layout/components/modules/modulesLIst.vue';
 
 let licenseMap = {};
 let showAbleKeyMap = {};
@@ -145,14 +145,13 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
   if (cell.urls && cell.urls.length > 0) {
     cell["path"] = cell.urls[0];
     if (cell.type == 3) {
-      console.log(cell["path"], "fuck");
       if (isUrl(cell["path"])) {
         cell.meta = {
           ...cell.meta,
           frameSrc: cell.path,
         };
         if (cell.path[0] != "/") cell.path = "/" + cell.name;
-      } else {
+      } else{
         for (let i = 0; i < routerBackup.length; i++) {
           if (routerBackup[i].path == cell.path) {
             // 获取目标路由
@@ -168,7 +167,7 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
             cell.meta = {
               ...backup.meta,
               ...cell.meta,
-              PageName: cell.urls[0] || cell.path,
+              PageName: cell.urls[0],
               showLink: cell.showLink,
             };
             break;
@@ -244,9 +243,11 @@ export const moduleStore = defineStore({
 
       timeConsole.checkTime("处理路由-预处理");
       // 预处理
-      resData.map((x) => {
-        moduleList.push(dealAsyncMenuList(x, this.routerBackup, resData));
-      });
+      // @ToDo 这里可能会导致一个加载问题
+      if (resData && resData.length && resData.length > 0)
+        resData?.map((x) => {
+          moduleList.push(dealAsyncMenuList(x, this.routerBackup, resData));
+        });
       this.moduleList = moduleList
         .filter(Boolean)
         .sort((a, b) => a.orderNumber - b.orderNumber);
@@ -329,7 +330,7 @@ export const moduleStore = defineStore({
       return targetModuleIndex == -1 ? false : true;
     },
 
-    isThatAPage(path) {
+    isThatAPage(path): stringAnyObj | boolean {
       path = decodeURI(path);
       // 直接前往当前模块的首页
       if (path == "/") return true;
@@ -339,10 +340,9 @@ export const moduleStore = defineStore({
         pageList = pageList.concat(flatChildrenArr(x.children));
       });
       pageList.map((x) => {
-        console.log(x.path, path, "asdasdasd");
         if (x.path == path) page = x;
       });
-
+      console.log(pageList,'routerInter',this.moduleList)
       // 首次匹配前触发模块加载操作，故不处理
       if (pageList.length == 0) return true;
       return page;
@@ -353,7 +353,7 @@ export const moduleStore = defineStore({
       this.nowPage.meta = pageMeta;
       this.nowLicense = licenseMap["page_" + pageMeta.menuId];
       this.nowShowAbleKey = showAbleKeyMap["page_" + pageMeta.menuId];
-      localStorage.setItem("menuId", pageMeta.menuId);
+      if (pageMeta.menuId) localStorage.setItem("menuId", pageMeta.menuId);
     },
   },
 });
