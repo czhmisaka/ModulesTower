@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-12 15:14:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-18 22:49:30
+ * @LastEditTime: 2024-02-18 23:36:46
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell.tsx
  */
 
@@ -197,5 +197,7 @@ export function getIotDeviceCellGridDesktopCardComponent(
                     },
                 }
             ).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
+        case IotDeviceCellGridDesktopType.infoNumberCard:
+            return gridCellMaker('', '', {}, {}, {})
     }
 }
