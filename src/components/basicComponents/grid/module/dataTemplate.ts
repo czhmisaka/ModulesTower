@@ -1,13 +1,13 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-11 21:44:46
+ * @LastEditTime: 2024-02-18 23:04:32
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
 import { cardUtil } from "./util";
 import { defineAsyncComponent, defineComponent, ref, h } from "vue";
-import { createApp } from "vue";
+import { createApp,markRaw } from "vue";
 import { componentLists } from "./gridCard/module/componentLists";
 
 export enum cardOnChangeType {
@@ -234,7 +234,7 @@ export const componentGetter = (
       //   component.name
       // );
       if (Object.keys(componentLists).indexOf(component.name) > -1) {
-        return componentLists[component.name];
+        return markRaw(componentLists[component.name]);
       } else {
         return componentLists["iframe"];
       }

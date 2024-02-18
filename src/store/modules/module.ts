@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-25 23:05:01
+ * @LastEditTime: 2024-02-05 21:46:06
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -23,7 +23,6 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { isUrl } from "@pureadmin/utils";
 import { timeConsole } from "@/router/util";
 import modulesLIst from "@/layout/components/modules/modulesLIst.vue";
-import { modulesLIst } from '@/layout/components/modules/modulesLIst.vue';
 
 let licenseMap = {};
 let showAbleKeyMap = {};
@@ -141,8 +140,8 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
     }
   }
 
-  // 补充path
-  if (cell.urls && cell.urls.length > 0) {
+   // 补充path
+   if (cell.urls && cell.urls.length > 0) {
     cell["path"] = cell.urls[0];
     if (cell.type == 3) {
       if (isUrl(cell["path"])) {
@@ -342,7 +341,6 @@ export const moduleStore = defineStore({
       pageList.map((x) => {
         if (x.path == path) page = x;
       });
-      console.log(pageList,'routerInter',this.moduleList)
       // 首次匹配前触发模块加载操作，故不处理
       if (pageList.length == 0) return true;
       return page;

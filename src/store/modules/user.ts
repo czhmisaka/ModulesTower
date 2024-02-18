@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-25 22:26:49
+ * @LastEditTime: 2024-02-06 13:43:02
  * @FilePath: /ConfigForDesktopPage/src/store/modules/user.ts
  */
 import { defineStore } from "pinia";
@@ -29,7 +29,6 @@ import data from "@iconify-icons/ep/edit";
 import { useAppStoreHook } from "./app";
 import { useCacheHook } from "./cache";
 
-sessionStorage;
 
 useCacheHook().setup("loginUserInfo", async () => {
   // return await get("/web/usc/user/select/loginUser", {});
@@ -112,23 +111,27 @@ export const useUserStore = defineStore({
       });
     },
 
-    /** 前端登出（不调用接口） */
-    async logOut() {
-      this.username = "";
-      this.roles = [];
-      this.menuList = [];
-      await post("/admin/base/comm/logout", {});
-      removeToken();
-      storageLocal.clear();
-      storageSession.clear();
+    async logOut(needLogout = true) {
+      if (needLogout) {
+        await post("/admin/base/comm/logout", {});
+      }
       const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
       useAppStoreHook().setLayout(Layout);
       useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
       toggleClass(Grey, "html-grey", document.querySelector("html"));
       toggleClass(Weak, "html-weakness", document.querySelector("html"));
-      router.push(loginPage);
+      removeToken();
+      localStorage.clear();
+      sessionStorage.clear();
+      storageSession.clear();
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
+      router.push(loginPage);
+      setTimeout(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+        storageSession.clear();
+      }, 500);
     },
 
     getLogOutBtn() {
@@ -158,7 +161,6 @@ export const useUserStore = defineStore({
     async getPageConfig(compName: string) {
       const menuId = localStorage.getItem("menuId");
       let config = await useCacheHook().getDataByKey("pageConfigForUser");
-      console.log(config, "configasd");
       return !compName && config
         ? config
         : !config[compName]

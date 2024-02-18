@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-23 11:40:32
+ * @LastEditTime: 2024-02-11 23:16:44
  * @FilePath: /ConfigForDesktopPage/src/store/modules/cardStyleConfig.ts
  */
 import { defineStore } from "pinia";
@@ -71,11 +71,11 @@ export const cardStyleConfigStore = defineStore({
       background: "rgba(60,60,60,.3)",
     },
     key: {
-      borderRadius: "small",
-      margin: "normal",
-      shadow: "normal",
-      filter: "norma",
-      cardBoxShadow: "normal",
+      borderRadius: "none",
+      margin: "small",
+      shadow: "small",
+      filter: "small",
+      cardBoxShadow: "small",
       cardBoxBackground: "white",
       cardBoxBackDropFilter: "none",
     },

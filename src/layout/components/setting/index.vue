@@ -27,7 +27,6 @@ import { loginPage } from "@/router/index";
 import { post } from "@/utils/api/requests";
 import { useCardStyleConfigHook } from '../../../store/modules/cardStyleConfig';
 import { ElDivider } from 'element-plus';
-import { useUserStoreHook } from '../../../store/modules/user';
 
 const router = useRouter();
 const { device } = useNav();
@@ -63,6 +62,10 @@ if (unref(layoutTheme)) {
 const setBorderRadius = (e) => useCardStyleConfigHook().set('borderRadius', e)
 // 配置默认间距
 const setMargin = (e) => useCardStyleConfigHook().set('margin', e)
+// 配置阴影
+const setShadow = (e) => useCardStyleConfigHook().set('shadow', e)
+// 配置通用卡片阴影
+const setCardBoxShadow = (e) => useCardStyleConfigHook().set('cardBoxShadow', e)
 
 /** 默认灵动模式 */
 const markValue = ref($storage.configure?.showModel ?? "smart");
@@ -239,12 +242,12 @@ nextTick(() => {
         </li>
       </el-tooltip>
 
-      <el-tooltip v-if="device !== 'mobile'" class="item" content="混合模式" placement="bottom">
+      <!-- <el-tooltip v-if="device !== 'mobile'" class="item" content="混合模式" placement="bottom">
         <li :class="layoutTheme.layout === 'mix' ? $style.isSelect : ''" ref="mixRef" @click="setLayoutModel('mix')">
           <div />
           <div />
         </li>
-      </el-tooltip>
+      </el-tooltip> -->
     </ul>
 
     <el-divider>主题色</el-divider>
@@ -301,6 +304,24 @@ nextTick(() => {
         <el-radio label="small">小</el-radio>
         <el-radio label="normal">中</el-radio>
         <el-radio label="large">大</el-radio>
+      </el-radio-group>
+    </ul>
+    <ElDivider>通用卡片阴影</ElDivider>
+    <ul class="theme-color">
+      <el-radio-group v-model="useCardStyleConfigHook().key.cardBoxShadow" size="small" @change="setCardBoxShadow">
+        <el-radio label="none">无</el-radio>
+        <el-radio label="small">小</el-radio>
+        <el-radio label="normal">中</el-radio>
+        <el-radio label="large">大</el-radio>
+      </el-radio-group>
+    </ul>
+    <ElDivider>组件阴影</ElDivider>
+    <ul class="theme-color">
+      <el-radio-group v-model="useCardStyleConfigHook().key.shadow" size="small" @change="setShadow">
+        <el-radio label="none">无</el-radio>
+        <el-radio label="small">小</el-radio>
+        <el-radio label="normal">中</el-radio>
+        <el-radio label="colorFul">多彩</el-radio>
       </el-radio-group>
     </ul>
     <!-- <ElDivider>边距</ElDivider>

@@ -1,3 +1,9 @@
+/*
+ * @Date: 2024-01-24 13:04:57
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-02-06 13:46:40
+ * @FilePath: /ConfigForDesktopPage/src/layout/hooks/useLayout.ts
+ */
 import { computed } from "vue";
 import { routerArrays } from "../types";
 import { useGlobal } from "@pureadmin/utils";
@@ -39,7 +45,7 @@ export function useLayout() {
 
   /** 清空缓存后从serverConfig.json读取默认配置并赋值到storage中 */
   const layout = computed(() => {
-    return $storage?.layout.layout;
+    return $storage?.layout?.layout;
   });
 
   const layoutTheme = computed(() => {

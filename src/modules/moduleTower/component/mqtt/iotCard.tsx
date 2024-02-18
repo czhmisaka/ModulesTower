@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-24 21:53:27
+ * @LastEditTime: 2024-02-18 22:55:24
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotCard.tsx
  */
 
@@ -17,7 +17,7 @@ import { ElSwitch } from 'element-plus';
 import { cusStyle } from '../../../userManage/types';
 import { post } from "@/utils/api/requests";
 import { IotDeviceCellGridDesktopType } from "./iotGridCell/iotGridCell";
-
+import { markRaw } from 'vue'
 
 export interface IotDeviceGridDesktopCellTemplate {
   type: IotDeviceCellGridDesktopType;
@@ -68,7 +68,7 @@ export const iotCardGridCellMaker = (
   deviceInfo: IotDeviceTemplate,
   options?: IotDeviceCellOptionsTemplate
 ) => {
-  return gridCellMaker(
+  return markRaw(gridCellMaker(
     key,
     key,
     {},
@@ -82,5 +82,5 @@ export const iotCardGridCellMaker = (
         ...options,
       },
     }
-  );
+  ));
 };

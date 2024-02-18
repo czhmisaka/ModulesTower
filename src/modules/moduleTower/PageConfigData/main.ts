@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-30 20:59:42
+ * @LastEditTime: 2024-02-18 22:54:18
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/main.ts
  */
 
@@ -36,10 +36,10 @@ import {
 } from "../component/mqtt/service/service";
 import { IotDeviceCellGridDesktopType } from "../component/mqtt/iotGridCell/iotGridCell";
 import { post } from "@/utils/api/requests";
-
+import { markRaw } from "vue";
 const wholeScreen = {
   size: {
-    width: 12,
+    width: 16,
     height: 8,
   },
 };
@@ -88,28 +88,31 @@ export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
     },
   };
 
-  const iotCardGridCellList = (await post("/admin/iot/iot/list", {})).data
-    .map((x) => {
-      return {
-        ...x,
-        gridCell: JSON.parse(x.gridCell),
-        service: JSON.parse(x.service),
-      };
-    })
-    .map((data, i) => {
-      return iotCardGridCellMaker(data.mainTopic, data, {
-        clickFunc: async (that, data) => {
-          openDrawerForIotCardServiceDesktop(that, data);
-        },
-        ...hoverFunc,
+  const iotCardGridCellList = markRaw(
+    (await post("/admin/iot/iot/list", {})).data
+      .map((x) => {
+        return {
+          ...x,
+          gridCell: JSON.parse(x.gridCell),
+          service: JSON.parse(x.service),
+        };
       })
-        .setPosition(
-          Math.floor(i / (wholeScreen.size.height / iotCard.size.height))* iotCard.size.width,
-          (i % (wholeScreen.size.height / iotCard.size.height)) *
-            iotCard.size.height
-        )
-        .setSize(iotCard.size.width, iotCard.size.height);
-    });
+      .map((data, i) => {
+        return iotCardGridCellMaker(data.mainTopic, data, {
+          clickFunc: async (that, data) => {
+            openDrawerForIotCardServiceDesktop(that, data);
+          },
+          ...hoverFunc,
+        })
+          .setPosition(
+            Math.floor(i / (wholeScreen.size.height / iotCard.size.height)) *
+              iotCard.size.width,
+            (i % (wholeScreen.size.height / iotCard.size.height)) *
+              iotCard.size.height
+          )
+          .setSize(iotCard.size.width, iotCard.size.height);
+      })
+  );
   const iotServiceCardGridCell = iotServiceCardGridCellMaker(
     "iotServiceCard",
     {

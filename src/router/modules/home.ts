@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-13 09:16:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-17 22:08:31
+ * @LastEditTime: 2024-02-05 21:50:08
  * @FilePath: /ConfigForDesktopPage/src/router/modules/home.ts
  */
 import type { RouteConfigsTable } from "/#/index";
@@ -16,16 +16,7 @@ const homeRouter: RouteConfigsTable = {
     title: "首页",
     rank: 0,
   },
-  children: [
-    {
-      path: "/welcome",
-      name: "Welcome",
-      component: () => import("@/views/welcome/index.vue"),
-      meta: {
-        title: "首页",
-      },
-    },
-  ],
+  children: [],
 };
 
 export default homeRouter;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 13:56:03
+ * @LastEditTime: 2024-02-18 22:27:03
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/mqttDeviceList.ts
  */
 
@@ -47,7 +47,7 @@ import {
 const wholeScreen = {
   size: {
     width: 12,
-    height: 8,
+    height: 16,
   },
 };
 export function getXpx(vw) {

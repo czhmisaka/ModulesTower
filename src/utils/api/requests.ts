@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-24 21:18:54
+ * @LastEditTime: 2024-02-11 22:15:14
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -20,7 +20,7 @@ const isDev = () => Env == "development";
 import { loadEnv } from "@build/index";
 import { ElLoading } from "element-plus";
 import { getPureRequestHeaders } from "./user/header";
-import { timeConsole } from '@/router/util'
+import { timeConsole } from "@/router/util";
 import { useRoute, useRouter } from "vue-router";
 import router from "@/router";
 const { VITE_PROXY_DOMAIN_REAL, VITE_PROXY_DOMAIN_FLOW } = loadEnv();
@@ -112,9 +112,9 @@ request.interceptors.response.use(
   (response) => {
     removeQueue(response.config);
     let res = response.data;
-    if (res.status == 200 ||res.code === 1000) {
+    if (res.status == 200 || res.code === 1000) {
       return Promise.resolve(res);
-    } else if (response.status == 401 ||res.code === 401) {
+    } else if (response.status == 401 || res.code === 401) {
       // 未登录状态
       const route = router.getRoutes();
       const nowRoute = route.filter((x) => {
@@ -127,7 +127,10 @@ request.interceptors.response.use(
         nowRoute?.meta &&
         (nowRoute?.meta["allPeopleCanSee"] || nowRoute?.meta["loginPage"])
       ) {
-      } else useUserStoreHook().logOut();
+      } else {
+        console.log("fuck");
+        return useUserStoreHook().logOut(false);
+      }
       return Promise.resolve({ data: {} });
     } else {
       if (res.message) ElMessage.error(res.message);

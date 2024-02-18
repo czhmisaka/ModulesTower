@@ -1,4 +1,3 @@
-"use strict";
 const mqtt = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;

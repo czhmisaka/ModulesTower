@@ -2,7 +2,7 @@
 /*
  * @Date: 2024-01-25 13:30:19
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-30 20:57:53
+ * @LastEditTime: 2024-02-18 23:08:55
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/gridCellComponent.tsx
  */
 import { gridCellMaker } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -10,8 +10,8 @@ import { IotDeviceGridDesktopCellTemplate, IotDeviceTemplate } from "../iotCard"
 import { cardComponentType } from '../../../../../components/basicComponents/grid/module/dataTemplate';
 import CardBgVue from "@/components/basicComponents/cell/card/cardBg.vue";
 import { ElDivider, ElInput, ElButton, ElSlider } from 'element-plus';
-import { defineComponent, ref } from "vue";
-import { pushData } from "./iotGridCell";
+import { defineComponent, markRaw, ref } from "vue";
+import { iotCardTitleStyle, pushData } from "./iotGridCell";
 
 
 export const sliderComponent = (gridCell: IotDeviceGridDesktopCellTemplate, IotCardInfo: IotDeviceTemplate) => {
@@ -20,31 +20,36 @@ export const sliderComponent = (gridCell: IotDeviceGridDesktopCellTemplate, IotC
     let preKey = gridCell.preKey ? gridCell.preKey + '_' : ''
     return gridCellMaker(name, name + gridCell.type, {}, {
         type: cardComponentType.cusComponent,
-        data: defineComponent({
-            props: ['label'],
+        data: markRaw(defineComponent({
+            props: ['label', 'min', 'max'],
             setup(props, context) {
                 context.emit("ready");
                 const word = ref('')
-                const click = () => {
+                const click = (e) => {
                     pushData(sendKey, preKey + word.value)
                 }
-                return () => [<CardBgVue cusStyle={{
-                    display: 'flex',
-                    padding: '12px',
-                    flexDirection: 'row',
-                    justifyContent: 'space-arround',
-                }}>
-                    {props.label ? <ElDivider contentPosition='left' style={{
-                        fontWeight: 600
+                console.log(props, 'props')
+                return () => [
+                    <CardBgVue cusStyle={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
                     }}>
-                        {props.label}
-                    </ElDivider> : null}
-                    <ElSlider vModel={word.value}></ElSlider>
-                    {/* <ElInput vModel={word.value}></ElInput> */}
-                </CardBgVue>]
+                        {props.label ? <div style={{
+                            ...iotCardTitleStyle
+                        }}>
+                            {props.label}
+                        </div> : null}
+                        <div style="width:calc(100% - 32px);height:auto;margin:0px 16px">
+                            <ElSlider vModel={word.value} onChange={click} min={props.min} max={props.max}></ElSlider>
+                        </div>
+                    </CardBgVue>
+                ]
             },
-        })
-    }, {}).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
+        }))
+    }, {
+        ...gridCell?.data,
+    }).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
 }
 
 
@@ -54,8 +59,8 @@ export const gridLightControlComponent = (gridCell: IotDeviceGridDesktopCellTemp
     let name = gridCell.preKey + sendKey + gridCell.type
     let preKey = gridCell.preKey ? gridCell.preKey + '_' : ''
     return gridCellMaker(name, name + gridCell.type, {}, {
-        type:cardComponentType.componentList,
-        name:'moduleTower_gridLightControl'
+        type: cardComponentType.componentList,
+        name: 'moduleTower_gridLightControl'
     }, {
         props: {
             sendKey,

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-09 16:23:43
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-24 21:17:20
+ * @LastEditTime: 2024-02-14 11:05:31
  * @FilePath: /ConfigForDesktopPage/src/utils/api/user/header.ts
  */
 
@@ -61,10 +61,6 @@ export const getHeaders = (
   } as {
     [key: string]: any;
   };
-  back["ddm-parameter-encrypt"] = false;
-  if (back["ddm-parameter-encrypt"] == true) {
-    delete back["ddm-parameter-encrypt"];
-  }
   return back;
 };
 
@@ -80,9 +76,6 @@ export const getPureRequestHeaders = (
   } as {
     [key: string]: any;
   };
-  if (back["ddm-parameter-encrypt"] == true) {
-    delete back["ddm-parameter-encrypt"];
-  }
   return back;
 };
 export const getDownLoadRequestHeaders = (
@@ -96,13 +89,9 @@ export const getDownLoadRequestHeaders = (
   let back = {
     route: window.location.href.split("#")[1],
     token: DataInfo["accessToken"], // 向后台发送的token
-    "ddm-parameter-encrypt": true,
     menuId,
     equipment,
     ...options,
   };
-  if (back["ddm-parameter-encrypt"] == true) {
-    delete back["ddm-parameter-encrypt"];
-  }
   return back;
 };

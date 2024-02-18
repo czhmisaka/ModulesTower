@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-24 21:48:08
+ * @LastEditTime: 2024-02-18 22:56:39
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef } from "vue";
+import { defineComponent, shallowRef,markRaw } from "vue";
 import { getAction } from "@/router/util";
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import cardEditModal from "@/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue";
@@ -481,7 +481,7 @@ export default defineComponent({
         } else if (type == cardOnChangeType.cardAdd) {
           // 这里写的尽量简单了，后期优化
           if (value) {
-            this.gridList.push(value);
+            this.gridList.push(value)
           } else {
             console.error('请勿添加空组件')
           }
@@ -565,7 +565,7 @@ export default defineComponent({
 
     // 填充gridList
     forceUpdateGridList() {
-      this.gridList = this.desktopData as Array<gridCellTemplate>;
+      this.gridList = markRaw(this.desktopData as Array<gridCellTemplate>)
       // this.gridListComputed()
     },
   },

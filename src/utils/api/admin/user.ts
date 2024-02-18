@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-17 22:04:31
+ * @LastEditTime: 2024-02-06 14:02:08
  * @FilePath: /ConfigForDesktopPage/src/utils/api/admin/user.ts
  */
 import { http } from "../../http";
@@ -51,12 +51,21 @@ const terminalType = {
 /** 登录 */
 export const getLogin = async (data?: object) => {
   // return http.request<UserResult>("post", "/login", { data });
-  return await post('/admin/base/open/login',{
+  return await post("/admin/base/open/login", {
     ...data,
-  })
+  });
 };
 
 /** 刷新token */
 export const refreshTokenApi = (data?: object) => {
-  return http.request<RefreshTokenResult>("post", "/refreshToken", { data });
+  return http.request<RefreshTokenResult>(
+    "post",
+    "/admin/base/open/refreshToken",
+    {
+      data: {
+        refreshToken: JSON.parse(sessionStorage.getItem("user-info"))
+          .refreshToken,
+      },
+    }
+  );
 };

@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-25 23:01:46
+ * @LastEditTime: 2024-02-05 21:45:32
  * @FilePath: /ConfigForDesktopPage/src/router/index.ts
  */
 
@@ -233,7 +233,6 @@ router.beforeEach(async (to, from, next) => {
     if (decodeURI(to.path).split("/").length > 0) {
       const routes = router.getRoutes();
       const path = decodeURI(to.path);
-      console.log("routerInter", routes.map((x) => x.path).indexOf(path) != -1);
       if (routes.map((x) => x.path).indexOf(path) != -1)
         routes.map((cell) => {
           if (cell.path == path) next({ ...to, ...cell });
@@ -241,11 +240,6 @@ router.beforeEach(async (to, from, next) => {
       else {
         await useModuleHook().searchToPage(path);
         const isThatAPage = useModuleHook().isThatAPage(to.path);
-        console.log(
-          "routerInter",
-          routes.map((x) => x.path).indexOf(path) != -1,
-          isThatAPage
-        );
         if (isThatAPage) next();
         else next({ path: "/error/404" });
       }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-24 21:52:29
+ * @LastEditTime: 2024-02-11 23:12:19
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
@@ -113,7 +113,6 @@ export const openDrawerForIotCardServiceDesktop = async (
       gridCellList.push(getIotDeviceCellGridDesktopCardComponent(x,IotCardInfo ))
     })
   }
-  console.log('asd',gridCellList)
   const init = eventCenterCell(
     eventTriggerType.onMounted,
     async (that, data) => {
@@ -170,7 +169,7 @@ export const openDrawerForIotCardServiceDesktop = async (
             wholeScreen: false,
             Fullscreen: true,
             maxRows: wholeScreen.size.height,
-            margin: 0,
+            margin: 3,
           },
         },
       });

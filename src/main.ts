@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-27 21:00:13
+ * @LastEditTime: 2024-02-15 22:02:33
  * @FilePath: /ConfigForDesktopPage/src/main.ts
  */
 import { getAction, getModuleFromView, timeChecker } from "@/router/util";
@@ -76,3 +76,5 @@ getServerConfig(app).then(async (config) => {
 });
 
 import "animate.css";
+import { post } from "./utils/api/requests";
+

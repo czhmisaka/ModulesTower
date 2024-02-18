@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-06 08:57:34
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-13 16:52:22
+ * @LastEditTime: 2024-02-06 12:37:27
  */
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import {
@@ -15,7 +15,7 @@ import {
   ElRadioGroup,
   ElRadio
 } from "element-plus";
-import { defineComponent, h, onMounted, ref, shallowRef, watchEffect } from "vue";
+import { defineComponent, reactive, h, onMounted, ref, shallowRef, watchEffect } from "vue";
 import { inputElementTemplate, formInputType, stringAnyObj, tableCellTemplate } from "../../types";
 import editor from "@/components/basicComponents/grid/module/baseToolComponents/editor.vue";
 import uploadFileList from "./uploadFileList.vue";
@@ -461,37 +461,138 @@ inputElement[formInputType.searchList] = {
           "placeholder",
           "clearable",
           'lazy',
-          'load'
+          'load', 'automatic-dropdown'
         ],
         setup(props, context) {
-          let options = ref([]);
+          let searchList_modelValue = ref([]);
           props["remoteMethod"]("").then(res => {
-            options.value = res;
+            searchList_modelValue.value = res;
           });
-          console.log(props.needTreeMode, 'needTreeMode')
           return () => [
             h(
               props.needTreeMode ? ElTreeSelect : ElSelect,
               {
                 ...props,
+                remote: true,
+                filterable: true,
+                automaticDropdown: true,
                 placeholder: props.placeholder.replace('输入', '选择'),
-                remoteMethod: async (query) => {
+                'remote-method': async (query) => {
                   let res = await props["remoteMethod"](query);
-                  options.value = res;
+                  searchList_modelValue.value = res;
                 },
                 "onUpdate:modelValue": (e) => {
                   context.emit("update:modelValue", e);
                 },
               },
               () =>
-                options.value.map((x) => {
+                searchList_modelValue.value.map((x) => {
                   return h(ElOption, {
                     value: x.value,
                     label: x.label,
+                    key: x.value
                   });
                 })
             ),
           ];
+        },
+      }),
+    } as stringAnyObj;
+    let attrs = {
+      multiple: true,
+      filterable: true,
+      remote: true,
+      reserveKeyword: true,
+      'automatic-dropdown': true,
+      remoteMethod: async () => { return [] }
+    };
+    if (input.inputOptions) attrs = { ...attrs, ...input.inputOptions };
+    if (input.funcInputOptionsLoader)
+      attrs = { ...attrs, ...(await input.funcInputOptionsLoader(that)) };
+    Object.keys(attrs).map((x) => {
+      if (x == 'type') {
+        properties.type = attrs[x]
+      }
+      properties["ui:" + x] = attrs[x];
+    });
+    return properties;
+  },
+};
+
+inputElement[formInputType.searchListByPageDivider] = {
+  properties: async (that, cell) => {
+    const { input } = cell;
+    let properties = {
+      ...base(cell),
+      type: "array",
+      items: {
+        type: 'string'
+      },
+      "ui:widget": defineComponent({
+        props: [
+          "props",
+          "style",
+          "class",
+          "readonly",
+          "multiple",
+          "filterable",
+          "remote",
+          "reserveKeyword",
+          "remoteMethod",
+          "modelValue",
+          "placeholder",
+          "clearable",
+          'lazy',
+          "pageSize"
+        ],
+        setup(props, context) {
+          let searchList_modelValue = ref([]);
+          let pageData = reactive({
+            query: "",
+            pageSize: props.pageSize || 10,
+            pageNumber: 1,
+            total: 0
+          })
+
+          let value = ref('')
+          const search = () => {
+            searchList_modelValue.value = []
+            props["remoteMethod"]({
+              ...pageData
+            }).then(res => {
+              searchList_modelValue.value = res.list;
+              pageData.total = res.total;
+            });
+          }
+          return () => [
+            <ElSelect
+              v-model={value}
+              {...props}
+              placeholder={props.placeholder.replace('输入', '选择')}
+              automatic-dropdown
+              remote-method={(query) => {
+                pageData.query = query;
+                search()
+              }}
+              {...{
+                "onUpdate:modelValue": (e) => {
+                  context.emit("update:modelValue", e);
+                },
+              }}
+              readonly={false}
+            >
+              {{
+                default: searchList_modelValue.value.map((x) => {
+                  return <ElOption label={x.label} value={x.value} key={x.value}
+                  ></ElOption>
+                }),
+                footer: <el-pagination small layout="prev, pager, next" default-page-size={pageData.pageSize} total={pageData.total} onChange={(pageNumber) => {
+                  pageData.pageNumber = pageNumber
+                  search()
+                }} />
+              }}
+            </ElSelect>
+          ]
         },
       }),
     } as stringAnyObj;
@@ -512,9 +613,8 @@ inputElement[formInputType.searchList] = {
       properties["ui:" + x] = attrs[x];
     });
     return properties;
-  },
-};
-
+  }
+}
 
 
 
@@ -877,6 +977,7 @@ inputElement[formInputType.richTextArea] = {
         style: {
           width: "99%",
           fontWeight: "900",
+          minHeight: "200px",
         },
       },
     } as stringAnyObj;

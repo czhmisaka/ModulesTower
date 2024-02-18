@@ -55,8 +55,7 @@ userInfo.data = async () => {
   let data = await useUserStoreHook().getOptions();
   return data
 };
-onMounted(async () => {
-});
+onMounted(async () => {});
 function toggleClass(flag: boolean, clsName: string, target?: HTMLElement) {
   const targetEl = target || document.body;
   let { className } = targetEl;
@@ -65,7 +64,13 @@ function toggleClass(flag: boolean, clsName: string, target?: HTMLElement) {
 }
 const router = useRouter();
 
-const loginOutBtn = useUserStoreHook().getLogOutBtn()
+const loginOutBtn = btnMaker("登出", btnActionTemplate.Function, {
+  elType: "danger",
+  icon: 'SwitchButton',
+  function: async (that, data) => {
+    await useUserStoreHook().logOut()
+  },
+});
 
 const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
   icon: 'UserFilled',
@@ -81,6 +86,11 @@ const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
     <topCollapse v-if="device === 'mobile'" class="hamburger-container" :is-active="pureApp.sidebar.opened"
       @toggleClick="toggleSideBar" />
 
+    <div v-if="layout !== 'mix' && device !== 'mobile'" class="breadcrumb-container"
+      style="font-size: 1.2em;height: 100%;width: 200px;line-height: 48px;text-align: left;display: flex;justify-content: space-between;">
+      {{ useNav().title.value }}
+      <el-divider direction="vertical" v-if="layout !== 'mix' && device !== 'mobile'" style="margin: auto 6px;" />
+    </div>
     <Breadcrumb v-if="layout !== 'mix' && device !== 'mobile'" class="breadcrumb-container" />
 
     <mixNav v-if="layout === 'mix'" />
@@ -91,11 +101,15 @@ const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
       <!-- 菜单搜索 -->
       <!-- <Search /> -->
       <!-- 通知 -->
-      <Notice id="header-notice" />
+      <!-- <Notice id="header-notice" /> -->
       <!-- 退出登录 -->
+      <el-divider direction="vertical" />
+
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link navbar-bg-hover select-none">
-          <p v-if="username" class="dark:text-white">
+        <!-- <span class="el-dropdown-link navbar-bg-hover select-none"> -->
+        <span class="el-dropdown-link select-none">
+          <!-- <p v-if="username" class="dark:text-white navBarWord"> -->
+          <p v-if="username" class="navBarWord">
             {{ username }}
             <el-icon style="transform: translateY(2px);">
               <ArrowDown />
@@ -107,6 +121,11 @@ const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
             :main-action-btn-list="[toUserCenterBtn]" :btnList="[loginOutBtn]" />
         </template>
       </el-dropdown>
+
+      <el-divider direction="vertical" />
+
+      <!-- 用户登陆 -->
+
       <span class="set-icon navbar-bg-hover" title="打开项目配置" @click="onPanel">
         <IconifyIconOffline icon="setting" />
       </span>
@@ -119,6 +138,7 @@ const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
   width: 100%;
   height: 48px;
   overflow: hidden;
+  background: $navBarColor !important;
 
   .hamburger-container {
     line-height: 48px;
@@ -133,7 +153,7 @@ const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
     height: 48px;
     height: 100%;
     align-items: center;
-    color: #000000d9;
+    //color: #000000d9;
     justify-content: flex-end;
 
     .el-dropdown-link {
@@ -143,7 +163,6 @@ const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
       align-items: center;
       justify-content: space-around;
       cursor: pointer;
-      color: #000000d9;
 
       p {
         font-size: 14px;
@@ -160,11 +179,13 @@ const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
   .breadcrumb-container {
     float: left;
     margin-left: 16px;
+    width: auto;
+    height: auto;
   }
 }
 
 .logout {
-  max-width: 200px;
+  max-width: 300px;
 
   :deep(.el-dropdown-menu__item) {
     min-width: 100%;
@@ -174,7 +195,8 @@ const toUserCenterBtn = btnMaker('个人中心', btnActionTemplate.Function, {
 }
 
 .userInfoCard {
-  width: 200px !important;
+  width: 300px !important;
   margin: 6px;
+  overflow: hidden;
 }
 </style>

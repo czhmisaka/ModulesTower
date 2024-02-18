@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-31 08:52:57
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-10-08 17:18:55
- * @FilePath: /lcdp_fe_setup/vite.config.js
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-02-05 21:07:09
+ * @FilePath: /ConfigForDesktopPage/vite.config.js
  */
 import {
     loadEnv
@@ -111,11 +111,13 @@ export default ({
             exclude: ["@pureadmin/theme/dist/browser-utils"]
         },
         build: {
+            target: 'esnext', 
             sourcemap: false,
             // 消除打包大小超过500kb警告
             chunkSizeWarningLimit: 4000,
             rollupOptions: {
                 input: {
+                    
                     index: pathResolve("index.html")
                 },
                 // 静态资源分类打包

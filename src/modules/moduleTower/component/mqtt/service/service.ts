@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 14:20:13
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-29 15:53:06
+ * @LastEditTime: 2024-02-18 22:52:39
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/service/service.ts
  */
 
@@ -11,7 +11,7 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { IotDeviceTemplate } from "../iotCard";
 import { stringAnyObj } from "@/modules/ApplicationManage/types";
-
+import { markRaw } from "vue";
 export enum IotDeviceServiceType {
   sendMsg = "sendMsg",
   getStreamData = "getStreamData",
@@ -29,20 +29,22 @@ export const iotServiceCardGridCellMaker = (
   isShow: boolean = true,
   options: stringAnyObj = {}
 ) => {
-  return gridCellMaker(
-    key,
-    key,
-    {},
-    {
-      type: cardComponentType.componentList,
-      name: "iotServiceCard",
-    },
-    {
-      props: {
-        deviceInfo,
-        ...options,
+  return markRaw(
+    gridCellMaker(
+      key,
+      key,
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "iotServiceCard",
       },
-      showInGridDesktop: isShow,
-    }
+      {
+        props: {
+          deviceInfo,
+          ...options,
+        },
+        showInGridDesktop: isShow,
+      }
+    )
   );
 };

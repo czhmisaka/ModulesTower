@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-03-20 14:36:17
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-11-13 19:05:37
- * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/baseToolComponents/editor.vue
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-02-16 23:24:58
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/baseToolComponents/editor.vue
 -->
 <script setup lang="ts">
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css

@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="select-none">
+  <div class="select-none" v-loading="loading">
     <div class="flex-c absolute right-5 top-3">
       <!-- 主题 -->
       <el-switch v-model="dataTheme" inline-prompt :active-icon="dayIcon" :inactive-icon="darkIcon"
@@ -126,8 +126,8 @@ onBeforeUnmount(() => {
           <Motion>
             <h2 class="outline-none">{{ title }}</h2>
           </Motion>
-<!-- :rules="loginRules" -->
-          <el-form ref="ruleFormRef" :model="ruleForm"  size="large">
+          <!-- :rules="loginRules" -->
+          <el-form ref="ruleFormRef" :model="ruleForm" size="large">
             <Motion :delay="100">
               <el-form-item class="formItem" :rules="[
                 {

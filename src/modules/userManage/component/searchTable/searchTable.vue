@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-25 22:55:39
+ * @LastEditTime: 2024-02-06 13:42:40
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
  * @FuckToUi: 改这么多图啥呢，又不好看
 -->
@@ -267,7 +267,7 @@ export default defineComponent({
   async created() {
     timeConsole.checkTime("searchTable");
     this.isReady = false;
-    // await this.loadUserConfig();
+    await this.loadUserConfig();
     await this.initData();
     this.isReady = true;
     this.$emit("ready");

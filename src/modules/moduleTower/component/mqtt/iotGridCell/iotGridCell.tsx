@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-12 15:14:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-27 20:59:19
+ * @LastEditTime: 2024-02-18 22:49:30
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell.tsx
  */
 
@@ -9,9 +9,10 @@ import CardBgVue from "@/components/basicComponents/cell/card/cardBg.vue";
 import { gridCellMaker, cardComponentType } from "@/components/basicComponents/grid/module/dataTemplate";
 import { post } from "@/utils/api/requests";
 import { ElButton, ElDivider, ElInput, ElSwitch } from "element-plus";
-import { defineComponent, ref } from "vue";
+import { defineComponent, markRaw, ref, reactive, onMounted } from "vue";
 import { IotDeviceCellOptionsTemplate, IotDeviceGridDesktopCellTemplate, IotDeviceTemplate } from "../iotCard";
 import { gridLightControlComponent, sliderComponent } from "./gridCellComponent";
+import progressCard from './progressCard.vue'
 
 export enum IotDeviceCellGridDesktopType {
     // 文本展示
@@ -34,6 +35,9 @@ export enum IotDeviceCellGridDesktopType {
     gridStatus = 'gridStatus',
     // 格栅光板控制 ws2812b
     gridLightControl = 'gridLightControl',
+    // 进度条
+    progressCard = 'progressCard',
+    //
 }
 
 export const pushData = async (topic, data) => {
@@ -43,6 +47,15 @@ export const pushData = async (topic, data) => {
     })
 }
 
+export const iotCardTitleStyle = {
+    fontWeight: 300,
+    fontSize: "1em",
+    margin: '3px 6px'
+}
+
+import infoCard from '../iotGridCell/infoCard.vue'
+
+import mqtt from '../script/mqtt'
 
 // 获取各种iot设备控制面板
 export function getIotDeviceCellGridDesktopCardComponent(
@@ -52,6 +65,8 @@ export function getIotDeviceCellGridDesktopCardComponent(
     let sendKey = gridCell.sendKey || IotCardInfo.mainTopic
     let name = gridCell.preKey + sendKey + gridCell.type
     let preKey = gridCell.preKey ? gridCell.preKey + '_' : ''
+    let getKey = gridCell.getKey || '';
+    getKey = getKey.replace('$|mainTopic|', IotCardInfo.mainTopic)
 
     switch (gridCell.type) {
         case IotDeviceCellGridDesktopType.switchCard:
@@ -61,7 +76,7 @@ export function getIotDeviceCellGridDesktopCardComponent(
                 {},
                 {
                     type: cardComponentType.cusComponent,
-                    data: defineComponent({
+                    data: markRaw(defineComponent({
                         props: ['label'],
                         setup(props, context) {
                             context.emit("ready");
@@ -73,41 +88,43 @@ export function getIotDeviceCellGridDesktopCardComponent(
                             return () => [<CardBgVue cusStyle={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                justifyContent: 'space-arround',
+                                justifyContent: 'space-between',
                             }}>
-                                {props.label ? <ElDivider contentPosition='left' style={{
-                                    fontWeight: 600
+                                {props.label ? <div style={{
+                                    ...iotCardTitleStyle
                                 }}>
                                     {props.label}
-                                </ElDivider> : null}
-                                <ElSwitch
-                                    vModel={value1.value}
-                                    size='large'
-                                    onChange={handleClick}
-                                    style={{
-                                        margin: 'auto'
-                                    }}></ElSwitch>
+                                </div> : null}
+                                <div style="width:calc(100% - 12px);height:auto;margin:0px 6px">
+                                    <ElSwitch
+                                        vModel={value1.value}
+                                        size='large'
+                                        onChange={handleClick}
+                                        style={{
+                                            margin: 'auto'
+                                        }}></ElSwitch>
+                                </div>
                             </CardBgVue>]
                         },
-                    }),
+                    })),
                 },
                 gridCell.data
             ).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
         case IotDeviceCellGridDesktopType.buttonCard:
             return gridCellMaker('', '', {}, {
                 type: cardComponentType.cusComponent,
-                data: defineComponent({
+                data: markRaw(defineComponent({
                     setup(props, context) {
                         return () => [
 
                         ]
                     },
-                })
+                }))
             }, gridCell.data)
         case IotDeviceCellGridDesktopType.inputCard:
             return gridCellMaker(name, name, {}, {
                 type: cardComponentType.cusComponent,
-                data: defineComponent({
+                data: markRaw(defineComponent({
                     props: ['label'],
                     setup(props, context) {
                         context.emit("ready");
@@ -117,25 +134,68 @@ export function getIotDeviceCellGridDesktopCardComponent(
                         }
                         return () => [<CardBgVue cusStyle={{
                             display: 'flex',
-                            padding: '12px',
-                            flexDirection: 'row',
-                            justifyContent: 'space-arround',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
                         }}>
-                            {props.label ? <ElDivider contentPosition='left' style={{
-                                fontWeight: 600
+                            {props.label ? <div style={{
+                                ...iotCardTitleStyle
                             }}>
                                 {props.label}
-                            </ElDivider> : null}
-                            <ElInput vModel={word.value}></ElInput><ElButton onClick={click} size='small'>发送</ElButton>
+                            </div> : null}
+                            <div style="width:calc(100% - 12px);height:auto;margin:6px">
+                                <ElInput vModel={word.value} >
+                                    {{ append: () => <ElButton onClick={click} size='small' icon='position'></ElButton> }}
+                                </ElInput>
+                            </div>
                         </CardBgVue>]
                     },
-                })
+                }))
             }, gridCell.data).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
-
+        case IotDeviceCellGridDesktopType.infoCard:
+            return gridCellMaker(
+                name,
+                name,
+                {},
+                {
+                    type: cardComponentType.cusComponent,
+                    data: markRaw(infoCard)
+                },
+                {
+                    ...gridCell?.data,
+                    props: {
+                        ...gridCell?.data?.props,
+                        getKey,
+                        sendKey,
+                        name,
+                        preKey,
+                        IotCardInfo,
+                    },
+                }
+            ).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
         case IotDeviceCellGridDesktopType.sliderCard:
             return sliderComponent(gridCell, IotCardInfo)
-
         case IotDeviceCellGridDesktopType.gridLightControl:
             return gridLightControlComponent(gridCell, IotCardInfo)
+        case IotDeviceCellGridDesktopType.progressCard:
+            return gridCellMaker(
+                name,
+                name,
+                {},
+                {
+                    type: cardComponentType.cusComponent,
+                    data: markRaw(progressCard)
+                },
+                {
+                    ...gridCell?.data,
+                    props: {
+                        ...gridCell?.data?.props,
+                        getKey,
+                        sendKey,
+                        name,
+                        preKey,
+                        IotCardInfo,
+                    },
+                }
+            ).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
     }
 }
