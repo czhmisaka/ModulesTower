@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-12-02 11:00:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-27 23:08:26
+ * @LastEditTime: 2024-03-08 14:43:19
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/types.ts
  */
 
@@ -37,8 +37,6 @@ export enum btnActionTemplate {
   OpenDrawer = "OpenDrawer",
   Function = "Function",
   Url = "Url",
-  UploadFunction = "UploadFunction",
-  HoverFunction = "HoverFunction",
 }
 
 /**

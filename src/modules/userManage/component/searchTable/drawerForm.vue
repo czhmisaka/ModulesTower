@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-23 17:10:26
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/drawerForm.vue
+ * @LastEditTime: 2024-03-08 14:43:52
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
   <el-drawer v-if="plugInData" v-model="isOpen" :title="plugInData.title"
@@ -258,8 +258,6 @@ export default defineComponent({
           let Data = this.$refs["gridDesktop"].baseData;
           await btn.function(this, Data);
         } else await btn.function(this, this.formData);
-      } else if (btn.type == btnActionTemplate.UploadFunction && btn.function) {
-        await btn.function(this, res);
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }

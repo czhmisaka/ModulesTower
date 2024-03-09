@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-10 08:56:53
  * @LastEditors: CZH
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/searchTable.ts
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.ts
  */
 
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-07-24 15:31:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-29 15:37:44
+ * @LastEditTime: 2024-03-03 16:45:10
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/service/service.vue
 -->
 <template>
@@ -16,7 +16,7 @@
         </el-divider>
         <div class="word" v-for="item in deviceInfoLocal.service">
             <div class="title">
-                {{ serviceName(item) }}
+                {{ serviceName(item.type) }}
             </div>
             <div class="btn">
             </div>

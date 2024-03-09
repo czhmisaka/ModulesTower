@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-18 22:27:03
+ * @LastEditTime: 2024-02-20 23:25:50
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/mqttDeviceList.ts
  */
 
@@ -35,7 +35,9 @@ import {
 import {
   btnMaker,
   closeDrawerFormEasy,
+  dobuleCheckBtnMaker,
   openDrawerFormEasy,
+  repBackMessageShow,
 } from "@/modules/userManage/component/searchTable/drawerForm";
 import { list } from "postcss";
 import { gridEditList } from "@/modules/main/PageConfigData/main";
@@ -44,6 +46,7 @@ import {
   eventTriggerType,
   windowResizeChecker,
 } from "@/modules/userManage/component/eventCenter/eventCenter";
+import { IotDeviceTemplate } from "../../component/mqtt/iotCard";
 const wholeScreen = {
   size: {
     width: 12,
@@ -72,12 +75,12 @@ const sizeGetter = () => {
 const positionGetter = () => {
   return {
     mqttDeviceList: {
-      x:0,
-      y:0
+      x: 0,
+      y: 0,
     },
     closeDesktop: {
-      x: wholeScreen.size.width - getXpx(60), 
-      y: 0
+      x: wholeScreen.size.width - getXpx(60),
+      y: 0,
     },
   };
 };
@@ -112,6 +115,7 @@ export const mqttDeviceListDesktop = async (): Promise<gridCellTemplate[]> => {
       openDrawerFormEasy(that, drawerProps);
     },
   });
+ 
   const 操作栏 = tableCellTemplateMaker(
     "操作",
     "asd",
@@ -149,8 +153,11 @@ export const mqttDeviceListDesktop = async (): Promise<gridCellTemplate[]> => {
       }
     )
       .setPosition(0, 0)
-      .setSize( sizeGetter().mqttDeviceList.width,sizeGetter().mqttDeviceList.height),
-      windowResize,
+      .setSize(
+        sizeGetter().mqttDeviceList.width,
+        sizeGetter().mqttDeviceList.height
+      ),
+    windowResize,
   ];
 };
 
@@ -178,8 +185,14 @@ export const openDrawerforMqttDeviceListDesktop = async (that) => {
             },
           }
         )
-          .setSize(sizeGetter().closeDesktop.width, sizeGetter().closeDesktop.height)
-          .setPosition(positionGetter().closeDesktop.x, positionGetter().closeDesktop.y);
+          .setSize(
+            sizeGetter().closeDesktop.width,
+            sizeGetter().closeDesktop.height
+          )
+          .setPosition(
+            positionGetter().closeDesktop.x,
+            positionGetter().closeDesktop.y
+          );
       };
       openDrawerFormEasy(that, {
         gridDesktop: true,

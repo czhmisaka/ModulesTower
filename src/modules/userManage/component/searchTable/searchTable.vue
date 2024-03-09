@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-06 13:42:40
+ * @LastEditTime: 2024-02-20 23:59:12
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
  * @FuckToUi: 改这么多图啥呢，又不好看
 -->
@@ -11,7 +11,7 @@
   }">
     <screenInputform ref="inputBox" :query="query" @search="search" @refresh="refresh" @btnClick="btnClick"
       :queryItemTemplate="searchItemTemplate" :selectedList="selectedList" @inputChange="queryChange" :btn-list="btnList"
-      :autoSearch="autoSearch" v-if="screenStatus" />
+      :autoSearch="autoSearch" v-if="screenStatus && isReady" />
     <inputForm ref="inputBox" :query="query" @search="search" @refresh="refresh" @btnClick="btnClick"
       :noTableEdit="noTableEdit" :queryItemTemplate="searchItemTemplate" :selectedList="selectedList"
       @inputChange="queryChange" :btn-list="btnList" :modeChange="modeChange" :autoSearch="autoSearch" :isCard="isCard"
@@ -31,10 +31,9 @@
       marginTop: '6px',
       float: 'right',
     }" v-if="PageData.total" v-model:current-page="PageData.pageNumber" v-model:page-size="PageData.pageSize"
-      :page-sizes="[5, 10, 20, 30, 40, 100, 200]" :small="true" :background="true"
-      layout="total, sizes, prev, pager, next, jumper" :total="PageData.total"
-      @size-change="(e) => search({ pageSize: e })" @current-change="(e) => search({ pageNumber: e })"
-      :hide-on-single-page="false" />
+      :page-sizes="[10, 20, 50, 100]" :small="true" :background="true" layout="total, sizes, prev, pager, next, jumper"
+      :total="PageData.total" @size-change="(e) => search({ pageSize: e })"
+      @current-change="(e) => search({ pageNumber: e })" :hide-on-single-page="false" />
   </cardBg>
 </template>
 
@@ -267,7 +266,7 @@ export default defineComponent({
   async created() {
     timeConsole.checkTime("searchTable");
     this.isReady = false;
-    await this.loadUserConfig();
+    // await this.loadUserConfig();
     await this.initData();
     this.isReady = true;
     this.$emit("ready");
@@ -355,7 +354,6 @@ export default defineComponent({
       this.query = query;
       if (this.autoSearch) this.search();
     },
-    uploadChange(query: stringAnyObj) { },
     refresh() {
       if (
         this.autoSearch == false &&

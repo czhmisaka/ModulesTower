@@ -1,3 +1,9 @@
+<!--
+ * @Date: 2024-02-16 23:07:02
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-02-25 01:27:30
+ * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/infoCard.vue
+-->
 <template>
     <CardBg :cusStyle="{
         display: 'flex',
@@ -26,7 +32,6 @@
 import CardBg from '@/components/basicComponents/cell/card/cardBg.vue';
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue';
 import { mqttService } from '../script/mqttService';
-import { cusStyle } from '../../../../userManage/types';
 import { iotCardTitleStyle } from './iotGridCell';
 import { IotDeviceTemplate } from '../iotCard';
 

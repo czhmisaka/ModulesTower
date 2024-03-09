@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-12 15:14:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-18 23:36:46
+ * @LastEditTime: 2024-03-08 14:17:45
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell.tsx
  */
 
@@ -13,6 +13,8 @@ import { defineComponent, markRaw, ref, reactive, onMounted } from "vue";
 import { IotDeviceCellOptionsTemplate, IotDeviceGridDesktopCellTemplate, IotDeviceTemplate } from "../iotCard";
 import { gridLightControlComponent, sliderComponent } from "./gridCellComponent";
 import progressCard from './progressCard.vue'
+import infoNumberCard from './infoNumber.vue'
+import streamChartCard from './streamChartCard.vue'
 
 export enum IotDeviceCellGridDesktopType {
     // 文本展示
@@ -37,7 +39,8 @@ export enum IotDeviceCellGridDesktopType {
     gridLightControl = 'gridLightControl',
     // 进度条
     progressCard = 'progressCard',
-    //
+    // 流式图表
+    streamChart = 'streamChart'
 }
 
 export const pushData = async (topic, data) => {
@@ -48,14 +51,12 @@ export const pushData = async (topic, data) => {
 }
 
 export const iotCardTitleStyle = {
-    fontWeight: 300,
+    fontWeight: 600,
     fontSize: "1em",
     margin: '3px 6px'
 }
 
 import infoCard from '../iotGridCell/infoCard.vue'
-
-import mqtt from '../script/mqtt'
 
 // 获取各种iot设备控制面板
 export function getIotDeviceCellGridDesktopCardComponent(
@@ -115,9 +116,7 @@ export function getIotDeviceCellGridDesktopCardComponent(
                 type: cardComponentType.cusComponent,
                 data: markRaw(defineComponent({
                     setup(props, context) {
-                        return () => [
-
-                        ]
+                        return () => []
                     },
                 }))
             }, gridCell.data)
@@ -198,6 +197,26 @@ export function getIotDeviceCellGridDesktopCardComponent(
                 }
             ).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
         case IotDeviceCellGridDesktopType.infoNumberCard:
-            return gridCellMaker('', '', {}, {}, {})
+            return gridCellMaker(name, name, {}, {
+                type: cardComponentType.cusComponent,
+                data: markRaw(infoNumberCard)
+            }, {
+                ...gridCell?.data,
+                props: {
+                    ...gridCell?.data?.props,
+                    getKey,
+                },
+            }).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
+        case IotDeviceCellGridDesktopType.streamChart:
+            return gridCellMaker(name, name, {}, {
+                type: cardComponentType.cusComponent,
+                data: markRaw(streamChartCard)
+            }, {
+                ...gridCell?.data,
+                props: {
+                    ...gridCell?.data?.props,
+                    getKey,
+                },
+            }).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
     }
 }

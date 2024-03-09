@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 14:20:13
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-18 22:52:39
+ * @LastEditTime: 2024-03-07 22:24:05
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/service/service.ts
  */
 
@@ -15,6 +15,12 @@ import { markRaw } from "vue";
 export enum IotDeviceServiceType {
   sendMsg = "sendMsg",
   getStreamData = "getStreamData",
+}
+
+export interface IotDeviceServiceCell {
+  type: IotDeviceServiceType;
+  data?: stringAnyObj;
+  sendKey: string;
 }
 
 // 获取服务名称
@@ -46,5 +52,5 @@ export const iotServiceCardGridCellMaker = (
         showInGridDesktop: isShow,
       }
     )
-  );
+  );  
 };

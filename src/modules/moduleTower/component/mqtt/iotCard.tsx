@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-18 22:55:24
+ * @LastEditTime: 2024-03-03 16:43:58
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotCard.tsx
  */
 
@@ -10,7 +10,7 @@ import {
   cardComponentType,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { stringAnyObj } from "@/modules/ApplicationManage/types";
-import { IotDeviceServiceType } from "./service/service";
+import { IotDeviceServiceCell, IotDeviceServiceType } from "./service/service";
 import { defineAsyncComponent, defineComponent, h, ref } from "vue";
 import CardBgVue from "@/components/basicComponents/cell/card/cardBg.vue";
 import { ElSwitch } from 'element-plus';
@@ -38,8 +38,9 @@ export interface IotDeviceGridDesktopCellTemplate {
 export interface IotDeviceTemplate {
   nameEn: string;
   name?: string;
+  id?: number;
   description?: string;
-  service?: IotDeviceServiceType[];
+  service?: IotDeviceServiceCell[];
   gridCell?: IotDeviceGridDesktopCellTemplate[];
   mainTopic?: string;
 }

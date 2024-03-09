@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-02-14 23:16:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-18 22:47:07
+ * @LastEditTime: 2024-02-25 01:30:36
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/script/mqttService.ts
  */
 import { useUserStoreHook } from "@/store/modules/user";
@@ -10,7 +10,6 @@ import { loadEnv } from "@build/index";
 const { VITE_PROXY_DOMAIN_MQTT } = loadEnv();
 
 const connectUrl = VITE_PROXY_DOMAIN_MQTT;
-console.log(VITE_PROXY_DOMAIN_MQTT, "asdasdasdasdiueqrwiouhiou");
 const DefaultOptions = {
   clean: true, // 保留会话
   connectTimeout: 4000, // 超时时间

@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-12 14:31:03
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/info/infoTable.vue
+ * @LastEditTime: 2024-02-20 23:44:38
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/info/infoTable.vue
 -->
 <template>
   <div ref="tableBox" class="tableBox" v-loading="loading" :style="{

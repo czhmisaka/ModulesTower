@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-11 23:12:19
+ * @LastEditTime: 2024-03-08 13:58:12
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
@@ -30,6 +30,7 @@ import { IotDeviceTemplate, iotCardGridCellMaker } from "./iotCard";
 
 import { iotServiceCardGridCellMaker } from "./service/service";
 import { getIotDeviceCellGridDesktopCardComponent } from "./iotGridCell/iotGridCell";
+import { gridEditList } from "@/modules/main/PageConfigData/main";
 
 const wholeScreen = {
   size: {
@@ -37,54 +38,7 @@ const wholeScreen = {
     height: 8,
   },
 };
-// export function getXpx(vw) {
-//   return vw / (document.body.clientWidth / wholeScreen.size.width);
-// }
-// export function getYpx(vh) {
-//   return vh / (document.body.clientHeight / wholeScreen.size.height);
-// }
 
-// const sizeGetter = () => {
-//   return {
-//     iotInfo: {
-//       width: getXpx(200),
-//       height: getYpx(200),
-//     },
-//     iotServiceCard: {
-//       width: getXpx(300),
-//       height: wholeScreen.size.height,
-//     },
-//     closeDesktop: {
-//       width: getXpx(60),
-//       height: getYpx(60),
-//     },
-//   };
-// };
-// const positionGetter = () => {
-//   return {
-//     iotInfo: {
-//       x: 0,
-//       y: 0,
-//     },
-//     iotServiceCard: {
-//       x: getXpx(200),
-//       y: 0,
-//     },
-//     closeDesktop: {
-//       x: wholeScreen.size.width - getXpx(60),
-//       y: 0,
-//     },
-//   };
-// };
-
-// let timeOut = null as any;
-// const windowResize = windowResizeChecker(async (that, baseData) => {
-//   if (timeOut) clearTimeout(timeOut);
-//   timeOut = setTimeout(() => {
-//     changeCardSize(that, sizeGetter());
-//     changeCardPosition(that, positionGetter());
-//   }, 50);
-// }, "windowResize");
 
 export const iotCardServiceDesktop = async () => {
   return [] as gridCellTemplate[];
@@ -97,21 +51,25 @@ export const openDrawerForIotCardServiceDesktop = async (
 ) => {
   // // 构建IotCard
   const iotInfoCardGridCell = iotCardGridCellMaker("iotInfo", IotCardInfo)
-  .setSize(2,2.5).setPosition(0,0)
-
+    .setSize(2, 2.5)
+    .setPosition(0, 0);
 
   // 构建IotServiceCard
   const iotServiceCardGridCell = iotServiceCardGridCellMaker(
     "iotServiceCard",
     IotCardInfo
-  ).setSize(2,4).setPosition(2,0)
+  )
+    .setSize(2, 4)
+    .setPosition(2, 0);
 
   // 构建gridCell
-  let gridCellList = [] as gridCellTemplate[]
-  if(IotCardInfo.gridCell){
-    IotCardInfo.gridCell.map(x=>{
-      gridCellList.push(getIotDeviceCellGridDesktopCardComponent(x,IotCardInfo ))
-    })
+  let gridCellList = [] as gridCellTemplate[];
+  if (IotCardInfo.gridCell) {
+    IotCardInfo.gridCell.map((x) => {
+      gridCellList.push(
+        getIotDeviceCellGridDesktopCardComponent(x, IotCardInfo)
+      );
+    });
   }
   const init = eventCenterCell(
     eventTriggerType.onMounted,
@@ -137,12 +95,14 @@ export const openDrawerForIotCardServiceDesktop = async (
           }
         )
           .setSize(
-            0.5,0.5
+            0.5,
+            0.5
             // sizeGetter().closeDesktop.width,
             // sizeGetter().closeDesktop.height
           )
           .setPosition(
-            11.5,0
+            11.5,
+            0
             // positionGetter().closeDesktop.x,
             // positionGetter().closeDesktop.y
           );
@@ -161,7 +121,20 @@ export const openDrawerForIotCardServiceDesktop = async (
               ...(await iotCardServiceDesktop()),
               ...gridCellList,
               closeBtn(that),
-              // windowResize,
+              gridCellMaker(
+                "editable",
+                "编辑",
+                {},
+                {
+                  name: "setting_editable",
+                  type: cardComponentType.componentList,
+                },
+                {
+                  isSettingTool: true,
+                }
+              )
+                .setPosition(11, 7)
+                .setSize(1, 1),
             ];
           },
           gridColNum: wholeScreen.size.width,
@@ -169,7 +142,7 @@ export const openDrawerForIotCardServiceDesktop = async (
             wholeScreen: false,
             Fullscreen: true,
             maxRows: wholeScreen.size.height,
-            margin: 3,
+            margin: 4,
           },
         },
       });

@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-18 17:28:13
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/inputForm.vue
+ * @LastEditTime: 2024-02-20 23:58:52
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
   <div v-if="(queryItemTemplate && queryItemTemplate.length > 0) ||
@@ -21,12 +21,15 @@
     }">
       <VueForm v-model="formData" :style="{
         textAlign: 'left',
+        marginRight: '-10px'
       }" :schema="schema" :ui-schema="uiSchema" :formProps="formProps" @change="onChange">
-        <div v-if="(btnList && btnList.length > 0) || !autoSearch || !noTableEdit" slot-scope="{ formData }"
-          :style="{ textAlign: 'right' }">
+        <div v-if="(btnList && btnList.length > 0) || !autoSearch || !noTableEdit" slot-scope="{ formData }" :style="{
+          textAlign: 'right',
+          marginRight: '10px'
+        }">
           <el-button class="btn" type="default" v-if="!noTableEdit" @click="btnClick(editFuncBtn)"
             :icon="'Setting'"></el-button>
-          <el-button class="btn" v-if="!autoSearch && queryItemTemplate && queryItemTemplate.length > 0 && modeChange"
+          <el-button class="btn" v-if="!autoSearch && modeChange"
             @click="btnClick(changeFuncBtn)" :icon="isCard ? 'Document' : 'Grid'"></el-button>
           <el-button class="btn" v-if="!autoSearch && queryItemTemplate && queryItemTemplate.length > 0"
             @click="refreshData(-1)" icon="RefreshRight">重置</el-button>
@@ -153,17 +156,17 @@ export default defineComponent({
       btnActionTemplate,
       actionUrl: VITE_PROXY_DOMAIN_REAL,
       editFuncBtn: btnMaker('', btnActionTemplate.Function, {
-        function: async (that, data) => {
-          await openTableEditor(that, data)
+        function: async (that1, data) => {
+          await openTableEditor(that1 as any, data)
         }
       }),
       changeFuncBtn: btnMaker('', btnActionTemplate.Function, {
-        function: async (that, data) => {
-          changeCardProperties(that, {
-            searchTable: {
-              isCard: !that.isCard,
-            },
-          });
+        function: async (that1, data) => {
+          let fuck = {}
+          fuck[that1.detail.label] = {
+            isCard: !that1.isCard,
+          }
+          changeCardProperties(that1, fuck);
         }
       })
     };
