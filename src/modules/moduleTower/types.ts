@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-03-08 14:12:24
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-08 15:02:46
+ * @LastEditTime: 2024-03-13 21:31:11
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/types.ts
  */
 
@@ -23,6 +23,8 @@ export const iotEventActionTypeObject = {
   keyMapTransform: "keyMapTransform",
   saveDataToMySql: "saveDataToMySql",
 };
+
+
 export type iotEventActionType = keyof typeof iotEventActionTypeObject;
 
 // iot事件 事件模板

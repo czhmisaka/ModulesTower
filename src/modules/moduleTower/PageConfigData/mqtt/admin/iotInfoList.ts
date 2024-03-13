@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-24 13:04:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-07 23:28:34
+ * @LastEditTime: 2024-03-12 22:54:22
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/admin/iotInfoList.ts
  */
 import {
@@ -32,6 +32,7 @@ let iot设备字段 = new SearchCellStorage([
   tableCellTemplateMaker("设备名称（En)", "nameEn"),
   tableCellTemplateMaker("简介", "description"),
   tableCellTemplateMaker("设备服务", "service"),
+  tableCellTemplateMaker("userKey",'mainUser'),
   tableCellTemplateMaker("更新时间", "updateTime"),
   tableCellTemplateMaker("创建时间", "createTime"),
 ]);
