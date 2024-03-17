@@ -45,6 +45,8 @@ const ruleForm = reactive({
 const imageCode = ref("");
 const imageCodeId = ref("");
 
+const isLogin = ref(true)
+
 const onLogin = async (formEl: FormInstance | undefined) => {
   loading.value = true;
   if (!formEl) return;
@@ -70,10 +72,8 @@ const onLogin = async (formEl: FormInstance | undefined) => {
             }
           })
           .catch((err) => {
-            if (err.code == 12000 || err.code == 11001) {
-              ruleForm.captcha = "";
-              reqGetImageCode();
-            }
+            ruleForm.captcha = "";
+            reqGetImageCode();
           });
       } else {
         loading.value = false;
@@ -85,6 +85,28 @@ const onLogin = async (formEl: FormInstance | undefined) => {
     loading.value = false;
   }
 };
+
+// 注册流程
+const userRegistration = async (formEl: FormInstance | undefined) => {
+  loading.value = true;
+  if (!formEl) return;
+  try {
+    const object = {
+      username: ruleForm.username,
+          password: ruleForm.password,
+          captchaId: imageCodeId.value,
+          verifyCode: ruleForm.captcha,
+    }
+    let res = await post('/admin/base/sys/user/addAMqttUser',object)
+    if(res.data.code === 200){
+      message.success('注册成功')
+    }
+  } catch {
+
+  } finally { 
+    loading.value = false
+  }
+}
 
 const reqGetImageCode = async () => {
   let res = await get("/admin/base/open/captcha", {
@@ -158,20 +180,28 @@ onBeforeUnmount(() => {
                   'border-radius': '4px',
                   'background': 'rgba(0, 0, 0, 0.7)',
                 }" @click="reqGetImageCode"></div>
-                <!-- <img
-                  style="margin-left: 10px"
-                  class="img-code"
-                  :src="imageCode"
-                  alt="图片验证码"
-                  @click="reqGetImageCode"
-                /> -->
               </el-form-item>
             </Motion>
 
-            <Motion :delay="250">
-              <el-button class="w-full mt-4" size="default" type="primary" :loading="loading"
-                @click="onLogin(ruleFormRef)">
+            <Motion :delay="250" v-if="isLogin">
+              <el-button class="mt-4" style="width:calc(100% - 132px)" size="default" type="primary" :loading="loading"
+                icon="promotion" @click="onLogin(ruleFormRef)">
                 登录
+              </el-button>
+              <el-button class="mt-4" style="width:120px" size="default" type="success" :icon="'Position'" @click="isLogin = false;
+              ruleForm.password = ''; ruleForm.username = ''">
+                注册
+              </el-button>
+            </Motion>
+
+            <Motion :delay="250" v-if="!isLogin">
+              <el-button class="mt-4" style="width:calc(100% - 132px)" size="default" type="success" :loading="loading"
+                icon="Position" @click="userRegistration(ruleFormRef)">
+                注册
+              </el-button>
+              <el-button class="mt-4" style="width:120px" size="default" type="primary" :icon="'Close'"
+                @click="isLogin = true">
+                返回登陆
               </el-button>
             </Motion>
           </el-form>

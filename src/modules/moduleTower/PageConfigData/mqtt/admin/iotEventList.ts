@@ -171,6 +171,7 @@ const openDrawerForIotEvent = async (that, data: iotEventTemplate = null) => {
       "id",
       "createTime",
       "updateTime",
+      "asd"
     ]),
     btnList: [
       btnMaker(isEdit ? "保存" : "新增", btnActionTemplate.Function, {
@@ -191,6 +192,13 @@ const 新增事件 = btnMaker("新增事件", btnActionTemplate.Function, {
   icon: "Plus",
   function: async (that, data) => {
     await openDrawerForIotEvent(that);
+  },
+});
+
+const 编辑事件 = btnMaker("编辑事件", btnActionTemplate.Function, {
+  icon: "Edit",
+  function: async (that, data: iotEventTemplate) => {
+    await openDrawerForIotEvent(that, data);
   },
 });
 
@@ -259,7 +267,11 @@ export const iotEventManage = async () => {
       {
         props: {
           searchItemTemplate: [],
-          showItemTemplate: iotEventStorage.getAll(),
+          showItemTemplate: iotEventStorage.getAll([
+            "id",
+            "createTime",
+            "updateTime",
+          ]),
           searchFunc: async (query, that) => {
             let res = await post("/admin/iot/iotEvent/list", {});
             return res.data;

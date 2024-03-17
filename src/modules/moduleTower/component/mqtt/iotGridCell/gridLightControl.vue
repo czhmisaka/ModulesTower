@@ -1,7 +1,7 @@
 <!--
  * @Date: 2024-01-27 21:13:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-03 20:49:19
+ * @LastEditTime: 2024-03-14 23:03:58
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/gridLightControl.vue
 -->
 <template>
@@ -12,17 +12,14 @@
     }">
         <div class="mainBoard">
             <div class="colorGrid" v-for="(item, i ) in ControlArr" :style="{
+                width: `${100 / Math.floor(Math.sqrt(ControlArr.length))}%`,
+                height: `${100 / Math.floor(Math.sqrt(ControlArr.length))}%`,
                 backgroundColor: `rgb(${item[0]},${item[1]},${item[2]})`,
                 color: `rgb(${255 - item[0]},${255 - item[1]},${255 - item[2]})`,
             }" @click="setColor(color, i)">
             </div>
         </div>
         <cardBg class="toolBar">
-            <div class="btn">
-                <el-button>
-                    燃烧的火焰
-                </el-button>
-            </div>
             <div class="btn">
                 <ElUpload>
                     <el-button>
@@ -94,7 +91,7 @@ export default defineComponent({
                     clearInterval(interval)
                     this.isReady = true
                 }
-            }, size - num)
+            }, 10)
         },
 
 
@@ -104,7 +101,10 @@ export default defineComponent({
     },
     mounted() {
         this.$emit('ready')
-        this.init()
+        console.log(this.size, 'fuck ')
+        if (this.size)
+            this.init(this.size)
+        else this.init()
     },
 })
 </script>

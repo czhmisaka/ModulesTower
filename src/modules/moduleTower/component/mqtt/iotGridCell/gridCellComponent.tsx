@@ -2,7 +2,7 @@
 /*
  * @Date: 2024-01-25 13:30:19
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-18 23:08:55
+ * @LastEditTime: 2024-03-14 22:47:55
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/gridCellComponent.tsx
  */
 import { gridCellMaker } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -62,10 +62,11 @@ export const gridLightControlComponent = (gridCell: IotDeviceGridDesktopCellTemp
         type: cardComponentType.componentList,
         name: 'moduleTower_gridLightControl'
     }, {
+        ...gridCell?.data,
         props: {
             sendKey,
             preKey,
-            ...gridCell.data
+            ...gridCell.data.props
         }
     }).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
 }
