@@ -93,17 +93,19 @@ const userRegistration = async (formEl: FormInstance | undefined) => {
   try {
     const object = {
       username: ruleForm.username,
-          password: ruleForm.password,
-          captchaId: imageCodeId.value,
-          verifyCode: ruleForm.captcha,
+      password: ruleForm.password,
+      captchaId: imageCodeId.value,
+      verifyCode: ruleForm.captcha,
     }
-    let res = await post('/admin/base/sys/user/addAMqttUser',object)
-    if(res.data.code === 200){
+    let res = await post('/admin/base/sys/user/addAMqttUser', object)
+    if (res.code === 1000) {
       message.success('注册成功')
+      isLogin.value = true
+      reqGetImageCode()
     }
   } catch {
 
-  } finally { 
+  } finally {
     loading.value = false
   }
 }
@@ -116,6 +118,7 @@ const reqGetImageCode = async () => {
   });
   imageCode.value = res.data.data
   imageCodeId.value = res.data.captchaId;
+  ruleForm.captcha = ''
 };
 
 /** 使用公共函数，避免`removeEventListener`失效 */
@@ -189,7 +192,7 @@ onBeforeUnmount(() => {
                 登录
               </el-button>
               <el-button class="mt-4" style="width:120px" size="default" type="success" :icon="'Position'" @click="isLogin = false;
-              ruleForm.password = ''; ruleForm.username = ''">
+              ruleForm.password = ''; ruleForm.username = ''; ruleForm.captcha = ''; reqGetImageCode()">
                 注册
               </el-button>
             </Motion>

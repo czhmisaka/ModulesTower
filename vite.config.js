@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-05 21:07:09
+ * @LastEditTime: 2024-03-19 15:27:00
  * @FilePath: /ConfigForDesktopPage/vite.config.js
  */
 import {
@@ -9,7 +9,6 @@ import {
 } from 'vite';
 import pkg from "./package.json";
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import path from 'path';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import ViteRequireContext from '@originjs/vite-plugin-require-context';
@@ -32,6 +31,8 @@ import {
 
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root = process.cwd();
+
+import path from 'path';
 
 /** 路径查找 */
 const pathResolve = (dir) => {

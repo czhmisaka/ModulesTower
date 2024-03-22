@@ -1,7 +1,7 @@
 <!--
  * @Date: 2024-01-27 21:13:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-14 23:03:58
+ * @LastEditTime: 2024-03-20 21:01:56
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/gridLightControl.vue
 -->
 <template>
@@ -10,22 +10,23 @@
         flexDirection: 'row',
         justifyContent: 'space-arround',
     }">
-        <div class="mainBoard">
+        <div class="mainBoard" v-if="mode == 'colorPicker'">
             <div class="colorGrid" v-for="(item, i ) in ControlArr" :style="{
-                width: `${100 / Math.floor(Math.sqrt(ControlArr.length))}%`,
-                height: `${100 / Math.floor(Math.sqrt(ControlArr.length))}%`,
+                margin: '0.5px',
+                width: `calc(${100 / Math.floor(Math.sqrt(ControlArr.length))}% - 1px)`,
+                height: `calc(${100 / Math.floor(Math.sqrt(ControlArr.length))}% - 1px)`,
                 backgroundColor: `rgb(${item[0]},${item[1]},${item[2]})`,
                 color: `rgb(${255 - item[0]},${255 - item[1]},${255 - item[2]})`,
             }" @click="setColor(color, i)">
             </div>
         </div>
+        <div class="mainBoard" v-if="mode == 'imagePicker'">
+            <canvas :id="canvas.id" :width="Math.floor(Math.sqrt(ControlArr.length))"
+                :height="Math.floor(Math.sqrt(ControlArr.length))"></canvas>
+        </div>
         <cardBg class="toolBar">
             <div class="btn">
-                <ElUpload>
-                    <el-button>
-                        上传图片
-                    </el-button>
-                </ElUpload>
+                <input type="file" accept=".png,.jpg" class="uploadBtn" required @change="upload" multiple />
             </div>
         </cardBg>
         <cardBg class="colorBoard">
@@ -64,10 +65,14 @@ export default defineComponent({
     ],
     data: () => {
         return {
+            canvas: {
+                id: 'canvas',
+            },
             ControlArr: [],
             isReady: false,
             color: 'rgb(255, 69, 0)',
             isUseColors: [],
+            mode: 'colorPicker' as 'colorPicker' | 'imagePicker'
         }
     },
     watch: {
@@ -81,27 +86,62 @@ export default defineComponent({
         }
     },
     methods: {
-        init(size = 8 * 8) {
-            let num = 0
-            this.isReady = false
-            const interval = setInterval(() => {
-                this.ControlArr.push([0, 0, 0])
-                num++
-                if (num == size) {
-                    clearInterval(interval)
-                    this.isReady = true
-                }
-            }, 10)
+        push() {
+            pushData(this.sendKey, this.preKey + JSON.stringify(this.ControlArr))
         },
 
+        init(size = 8 * 8) {
+            this.isReady = false
+            for (let x = 0; x < size; x++) {
+                this.ControlArr.push([0, 0, 0])
+            }
+            this.canvas.id = Math.random().toString(36) + '_' + this.preKey
+            this.push()
+        },
+
+        upload(e) {
+            this.mode = 'imagePicker'
+            const that = this
+            setTimeout(() => {
+                const fileList = e.target.files
+                for (let times = 0; times < 2; times++) {
+                    for (let i = 0; i < fileList.length; i++) {
+                        const file = fileList[i]
+                        const image = new Image();
+                        const canvas = document.getElementById(that.canvas.id) as any;
+                        const ctx = canvas.getContext("2d");
+                        image.src = URL.createObjectURL(file);
+                        image.onload = function (event) {
+                            URL.revokeObjectURL(image.src);
+                            canvas.width = image.width;
+                            canvas.height = image.height;
+                            ctx.drawImage(image, 0, 0);
+                            const dataWidth = Math.sqrt(that.ControlArr.length)
+                            const step = image.width / dataWidth
+                            const firstStep = step / 2
+                            for (let y = 0; y < dataWidth; y++) {
+                                for (let x = 0; x < dataWidth; x++) {
+                                    const color = ctx.getImageData(x * step + firstStep, y * step + firstStep, 1, 1).data;
+                                    console.log(color, 'color')
+                                    that.ControlArr[y * dataWidth + x] = [0.2 * color[0], 0.2 * color[1], 0.2 * color[2]]
+                                }
+                            }
+                            console.log('pushDatta', that.ControlArr)
+                            that.push()
+                        }
+                    }
+                }
+            }, 300)
+
+        },
 
         setColor(color, i) {
             this.ControlArr[i] = color.replace('rgb(', '').replace(')', '').split(',')
+            this.push()
         }
     },
     mounted() {
         this.$emit('ready')
-        console.log(this.size, 'fuck ')
         if (this.size)
             this.init(this.size)
         else this.init()
