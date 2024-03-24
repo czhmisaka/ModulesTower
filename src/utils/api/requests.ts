@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-11 22:15:14
+ * @LastEditTime: 2024-03-24 01:25:24
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -161,6 +161,12 @@ export function post(url: string, data: object) {
     data,
   }) as any;
 }
+
+// 聊天专用
+export const chat = async (word: string) => {
+  const tokenRes = await post("/admin/iot/iot/getChatToken", { word });
+  return tokenRes;
+};
 
 export function post_formData(url: string, params: object) {
   let formData = new FormData();

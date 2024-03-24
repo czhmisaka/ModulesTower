@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-19 15:27:00
+ * @LastEditTime: 2024-03-24 00:34:32
  * @FilePath: /ConfigForDesktopPage/vite.config.js
  */
 import {
@@ -136,7 +136,8 @@ export default ({
                     name: 'dev',
                     // target: 'http://127.0.0.1:80',
                     // target: 'http://10.73.153.63:7861/chat',
-                    target: 'http://10.73.153.150:14791/lcdpChat/chat',
+                    // target: 'http://10.73.153.150:14791/lcdpChat/chat',
+                    target:'https://open.bigmodel.cn/api/paas/v4/',
                     changeOrigin: true,
                     ws: true,
                     rewrite: (path) => {
