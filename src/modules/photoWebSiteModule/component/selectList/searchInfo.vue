@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-16 02:33:50
+ * @LastEditTime: 2024-12-22 01:20:06
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\component\selectList\searchInfo.vue
 -->
 <template>
@@ -46,6 +46,28 @@
         placeholder="图片名字"
         class="item"
       ></el-input>
+      <el-popover
+        v-if="canSearchByImage"
+        placement="bottom-start"
+        :width="400"
+        trigger="click"
+      >
+        <template #reference>
+          <el-button class="item"> 智能搜索 </el-button>
+        </template>
+        <template #default>
+          <div style="height: 180px; width: 100%">
+            <el-input
+              v-model="userinput"
+              type="textarea"
+              v-loading="userinputLoading"
+              :autosize="{ minRows: 8, maxRows: 8 }"
+              placeholder="随便写点什么，回车搜索"
+              @keydown.native.enter="aiSearch(userinput)"
+            />
+          </div>
+        </template>
+      </el-popover>
       <el-select
         v-model="query['tags']"
         :placeholder="'标签'"
@@ -323,6 +345,7 @@ import { ElMessage } from "element-plus";
 import { getPreUrl } from "../../../../utils/api/requests";
 import { getHeaders } from "../../../../utils/api/user/header";
 import { searchByPicture } from "../../api/upload";
+import { chat, isMobile } from "@/utils/api/requests";
 
 const dateList = [] as {
   name: string;
@@ -358,6 +381,8 @@ dateList.push({
   time: nowDay - oneYear,
 });
 
+let timeout = null;
+
 export default defineComponent({
   name: "searchInfo",
   componentInfo: {
@@ -376,6 +401,21 @@ export default defineComponent({
 
   components: { cardBg },
   watch: {
+    // userinput: {
+    //   handler(val) {
+    //     if (!val) return;
+    //     console.log(timeout, "asd");
+    //     if (timeout) {
+    //       clearTimeout(timeout);
+    //     }
+    //     const that = this;
+    //     timeout = setTimeout(async () => {
+    //       await that.aiSearch(val);
+    //     }, 5000);
+    //   },
+    //   deep: true,
+    //   immediate: true,
+    // },
     rowHeight: {
       handler(val) {
         changeCardProperties(this, {
@@ -400,12 +440,11 @@ export default defineComponent({
     },
     "baseData.query": {
       handler(val) {
-        console.log(val, "asd");
         if (val) {
           Object.keys(val).map((key) => {
             // 不相等时更新
             console.log(key, val[key], this.query[key]);
-            if (this.query[key] != val[key]) this.query[key] = val[key];
+            if (JSON.stringify(this.query[key]) != JSON.stringify(val[key])) this.query[key] = val[key];
           });
         }
       },
@@ -428,7 +467,8 @@ export default defineComponent({
       preUrl: getPreUrl(),
       dataType: {},
       query: {},
-
+      userinput: "",
+      userinputLoading:false,
       token: "",
       canSearchByImage: false,
       amd_timeOut: null,
@@ -467,9 +507,7 @@ export default defineComponent({
       }
       setData(that, data);
     },
-    beforeAvatarUpload(file) {
-     
-    },
+    beforeAvatarUpload(file) {},
     clear() {
       const context = this;
       this.query = {};
@@ -482,6 +520,41 @@ export default defineComponent({
           getFunc: getFunc,
         },
       });
+    },
+
+    async aiSearch(val) {
+      this.userinputLoading = true
+      let res = await chat(val, "glm-4-flash", [
+        {
+          role: "system",
+          content: `
+          你会分析用户的意图，并提取用户希望搜索的图片关键词。
+          现有关键词：
+${JSON.stringify(this.tagList)}
+要求：
+1. 只输出关键词即可，使用json列表格式
+2. 从现有关键词中选取
+3. 输出内容从下文中的现有关键词中寻找，不少于10个，不多于30个
+`,
+        },
+      ]);
+      const listStr = res.data.choices[0].message.content;
+      const list = JSON.parse("[" + listStr.split("[")[1].split("]")[0] + "]");
+      console.log(listStr, "返回", list);
+      let searchList = [];
+      this.tagList.map((x) => {
+        list.map((c) => {
+          if (x.name.indexOf(c) > -1) {
+            if (searchList.indexOf(x.id) == -1) searchList.push(x.id);
+          }
+        });
+      });
+      console.log(searchList, "结果");
+      if (searchList.length == 0) {
+        return ElMessage.warning("未能识别到可用标签");
+      }
+      this.query.tags = searchList;
+      this.userinputLoading = false
     },
 
     checkQuery(arr: string[]) {
@@ -511,8 +584,7 @@ export default defineComponent({
       //   ElMessage.error("上传图片大小不能超过 10MB!");
       //   return false;
       // }
-      console.log(file,'asdasdasd')
-      const { data } = await searchByPicture(file.file)
+      const { data } = await searchByPicture(file.file);
       const that = this;
       if (this.searchByImage) {
         this.searchByImage(that, data.list);

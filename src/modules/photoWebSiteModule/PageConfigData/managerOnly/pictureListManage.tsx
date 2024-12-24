@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-11-04 01:02:39
+ * @LastEditTime: 2024-12-21 12:15:01
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\pictureListManage.tsx
  */
 
@@ -117,6 +117,7 @@ export const 开始上传按钮 = btnMaker("上传", btnActionTemplate.Function,
       icon: "UploadFilled",
       isShow: (d) => d.categoryId,
       function: async (th, dat) => {
+        console.log(JSON.parse(JSON.stringify(da)))
         let data = da._selectedList.filter(
           (x) =>
             x.uploadStatus == uploadStatus.ready ||
@@ -137,13 +138,15 @@ export const 开始上传按钮 = btnMaker("上传", btnActionTemplate.Function,
             console.log(res, "查看图片");
             x.uploadStatus = uploadStatus.finish;
             x.tags = res.data.tags;
+            console.log(x.name,'asd')
+            let res2 = await post('/admin/picture/pictureInfo/update',{
+              id:res.data.id,
+              name:x.name
+            })
             let photos = await useCacheHook().getDataByKey(photoListKey);
             photos.map((c) => {
               if (c.localId == x.localId) c = x;
             });
-            // useCacheHook().setup(photoListKey,photos.map(c=>{
-
-            // },)
           } catch {
             x.uploadStatus = uploadStatus.error;
           }

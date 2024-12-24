@@ -123,14 +123,14 @@ request.interceptors.response.use(
           -1 && x.path != "/"
         );
       })[0];
-      console.log(nowRoute,'asd')
+      console.log(nowRoute, 'asd')
       if (
         nowRoute?.meta &&
         (nowRoute?.meta["allPeopleCanSee"] || nowRoute?.meta["loginPage"])
       ) {
       } else {
-        console.log("fuck",response.config);
-        
+        console.log("fuck", response.config);
+
         return useUserStoreHook().logOut(false);
       }
       return Promise.resolve({ data: {} });
@@ -167,9 +167,10 @@ export function post(url: string, data: object) {
 // 聊天专用
 export const chat = async (
   word: string,
-  model: 'glm-4-0520' | 'glm-4 ' | 'glm-4-air' | 'glm-4-airx' | 'glm-4-flash' | 'glm-3-turbo' = 'glm-4-flash'
+  model: 'glm-4-0520' | 'glm-4 ' | 'glm-4-air' | 'glm-4-airx' | 'glm-4-flash' | 'glm-3-turbo' = 'glm-4-flash',
+  history: { role: "function" | "user" | "system" | "assistant", content: string }[] = []
 ) => {
-  const tokenRes = await post("/admin/iot/iot/getChatToken", { word, model });
+  const tokenRes = await post("/admin/iot/iot/getChatToken", { word, model, history });
   return tokenRes;
 };
 

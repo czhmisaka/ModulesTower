@@ -380,6 +380,7 @@ export const 解析图片信息 = btnMaker("解析图片信息", btnActionTempla
     }
 })
 
+
 export const InfoCardBtnList = [
     打包成册,
     收藏按钮,
