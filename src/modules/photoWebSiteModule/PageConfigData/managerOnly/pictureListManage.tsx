@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-12-21 12:15:01
+ * @LastEditTime: 2024-12-24 23:21:51
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\pictureListManage.tsx
  */
 
@@ -49,6 +49,7 @@ import {
   ElLoading,
   ElMessage,
   ElMessageBox,
+  ElNotification,
   ElPopover,
   ElTag,
   ElTooltip,
@@ -102,7 +103,6 @@ export const 批量上传按钮 = btnMaker(
         uploadStatus: uploadStatus.ready,
         data,
       });
-      console.log(photos, "asd");
     },
   }
 );
@@ -117,7 +117,7 @@ export const 开始上传按钮 = btnMaker("上传", btnActionTemplate.Function,
       icon: "UploadFilled",
       isShow: (d) => d.categoryId,
       function: async (th, dat) => {
-        console.log(JSON.parse(JSON.stringify(da)))
+        console.log(JSON.parse(JSON.stringify(da)));
         let data = da._selectedList.filter(
           (x) =>
             x.uploadStatus == uploadStatus.ready ||
@@ -138,11 +138,11 @@ export const 开始上传按钮 = btnMaker("上传", btnActionTemplate.Function,
             console.log(res, "查看图片");
             x.uploadStatus = uploadStatus.finish;
             x.tags = res.data.tags;
-            console.log(x.name,'asd')
-            let res2 = await post('/admin/picture/pictureInfo/update',{
-              id:res.data.id,
-              name:x.name
-            })
+            console.log(x.name, "asd");
+            let res2 = await post("/admin/picture/pictureInfo/update", {
+              id: res.data.id,
+              name: x.name,
+            });
             let photos = await useCacheHook().getDataByKey(photoListKey);
             photos.map((c) => {
               if (c.localId == x.localId) c = x;
@@ -152,6 +152,107 @@ export const 开始上传按钮 = btnMaker("上传", btnActionTemplate.Function,
           }
         });
         th.close();
+      },
+    });
+
+    // 选择一个相册
+    let drawerProps = {
+      title: "选择目标上传的相册",
+      queryItemTemplate: [
+        {
+          ...上级相册,
+          label: "选择相册",
+          key: "categoryId",
+        },
+      ],
+      btnList: [开始上传],
+    } as drawerProps;
+
+    openDrawerFormEasy(that, drawerProps);
+  },
+});
+
+export const 全量上传按钮 = btnMaker("全部上传", btnActionTemplate.Function, {
+  isShow: (d) => d._selectedList.length == 0,
+  function: async (that, da) => {
+    const 开始上传 = btnMaker("开始上传", btnActionTemplate.Function, {
+      elType: "warning",
+      icon: "UploadFilled",
+      isShow: (d) => d.categoryId,
+      function: async (th, dat) => {
+        let wholeData = await useCacheHook().getDataByKey(photoListKey);
+        let data = wholeData.filter(
+          (x) =>
+            x.uploadStatus == uploadStatus.ready ||
+            x.uploadStatus == uploadStatus.error
+        );
+        console.log(data, "准备上传的文件");
+        async function upload(x) {
+          try {
+            x.uploadStatus = uploadStatus.start;
+            let res = await uploadFile(x.data.file);
+            x.uploadStatus = uploadStatus.read;
+            x.url = res.data.url;
+            x.data = res.data;
+            let res1 = await post("/admin/picture/categories/addPicture", {
+              pictureIds: [res.data.id],
+              categoryId: dat.categoryId,
+            });
+            x.uploadStatus = uploadStatus.finish;
+            x.tags = res.data.tags;
+            let res2 = await post("/admin/picture/pictureInfo/update", {
+              id: res.data.id,
+              name: x.name,
+            });
+            let photos = await useCacheHook().getDataByKey(photoListKey);
+            photos.map((c) => {
+              if (c.localId == x.localId) c = x;
+            });
+          } catch {
+            x.uploadStatus = uploadStatus.error;
+          }
+        }
+        data.map(async (x) => {});
+        const size = 5;
+        let page = 0;
+        setTimeout(() => {
+          that.close();
+        }, 200);
+        let notification = ElNotification({
+          duration: 0,
+          title: "上传进度",
+          dangerouslyUseHTMLString: true,
+          message: `${page * size} / ${data.length}`,
+        });
+        while (page * size < data.length) {
+          await Promise.all([
+            upload(data[page * size]),
+            upload(data[page * size + 1]),
+            upload(data[page * size + 2]),
+            upload(data[page * size + 3]),
+            upload(data[page * size + 4]),
+            // upload(data[page * size + 5]),
+            // upload(data[page * size + 6]),
+            // upload(data[page * size + 7]),
+            // upload(data[page * size + 8]),
+            // upload(data[page * size + 9]),
+          ]);
+          page += 1;
+          notification.close();
+          notification = ElNotification({
+            duration: 0,
+            title: "上传进度",
+            dangerouslyUseHTMLString: true,
+            message: `${page * size} / ${data.length}`,
+          });
+        }
+        notification = ElNotification({
+          duration: 3,
+          type: "success",
+          title: "上传完成",
+          dangerouslyUseHTMLString: true,
+          message: `${data.length}张图片上传完成`,
+        });
       },
     });
 
@@ -398,8 +499,7 @@ export const PictureListManage = async () => {
                     effect="dark"
                     type="info"
                   >
-                    {x.nameCn}
-                    ({x.name})
+                    {x.nameCn}({x.name})
                   </ElTag>
                 );
               })}
@@ -432,17 +532,30 @@ export const PictureListManage = async () => {
         props: {
           searchItemTemplate: [],
           showItemTemplate: photoInfoStorage.getAll(),
-          searchFunc: async (query, that) =>
-            await useCacheHook().getDataByKey(photoListKey),
+          searchFunc: async (query, that) => {
+            console.log(query, "搜索");
+            let { pageNumber, pageSize } = query;
+            if (!pageNumber) pageNumber = 1;
+            if (!pageSize) pageSize = 10;
+            let wholeData = await useCacheHook().getDataByKey(photoListKey);
+            return {
+              list: wholeData.slice(
+                (pageNumber - 1) * pageSize,
+                pageNumber * pageSize
+              ),
+              total: wholeData.length,
+            };
+          },
           defaultQuery: {
             showLink: null,
           },
           btnList: [
             批量上传按钮,
             开始上传按钮,
+            全量上传按钮,
             批量删除,
             清空,
-            生成图片,
+            // 生成图片,
             添加图片到图集,
           ],
           autoSearch: false,
