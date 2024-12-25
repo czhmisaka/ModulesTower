@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-10-06 00:18:27
+ * @LastEditTime: 2024-12-25 00:19:56
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\collectionManage.ts
  */
 import {
@@ -35,9 +35,8 @@ import { ElMessage } from "element-plus";
 const collectionStorage = new SearchCellStorage([
   tableCellTemplateMaker("收藏夹名", "name"),
   tableCellTemplateMaker("描述", "description"),
-  tableCellTemplateMaker("图片数量", "nb_images"),
-  tableCellTemplateMaker("所有者", "username"),
-  tableCellTemplateMaker("最近编辑时间", "date_creation"),
+  // tableCellTemplateMaker("所有者", "username"),
+  tableCellTemplateMaker("最近编辑时间", "updateTime"),
 ]);
 
 export const 删除收藏夹 = btnMaker("删除", btnActionTemplate.Function, {
@@ -141,7 +140,7 @@ export const collectionManage = async () => {
       {
         props: {
           searchItemTemplate: [tableCellTemplateMaker("关键词", "keyWord")],
-          showItemTemplate: collectionStorage.getAll(),
+          showItemTemplate: collectionStorage.getAll(['count','']),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await post("/admin/picture/collection/tree", {});
             return res.data;

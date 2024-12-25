@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-12-08 19:59:01
+ * @LastEditTime: 2024-12-25 00:37:58
  * @FilePath: \github\config-for-desktop-page\src\modules\main\PageConfigData\index.ts
  */
 import { mainDesktop } from "./main";
@@ -62,12 +62,12 @@ let pageConfig = {
   },
   TRANSIMAGE: {
     name: 'trans',
-    desktopData: uploadImage_new,
+    desktopData: uploadImage,
     gridColNum: 12,
     cusStyle: {
       allPeopleCanSee:true,
       Fullscreen: false,
-      showLink: true,
+      showLink: false,
       wholeScreen: true,
       maxRows: 8,
       margin: 6,

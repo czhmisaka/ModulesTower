@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-12-24 23:21:51
+ * @LastEditTime: 2024-12-24 23:56:20
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\pictureListManage.tsx
  */
 
@@ -103,6 +103,9 @@ export const 批量上传按钮 = btnMaker(
         uploadStatus: uploadStatus.ready,
         data,
       });
+
+      console.log(that,'asd')
+      that.search() 
     },
   }
 );
@@ -533,7 +536,6 @@ export const PictureListManage = async () => {
           searchItemTemplate: [],
           showItemTemplate: photoInfoStorage.getAll(),
           searchFunc: async (query, that) => {
-            console.log(query, "搜索");
             let { pageNumber, pageSize } = query;
             if (!pageNumber) pageNumber = 1;
             if (!pageSize) pageSize = 10;
@@ -558,7 +560,7 @@ export const PictureListManage = async () => {
             // 生成图片,
             添加图片到图集,
           ],
-          autoSearch: false,
+          autoSearch: true,
           modeChange: true,
           isCard: false,
         },
