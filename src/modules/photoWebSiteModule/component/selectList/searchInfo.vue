@@ -1,90 +1,59 @@
 <!--
  * @Date: 2023-01-20 23:35:00
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-16 02:33:50
- * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\component\selectList\searchInfo.vue
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-12-27 10:07:53
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
   <cardBg>
-    <div
-      class="wholeBox"
-      :style="{
-        lineHeight: sizeUnit.blockSize + 'px',
-      }"
-    >
-      <span
-        style="
+    <div class="wholeBox" :style="{
+      lineHeight: sizeUnit.blockSize + 'px',
+    }">
+      <span style="
           top: 3px;
           position: relative;
           margin-right: 6px;
           display: inline-block;
-        "
-      >
-        <el-color-picker
-          v-model="query['color']"
-          color-format="rgb"
-          validate-event
-          size="default"
-          :style="{
-            margin: '3px',
-          }"
-        />
+        ">
+        <el-color-picker v-model="query['color']" color-format="rgb" validate-event size="default" :style="{
+          margin: '3px',
+        }" />
       </span>
 
-      <el-slider
-        v-model="query['colorRange']"
-        class="item"
-        style="
+      <el-slider v-model="query['colorRange']" class="item" style="
           width: 120px;
           display: inline-block;
           padding: 0px 10px;
           padding-top: 25px;
-        "
-      />
-      <el-input
-        v-model="query['name']"
-        placeholder="图片名字"
-        class="item"
-      ></el-input>
-      <el-select
-        v-model="query['tags']"
-        :placeholder="'标签'"
-        style="width: 120px"
-        class="item"
-        multiple
-        clearable
-        collapse-tags
-      >
-        <el-option
-          v-for="tag in tagList"
-          :value="tag.id"
-          :key="tag.id"
-          :label="`${tag.nameCn}【${tag.name}】`"
-        ></el-option>
+        " />
+      <el-input v-model="query['name']" placeholder="图片名字" class="item"></el-input>
+      <el-popover v-if="canSearchByImage" placement="bottom-start" :width="400" trigger="click">
+        <template #reference>
+          <el-button class="item"> 智能搜索 </el-button>
+        </template>
+        <template #default>
+          <div style="height: 180px; width: 100%">
+            <el-input v-model="userinput" type="textarea" v-loading="userinputLoading"
+              :autosize="{ minRows: 8, maxRows: 8 }" placeholder="随便写点什么，回车搜索"
+              @keydown.native.enter="aiSearch(userinput)" />
+          </div>
+        </template>
+      </el-popover>
+      <el-select v-model="query['tags']" :placeholder="'标签'" style="width: 120px" class="item" multiple clearable
+        collapse-tags>
+        <el-option v-for="tag in tagList" :value="tag.id" :key="tag.id" :label="`${tag.nameCn}【${tag.name}】`"></el-option>
       </el-select>
-      <el-popover
-        v-if="canSearchByImage"
-        placement="bottom-start"
-        :width="200"
-        trigger="hover"
-      >
+      <el-popover v-if="canSearchByImage" placement="bottom-start" :width="200" trigger="hover">
         <template #reference>
           <el-button icon="plus" type="primary" :plain="true">
             以图搜图
           </el-button>
         </template>
         <template #default>
-          <el-upload
-            class="upload-demo"
-            drag
-            :data="{}"
-            multiple
-            :http-request="searchByImages"
-            :headers="{
-              ...getHeaders(),
-              'Content-Type': 'multipart/form-data',
-            }"
-          >
+          <el-upload class="upload-demo" drag :data="{}" multiple :http-request="searchByImages" :headers="{
+            ...getHeaders(),
+            'Content-Type': 'multipart/form-data',
+          }">
             <el-icon class="el-icon--upload"><upload-filled /></el-icon>
             <div class="el-upload__text">以图搜图</div>
           </el-upload>
@@ -93,15 +62,10 @@
 
       <el-popover placement="top-start" :width="200" trigger="click">
         <template #reference>
-          <el-button
-            :plain="!checkQuery(['file_size_min', 'file_size_max'])"
-            :type="
-              checkQuery(['file_size_min', 'file_size_max'])
-                ? 'primary'
-                : 'info'
-            "
-            @click="clearQuery(['file_size_min', 'file_size_max'])"
-          >
+          <el-button :plain="!checkQuery(['file_size_min', 'file_size_max'])" :type="checkQuery(['file_size_min', 'file_size_max'])
+            ? 'primary'
+            : 'info'
+            " @click="clearQuery(['file_size_min', 'file_size_max'])">
             大小
             <el-icon v-if="checkQuery(['file_size_min', 'file_size_max'])">
               <Close />
@@ -110,55 +74,37 @@
         </template>
         <template #default>
           <div class="twoInputRow">
-            <el-input
-              class="half"
-              v-model="query['file_size_min']"
-              placeholder="最小"
-            ></el-input>
+            <el-input class="half" v-model="query['file_size_min']" placeholder="最小"></el-input>
             ~
-            <el-input
-              class="half"
-              v-model="query['file_size_max']"
-              placeholder="最大"
-            ></el-input>
+            <el-input class="half" v-model="query['file_size_max']" placeholder="最大"></el-input>
           </div>
         </template>
       </el-popover>
 
       <el-popover placement="top-start" :width="300" trigger="click">
         <template #reference>
-          <el-button
-            :style="{
-              marginLeft: '6px',
-            }"
-            :plain="
-              !checkQuery([
-                'width_min',
-                'width_max',
-                'height_min',
-                'height_max',
-              ])
-            "
-            :type="
-              checkQuery(['width_min', 'width_max', 'height_min', 'height_max'])
-                ? 'primary'
-                : 'info'
-            "
-            @click="
-              clearQuery(['width_min', 'width_max', 'height_min', 'height_max'])
-            "
-          >
+          <el-button :style="{
+            marginLeft: '6px',
+          }" :plain="!checkQuery([
+  'width_min',
+  'width_max',
+  'height_min',
+  'height_max',
+])
+  " :type="checkQuery(['width_min', 'width_max', 'height_min', 'height_max'])
+    ? 'primary'
+    : 'info'
+    " @click="
+    clearQuery(['width_min', 'width_max', 'height_min', 'height_max'])
+    ">
             尺寸
-            <el-icon
-              v-if="
-                checkQuery([
-                  'width_min',
-                  'width_max',
-                  'height_min',
-                  'height_max',
-                ])
-              "
-            >
+            <el-icon v-if="checkQuery([
+              'width_min',
+              'width_max',
+              'height_min',
+              'height_max',
+            ])
+              ">
               <Close />
             </el-icon>
           </el-button>
@@ -166,136 +112,71 @@
         <template #default>
           <div class="threeInputRow">
             宽
-            <el-input
-              class="half"
-              v-model="query['width_min']"
-              placeholder="最小"
-            ></el-input>
+            <el-input class="half" v-model="query['width_min']" placeholder="最小"></el-input>
             ~
-            <el-input
-              class="half"
-              v-model="query['width_max']"
-              placeholder="最大"
-            ></el-input>
+            <el-input class="half" v-model="query['width_max']" placeholder="最大"></el-input>
           </div>
           <br />
           <div class="threeInputRow">
             高
-            <el-input
-              class="half"
-              v-model="query['height_min']"
-              placeholder="最小"
-            ></el-input>
+            <el-input class="half" v-model="query['height_min']" placeholder="最小"></el-input>
             ~
-            <el-input
-              class="half"
-              v-model="query['height_max']"
-              placeholder="最大"
-            ></el-input>
+            <el-input class="half" v-model="query['height_max']" placeholder="最大"></el-input>
           </div>
         </template>
       </el-popover>
 
-      <el-popover
-        placement="top-start"
-        :width="dataType['date_available_end'] ? 'auto' : 200"
-        trigger="click"
-      >
+      <el-popover placement="top-start" :width="dataType['date_available_end'] ? 'auto' : 200" trigger="click">
         <template #reference>
-          <el-button
-            :style="{
-              marginLeft: '6px',
-            }"
-            :plain="!checkQuery(['date_available_start', 'date_available_end'])"
-            :type="
-              checkQuery(['date_available_start', 'date_available_end'])
-                ? 'primary'
-                : 'info'
-            "
-            @click="
-              (e) => {
-                dataType['date_available_end'] = false;
-                clearQuery(['date_available_start', 'date_available_end']);
-              }
-            "
-          >
+          <el-button :style="{
+            marginLeft: '6px',
+          }" :plain="!checkQuery(['date_available_start', 'date_available_end'])" :type="checkQuery(['date_available_start', 'date_available_end'])
+  ? 'primary'
+  : 'info'
+  " @click="(e) => {
+    dataType['date_available_end'] = false;
+    clearQuery(['date_available_start', 'date_available_end']);
+  }
+    ">
             添加日期
-            <el-icon
-              v-if="checkQuery(['date_available_start', 'date_available_end'])"
-            >
+            <el-icon v-if="checkQuery(['date_available_start', 'date_available_end'])">
               <Close />
             </el-icon>
           </el-button>
         </template>
         <template #default>
-          <el-radio-group
-            v-model="query['date_available_start']"
-            class="ml-4"
-            @click="dataType['date_available_end'] = false"
-          >
-            <el-radio
-              style="width: 100%; margin-left: -1em"
-              v-for="item in dateList"
-              :label="new Date(item.time).toLocaleString()"
-              size="small"
-              >{{ item.name }}</el-radio
-            >
+          <el-radio-group v-model="query['date_available_start']" class="ml-4"
+            @click="dataType['date_available_end'] = false">
+            <el-radio style="width: 100%; margin-left: -1em" v-for="item in dateList"
+              :label="new Date(item.time).toLocaleString()" size="small">{{ item.name }}</el-radio>
           </el-radio-group>
           <el-divider style="margin: 3px" />
-          <el-radio-group
-            v-model="dataType['date_available_end']"
-            label="自定时间"
-          >
-            <el-radio
-              style="width: 100%; margin-left: 0.15em"
-              size="small"
-              :label="true"
-              @click="clearQuery(['date_available_start'])"
-              >{{ "自定时间" }}</el-radio
-            >
+          <el-radio-group v-model="dataType['date_available_end']" label="自定时间">
+            <el-radio style="width: 100%; margin-left: 0.15em" size="small" :label="true"
+              @click="clearQuery(['date_available_start'])">{{ "自定时间" }}</el-radio>
           </el-radio-group>
           <br />
-          <div
-            id="fuckteleported"
-            :style="{
-              width: '100%',
-            }"
-          >
-            <el-date-picker
-              :teleported="false"
-              v-if="dataType['date_available_end']"
-              v-model="query['date_available_end']"
-              type="datetimerange"
-              range-separator="To"
-              start-placeholder="开始"
-              end-placeholder="结束"
-            />
+          <div id="fuckteleported" :style="{
+            width: '100%',
+          }">
+            <el-date-picker :teleported="false" v-if="dataType['date_available_end']"
+              v-model="query['date_available_end']" type="datetimerange" range-separator="To" start-placeholder="开始"
+              end-placeholder="结束" />
           </div>
         </template>
       </el-popover>
 
-      <el-button
-        v-if="Object.keys(query).length > 0"
-        :style="{
-          margin: `${(sizeUnit.blockSize - 30) / 2}px 0px`,
-          float: 'right',
-        }"
-        @click="clear"
-        >重置</el-button
-      >
-      <el-slider
-        v-model="rowHeight"
-        :min="30"
-        :max="300"
-        class="item"
-        style="
+      <el-button v-if="Object.keys(query).length > 0" :style="{
+        margin: `${(sizeUnit.blockSize - 30) / 2}px 0px`,
+        float: 'right',
+      }" @click="clear">重置</el-button>
+      <el-slider v-model="rowHeight" :min="30" :max="300" class="item" style="
           float: right;
           width: 120px;
           display: inline-block;
           padding: 0px 10px;
           padding-top: 25px;
-        "
-      />
+        " />
     </div>
   </cardBg>
 </template>
@@ -323,6 +204,7 @@ import { ElMessage } from "element-plus";
 import { getPreUrl } from "../../../../utils/api/requests";
 import { getHeaders } from "../../../../utils/api/user/header";
 import { searchByPicture } from "../../api/upload";
+import { chat, isMobile } from "@/utils/api/requests";
 
 const dateList = [] as {
   name: string;
@@ -358,6 +240,8 @@ dateList.push({
   time: nowDay - oneYear,
 });
 
+let timeout = null;
+
 export default defineComponent({
   name: "searchInfo",
   componentInfo: {
@@ -376,6 +260,21 @@ export default defineComponent({
 
   components: { cardBg },
   watch: {
+    // userinput: {
+    //   handler(val) {
+    //     if (!val) return;
+    //     console.log(timeout, "asd");
+    //     if (timeout) {
+    //       clearTimeout(timeout);
+    //     }
+    //     const that = this;
+    //     timeout = setTimeout(async () => {
+    //       await that.aiSearch(val);
+    //     }, 5000);
+    //   },
+    //   deep: true,
+    //   immediate: true,
+    // },
     rowHeight: {
       handler(val) {
         changeCardProperties(this, {
@@ -400,12 +299,11 @@ export default defineComponent({
     },
     "baseData.query": {
       handler(val) {
-        console.log(val, "asd");
         if (val) {
           Object.keys(val).map((key) => {
             // 不相等时更新
             console.log(key, val[key], this.query[key]);
-            if (this.query[key] != val[key]) this.query[key] = val[key];
+            if (JSON.stringify(this.query[key]) != JSON.stringify(val[key])) this.query[key] = val[key];
           });
         }
       },
@@ -428,7 +326,8 @@ export default defineComponent({
       preUrl: getPreUrl(),
       dataType: {},
       query: {},
-
+      userinput: "",
+      userinputLoading: false,
       token: "",
       canSearchByImage: false,
       amd_timeOut: null,
@@ -467,9 +366,7 @@ export default defineComponent({
       }
       setData(that, data);
     },
-    beforeAvatarUpload(file) {
-     
-    },
+    beforeAvatarUpload(file) { },
     clear() {
       const context = this;
       this.query = {};
@@ -482,6 +379,42 @@ export default defineComponent({
           getFunc: getFunc,
         },
       });
+    },
+
+    async aiSearch(val) {
+      this.userinputLoading = true
+      let res = await chat(val, "glm-4-flash", [
+        {
+          role: "system",
+          content: `
+          你会分析用户的意图，并提取用户希望搜索的图片关键词。
+          现有关键词：
+${JSON.stringify(this.tagList.map(x => { return { name: x.name, id: x.id } }))}
+要求：
+1. 只输出关键词即可，使用json列表格式
+2. 从现有关键词中选取
+3. 输出内容从下文中的现有关键词中寻找，不少于10个，不多于30个
+4. 不要输出任何不合适的关键词（黄色信息、暴力信息等）
+`,
+        },
+      ]);
+      const listStr = res.data.choices[0].message.content;
+      const list = JSON.parse("[" + listStr.split("[")[1].split("]")[0] + "]");
+      console.log(listStr, "返回", list);
+      let searchList = [];
+      this.tagList.map((x) => {
+        list.map((c) => {
+          if (x.name.indexOf(c) > -1) {
+            if (searchList.indexOf(x.id) == -1) searchList.push(x.id);
+          }
+        });
+      });
+      console.log(searchList, "结果");
+      if (searchList.length == 0) {
+        return ElMessage.warning("未能识别到可用标签");
+      }
+      this.query.tags = searchList;
+      this.userinputLoading = false
     },
 
     checkQuery(arr: string[]) {
@@ -511,8 +444,7 @@ export default defineComponent({
       //   ElMessage.error("上传图片大小不能超过 10MB!");
       //   return false;
       // }
-      console.log(file,'asdasdasd')
-      const { data } = await searchByPicture(file.file)
+      const { data } = await searchByPicture(file.file);
       const that = this;
       if (this.searchByImage) {
         this.searchByImage(that, data.list);

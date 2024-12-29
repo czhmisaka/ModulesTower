@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2024-10-07 19:09:46
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-12-24 23:27:43
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\main.ts
  */
 
 import {
@@ -67,7 +67,7 @@ export const getFunc = async function (that, data) {
   let searchData = {
     ...query,
     pageSize: limit,
-    pageNumber: offset
+    pageNum: Math.floor(offset/limit)
   } as stringAnyObj
   if (category && category.id && searchMode == 'category') {
     searchData = {

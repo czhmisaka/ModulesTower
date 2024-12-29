@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-10-21 02:59:01
+ * @LastEditTime: 2024-12-25 00:17:28
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\newCategoryManage.ts
  */
 
@@ -98,7 +98,7 @@ export const 新增相册 = btnMaker('新增相册', btnActionTemplate.Function,
 
 const 删除相册 = btnMaker('删除相册', btnActionTemplate.Function, {
     icon: 'Delete',
-    elType:'danger',
+    elType: 'danger',
     function: async (that, data) => {
         if (await doubleCheckBtnMaker('删除相册', '确认删除相册【' + data.name + '】吗？').catch(x => false)) {
             let res = await post("/admin/picture/categories/delete", {
@@ -168,22 +168,33 @@ export const CategoryManage = async () => {
             type: cardComponentType.componentList,
         }, {
             props: {
-                searchItemTemplate: [],
+                searchItemTemplate: [
+                    tableCellTemplateMaker('相册名', 'name')
+                ],
                 showItemTemplate: [
                     ...Storage.getByKeyArr([
-                        'name', 'desc', 'count', 'score'
+                        'name', 'desc',
                     ]),
                     tableCellTemplateMaker('操作', 'asd', actionCell([编辑相册, 删除相册]))
                 ],
                 searchFunc: async (query, that) => {
-                    let res = await post("/admin/picture/categories/tree", {});
+                    const { name } = query
+                    let res = null
+                    if (!name)
+                        res = await post("/admin/picture/categories/tree", {});
+                    else {
+                        res = await post('/admin/picture/categories/list', {})
+                        res.data = res.data.filter(x => {
+                            return x.name.indexOf(name) > -1
+                        })
+                    }
                     return res.data;
                 },
                 defaultQuery: {
                     showLink: null,
                 },
                 btnList: [新增相册, 批量删除相册],
-                autoSearch: false,
+                autoSearch: true,
                 modeChange: true,
                 isCard: false,
             }

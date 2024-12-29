@@ -1,47 +1,82 @@
 <!--
  * @Date: 2023-01-21 21:10:09
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-16 21:33:00
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-12-21 13:07:44
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\component\imageInfo\infoCard.vue
 -->
 <template>
-  <cardBg :cus-style="{
-    overflow: 'scroll',
-  }">
-    <span v-if="baseData.image && baseData.image.length && baseData.image.length > 0">
-      <el-card :style="{
-        ...elCardInfo.style,
-        height: baseData.image.length > 5 ? '200px' : '160px',
-      }" :body-style="{
-  padding: '0px',
-  paddingBottom: '-5px',
-}">
-        <waterFallItem v-for="(image, index) in baseData['image']" :url="image.url" :item="image" :cus-style="{
-          width: 'calc(100%)',
-          borderRadius: '6px',
-          height: '150px',
-          position: 'absolute',
-          transform: `translateX(-50%) translateY(${baseData.image.length > 5 ? '20px' : '0px'
+  <cardBg
+    :cus-style="{
+      overflow: 'scroll',
+    }"
+  >
+    <span
+      v-if="
+        baseData.image && baseData.image.length && baseData.image.length > 0
+      "
+    >
+      <el-card
+        :style="{
+          ...elCardInfo.style,
+          height: baseData.image.length > 5 ? '200px' : '160px',
+        }"
+        :body-style="{
+          padding: '0px',
+          paddingBottom: '-5px',
+        }"
+      >
+        <waterFallItem
+          v-for="(image, index) in baseData['image']"
+          :url="image.url"
+          :item="image"
+          :cus-style="{
+            width: 'calc(100%)',
+            borderRadius: '6px',
+            height: '150px',
+            position: 'absolute',
+            transform: `translateX(-50%) translateY(${
+              baseData.image.length > 5 ? '20px' : '0px'
             }) scale(${0.8}) rotate(${index * 27}deg)`,
-        }" :noPreview="true" :noTitle="true"></waterFallItem>
+          }"
+          :noPreview="true"
+          :noTitle="true"
+        ></waterFallItem>
       </el-card>
     </span>
     <span v-else>
-      <el-card :style="elCardInfo.style" :body-style="{
-        padding: '0px',
-        paddingBottom: '-5px',
-      }">
-        <waterFallItem v-if="baseData['image']" :url="baseData['image'].url" :item="baseData['image']" :cus-style="{
-          width: 'calc(100%)',
-          borderRadius: '6px',
-          height: '150px',
-        }" :noPreview="true"></waterFallItem>
+      <el-card
+        :style="elCardInfo.style"
+        :body-style="{
+          padding: '0px',
+          paddingBottom: '-5px',
+        }"
+      >
+        <waterFallItem
+          v-if="baseData['image']"
+          :url="baseData['image'].url"
+          :item="baseData['image']"
+          :cus-style="{
+            width: 'calc(100%)',
+            borderRadius: '6px',
+            height: '150px',
+          }"
+          :noPreview="true"
+        ></waterFallItem>
       </el-card>
-      <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="颜色">
+      <el-card
+        :style="elCardInfo.style"
+        :body-style="elCardInfo.bodyStyle"
+        title="颜色"
+      >
         <div class="flexBox">
-          <div class="tag" v-for="color in colorList" :style="{
-            backgroundColor: color,
-          }" @click="colorClick(color)"></div>
+          <div
+            class="tag"
+            v-for="color in colorList"
+            :style="{
+              backgroundColor: color,
+            }"
+            @click="colorClick(color)"
+          ></div>
         </div>
       </el-card>
       <!-- <el-card :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle" title="评分">
@@ -51,35 +86,88 @@
           @change="rate"
         />
       </el-card> -->
-      <el-card title="基本信息" :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle">
-        <el-descriptions :column="1" size="small" v-if="baseData['image']" border :style="{
-          textWrap: 'nowrap',
-        }">
-          <el-descriptions-item v-for="item in Object.keys(imageInfo)" :align="'left'" :label="item" label-align="left">
-            <el-popover placement="top-start" :width="400" trigger="hover" :content="imageInfo[item]">
+      <el-card
+        title="基本信息"
+        :style="elCardInfo.style"
+        :body-style="elCardInfo.bodyStyle"
+      >
+        <el-descriptions
+          :column="1"
+          size="small"
+          v-if="baseData['image']"
+          border
+          :style="{
+            textWrap: 'nowrap',
+          }"
+        >
+          <el-descriptions-item
+            v-for="item in Object.keys(imageInfo)"
+            :align="'left'"
+            :label="item"
+            label-align="left"
+          >
+            <el-popover
+              placement="top-start"
+              :width="400"
+              trigger="hover"
+              :content="imageInfo[item]"
+            >
               <template #reference>{{ imageInfo[item] }} </template>
             </el-popover>
           </el-descriptions-item>
         </el-descriptions>
       </el-card>
-      <el-card v-if="categoryInfo.length > 0" title="相册信息" :style="elCardInfo.style"
-        :body-style="{ ...elCardInfo.bodyStyle, padding: '3px' }">
-        <el-tag class="floatTag" v-for="item in categoryInfo" effect="dark" type="info">相册【{{ item.name }}】</el-tag>
+      <el-card
+        v-if="categoryInfo.length > 0"
+        title="相册信息"
+        :style="elCardInfo.style"
+        :body-style="{ ...elCardInfo.bodyStyle, padding: '3px' }"
+      >
+        <el-tag
+          class="floatTag"
+          v-for="item in categoryInfo"
+          effect="dark"
+          type="info"
+        >
+          相册【{{ item.name }}】
+        </el-tag>
       </el-card>
-      <el-card title="标签信息" :style="elCardInfo.style" :body-style="{ ...elCardInfo.bodyStyle, padding: '0px' }"
-        v-if="tagList && tagList.length > 0">
-        <div v-for="item in tagList" class="floatTag" style="margin: 3px; margin-top: 2px">
-          <el-button size="small" type="info">
-            {{ item.nameCn||item.name }}
-          </el-button>
+      <el-card
+        title="标签信息"
+        :style="elCardInfo.style"
+        :body-style="{ ...elCardInfo.bodyStyle, padding: '0px' }"
+        v-if="tagList && tagList.length > 0"
+      >
+        <div
+          v-for="item in tagList"
+          class="floatTag"
+          style="margin: 3px; margin-top: 2px"
+        >
+          <el-tag closable @close="deleteTag(item)" size="small" type="info">
+            {{ item.nameCn || item.name }}
+          </el-tag>
         </div>
       </el-card>
     </span>
-    <el-card title="操作" :style="elCardInfo.style" :body-style="{ ...elCardInfo.bodyStyle, padding: '0px' }"
-      v-if="baseData.image">
-      <div v-for="item in btnList" class="floatTag" style="margin: 3px; margin-top: 2px">
-        <el-button v-if="item.isShow(baseData.image, item)" :loading="item.isLoading" @click="btnClick(item)"
-          :type="item.elType" :icon="item.icon" size="small">
+    <el-card
+      title="操作"
+      :style="elCardInfo.style"
+      :body-style="{ ...elCardInfo.bodyStyle, padding: '0px' }"
+      v-if="baseData.image"
+    >
+      <div
+        v-for="item in btnList"
+        class="floatTag"
+        style="margin: 3px; margin-top: 2px"
+      >
+        <el-button
+          v-if="item.isShow(baseData.image, item)"
+          :loading="item.isLoading"
+          @click="btnClick(item)"
+          :type="item.elType"
+          :icon="item.icon"
+          size="small"
+        >
           {{ item.label }}
         </el-button>
       </div>
@@ -135,7 +223,14 @@ export default defineComponent({
 
   baseProps: {},
 
-  props: ["baseData", "sizeUnit", "image", "watchKeyForCategory", "btnList", 'sendSearch'],
+  props: [
+    "baseData",
+    "sizeUnit",
+    "image",
+    "watchKeyForCategory",
+    "btnList",
+    "sendSearch",
+  ],
   components: { cardBg, waterFallItem },
   watch: {
     "baseData.image": {
@@ -187,22 +282,33 @@ export default defineComponent({
       //   image_id: this.baseData.image.id,
       // });
     },
+
+    async deleteTag(tag) {
+      console.log(tag, "标签", this.data);
+      let res = await post('/admin/picture/tags/deletePicture',{
+          tagId:tag.id,
+          pictureId:this.data.id
+      })
+      this.initImageInfo(this.baseData.image)
+    },
+
     async initImageInfo(image) {
       if (typeof image == "object" && !Array.isArray(image)) {
         if (!image || !image.id) return;
         // let res = await get("/image-info?id=" + image.id, {});
-        let res = await post('/admin/picture/pictureInfo/pictureInfo', {
+        let res = await post("/admin/picture/pictureInfo/pictureInfo", {
           id: image.id,
-        })
-        console.log(res, 'fuck')
+        });
+        console.log(res, "fuck");
         if (!res || !res.data) return;
-        let { data } = res
+        let { data } = res;
         const { tags, colors, Categories } = data;
-        this.colorList = colors.map(x => {
-          return `rgb(${x.r},${x.g},${x.b})`
+        this.data = data
+        this.colorList = colors.map((x) => {
+          return `rgb(${x.r},${x.g},${x.b})`;
         });
         this.tagList = tags;
-        this.categoryInfo = Categories
+        this.categoryInfo = Categories;
         this.imageInfo = {
           文件名称: data.name,
           尺寸: `${data.width}px × ${data.height}px`,
@@ -285,14 +391,14 @@ export default defineComponent({
       //   },
       // });
       if (this.sendSearch) {
-        await this.sendSearch(this, color)
+        await this.sendSearch(this, color);
       }
       this.$nextTick(() => {
         setData(that, {
           query: {
             color: color,
-            colorRange: 30
-          }
+            colorRange: 30,
+          },
         });
       });
     },

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-16 02:50:03
+ * @LastEditTime: 2024-12-26 02:57:50
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\component\imageList\waterfall.vue
 -->
 <template>
@@ -35,13 +35,15 @@
         <div
           class="row"
           v-for="(imgList, rowIndex) in rowList"
-          :style="{ height: row.height + 40 + 'px' }"
+          :key="rowIndex"
+          :style="{ height: (rowHeight || row.height) + 40 + 'px' }"
         >
           <waterFallItem
             v-for="(item, colIndex) in imgList"
+            :key="colIndex"
             :url="item.url"
             :width="item.width - row.margin * 2"
-            :height="row.height"
+            :height="rowHeight || row.height"
             :item="item"
             :cusStyle="{
               margin: row.margin + 'px',
@@ -189,6 +191,7 @@ export default defineComponent({
     "imageList",
     "getFunc",
     "startSearch",
+    "rowHeight",
   ],
   components: { cardBg, waterFallItem },
   watch: {
@@ -202,19 +205,20 @@ export default defineComponent({
         this.data.offset = 0;
 
         imageListForReSize = [];
+        let height = this.rowHeight || this.row.height
         let list = val.map((x) => {
           return {
             ...x,
             origin: x,
             url: x.url,
             path: x.path,
-            height: that.row.height,
+            height: height,
             width:
               Math.floor(
-                ((that.row.height / x.height) * x.width) / that.row.rowIndexSize
+                ((height / x.height) * x.width) / that.row.rowIndexSize
               ) * that.row.rowIndexSize,
             rowIndex: Math.floor(
-              ((that.row.height / x.height) * x.width) / that.row.rowIndexSize
+              ((height / x.height) * x.width) / that.row.rowIndexSize
             ),
           };
         });
@@ -449,9 +453,6 @@ export default defineComponent({
       if (that.isLoading) return null;
       if (!val) return null;
       that.isLoading = true;
-      setTimeout(() => {
-        that.isLoading = false;
-      }, 500);
       let { limit, offset } = that.data;
       let list = await this.getFunc(that, {
         ...val,
@@ -460,24 +461,33 @@ export default defineComponent({
       });
       if (list.length == 0) return;
       that.data = { limit, offset: list.length + offset };
+      let height = that.rowHeight || that.row.height
       list = list.map((x) => {
         return {
           ...x,
           origin: x,
           url: x.url,
           path: x.path,
-          height: that.row.height,
+          height: height,
           width:
             Math.floor(
-              ((that.row.height / x.height) * x.width) / that.row.rowIndexSize
+              ((height / x.height) * x.width) / that.row.rowIndexSize
             ) * that.row.rowIndexSize,
           rowIndex: Math.floor(
-            ((that.row.height / x.height) * x.width) / that.row.rowIndexSize
+            ((height / x.height) * x.width) / that.row.rowIndexSize
           ),
         };
       });
-      imageListForReSize = imageListForReSize.concat(list);
-      this.pkFunc(list);
+      const ids = imageListForReSize.map(x=>x.id)
+      let back = []
+      list.map(x=>{
+        if(ids.indexOf(x.id)==-1){
+          back.push(x)
+        }
+      })
+      console.log(imageListForReSize,back,list)
+      imageListForReSize = imageListForReSize.concat(back);
+      this.pkFunc(back);
       that.isLoading = false;
     },
 
