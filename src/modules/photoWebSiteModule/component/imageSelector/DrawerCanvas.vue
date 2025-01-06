@@ -1,9 +1,19 @@
 <template>
   <div class="basic_container">
-    <div class="tool">
-      <el-button @click="handlePenClick">钢笔</el-button>
+    <card-bg class="tool cardBg" v-if="!canUpload">
+      <el-button @click="handlePenClick">再切一个</el-button>
       <el-button type="primary" @click="handleConfirm">确认裁剪</el-button>
-    </div>
+
+      <el-image
+        style="
+          width: 180px;
+          height: 120px;
+          margin: 10px 5px;
+          box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
+        "
+        :src="realShow" :fit="'contain'"
+      ></el-image>
+    </card-bg>
     <el-upload
       drag
       :auto-upload="true"
@@ -44,12 +54,11 @@
         </cropper-canvas>
       </div>
       <div class="info_wrap">
-        <div class="cropper_preview" style="opacity: 0">
-          <div>实际效果：img/canvas</div>
-          <canvas ref="resultCanvas"></canvas>
-        </div>
-        <div>
-          <img :src="realShow" style="width: 200px" />
+        <div class="cropper_preview" style="opacity: 1">
+          <canvas
+            ref="resultCanvas"
+            style="transform: translateY(-1000px)"
+          ></canvas>
         </div>
       </div>
     </div>
@@ -61,7 +70,7 @@ import "cropperjs";
 import { computed, nextTick, ref, onMounted } from "vue";
 import { ElLoading, ElMessageBox } from "element-plus";
 import { uploadFile } from "@/modules/photoWebSiteModule/api/upload";
-
+import cardBg from "../../../../components/basicComponents/cell/card/cardBg.vue";
 const fileObj = ref({});
 const canUpload = ref(true);
 
@@ -81,11 +90,12 @@ async function handlePenClick() {
   points = [];
   isPanDrawingLine = true;
   // 清除之前的动态线条
-  // await nextTick();
-  // const ctx = drawingcanvas.value.getContext('2d');
-  // drawStaticElements(ctx, drawingcanvas.value, true);
-  // ctx.clearRect(0, 0, drawingcanvas.value.width, drawingcanvas.value.height);
+  await nextTick();
+  const ctx = drawingcanvas.value.getContext("2d");
+  drawStaticElements(ctx, drawingcanvas.value, true);
+  ctx.clearRect(0, 0, drawingcanvas.value.width, drawingcanvas.value.height);
 }
+
 function startDrawing(e) {
   if (!isDrawing.value || !isPanDrawingLine) return;
   const canvas = e.target;
@@ -114,7 +124,7 @@ function startDrawing(e) {
     if (points.length > 0) {
       const lastPoint = points[points.length - 1];
       ctx.strokeStyle = "#409EFF";
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(lastPoint.x, lastPoint.y);
       ctx.lineTo(x, y);
@@ -215,6 +225,7 @@ function isMouseOnPoint(x, y) {
 const emit = defineEmits(["success"]);
 const realShow = ref();
 const resultCanvas = ref();
+const needTransList = ref([]);
 async function handleConfirm() {
   const pointRect = getBoundingBox(points);
   const res = await getCanvasFromPoints(pointRect);
@@ -242,9 +253,12 @@ async function handleConfirm() {
   ctx.clip(); // 剪切区域
   ctx.drawImage(res, 0, 0, res.width, res.height);
 
+  console.log(resultCanvas.value, "asd");
+
   // 导出圆形图片数据
   const dataImage = resultCanvas.value.toDataURL("image/png");
   realShow.value = dataImage;
+
   const file = dataURLtoFile(dataImage, fileObj.value.name);
   emit("success", {
     ...fileObj.value,
@@ -252,6 +266,7 @@ async function handleConfirm() {
     fileShow: dataImage,
   });
 }
+
 // 根据点位，获取闭合空间的宽高
 function getBoundingBox(points) {
   if (points.length === 0) {
@@ -346,17 +361,25 @@ async function upload(data) {
     text: "图像上传中",
   });
   let re = await uploadFile(data.file);
+
   fileObj.value = {
     name: re.data.name,
-    file: data.file,
-    fileShow: re.data.url,
+    file: re.data.file.replace(
+      "http://127.0.0.1:8001",
+      window.location.origin + "/api/"
+    ),
+    fileShow: re.data.url.replace(
+      "http://127.0.0.1:8001",
+      window.location.origin + "/api/"
+    ),
   };
   canUpload.value = false;
   loading.close();
+  handlePenClick();
 }
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .drawing_canvas {
   position: absolute;
   top: 0;
@@ -391,5 +414,21 @@ button {
   & + button {
     margin-left: 20px;
   }
+}
+
+.tool {
+  position: absolute;
+  z-index: 1000;
+  right: 20px;
+  top: 20px;
+  border-radius: 10px !important;
+  padding: 6px;
+  width: 200px !important;
+  height: calc(100% - 40px) !important;
+  box-shadow: 0px 0px 10px gray !important;
+}
+
+.basic_container {
+  height: 100%;
 }
 </style>
